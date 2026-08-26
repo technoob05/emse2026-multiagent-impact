@@ -1,0 +1,15 @@
+check,status,value,expected,note
+chain_pr_key_unique,PASS,8608,8608,One parent row per PR.
+events_strictly_time_ordered_after_trigger,PASS,0,0 violations,Prevents pre-trigger leakage.
+events_inside_seven_day_window,PASS,0,0 violations,Prevents outcome-window leakage.
+exact_duplicate_rows_handled,PASS,9,9 documented surplus rows,Exact duplicates are removed before sequence construction.
+mapped_first_anchor_count,PASS,924,924,Reconciles to the five-minute burst analysis.
+mapped_first_anchor_identity_unique,PASS,0,0 ambiguous anchors,Required for same-versus-different product transitions.
+owner_sequence_pr_washout_grain,PASS,3696,3696,One next-owner state per mapped-first PR and washout.
+owner_sequence_key_unique,PASS,0,0 duplicated keys,Protects mutually exclusive shares.
+owner_next_state_after_washout,PASS,0,0 violations,Confirms temporal separation from the anchor.
+product_placebo_probability_bounds,PASS,True,True,"The future product mix is used only as a random-order null, not a predictor."
+episode_times_monotone_within_pr,PASS,True,True,Required for sequential risk sets.
+dynamic_pr_state_key_unique,PASS,0,0 duplicated keys,Each PR contributes at most once to automation state k.
+dynamic_next_episode_strictly_later,PASS,0,0 violations,The outcome is the immediate later episode.
+dynamic_risk_sets_nonincreasing,PASS,True,True,k is built prospectively and stops at the first user-account episode.

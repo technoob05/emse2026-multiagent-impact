@@ -1,0 +1,34 @@
+{
+  "run_id": "feedback-response-audit-20260825",
+  "created_utc": "2026-08-26T08:59:17.267962+00:00",
+  "schema_version": "feedback-response-audit-v1",
+  "row_count": 600,
+  "channel_counts": {
+    "direct_inline_reply": 120,
+    "force_push": 80,
+    "no_observed_action": 120,
+    "subsequent_pr_comment": 140,
+    "subsequent_review": 140
+  },
+  "config_sha256": "d637e88115f8136fe0f41e433dd01c87e0034e0f141423d2ef261e650026b2a3",
+  "schema_sha256": "9d392727a20d0814391d7e13606e03e1991af56cfa1bfd9370e40d6f80799349",
+  "script_sha256": "26bace8004dca5ccde796d1b07b5dfb207557feecbb96ff216615451a2a01dcb",
+  "source_sha256": {
+    "pull_request.parquet": "f31e6dc4a907db48ee8647626883ce188be5cb0da2acd0ce665b5f0a7d5d6f8f",
+    "pr_reviews.parquet": "89104dd24c370464d0ff1c69d363253efd15ec0ee97d985e0da415018b4102c5",
+    "pr_review_comments.parquet": "aeef219f1362cbb8b53278a9b75d6890faf16929cf9686ecf74287f4da4d7e76",
+    "pr_comments.parquet": "610277c97b31c3f97d5b0cf9ce05c5c077610371b8d07353adfdb930d2646984",
+    "pr_timeline.parquet": "fdb5529fdd6648933a88111d4056947baff6e3cf7f94926b48de83e830dd089c"
+  },
+  "code_revision": "unavailable",
+  "raw_identifiers_in_blinded_packet": false,
+  "raw_record_key_separate": true,
+  "outcomes_visible_to_coders": false,
+  "external_upload": false,
+  "excluded_likely_secret_records": 0,
+  "artifact_sha256": {
+    "coder_A_blinded.csv": "077060a3b761554086eb84eaad57c9e21e14bb3c4be9b8fa81a75c11519fb48d",
+    "coder_B_blinded.csv": "077060a3b761554086eb84eaad57c9e21e14bb3c4be9b8fa81a75c11519fb48d",
+    "private_record_key.csv": "b3a5059caec9eb465619c243ddb5d8541c70a7293560dcf86de2ea3cab29c6ed"
+  }
+}

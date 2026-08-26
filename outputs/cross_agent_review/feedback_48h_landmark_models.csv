@@ -1,0 +1,9 @@
+term,estimate,ci_low,ci_high,p_value,specification,n_prs,n_repositories
+"C(early_loop_shape, Treatment('no_observed_response'))[T.agent_only_continuation]",0.0604173763423932,-0.016165400656123687,0.1370001533409101,0.1220449502226695,repo_clustered_controls,1733,641
+"C(early_loop_shape, Treatment('no_observed_response'))[T.human_mediated]",0.16093190915728192,0.0935567930266892,0.22830702528787464,2.846980367751687e-06,repo_clustered_controls,1733,641
+"C(early_loop_shape, Treatment('no_observed_response'))[T.other_activity]",0.08236858246700979,-0.022309158650124172,0.18704632358414375,0.12301236939915755,repo_clustered_controls,1733,641
+"C(early_loop_shape, Treatment('no_observed_response'))[T.visible_code_movement]",0.25566837587221947,0.16921080771916797,0.34212594402527097,6.7949241262336175e-09,repo_clustered_controls,1733,641
+"C(early_loop_shape, Treatment('no_observed_response'))[T.agent_only_continuation]",0.10535508207150385,,,,repository_fixed_effects,1733,641
+"C(early_loop_shape, Treatment('no_observed_response'))[T.human_mediated]",0.15059997430210678,,,,repository_fixed_effects,1733,641
+"C(early_loop_shape, Treatment('no_observed_response'))[T.other_activity]",0.052779565477738606,,,,repository_fixed_effects,1733,641
+"C(early_loop_shape, Treatment('no_observed_response'))[T.visible_code_movement]",0.14014594576229306,,,,repository_fixed_effects,1733,641

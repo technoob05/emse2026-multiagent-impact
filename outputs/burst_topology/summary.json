@@ -1,0 +1,212 @@
+{
+  "interpretation": "Observed public response topology; no causal, semantic-resolution, or verified-manual-work claim.",
+  "cohort_prs": 8608,
+  "repositories": 1416,
+  "product_pairs": 25,
+  "raw_event_rows": 27906,
+  "deduplicated_event_rows": 27897,
+  "bootstrap_draws": 5000,
+  "zero_minute_landmark": {
+    "user_account": {
+      "prs": 2381,
+      "share_all_prs": 0.27660315985130113,
+      "cluster_ci": [
+        0.23620506707019598,
+        0.32549918602285577
+      ],
+      "share_post_burst_actions": 0.42877723752926344,
+      "median_minutes_from_burst_end": 26.833333333333336
+    },
+    "mapped_product": {
+      "prs": 1305,
+      "share_all_prs": 0.15160315985130113,
+      "cluster_ci": [
+        0.12746781512088523,
+        0.1777879318418588
+      ],
+      "share_post_burst_actions": 0.23500810372771475,
+      "median_minutes_from_burst_end": 4.466666666666666
+    },
+    "other_bot": {
+      "prs": 1359,
+      "share_all_prs": 0.15787639405204462,
+      "cluster_ci": [
+        0.1243785978801915,
+        0.19580167142205362
+      ],
+      "share_post_burst_actions": 0.24473257698541329,
+      "median_minutes_from_burst_end": 2.45
+    },
+    "branch_movement_untyped": {
+      "prs": 508,
+      "share_all_prs": 0.05901486988847584,
+      "cluster_ci": [
+        0.04400444524302646,
+        0.07508073197629773
+      ],
+      "share_post_burst_actions": 0.0914820817576085,
+      "median_minutes_from_burst_end": 30.891666666666666
+    },
+    "no_action_within_7d": {
+      "prs": 3055,
+      "share_all_prs": 0.3549024163568773,
+      "cluster_ci": [
+        0.3067336728910573,
+        0.4045779967557366
+      ],
+      "share_post_burst_actions": null,
+      "median_minutes_from_burst_end": null
+    }
+  },
+  "five_minute_landmark": {
+    "user_account": {
+      "prs": 2526,
+      "share_all_prs": 0.2934479553903346,
+      "cluster_ci": [
+        0.25348000574714324,
+        0.3382243377402107
+      ],
+      "share_post_burst_actions": 0.5294487528819954,
+      "median_minutes_from_burst_end": 41.50833333333333
+    },
+    "mapped_product": {
+      "prs": 924,
+      "share_all_prs": 0.10734200743494424,
+      "cluster_ci": [
+        0.09078989638304769,
+        0.12422454108654532
+      ],
+      "share_post_burst_actions": 0.1936700901278558,
+      "median_minutes_from_burst_end": 14.600000000000001
+    },
+    "other_bot": {
+      "prs": 761,
+      "share_all_prs": 0.08840613382899629,
+      "cluster_ci": [
+        0.06839048415306966,
+        0.11318412900305887
+      ],
+      "share_post_burst_actions": 0.15950534479144834,
+      "median_minutes_from_burst_end": 6.8500000000000005
+    },
+    "branch_movement_untyped": {
+      "prs": 560,
+      "share_all_prs": 0.06505576208178439,
+      "cluster_ci": [
+        0.04900968494433303,
+        0.08309816719925466
+      ],
+      "share_post_burst_actions": 0.11737581219870048,
+      "median_minutes_from_burst_end": 45.141666666666666
+    },
+    "no_action_within_7d": {
+      "prs": 3837,
+      "share_all_prs": 0.4457481412639405,
+      "cluster_ci": [
+        0.40067585661824523,
+        0.49104202629507054
+      ],
+      "share_post_burst_actions": null,
+      "median_minutes_from_burst_end": null
+    }
+  },
+  "thirty_minute_landmark": {
+    "user_account": {
+      "prs": 2165,
+      "share_all_prs": 0.25151022304832715,
+      "cluster_ci": [
+        0.21871128636661022,
+        0.28793817916271564
+      ],
+      "share_post_burst_actions": 0.5886351277868407,
+      "median_minutes_from_burst_end": 134.95
+    },
+    "mapped_product": {
+      "prs": 653,
+      "share_all_prs": 0.0758596654275093,
+      "cluster_ci": [
+        0.06352342502961429,
+        0.0890242339966809
+      ],
+      "share_post_burst_actions": 0.177542142468733,
+      "median_minutes_from_burst_end": 41.43333333333334
+    },
+    "other_bot": {
+      "prs": 377,
+      "share_all_prs": 0.04379646840148699,
+      "cluster_ci": [
+        0.034784734705936564,
+        0.0539507812321143
+      ],
+      "share_post_burst_actions": 0.10250135943447526,
+      "median_minutes_from_burst_end": 45.7
+    },
+    "branch_movement_untyped": {
+      "prs": 483,
+      "share_all_prs": 0.05611059479553903,
+      "cluster_ci": [
+        0.04319762562232472,
+        0.07066300187500106
+      ],
+      "share_post_burst_actions": 0.13132137030995106,
+      "median_minutes_from_burst_end": 117.8
+    },
+    "no_action_within_7d": {
+      "prs": 4930,
+      "share_all_prs": 0.5727230483271375,
+      "cluster_ci": [
+        0.5324263128916895,
+        0.61128431853417
+      ],
+      "share_post_burst_actions": null,
+      "median_minutes_from_burst_end": null
+    }
+  },
+  "five_minute_mapped_product_change_from_zero": {
+    "prs": -381,
+    "percentage_points": -4.4261152416356895,
+    "relative_change": -0.2919540229885058,
+    "paired_repository_cluster_ci_percentage_points": [
+      -6.03122133908836,
+      -2.9928950965331365
+    ]
+  },
+  "five_minute_mapped_retention": {
+    "zero_minute_mapped_product_prs": 1305,
+    "mapped_product_state_retained_prs": 758,
+    "mapped_product_state_reclassified_prs": 547,
+    "retention_share": 0.5808429118773947,
+    "reclassified_share": 0.4191570881226053,
+    "cluster_ci": [
+      0.5255758639601013,
+      0.6396933885587214
+    ]
+  },
+  "five_minute_user_to_mapped_ratio": 2.733766233766234,
+  "five_minute_ordering_robustness": [
+    {
+      "burst_threshold_minutes": 5,
+      "exclusion_unit": "product_pair",
+      "exclusions": 25,
+      "minimum_user_minus_mapped_percentage_points": 16.547020818377604,
+      "maximum_user_minus_mapped_percentage_points": 19.86125385405961,
+      "user_exceeds_mapped_in_every_exclusion": true,
+      "no_action_is_largest_in_every_exclusion": true
+    },
+    {
+      "burst_threshold_minutes": 5,
+      "exclusion_unit": "repository",
+      "exclusions": 1416,
+      "minimum_user_minus_mapped_percentage_points": 16.873804971319313,
+      "maximum_user_minus_mapped_percentage_points": 19.132713843221346,
+      "user_exceeds_mapped_in_every_exclusion": true,
+      "no_action_is_largest_in_every_exclusion": true
+    }
+  ],
+  "data_quality": {
+    "surplus_exact_duplicates": 9,
+    "duplicate_prs": 2,
+    "failed_checks": 0,
+    "warning_checks": 1
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": "feedback-routing-v1",
+  "rows": 8608,
+  "unique_prs": 8608,
+  "unique_repositories": 1416,
+  "raw_text_exported": false,
+  "identity_policy": "exact aliases only",
+  "alias_count": 8,
+  "followup": "complete seven-day observation; outcomes measured in first 48 hours",
+  "model_validation": "five-fold repository-grouped cross-validation",
+  "claim_scope": "predictive association, not causal effect"
+}

@@ -1,0 +1,51 @@
+{
+  "dataset_revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+  "grain": "one first cross-product inline trigger per PR, open at 48h, fixed 30d horizon",
+  "cohort": {
+    "source_landmark_rows": 1733,
+    "inline_trigger_landmark_rows": 1067,
+    "unique_prs": 1067,
+    "repositories": 469,
+    "ordered_product_pairs": 21,
+    "outcome_positive_prs": 423,
+    "all_triggers_inline_review_comments": true,
+    "all_triggers_cross_product": true,
+    "one_row_per_pr": true,
+    "all_landmarks_exactly_trigger_plus_48h": true,
+    "all_prs_open_at_48h_landmark": true,
+    "all_positive_outcomes_after_48h": true,
+    "all_positive_outcomes_by_30d": true,
+    "all_triggers_have_30d_observation_horizon": true
+  },
+  "exposure": {
+    "direct_reply_events_within_48h": 128,
+    "prs_with_direct_reply_within_48h": 109,
+    "all_direct_replies_resolve_to_raw_inline_rows": true,
+    "all_direct_reply_parent_ids_equal_trigger_event_id": true,
+    "all_direct_reply_timestamps_match_raw_table": true,
+    "all_direct_replies_strictly_after_trigger": true,
+    "all_direct_replies_at_or_before_48h_landmark": true,
+    "exposure_thresholds_are_nested": true,
+    "exposed_prs_by_threshold": {
+      "1": 62,
+      "6": 86,
+      "24": 104,
+      "48": 109
+    }
+  },
+  "pretrigger_controls": {
+    "raw_interaction_rows_with_invalid_or_pre_creation_time": 0,
+    "pretrigger_interaction_rows_used": 3323,
+    "pretrigger_force_push_rows_used": 230,
+    "all_pretrigger_interaction_times_strictly_before_trigger": true,
+    "all_pretrigger_force_push_times_strictly_before_trigger": true,
+    "trigger_text_used_as_control": false,
+    "posttrigger_route_used_in_model_A": false,
+    "outcome_used_to_define_exposure_or_controls": false
+  },
+  "ownership_route_model_B_only": true,
+  "outcome_not_observed_until_after_all_exposure_thresholds": true,
+  "semantic_labels_used": false,
+  "semantic_resolution_claim_allowed": false,
+  "all_assertions_passed": true
+}

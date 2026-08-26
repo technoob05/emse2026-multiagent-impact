@@ -1,0 +1,20 @@
+{
+  "schema_version": "addressed-edge-specificity-v1",
+  "grain": "one first cross-product inline trigger per PR, restricted to PRs still open at trigger + 48h and observed through trigger + 30d",
+  "primary_specificity_population": "PRs with an exact-parent inline reply or a later submitted review/PR comment by the same threshold",
+  "primary_exposure": "raw inline in_reply_to_id equals the exact trigger_event_id",
+  "primary_control": "later submitted review or PR comment is visible, but no exact-parent reply is visible by the threshold",
+  "outcome": "merge strictly after trigger + 48h and no later than trigger + 30d",
+  "event_groups": {
+    "exact_edge": "at least one exact-parent inline reply; exact edge takes precedence",
+    "nonexact_discussion_only": "later submitted review or PR comment, no exact edge",
+    "movement_only": "force push but no exact edge, later review, or PR comment",
+    "no_visible_activity": "none of the measured response channels by the threshold"
+  },
+  "construct_limits": [
+    "A raw parent edge is structural and does not label meaning, acceptance, or resolution.",
+    "A later review or PR comment is public discussion but is not known to address the trigger.",
+    "A force push is visible code movement and is not treated as discussion.",
+    "All estimates are observational and may reflect unmeasured attention or task difficulty."
+  ]
+}

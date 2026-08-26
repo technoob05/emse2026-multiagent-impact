@@ -1,0 +1,17 @@
+{
+  "generated_at_utc": "2026-08-26T07:11:35.998872+00:00",
+  "source": "Does AI Code Review Lead to Code Changes? online appendix",
+  "source_record": "https://zenodo.org/records/19562450",
+  "source_license": "CC-BY-4.0",
+  "archive_sha256": "31485800a45b405af4c9e31dedd8d32b24ea06adc4bcd552ef5bc62b32387ccb",
+  "rows": 5652,
+  "sources": 5,
+  "positive_share": 0.6997523000707714,
+  "gate": {
+    "minimum_each_source_roc_auc": 0.7,
+    "minimum_each_source_balanced_accuracy": 0.6,
+    "passed": false
+  },
+  "aidev_scoring_performed": false,
+  "reason": "At least one held-out source failed; the proxy is rejected and AIDev text is not scored."
+}

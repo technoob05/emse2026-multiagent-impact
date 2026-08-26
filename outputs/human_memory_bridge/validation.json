@@ -1,0 +1,33 @@
+{
+  "cross_feedback_prs": 8608,
+  "distinct_pr_user_responders_48h": 4814,
+  "single_account_first_human_mediator_prs": 3603,
+  "simultaneous_first_human_account_prs_excluded": 0,
+  "single_account_first_user_decisive_reviewer_prs": 2020,
+  "simultaneous_first_decisive_account_prs_excluded": 0,
+  "history_rule": "same repository, different PR, submitted strictly before trigger",
+  "responder_history_checks": {
+    "candidate_same_pr_rows_excluded": 8133,
+    "candidate_future_or_equal_rows_excluded": 150114,
+    "valid_prior_history_rows": 221058,
+    "valid_history_same_pr_rows": 0,
+    "valid_history_future_or_equal_rows": 0
+  },
+  "author_baseline_history_checks": {
+    "candidate_same_pr_rows_excluded": 4168,
+    "candidate_future_or_equal_rows_excluded": 96844,
+    "valid_prior_history_rows": 84966,
+    "valid_history_same_pr_rows": 0,
+    "valid_history_future_or_equal_rows": 0
+  },
+  "decisive_reviewer_history_checks": {
+    "candidate_same_pr_rows_excluded": 3051,
+    "candidate_future_or_equal_rows_excluded": 72762,
+    "valid_prior_history_rows": 137277,
+    "valid_history_same_pr_rows": 0,
+    "valid_history_future_or_equal_rows": 0
+  },
+  "no_same_pr_history_in_valid_matches": true,
+  "no_future_or_equal_history_in_valid_matches": true,
+  "interpretation": "observable account history; descriptive and non-causal"
+}

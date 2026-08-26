@@ -1,0 +1,9 @@
+ownership_route_48h,account_role,prior_different_pr_reviewer,prs,repositories,later_merge_rate_descriptive
+automation_then_human,author_account,False,26,21,0.38461538461538464
+automation_then_human,author_account,True,39,28,0.6153846153846154
+automation_then_human,other_user,False,34,29,0.5294117647058824
+automation_then_human,other_user,True,63,41,0.5873015873015873
+human_first,author_account,False,69,62,0.2608695652173913
+human_first,author_account,True,118,63,0.6694915254237288
+human_first,other_user,False,123,103,0.43089430894308944
+human_first,other_user,True,157,90,0.535031847133758

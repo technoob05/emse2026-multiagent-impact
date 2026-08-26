@@ -1,0 +1,194 @@
+{
+  "schema_version": "addressed-edge-landmark-v1",
+  "grain": "one first cross-product inline-review trigger per PR that remains open at trigger + 48h and has a complete trigger + 30d outcome horizon",
+  "exposure_construct": "observed exact-parent inline reply edge; no semantic-resolution claim",
+  "outcome_construct": "later public merge timing; no correctness or causal claim",
+  "columns": [
+    {
+      "column": "pr_id",
+      "dtype": "Int64",
+      "definition": "PR identifier; analysis grain is one PR's first cross-product inline trigger.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "repo_id",
+      "dtype": "Int64",
+      "definition": "Repository cluster and fixed-effect identifier.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "trigger_dt",
+      "dtype": "Datetime(time_unit='us', time_zone='UTC')",
+      "definition": "Timestamp of the first recognized cross-product feedback event on the PR.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "trigger_event_id",
+      "dtype": "Int64",
+      "definition": "Raw inline-comment id of the exact trigger.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "trigger_review_id",
+      "dtype": "Int64",
+      "definition": "Review-batch id containing the trigger.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "author_agent",
+      "dtype": "String",
+      "definition": "Mapped product attributed as PR author.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "trigger_reviewer_agent",
+      "dtype": "String",
+      "definition": "Exactly mapped product that authored the trigger.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "ordered_product_pair",
+      "dtype": "String",
+      "definition": "Directed author product -> reviewer product.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "trigger_month",
+      "dtype": "String",
+      "definition": "Internal timing or audit field.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "outcome_landmark_dt",
+      "dtype": "Datetime(time_unit='us', time_zone='UTC')",
+      "definition": "Trigger timestamp plus 48 hours; every PR is still open here.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "merged_from_48h_to_30d",
+      "dtype": "Boolean",
+      "definition": "Observed merge strictly after the landmark and no later than trigger + 30 days.",
+      "available_when": "outcome"
+    },
+    {
+      "column": "first_exact_reply_hours",
+      "dtype": "Float64",
+      "definition": "Hours to the earliest inline reply whose in_reply_to_id equals trigger_event_id.",
+      "available_when": "posttrigger_by_48h"
+    },
+    {
+      "column": "first_exact_reply_dt",
+      "dtype": "Datetime(time_unit='us', time_zone='UTC')",
+      "definition": "Timestamp of that earliest exact-parent reply.",
+      "available_when": "posttrigger_by_48h"
+    },
+    {
+      "column": "exact_reply_events_48h",
+      "dtype": "UInt32",
+      "definition": "Number of exact-parent inline replies by the 48-hour landmark.",
+      "available_when": "posttrigger_by_48h"
+    },
+    {
+      "column": "exact_parent_reply_by_1h",
+      "dtype": "Boolean",
+      "definition": "True if any inline reply with in_reply_to_id exactly equal to trigger_event_id occurs within 1 hours; structural edge only.",
+      "available_when": "posttrigger_by_48h"
+    },
+    {
+      "column": "exact_parent_reply_by_6h",
+      "dtype": "Boolean",
+      "definition": "True if any inline reply with in_reply_to_id exactly equal to trigger_event_id occurs within 6 hours; structural edge only.",
+      "available_when": "posttrigger_by_48h"
+    },
+    {
+      "column": "exact_parent_reply_by_24h",
+      "dtype": "Boolean",
+      "definition": "True if any inline reply with in_reply_to_id exactly equal to trigger_event_id occurs within 24 hours; structural edge only.",
+      "available_when": "posttrigger_by_48h"
+    },
+    {
+      "column": "exact_parent_reply_by_48h",
+      "dtype": "Boolean",
+      "definition": "True if any inline reply with in_reply_to_id exactly equal to trigger_event_id occurs within 48 hours; structural edge only.",
+      "available_when": "posttrigger_by_48h"
+    },
+    {
+      "column": "ownership_route_48h",
+      "dtype": "String",
+      "definition": "Post-trigger public route observed by 48 hours; used only in secondary Model B.",
+      "available_when": "posttrigger_by_48h"
+    },
+    {
+      "column": "pre_events",
+      "dtype": "UInt32",
+      "definition": "Count of valid submitted-review, PR-comment, and inline-comment rows strictly before trigger.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "pre_user_events",
+      "dtype": "UInt32",
+      "definition": "Pretrigger interaction rows whose GitHub user_type is User.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "pre_bot_events",
+      "dtype": "UInt32",
+      "definition": "Pretrigger interaction rows whose GitHub user_type is Bot.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "pre_decisive_reviews",
+      "dtype": "UInt32",
+      "definition": "Pretrigger submitted reviews with APPROVED or CHANGES_REQUESTED state.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "pre_force_pushes",
+      "dtype": "UInt32",
+      "definition": "Timestamped force-push timeline rows strictly before trigger.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "log1p_trigger_age_hours",
+      "dtype": "Float64",
+      "definition": "log(1 + hours from PR creation to trigger).",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "log1p_pre_events",
+      "dtype": "Float64",
+      "definition": "log(1 + pre_events).",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "pr_created_dt",
+      "dtype": "Datetime(time_unit='us', time_zone='UTC')",
+      "definition": "Internal timing or audit field.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "last_pre_event_dt",
+      "dtype": "Datetime(time_unit='us', time_zone='UTC')",
+      "definition": "Internal timing or audit field.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "last_pre_force_push_dt",
+      "dtype": "Datetime(time_unit='us', time_zone='UTC')",
+      "definition": "Internal timing or audit field.",
+      "available_when": "at_or_before_trigger"
+    },
+    {
+      "column": "merged_dt",
+      "dtype": "Datetime(time_unit='us', time_zone='UTC')",
+      "definition": "Internal timing or audit field.",
+      "available_when": "outcome"
+    },
+    {
+      "column": "closed_dt",
+      "dtype": "Datetime(time_unit='us', time_zone='UTC')",
+      "definition": "Internal timing or audit field.",
+      "available_when": "at_or_before_trigger"
+    }
+  ]
+}

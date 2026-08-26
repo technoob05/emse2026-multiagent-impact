@@ -1,0 +1,2 @@
+treated_repo,control_repo,onset_month,first_agent,match_distance,treated_log_pr_mean,treated_log_pr_slope,treated_merge_rate,control_log_pr_mean,control_log_pr_slope,control_merge_rate
+https://api.github.com/repos/doobidoo/mcp-memory-service,https://api.github.com/repos/Zipstack/unstract,2025-11-01 00:00:00+00:00,Claude_Code,0.5457674946871431,2.340361321429713,0.5249110622493385,0.8125,2.3702320409929425,0.8047189562170497,0.8409090909090909

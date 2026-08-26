@@ -1,0 +1,12 @@
+check,value
+pairs_total,546
+repositories,149
+median_trigger_gap_hours,55.75694444444444
+largest_repository_pair_share,0.2087912087912088
+exact_author_user_match,True
+exact_repo_match,True
+exact_author_product_match,True
+exact_trigger_source_match,True
+exact_trigger_month_match,True
+unique_cross_prs,True
+unique_same_prs,True

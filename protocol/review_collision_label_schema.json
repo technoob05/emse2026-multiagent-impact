@@ -1,0 +1,66 @@
+{
+  "schema_version": "review-collision-audit-v1",
+  "frozen_before_semantic_coding": true,
+  "unit": "one canonical pair of top-level inline comments from two different mapped reviewer products at the exact same original commit, path, and original diff position",
+  "selection_rule": "Within each strict locus, order comments by valid creation timestamp and event id. Comment A is the earliest mapped-product comment; Comment B is the earliest comment at that locus from a different mapped product. Retain one pair per locus.",
+  "labels": {
+    "comment_A_substance": {
+      "allowed": [
+        "substantive_review_concern",
+        "boilerplate_or_status",
+        "unclear"
+      ],
+      "definition": "Whether Comment A makes a code-review claim or request that can be compared with Comment B."
+    },
+    "comment_B_substance": {
+      "allowed": [
+        "substantive_review_concern",
+        "boilerplate_or_status",
+        "unclear"
+      ],
+      "definition": "Whether Comment B makes a code-review claim or request that can be compared with Comment A."
+    },
+    "pair_relation": {
+      "allowed": [
+        "redundant_or_agreeing",
+        "complementary",
+        "contradictory",
+        "unrelated_or_unclear"
+      ],
+      "definitions": {
+        "redundant_or_agreeing": "The comments identify the same issue, request substantially the same change, or explicitly agree.",
+        "complementary": "The comments address the same code locus but add materially different, compatible concerns or remedies.",
+        "contradictory": "Following one comment would conflict with, undo, or directly reject the other comment's diagnosis or requested change.",
+        "unrelated_or_unclear": "The visible text is insufficient, boilerplate, or concerns different topics whose relationship cannot be established."
+      }
+    },
+    "confidence": {
+      "allowed": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "definition": "Coder confidence based only on the two comments and visible diff context."
+    },
+    "evidence_note": {
+      "allowed": "free text",
+      "definition": "A short reason for the assigned relation; do not infer hidden intent or code correctness."
+    }
+  },
+  "coding_rules": [
+    "Code only the visible comment text and supplied diff context.",
+    "Do not infer that either reviewer is correct or that the code was changed.",
+    "Use unrelated_or_unclear when either comment cannot be interpreted well enough for a pairwise relation.",
+    "Product, repository, pull-request outcome, and raw identifiers remain hidden from coders.",
+    "Coders work independently before adjudication."
+  ],
+  "adjudication": {
+    "independent_coders": 2,
+    "primary_reliability_metric": "Cohen kappa for pair_relation",
+    "minimum_kappa": 0.70,
+    "maximum_boilerplate_or_unclear_share": 0.30,
+    "minimum_valid_pairs_for_prevalence": 100,
+    "minimum_adjudicated_cases_per_contrast_category": 30
+  },
+  "language_policy": "Labels describe visible semantic relations between public comments. They do not establish correctness, causal impact, repair, resolution, or private coordination."
+}

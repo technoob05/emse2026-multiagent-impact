@@ -1,0 +1,4 @@
+population,prs,repositories,product_pairs,largest_repository_share,largest_product_pair_share
+mapped_first_anchor,924,325,23,0.024891774891774892,0.16233766233766234
+dynamic_k1,1742,484,24,0.04764638346727899,0.2927669345579793
+dynamic_k4,205,105,16,0.05365853658536585,0.23414634146341465

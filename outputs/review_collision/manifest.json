@@ -1,0 +1,27 @@
+{
+  "run_id": "review-collision-audit-20260826",
+  "created_utc": "2026-08-26T08:59:31.334068+00:00",
+  "dataset_revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+  "schema_version": "review-collision-audit-v1",
+  "code_revision": "unavailable",
+  "source_sha256": {
+    "pull_request.parquet": "f31e6dc4a907db48ee8647626883ce188be5cb0da2acd0ce665b5f0a7d5d6f8f",
+    "pr_reviews.parquet": "89104dd24c370464d0ff1c69d363253efd15ec0ee97d985e0da415018b4102c5",
+    "pr_review_comments.parquet": "aeef219f1362cbb8b53278a9b75d6890faf16929cf9686ecf74287f4da4d7e76"
+  },
+  "schema_sha256": "bb900619e5134ccbf0711cb33485f482f4ace85878854cf11038935711197cf4",
+  "script_sha256": "de2a5af74997cf0f8ecdeb94831a81e13c340f95e17a2119e858e21b346c0db1",
+  "artifact_sha256": {
+    "audit_packets/coder_A_blinded.csv": "763bb5593a86f74a71039d23ff09df3bd33ffbbf751a2c67342cae5efc906014",
+    "audit_packets/coder_B_blinded.csv": "951ab6d7cb7c296a32a7ddd1690fe50b4ad15bfb58a306fe6bdb02e73d6cc637",
+    "private/private_record_key.csv": "2378f8fe3dbc7513bf62f4724623bf4cafa35e2406326debdf0ad3c1d6c6d4b9",
+    "private/strict_collision_population.parquet": "29a4ad0194bbf9261b9e30425da6dc99e94946c70a194d1a4354b5f1c6f0e59c",
+    "repo_concentration.csv": "8825f9fec972161e78cd467d750ef07e9824b476518202d3c309b88014a132f2",
+    "product_pair_concentration.csv": "3ec85304ec054ae8a5f5e9c2c4cf7a85d3aa40ca1df9ef7b95854f216f8f8b87",
+    "quality_and_sampling_summary.json": "f9aebad89aa82079910c6d300ea0bae4730a6eaa667526149aabed980f21d93f"
+  },
+  "raw_identifiers_in_blinded_packets": false,
+  "product_and_outcome_blinding": true,
+  "private_key_separate": true,
+  "external_upload": false
+}

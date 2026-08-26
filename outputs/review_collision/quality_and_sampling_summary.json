@@ -1,0 +1,106 @@
+{
+  "dataset_revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+  "selection_contract": {
+    "top_level_inline_only": true,
+    "exact_account_alias_mapping_imported_from": "src/multiagent_impact/cross_agent_review.py",
+    "minimum_mapped_products_at_locus": 2,
+    "exact_locus_key": [
+      "pr_id",
+      "original_commit_id",
+      "path",
+      "original_position"
+    ],
+    "valid_time_rule": "parseable comment and PR-creation timestamps, with comment at/after PR creation; post-close public comments are retained and quantified as a sensitivity subset",
+    "canonical_pair_rule": "earliest mapped-product comment plus earliest different-product comment, ordered by timestamp then event id",
+    "one_pair_per_locus": true
+  },
+  "support": {
+    "source_inline_comments": 289780,
+    "top_level_inline_comments": 200873,
+    "top_level_with_unambiguous_review_to_pr_key": 200873,
+    "top_level_mapped_product_comments": 78406,
+    "mapped_comments_with_parseable_comment_and_pr_creation_timestamps": 78406,
+    "mapped_comments_with_complete_valid_locus_key": 78406,
+    "mapped_comments_at_or_after_pr_creation": 78406,
+    "mapped_comments_within_common_interaction_cutoff": 78388,
+    "mapped_comments_at_or_before_pr_close_when_known": 66224,
+    "strict_valid_mapped_comment_rows": 78406,
+    "strict_prs_with_two_or_more_mapped_products": 886,
+    "strict_same_snapshot_same_locus_groups": 167,
+    "comment_rows_in_strict_loci": 349,
+    "canonical_collision_loci": 167,
+    "pull_requests_with_collision_locus": 159,
+    "canonical_loci_with_both_comments_during_open_pr_state": 133,
+    "canonical_loci_with_at_least_one_post_close_comment": 34,
+    "audit_packet_rows_per_coder": 167,
+    "sampling_mode": "complete_strict_population",
+    "full_strict_population_covered": true,
+    "records_with_secret_redaction": 0,
+    "records_with_truncated_comment": 0,
+    "records_with_truncated_diff_context": 6
+  },
+  "concentration": {
+    "repositories": 98,
+    "product_pairs": 8,
+    "largest_repository_count": 9,
+    "largest_repository_share": 0.05389221556886228,
+    "largest_product_pair": "Copilot + OpenAI_Codex",
+    "largest_product_pair_count": 109,
+    "largest_product_pair_share": 0.6526946107784432,
+    "repository_hhi": 0.01717523037756822,
+    "product_pair_hhi": 0.4657391803219908
+  },
+  "timing": {
+    "minimum_gap_seconds": 0.0,
+    "median_gap_minutes": 1.3666666666666667,
+    "p25_gap_minutes": 0.5333333333333333,
+    "p75_gap_minutes": 3.3833333333333333,
+    "p90_gap_minutes": 5.8,
+    "share_within_1_minute": 0.40119760479041916,
+    "share_within_5_minutes": 0.8682634730538922,
+    "share_within_10_minutes": 0.9401197604790419,
+    "share_within_60_minutes": 0.9760479041916168
+  },
+  "falsification_gates": {
+    "minimum_100_valid_pairs": {
+      "status": "pass",
+      "observed": 167,
+      "threshold": 100
+    },
+    "minimum_100_pairs_in_open_pr_state_sensitivity": {
+      "status": "pass",
+      "observed": 133,
+      "threshold": 100
+    },
+    "largest_repository_supplies_at_most_half": {
+      "status": "pass",
+      "observed": 0.05389221556886228,
+      "threshold": 0.5
+    },
+    "largest_product_pair_supplies_at_most_half": {
+      "status": "fail",
+      "observed": 0.6526946107784432,
+      "threshold": 0.5
+    },
+    "complete_population_if_at_most_300": {
+      "status": "pass",
+      "population": 167,
+      "packet_rows": 167,
+      "threshold": 300
+    },
+    "cohen_kappa_at_least_0_70": {
+      "status": "pending_dual_coding",
+      "threshold": 0.7
+    },
+    "boilerplate_or_unclear_at_most_0_30": {
+      "status": "pending_dual_coding",
+      "threshold": 0.3
+    },
+    "at_least_30_cases_per_headline_semantic_category": {
+      "status": "pending_adjudication",
+      "threshold": 30
+    }
+  },
+  "semantic_labels_assigned": false,
+  "interpretation_limit": "Same-locus co-occurrence is not semantic duplication, contradiction, correctness, repair, or causal impact; those claims require the frozen dual-coder audit."
+}

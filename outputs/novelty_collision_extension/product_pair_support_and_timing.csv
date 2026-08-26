@@ -1,0 +1,9 @@
+product_pair,loci,repositories,median_gap_seconds,share_within_5_minutes,open_state_loci,exact_normalized_body_duplicates,locus_share
+Copilot + OpenAI_Codex,109,62,84.0,0.8899082568807339,85,0,0.6526946107784432
+Copilot + Cursor,26,16,58.0,0.8461538461538461,19,0,0.15568862275449102
+Cursor + OpenAI_Codex,19,15,77.0,0.7894736842105263,17,0,0.11377245508982035
+Devin + OpenAI_Codex,8,3,185.0,0.75,8,0,0.04790419161676647
+Copilot + Devin,2,2,97.0,1.0,2,0,0.011976047904191617
+Claude_Code + Cursor,1,1,95.0,1.0,1,0,0.005988023952095809
+Claude_Code + OpenAI_Codex,1,1,3.0,1.0,1,0,0.005988023952095809
+Cursor + Devin,1,1,81.0,1.0,0,0,0.005988023952095809

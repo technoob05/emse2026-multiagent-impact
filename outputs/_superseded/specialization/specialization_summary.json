@@ -1,0 +1,37 @@
+{
+  "eligible_repositories": 41,
+  "labelled_pre_prs": 1054,
+  "labelled_post_prs": 2232,
+  "mean_rarity_difference": 0.04998244089694555,
+  "rarity_difference_ci95": [
+    -0.04580813286722096,
+    0.14216554625320088
+  ],
+  "median_rarity_difference": 0.03741776315789469,
+  "share_repositories_positive_rarity": 0.6341463414634146,
+  "wilcoxon_p": 0.11095958557284565,
+  "mean_breadth_change": 0.8536585365853658,
+  "breadth_change_ci95": [
+    0.21951219512195122,
+    1.4666048710669866
+  ],
+  "share_repositories_with_new_task_type": 0.6829268292682927,
+  "share_repositories_with_entrant_expansion": 0.5365853658536586,
+  "share_repositories_with_integrated_entrant_expansion": 0.3902439024390244,
+  "entrant_introduced_task_types": 34,
+  "entrant_integrated_task_types": 23,
+  "entrant_expansion_integration_rate": 0.6764705882352942,
+  "mean_role_distance_jsd": 0.4582565502964302,
+  "mean_rarefied_breadth_change": 0.2577560975609756,
+  "rarefied_breadth_change_ci95": [
+    -0.04779008059574827,
+    0.6034950653850977
+  ],
+  "third_agent_within_window_share": 0.4146341463414634,
+  "paired_sign_flip_test": {
+    "observed": 0.04998244089694555,
+    "null_mean": -0.0011090813936053673,
+    "null_sd": 0.04831925481670361,
+    "p_two_sided": 0.3127374525094981
+  }
+}

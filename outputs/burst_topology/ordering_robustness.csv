@@ -1,0 +1,11 @@
+burst_threshold_minutes,exclusion_unit,exclusions,minimum_user_minus_mapped_percentage_points,maximum_user_minus_mapped_percentage_points,user_exceeds_mapped_in_every_exclusion,no_action_is_largest_in_every_exclusion
+0,product_pair,25,10.247666905958363,14.18293936279548,True,True
+1,product_pair,25,11.629576453697055,16.00719424460432,True,True
+5,product_pair,25,16.547020818377604,19.86125385405961,True,True
+10,product_pair,25,16.95979899497488,19.23175745118191,True,True
+30,product_pair,25,16.483247737833214,18.435251798561154,True,True
+0,repository,1416,10.456500956022946,13.223731236597573,True,True
+1,repository,1416,12.26099426386233,15.070288301167498,True,True
+5,repository,1416,16.873804971319313,19.132713843221346,True,True
+10,repository,1416,16.83795411089866,18.822968787228973,True,True
+30,repository,1416,16.276290630975144,17.941386704789135,True,True

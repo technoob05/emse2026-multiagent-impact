@@ -1,0 +1,61 @@
+{
+  "dataset_revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+  "overview": {
+    "rows": 7685281,
+    "unique_ids": 7685281,
+    "repositories": 961168,
+    "agents": 6,
+    "first_created": "2024-12-24T00:23:09+00:00",
+    "last_created": "2026-03-31T23:59:59+00:00",
+    "null_repo_url": 0,
+    "null_agent": 0,
+    "null_created": 0,
+    "open_or_null_closed": 735168,
+    "not_merged": 1468489,
+    "closed_before_created": 47,
+    "merged_before_created": 45,
+    "merged_without_closed": 0,
+    "duplicate_ids": 0
+  },
+  "repository_summary": {
+    "repo_rows": 961168,
+    "multiagent_repositories": 44822
+  },
+  "repository_join": {
+    "matched": 957185,
+    "total": 961168,
+    "unmatched": 3983
+  },
+  "agent_counts": [
+    {
+      "agent": "OpenAI_Codex",
+      "prs": 3844602,
+      "repos": 355920
+    },
+    {
+      "agent": "Copilot",
+      "prs": 1581924,
+      "repos": 347971
+    },
+    {
+      "agent": "Claude_Code",
+      "prs": 1567100,
+      "repos": 174038
+    },
+    {
+      "agent": "Cursor",
+      "prs": 317453,
+      "repos": 81915
+    },
+    {
+      "agent": "Google_Jules",
+      "prs": 296411,
+      "repos": 41125
+    },
+    {
+      "agent": "Devin",
+      "prs": 77791,
+      "repos": 10321
+    }
+  ]
+}

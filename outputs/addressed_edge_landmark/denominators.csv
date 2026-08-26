@@ -1,0 +1,9 @@
+threshold_hours,exposure_group,prs,repositories,later_merges,later_merge_rate,grain
+1,no_exact_parent_reply_by_threshold,1005,452,387,0.3850746268656716,"one first cross-product inline trigger per PR, open at 48h, with fixed 30d horizon"
+1,exact_parent_reply_by_threshold,62,49,36,0.5806451612903226,"one first cross-product inline trigger per PR, open at 48h, with fixed 30d horizon"
+6,no_exact_parent_reply_by_threshold,981,443,374,0.381243628950051,"one first cross-product inline trigger per PR, open at 48h, with fixed 30d horizon"
+6,exact_parent_reply_by_threshold,86,63,49,0.5697674418604651,"one first cross-product inline trigger per PR, open at 48h, with fixed 30d horizon"
+24,no_exact_parent_reply_by_threshold,963,440,365,0.3790238836967809,"one first cross-product inline trigger per PR, open at 48h, with fixed 30d horizon"
+24,exact_parent_reply_by_threshold,104,75,58,0.5576923076923077,"one first cross-product inline trigger per PR, open at 48h, with fixed 30d horizon"
+48,no_exact_parent_reply_by_threshold,958,439,363,0.37891440501043844,"one first cross-product inline trigger per PR, open at 48h, with fixed 30d horizon"
+48,exact_parent_reply_by_threshold,109,76,60,0.5504587155963303,"one first cross-product inline trigger per PR, open at 48h, with fixed 30d horizon"

@@ -1,0 +1,75 @@
+{
+  "whole_population": {
+    "prs": 3942,
+    "prs_with_any_exact_edge": 521,
+    "prs_merged_within_horizon": 2949,
+    "person_period_rows": 13719,
+    "exposed_person_period_rows": 940,
+    "events": 2949,
+    "edges_observed_after_hour_48": 18,
+    "exposure_is_time_varying": true
+  },
+  "hazard_primary": {
+    "odds_ratio": 1.7353087271731105,
+    "ci_low": 1.3803962328953605,
+    "ci_high": 2.1814724691670677,
+    "p_value": 2.343404358931242e-06
+  },
+  "interaction": {
+    "landmark_prs": 1067,
+    "exposed_prs": 109,
+    "class_counts": {
+      "no_edge": 958,
+      "edge_by_known_reviewer": 64,
+      "edge_by_newcomer": 32,
+      "edge_by_automation": 13
+    },
+    "history_rule": "same repository, different PR, user-account submitted review strictly before the trigger"
+  },
+  "moderation": {
+    "comparison": "edge_by_known_reviewer minus edge_by_newcomer",
+    "estimate": 0.40726512772820267,
+    "standard_error": 0.09372965951571133,
+    "ci_low": 0.2235583707942065,
+    "ci_high": 0.5909718846621989,
+    "p_value": 1.3920963049093162e-05,
+    "n_prs": 1067,
+    "repositories": 469,
+    "interpretation": "difference between two adjusted contrasts, both against the no-edge reference; a null result means the trace does not show that repository familiarity changes what the edge marks"
+  },
+  "moderation_robustness": [
+    {
+      "check": "Primary",
+      "detail": "pre-trigger adjusted",
+      "estimate": 0.40726512772820267,
+      "ci_low": 0.2235583707942065,
+      "ci_high": 0.5909718846621989,
+      "n_prs": 1067
+    },
+    {
+      "check": "Repository fixed effects",
+      "detail": "within-repository comparison only",
+      "estimate": 0.08740016429231144,
+      "ci_low": -0.16756490519680112,
+      "ci_high": 0.342365233781424,
+      "n_prs": 1067
+    },
+    {
+      "check": "Leave one ordered product pair out",
+      "detail": "21 refits",
+      "estimate": 0.4073594237148248,
+      "ci_low": 0.37149736066771155,
+      "ci_high": 0.4276746000418775,
+      "n_prs": 1067
+    },
+    {
+      "check": "Leave one exposed repository out",
+      "detail": "76 refits",
+      "estimate": 0.40412241745388655,
+      "ci_low": 0.3807530903174748,
+      "ci_high": 0.4325666206139793,
+      "n_prs": 1067
+    }
+  ],
+  "scope": "observational extensions to RQ3; no causal claim"
+}

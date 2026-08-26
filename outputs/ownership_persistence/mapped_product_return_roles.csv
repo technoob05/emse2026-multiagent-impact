@@ -1,0 +1,7 @@
+first_owner_state,next_mapped_product_role,prs,repositories,share_within_mapped_next
+mapped_product,authoring_product,71,33,0.20699708454810495
+mapped_product,other_mapped_product,16,13,0.04664723032069971
+mapped_product,triggering_reviewer_product,256,116,0.7463556851311953
+user_account,authoring_product,204,103,0.43312101910828027
+user_account,other_mapped_product,19,11,0.040339702760084924
+user_account,triggering_reviewer_product,248,126,0.5265392781316348

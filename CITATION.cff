@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+title: >-
+  Participation Is Not Collaboration: Tracing Public Ownership After
+  Cross-Product Agent Review
+message: >-
+  If you use this artifact, please cite the accompanying paper. Author
+  affiliations and the archival DOI are pending and will be filled in at
+  submission.
+type: software
+authors:
+  - given-names: Dao Sy Duy
+    family-names: Minh
+  - given-names: Huynh Trung
+    family-names: Kiet
+  - given-names: Tran Chi
+    family-names: Nguyen
+  - given-names: Pham Phu
+    family-names: Hoa
+  - given-names: Nguyen Lam Phu
+    family-names: Quy
+abstract: >-
+  Reproducible analysis artifact for a study of what happens after one coding
+  agent reviews a pull request written by a different coding agent. The
+  repository pins the AIDev-7.6M release, reconstructs the public event path
+  from cross-product review to an exact addressed edge, a next visible owner,
+  and a later merge state, and reports every robustness check and rejected
+  claim.
+keywords:
+  - mining software repositories
+  - coding agents
+  - agentic software engineering
+  - code review
+  - human-agent collaboration
+  - pull requests
+license: MIT
+repository-code: 'https://github.com/technoob05/emse2026-multiagent-impact'
+references:
+  - type: data
+    title: 'AIDev: Studying AI Coding Agents on GitHub'
+    authors:
+      - family-names: Li
+        given-names: Hao
+    notes: >-
+      Source data. Pinned at revision
+      37bbe1533e26cc1e1374917dba1186d1c8a4dc81. Not redistributed here.

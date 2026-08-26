@@ -1,0 +1,30 @@
+{
+  "exposure_events": 128,
+  "exposed_prs": 109,
+  "exposure_events_written_by_user_accounts": 105,
+  "exposure_events_written_by_the_triggering_product": 13,
+  "exposure_events_written_by_a_different_mapped_product": 3,
+  "landmark_selection": {
+    "inline_cross_product_triggers": 3942,
+    "closed_by_hour_48": 2875,
+    "merged_by_hour_48": 2528,
+    "still_open_at_hour_48": 1067,
+    "landmark_cohort_prs": 1067,
+    "landmark_cohort_share_of_inline_triggers": 0.2706747843734145,
+    "interpretation": "the landmark cohort is the slower-resolving remainder of the cross-product inline-trigger population; most such PRs close before the outcome window opens"
+  },
+  "conditional_randomisation": {
+    "threshold_hours": 48,
+    "scope": "repositories with within-repository exposure variation, with repository fixed effects so the coefficient uses within-repository variation only",
+    "repositories": 46,
+    "n_prs": 321,
+    "exposed_prs": 77,
+    "observed_estimate": 0.16360614995993655,
+    "permutations": 2000,
+    "permutation_mean": -0.0013667906388764228,
+    "permutation_sd": 0.06272168814558693,
+    "permutation_p_value_two_sided": 0.0069965017491254375,
+    "interpretation": "conditional randomisation test; the reference distribution is centred because every retained repository can actually be re-randomised"
+  },
+  "scope": "descriptive scope audit and exposure-definition sensitivity; no causal claim"
+}

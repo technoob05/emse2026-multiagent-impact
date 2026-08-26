@@ -1,0 +1,6 @@
+population,rows,prs,repositories,prior_reviewer_share,median_prior_review_prs_among_experienced
+first_user_mediators,3603,3603,834,0.7124618373577575,9.0
+all_distinct_48h_user_responders,4814,3603,834,0.7023265475695887,9.0
+all_cross_feedback_pr_author_accounts,8608,8608,1416,0.4038104089219331,4.0
+user_like_cross_feedback_pr_author_accounts,6695,6695,1215,0.519193427931292,4.0
+mapped_or_bot_cross_feedback_pr_author_accounts,1913,1913,361,0.0,

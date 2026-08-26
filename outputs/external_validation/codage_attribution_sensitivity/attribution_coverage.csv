@@ -1,0 +1,6 @@
+stage,prs,share_of_landmark
+AIDev addressed-edge landmark cohort,1067,1.0
+PR also appears in external A2A cross-product cohort,123,0.11527647610121837
+External source agrees on exact author-reviewer pair,119,0.11152764761012184
+Exact pair agreement conditional on overlapping PR,119,0.967479674796748
+Exact-edge exposed PRs in exact-pair overlap,9,0.07563025210084033

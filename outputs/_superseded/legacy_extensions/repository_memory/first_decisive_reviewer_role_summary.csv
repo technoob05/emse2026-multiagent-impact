@@ -1,0 +1,4 @@
+account_role,prs,repositories,prior_reviewer_share,median_prior_review_prs_among_experienced,median_prior_review_events_among_experienced,median_recency_days_among_experienced
+author_account,0,0,,,,
+other_user,2020,488,0.7821782178217822,11.0,16.0,1.4002025462962964
+all_first_decisive_reviewers,2020,488,0.7821782178217822,11.0,16.0,1.4002025462962964

@@ -1,0 +1,139 @@
+{
+  "ai_review_action_analysis": {
+    "addressed_means_exact_public_reply": false,
+    "analysis_row_ids_unique": 5652,
+    "analysis_rows": 5652,
+    "archive_bytes": 44349100,
+    "archive_files": 1086,
+    "archive_md5": "93cabf0873330f4d75d570d5bf5f31b0",
+    "archive_sha256": "31485800a45b405af4c9e31dedd8d32b24ea06adc4bcd552ef5bc62b32387ccb",
+    "archive_uncompressed_bytes": 269194546,
+    "canonical_url": "https://zenodo.org/records/19562450",
+    "construct_disposition": "semantic_code_change_addressing_only",
+    "doi": "10.5281/zenodo.19562450",
+    "embedded_license_files": [],
+    "exact_public_edge_supported": false,
+    "human_final_label_files": {
+      "(resolved)sampled_file_level_review.csv": 50,
+      "(resolved)sampled_human_review.csv": 50,
+      "(resolved)sampled_patch_level_review.csv": 50
+    },
+    "human_final_label_rows": 150,
+    "inline_review_comment_events": 4879,
+    "issue_comment_events": 367,
+    "issue_comment_fragment_rows": 773,
+    "parsed_analysis_rows": 5652,
+    "record_metadata_license": "CC-BY-4.0",
+    "released_stage1_member": "AIReviewActionAnalysis(Zenodo)/llm_analysis/output/reviews(llm_input)(consider_path)/Suggestion_openai-gpt-4.1_p=3.12(1)(f).csv",
+    "source": "AIReviewActionAnalysis",
+    "sources": {
+      "Human": 1166,
+      "aidar-freeed/ai-codereviewer": 169,
+      "anc95/ChatGPT-CodeReview": 2831,
+      "coderabbitai/ai-pr-reviewer": 713,
+      "mattzcarey/code-review-gpt": 773
+    },
+    "stage1_classification": {
+      "0": 756,
+      "1": 941,
+      "2": 3955
+    },
+    "stage1_formatted_rows": 5652,
+    "stage1_model_from_filename": "openai-gpt-4.1",
+    "stage2_declared_stage1_member": "AIReviewActionAnalysis(Zenodo)/llm_analysis/output/reviews(llm_input)(consider_path)/Suggestion_openai-o3-mini_p=3.12(1)(f).csv",
+    "stage2_declared_stage1_member_present": false,
+    "stage2_formatted_rows": 5652,
+    "stage2_model_from_filename": "openai-o3-mini",
+    "stage2_resolution": {
+      "0": 756,
+      "1": 941,
+      "2,-1": 76,
+      "2,0": 2906,
+      "2,1": 188,
+      "2,2": 785
+    },
+    "underlying_events_by_source": {
+      "Human": 1166,
+      "aidar-freeed/ai-codereviewer": 169,
+      "anc95/ChatGPT-CodeReview": 2831,
+      "coderabbitai/ai-pr-reviewer": 713,
+      "mattzcarey/code-review-gpt": 367
+    },
+    "underlying_public_comment_events": 5246,
+    "zenodo_expected_md5": "93cabf0873330f4d75d570d5bf5f31b0",
+    "zenodo_md5_matches": true,
+    "zip_crc_failure": null
+  },
+  "aidev_overlap": {
+    "aidev_issue_comment_ids": 373549,
+    "aidev_review_comment_ids": 289780,
+    "review_action_issue_id_overlap": 0,
+    "review_action_review_id_overlap": 0,
+    "swe_all_pr_url_overlap": 4,
+    "swe_prs": 350,
+    "swe_rich_pr_url_overlap": 3
+  },
+  "audit_date": "2026-08-26",
+  "raw_comment_text_exported": false,
+  "swe_prbench": {
+    "ai_comments_removed_sum": 27,
+    "annotation_bodies_below_10_whitespace_tokens": 386,
+    "annotation_comment_ids_global_unique": 28,
+    "annotation_comment_task_keys_unique": 1674,
+    "annotation_comment_timestamp_field_present": false,
+    "annotation_comments": 1674,
+    "annotation_comments_all_initiating": true,
+    "annotation_files": 350,
+    "annotation_reply_to_present": 0,
+    "annotation_substantive_comments_sum": 1674,
+    "annotation_tasks_match_pr_tasks": true,
+    "canonical_url": "https://huggingface.co/datasets/foundry-ai/swe-prbench",
+    "construct_disposition": "semantic_initiating_feedback_only",
+    "contexts": {
+      "config_A": {
+        "files": 350,
+        "pipeline_versions": {
+          "v0.4.1": 350
+        },
+        "unique_tasks": 350
+      },
+      "config_B": {
+        "files": 350,
+        "pipeline_versions": {
+          "v0.4.1": 350
+        },
+        "unique_tasks": 350
+      },
+      "config_C": {
+        "files": 350,
+        "pipeline_versions": {
+          "v0.4.1": 350
+        },
+        "unique_tasks": 350
+      }
+    },
+    "declared_license": "CC-BY-4.0",
+    "embedded_comment_own_id_field_present": false,
+    "embedded_comment_timestamp_field_present": false,
+    "embedded_comments_with_reply_to_id": 1367,
+    "embedded_human_comments": 3093,
+    "exact_public_edge_supported": false,
+    "local_tree": {
+      "algorithm": "sha256(path NUL sha256(file) LF)",
+      "bytes": 41381855,
+      "files": 1407,
+      "sha256": "0eb8e0acba0d54d8704ea80b477b510d923e563fae4fc94997d820a6718feac4"
+    },
+    "merged_at_present": 350,
+    "pr_num_substantive_comments_sum": 2240,
+    "prs_where_summary_differs_from_annotation": 265,
+    "prs_where_summary_matches_annotation": 85,
+    "prs_with_ai_comments_removed": 14,
+    "pull_requests": 350,
+    "repositories": 65,
+    "revision": "b87f5797aef3ed2c3153bb1304ea4d801d36ba6e",
+    "source": "SWE-PRBench",
+    "unique_pr_urls": 350,
+    "unique_task_ids": 350
+  }
+}

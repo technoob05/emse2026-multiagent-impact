@@ -1,0 +1,17 @@
+threshold_hours,population,group,prs,repositories,later_merges,later_merge_rate
+1,full_landmark_cohort,exact_edge,62,49,36,0.5806451612903226
+1,full_landmark_cohort,movement_only,22,16,14,0.6363636363636364
+1,full_landmark_cohort,no_visible_activity,613,330,220,0.35889070146818924
+1,full_landmark_cohort,nonexact_discussion_only,370,195,153,0.4135135135135135
+6,full_landmark_cohort,exact_edge,86,63,49,0.5697674418604651
+6,full_landmark_cohort,movement_only,25,20,15,0.6
+6,full_landmark_cohort,no_visible_activity,532,294,184,0.3458646616541353
+6,full_landmark_cohort,nonexact_discussion_only,424,220,175,0.41273584905660377
+24,full_landmark_cohort,exact_edge,104,75,58,0.5576923076923077
+24,full_landmark_cohort,movement_only,27,16,18,0.6666666666666666
+24,full_landmark_cohort,no_visible_activity,459,265,147,0.3202614379084967
+24,full_landmark_cohort,nonexact_discussion_only,477,250,200,0.4192872117400419
+48,full_landmark_cohort,exact_edge,109,76,60,0.5504587155963303
+48,full_landmark_cohort,movement_only,26,16,20,0.7692307692307693
+48,full_landmark_cohort,no_visible_activity,426,249,132,0.30985915492957744
+48,full_landmark_cohort,nonexact_discussion_only,506,261,211,0.41699604743083

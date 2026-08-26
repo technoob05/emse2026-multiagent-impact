@@ -1,0 +1,5 @@
+stage,prs,share_of_inline_triggers
+Cross-product inline triggers with a 30-day horizon,3942,1.0
+Closed at or before hour 48,2875,0.7293252156265855
+Merged at or before hour 48,2528,0.641298833079655
+Still open at hour 48,1067,0.2706747843734145

@@ -1,0 +1,2 @@
+comparison,estimate,standard_error,ci_low,ci_high,p_value,n_prs,repositories,interpretation
+edge_by_known_reviewer minus edge_by_newcomer,0.40726512772820267,0.09372965951571133,0.2235583707942065,0.5909718846621989,1.3920963049093162e-05,1067,469,"difference between two adjusted contrasts, both against the no-edge reference; a null result means the trace does not show that repository familiarity changes what the edge marks"

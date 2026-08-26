@@ -1,0 +1,12 @@
+cross_agent,source,state,prs,events
+true,submitted_review,COMMENTED,7188,11145
+true,inline_review_comment,,5278,19306
+true,pr_comment,,1809,3157
+true,submitted_review,APPROVED,11,23
+true,submitted_review,CHANGES_REQUESTED,2,2
+true,submitted_review,DISMISSED,1,4
+false,pr_comment,,55336,101984
+false,submitted_review,COMMENTED,31608,82530
+false,inline_review_comment,,25240,101075
+false,submitted_review,APPROVED,2,2
+false,submitted_review,DISMISSED,1,1

@@ -1,0 +1,8 @@
+transition_type,same_issue,n,repositories,merge_rate_30d
+brand_change_same_contributor,False,1,1,1.0
+contributor_change_stable_agent,False,12,10,0.3333333333333333
+contributor_change_stable_agent,True,1,1,0.0
+joint_reconfiguration,False,18,17,0.3888888888888889
+joint_reconfiguration,True,1,1,1.0
+persistence,False,238,89,0.453781512605042
+persistence,True,73,39,0.5342465753424658

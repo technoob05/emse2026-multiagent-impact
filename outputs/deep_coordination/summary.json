@@ -1,0 +1,123 @@
+{
+  "interpretation": "Temporal public-state transitions; no causal, semantic-resolution, or verified-manual-work claim.",
+  "mapped_first_prs": 924,
+  "mapped_first_exit_after_five_minute_washout": {
+    "user_account": {
+      "prs": 217,
+      "share": 0.23484848484848486,
+      "cluster_ci": [
+        0.19685018648984667,
+        0.2741625310173697
+      ]
+    },
+    "same_mapped_product": {
+      "prs": 284,
+      "share": 0.30735930735930733,
+      "cluster_ci": [
+        0.26576894178223154,
+        0.35011586146016965
+      ]
+    },
+    "different_mapped_product": {
+      "prs": 43,
+      "share": 0.046536796536796536,
+      "cluster_ci": [
+        0.03151242118784503,
+        0.06206109181942986
+      ]
+    },
+    "other_bot": {
+      "prs": 39,
+      "share": 0.04220779220779221,
+      "cluster_ci": [
+        0.026367833884915128,
+        0.060897593320235754
+      ]
+    },
+    "branch_movement_untyped": {
+      "prs": 36,
+      "share": 0.03896103896103896,
+      "cluster_ci": [
+        0.02441849109738372,
+        0.05411628617061253
+      ]
+    },
+    "no_later_state": {
+      "prs": 305,
+      "share": 0.3300865800865801,
+      "cluster_ci": [
+        0.29001047261009666,
+        0.37201501633713435
+      ]
+    }
+  },
+  "product_order_placebo_after_five_minute_washout": {
+    "eligible_prs": 495,
+    "observed_same_product_share": 0.8444444444444444,
+    "random_order_expected_share": 0.8357905914223057,
+    "difference_percentage_points": 0.8653853022138789,
+    "cluster_ci_percentage_points": [
+      -1.0828272622732598,
+      3.1451768849823702
+    ],
+    "leave_one_out_difference_ranges_percentage_points": [
+      {
+        "exclusion_unit": "product_pair",
+        "minimum": 0.10533417691453556,
+        "maximum": 1.2787367826348568
+      },
+      {
+        "exclusion_unit": "repository",
+        "minimum": 0.052702449080333086,
+        "maximum": 1.1274794391602387
+      }
+    ]
+  },
+  "dynamic_automation_primary_gap": {
+    "episode_gap_minutes": 5,
+    "k1_at_risk_prs": 1742,
+    "k4_at_risk_prs": 205,
+    "k1_user_share": 0.25774971297359356,
+    "k4_user_share": 0.0975609756097561,
+    "k1_automation_share": 0.3587830080367394,
+    "k4_automation_share": 0.6292682926829268,
+    "k4_permuted_user_mean": 0.1016669747067248,
+    "k4_permuted_user_interval": [
+      0.06415579958819492,
+      0.14
+    ]
+  },
+  "concentration": [
+    {
+      "population": "mapped_first_anchor",
+      "prs": 924,
+      "repositories": 325,
+      "product_pairs": 23,
+      "largest_repository_share": 0.024891774891774892,
+      "largest_product_pair_share": 0.16233766233766234
+    },
+    {
+      "population": "dynamic_k1",
+      "prs": 1742,
+      "repositories": 484,
+      "product_pairs": 24,
+      "largest_repository_share": 0.04764638346727899,
+      "largest_product_pair_share": 0.2927669345579793
+    },
+    {
+      "population": "dynamic_k4",
+      "prs": 205,
+      "repositories": 105,
+      "product_pairs": 16,
+      "largest_repository_share": 0.05365853658536585,
+      "largest_product_pair_share": 0.23414634146341465
+    }
+  ],
+  "quality": {
+    "checks": 14,
+    "failed": 0,
+    "exact_duplicate_surplus_removed": 9
+  },
+  "bootstrap_draws": 5000,
+  "permutation_draws": 500
+}

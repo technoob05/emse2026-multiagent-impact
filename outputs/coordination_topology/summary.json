@@ -1,0 +1,44 @@
+{
+  "interpretation": "observational public traces; no causal or semantic-resolution claim",
+  "funnel": [
+    {
+      "stage": "Complete cross-product trigger cohort",
+      "prs": 8608,
+      "share_of_trigger_cohort": 1.0
+    },
+    {
+      "stage": "Any later visible action",
+      "prs": 5553,
+      "share_of_trigger_cohort": 0.6450975836431226
+    },
+    {
+      "stage": "Exact reply to the trigger",
+      "prs": 730,
+      "share_of_trigger_cohort": 0.08480483271375465
+    },
+    {
+      "stage": "Mapped different-product exact reply",
+      "prs": 74,
+      "share_of_trigger_cohort": 0.008596654275092937
+    }
+  ],
+  "responsive_prs_with_only_off_thread_followup_share": 0.8685395281829642,
+  "same_author_visibility_gap": {
+    "pairs": 546,
+    "cross_rate": 0.6813186813186813,
+    "same_rate": 0.815018315018315,
+    "difference": -0.1336996336996337,
+    "repository_cluster_ci": [
+      -0.19926850120651357,
+      -0.03970223325062035
+    ]
+  },
+  "hybrid_vs_automation_only_later_merge": {
+    "difference": 0.1287360860943623,
+    "ci": [
+      0.030012568273299747,
+      0.22745960391542486
+    ],
+    "p_value": 0.010594237216029517
+  }
+}

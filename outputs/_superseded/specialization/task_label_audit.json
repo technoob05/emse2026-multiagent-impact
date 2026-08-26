@@ -1,0 +1,64 @@
+{
+  "pull_requests": 361296,
+  "rule_labelled": 147036,
+  "rule_coverage": 0.40696824764182277,
+  "validation_overlap": 4457,
+  "agreement": 0.9950639443571909,
+  "agreement_by_type": [
+    {
+      "task_type": "feat",
+      "n": 1633,
+      "agreement": 0.9975505205143906
+    },
+    {
+      "task_type": "fix",
+      "n": 1245,
+      "agreement": 0.993574297188755
+    },
+    {
+      "task_type": "docs",
+      "n": 663,
+      "agreement": 0.9939668174962293
+    },
+    {
+      "task_type": "chore",
+      "n": 444,
+      "agreement": 0.990990990990991
+    },
+    {
+      "task_type": "refactor",
+      "n": 241,
+      "agreement": 1.0
+    },
+    {
+      "task_type": "test",
+      "n": 91,
+      "agreement": 0.978021978021978
+    },
+    {
+      "task_type": "ci",
+      "n": 88,
+      "agreement": 1.0
+    },
+    {
+      "task_type": "perf",
+      "n": 36,
+      "agreement": 1.0
+    },
+    {
+      "task_type": "build",
+      "n": 8,
+      "agreement": 1.0
+    },
+    {
+      "task_type": "style",
+      "n": 7,
+      "agreement": 1.0
+    },
+    {
+      "task_type": "revert",
+      "n": 1,
+      "agreement": 1.0
+    }
+  ]
+}

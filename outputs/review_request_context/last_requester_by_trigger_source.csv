@@ -1,0 +1,13 @@
+trigger_source,requester_role,prs
+inline_review_comment,author_account,3034
+inline_review_comment,other_user_like,734
+inline_review_comment,mapped_agent,204
+inline_review_comment,other_bot,65
+pr_comment,mapped_agent,274
+pr_comment,other_user_like,126
+pr_comment,author_account,114
+pr_comment,other_bot,4
+submitted_review,author_account,1397
+submitted_review,other_user_like,302
+submitted_review,mapped_agent,68
+submitted_review,other_bot,21

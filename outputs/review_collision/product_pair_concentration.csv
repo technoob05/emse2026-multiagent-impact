@@ -1,0 +1,9 @@
+product_pair,collision_loci,share
+Copilot + OpenAI_Codex,109,0.6526946107784432
+Copilot + Cursor,26,0.15568862275449102
+Cursor + OpenAI_Codex,19,0.11377245508982035
+Devin + OpenAI_Codex,8,0.04790419161676647
+Copilot + Devin,2,0.011976047904191617
+Claude_Code + Cursor,1,0.005988023952095809
+Claude_Code + OpenAI_Codex,1,0.005988023952095809
+Cursor + Devin,1,0.005988023952095809

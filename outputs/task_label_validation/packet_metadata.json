@@ -1,0 +1,9 @@
+{
+  "dataset_revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+  "seed": 20260825,
+  "target_per_agent_period_prefix_stratum": 15,
+  "sample_rows": 360,
+  "allowed_labels": "feat | fix | docs | test | maintenance | unclear",
+  "blinding": "Coder files exclude agent, period, prefix status, and model prediction.",
+  "adjudication": "Two independent human coders; reconcile only after both files are locked."
+}

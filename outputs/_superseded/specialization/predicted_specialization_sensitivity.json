@@ -1,0 +1,290 @@
+[
+  {
+    "window_days": 30,
+    "min_margin": 0.0,
+    "min_pre": 5,
+    "min_post": 5,
+    "min_entrant": 3,
+    "eligible_repositories": 117,
+    "labelled_pre_prs": 3049,
+    "labelled_post_prs": 6155,
+    "mean_rarity_difference": 0.0511635922007908,
+    "rarity_difference_ci95": [
+      0.01950964409993704,
+      0.08297784113385992
+    ],
+    "median_rarity_difference": 0.03076923076923077,
+    "share_repositories_positive_rarity": 0.5982905982905983,
+    "wilcoxon_p": 0.0015301255442099263,
+    "mean_breadth_change": 0.4358974358974359,
+    "breadth_change_ci95": [
+      0.2393162393162393,
+      0.6410256410256411
+    ],
+    "share_repositories_with_new_task_type": 0.5641025641025641,
+    "share_repositories_with_entrant_expansion": 0.4017094017094017,
+    "share_repositories_with_integrated_entrant_expansion": 0.28205128205128205,
+    "entrant_introduced_task_types": 59,
+    "entrant_integrated_task_types": 38,
+    "entrant_expansion_integration_rate": 0.6440677966101694,
+    "mean_role_distance_jsd": 0.43742344817931533,
+    "permutation_test": {
+      "observed": 0.0511635922007908,
+      "null_mean": 0.000590455404472659,
+      "null_sd": 0.011684325474566316,
+      "p_two_sided": 0.001996007984031936
+    }
+  },
+  {
+    "window_days": 60,
+    "min_margin": 0.0,
+    "min_pre": 5,
+    "min_post": 5,
+    "min_entrant": 3,
+    "eligible_repositories": 147,
+    "labelled_pre_prs": 4655,
+    "labelled_post_prs": 10015,
+    "mean_rarity_difference": 0.028456896364776996,
+    "rarity_difference_ci95": [
+      0.001788498241258944,
+      0.056584524753567594
+    ],
+    "median_rarity_difference": 0.01696451696451695,
+    "share_repositories_positive_rarity": 0.5782312925170068,
+    "wilcoxon_p": 0.032691455725492174,
+    "mean_breadth_change": 0.40816326530612246,
+    "breadth_change_ci95": [
+      0.2108843537414966,
+      0.5986394557823129
+    ],
+    "share_repositories_with_new_task_type": 0.5578231292517006,
+    "share_repositories_with_entrant_expansion": 0.35374149659863946,
+    "share_repositories_with_integrated_entrant_expansion": 0.3197278911564626,
+    "entrant_introduced_task_types": 64,
+    "entrant_integrated_task_types": 54,
+    "entrant_expansion_integration_rate": 0.84375,
+    "mean_role_distance_jsd": 0.4084240116645525,
+    "permutation_test": {
+      "observed": 0.028456896364776996,
+      "null_mean": -0.00049430658668311,
+      "null_sd": 0.009665372724401254,
+      "p_two_sided": 0.007984031936127744
+    }
+  },
+  {
+    "window_days": 90,
+    "min_margin": 0.0,
+    "min_pre": 5,
+    "min_post": 5,
+    "min_entrant": 3,
+    "eligible_repositories": 167,
+    "labelled_pre_prs": 4803,
+    "labelled_post_prs": 13348,
+    "mean_rarity_difference": 0.026595035906865253,
+    "rarity_difference_ci95": [
+      0.0004896443285338338,
+      0.05349060656039528
+    ],
+    "median_rarity_difference": 0.020289855072463947,
+    "share_repositories_positive_rarity": 0.5808383233532934,
+    "wilcoxon_p": 0.01540887258404939,
+    "mean_breadth_change": 0.47305389221556887,
+    "breadth_change_ci95": [
+      0.2844565926769215,
+      0.6646706586826348
+    ],
+    "share_repositories_with_new_task_type": 0.592814371257485,
+    "share_repositories_with_entrant_expansion": 0.38922155688622756,
+    "share_repositories_with_integrated_entrant_expansion": 0.30538922155688625,
+    "entrant_introduced_task_types": 84,
+    "entrant_integrated_task_types": 63,
+    "entrant_expansion_integration_rate": 0.75,
+    "mean_role_distance_jsd": 0.4177359386507758,
+    "permutation_test": {
+      "observed": 0.026595035906865253,
+      "null_mean": 0.0004086888087628523,
+      "null_sd": 0.010438523167435503,
+      "p_two_sided": 0.01249375312343828
+    }
+  },
+  {
+    "window_days": 120,
+    "min_margin": 0.0,
+    "min_pre": 5,
+    "min_post": 5,
+    "min_entrant": 3,
+    "eligible_repositories": 157,
+    "labelled_pre_prs": 4368,
+    "labelled_post_prs": 14787,
+    "mean_rarity_difference": 0.008447513663436056,
+    "rarity_difference_ci95": [
+      -0.016949567249259053,
+      0.0357638827971892
+    ],
+    "median_rarity_difference": 0.00489432703003323,
+    "share_repositories_positive_rarity": 0.5095541401273885,
+    "wilcoxon_p": 0.49208126209163283,
+    "mean_breadth_change": 0.5796178343949044,
+    "breadth_change_ci95": [
+      0.37579617834394907,
+      0.7770700636942676
+    ],
+    "share_repositories_with_new_task_type": 0.5923566878980892,
+    "share_repositories_with_entrant_expansion": 0.3821656050955414,
+    "share_repositories_with_integrated_entrant_expansion": 0.3184713375796178,
+    "entrant_introduced_task_types": 82,
+    "entrant_integrated_task_types": 65,
+    "entrant_expansion_integration_rate": 0.7926829268292683,
+    "mean_role_distance_jsd": 0.40957305282575956,
+    "permutation_test": {
+      "observed": 0.008447513663436056,
+      "null_mean": 0.0007439579840650376,
+      "null_sd": 0.010352752591126205,
+      "p_two_sided": 0.4091816367265469
+    }
+  },
+  {
+    "window_days": 90,
+    "min_margin": 0.5,
+    "min_pre": 5,
+    "min_post": 5,
+    "min_entrant": 3,
+    "eligible_repositories": 146,
+    "labelled_pre_prs": 4223,
+    "labelled_post_prs": 10503,
+    "mean_rarity_difference": 0.0168219818740913,
+    "rarity_difference_ci95": [
+      -0.015477916207037671,
+      0.04581209501359332
+    ],
+    "median_rarity_difference": 0.021870639214844834,
+    "share_repositories_positive_rarity": 0.547945205479452,
+    "wilcoxon_p": 0.028560207348054246,
+    "mean_breadth_change": 0.4178082191780822,
+    "breadth_change_ci95": [
+      0.21232876712328766,
+      0.6164383561643836
+    ],
+    "share_repositories_with_new_task_type": 0.5684931506849316,
+    "share_repositories_with_entrant_expansion": 0.3972602739726027,
+    "share_repositories_with_integrated_entrant_expansion": 0.3082191780821918,
+    "entrant_introduced_task_types": 76,
+    "entrant_integrated_task_types": 57,
+    "entrant_expansion_integration_rate": 0.75,
+    "mean_role_distance_jsd": 0.4237886307923946,
+    "permutation_test": {
+      "observed": 0.0168219818740913,
+      "null_mean": 0.00012877448582178204,
+      "null_sd": 0.01104257145726801,
+      "p_two_sided": 0.1317365269461078
+    }
+  },
+  {
+    "window_days": 90,
+    "min_margin": 1.0,
+    "min_pre": 5,
+    "min_post": 5,
+    "min_entrant": 3,
+    "eligible_repositories": 126,
+    "labelled_pre_prs": 3561,
+    "labelled_post_prs": 7950,
+    "mean_rarity_difference": 0.03462017328146851,
+    "rarity_difference_ci95": [
+      -0.0006016419522094987,
+      0.06793856580396399
+    ],
+    "median_rarity_difference": 0.031111233103986724,
+    "share_repositories_positive_rarity": 0.5793650793650794,
+    "wilcoxon_p": 0.009040058325487684,
+    "mean_breadth_change": 0.47619047619047616,
+    "breadth_change_ci95": [
+      0.24603174603174602,
+      0.6904761904761905
+    ],
+    "share_repositories_with_new_task_type": 0.6190476190476191,
+    "share_repositories_with_entrant_expansion": 0.42857142857142855,
+    "share_repositories_with_integrated_entrant_expansion": 0.3492063492063492,
+    "entrant_introduced_task_types": 71,
+    "entrant_integrated_task_types": 54,
+    "entrant_expansion_integration_rate": 0.7605633802816901,
+    "mean_role_distance_jsd": 0.4143164662610226,
+    "permutation_test": {
+      "observed": 0.03462017328146851,
+      "null_mean": -0.00038121158256972034,
+      "null_sd": 0.012151794340477636,
+      "p_two_sided": 0.001996007984031936
+    }
+  },
+  {
+    "window_days": 90,
+    "min_margin": 0.0,
+    "min_pre": 10,
+    "min_post": 10,
+    "min_entrant": 5,
+    "eligible_repositories": 75,
+    "labelled_pre_prs": 3379,
+    "labelled_post_prs": 9514,
+    "mean_rarity_difference": 0.046251857797315,
+    "rarity_difference_ci95": [
+      0.015591501909926943,
+      0.08163116309081055
+    ],
+    "median_rarity_difference": 0.032813340505648214,
+    "share_repositories_positive_rarity": 0.68,
+    "wilcoxon_p": 0.0008954453299788235,
+    "mean_breadth_change": 0.36,
+    "breadth_change_ci95": [
+      0.09333333333333334,
+      0.5866666666666667
+    ],
+    "share_repositories_with_new_task_type": 0.48,
+    "share_repositories_with_entrant_expansion": 0.28,
+    "share_repositories_with_integrated_entrant_expansion": 0.24,
+    "entrant_introduced_task_types": 27,
+    "entrant_integrated_task_types": 20,
+    "entrant_expansion_integration_rate": 0.7407407407407407,
+    "mean_role_distance_jsd": 0.34835040117705074,
+    "permutation_test": {
+      "observed": 0.046251857797315,
+      "null_mean": -0.00015468392226311668,
+      "null_sd": 0.011914469408114022,
+      "p_two_sided": 0.001996007984031936
+    }
+  },
+  {
+    "window_days": 90,
+    "min_margin": 0.0,
+    "min_pre": 20,
+    "min_post": 20,
+    "min_entrant": 5,
+    "eligible_repositories": 37,
+    "labelled_pre_prs": 2811,
+    "labelled_post_prs": 7980,
+    "mean_rarity_difference": 0.046972233823066104,
+    "rarity_difference_ci95": [
+      0.004497401311657136,
+      0.1009451740779469
+    ],
+    "median_rarity_difference": 0.03418803418803418,
+    "share_repositories_positive_rarity": 0.6756756756756757,
+    "wilcoxon_p": 0.01007952104555443,
+    "mean_breadth_change": 0.10810810810810811,
+    "breadth_change_ci95": [
+      -0.24324324324324326,
+      0.3783783783783784
+    ],
+    "share_repositories_with_new_task_type": 0.32432432432432434,
+    "share_repositories_with_entrant_expansion": 0.21621621621621623,
+    "share_repositories_with_integrated_entrant_expansion": 0.1891891891891892,
+    "entrant_introduced_task_types": 8,
+    "entrant_integrated_task_types": 7,
+    "entrant_expansion_integration_rate": 0.875,
+    "mean_role_distance_jsd": 0.3067633974633414,
+    "permutation_test": {
+      "observed": 0.046972233823066104,
+      "null_mean": -1.4453005802142872e-05,
+      "null_sd": 0.01248775190353686,
+      "p_two_sided": 0.001996007984031936
+    }
+  }
+]

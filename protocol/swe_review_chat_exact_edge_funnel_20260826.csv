@@ -1,0 +1,9 @@
+order,stage,count
+1,dataset_pr_rows,1082529
+2,exact_alias_mapped_author_prs,5250
+3,prs_with_any_cross_product_inline_parent,38
+4,prs_where_qualifying_parent_has_nested_reply,7
+5,non_aidev_candidate_prs,0
+6,non_aidev_prs_where_first_trigger_has_nested_reply,0
+7,rest_validated_landmark_eligible_prs,0
+8,rest_validated_exact_reply_by_48h_prs,0

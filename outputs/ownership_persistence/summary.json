@@ -1,0 +1,65 @@
+{
+  "verdict": "APPENDIX",
+  "scope": "cross-product feedback; >5 minutes through 48 hours",
+  "base_prs": 8608,
+  "exact_duplicate_surplus_rows": 9,
+  "logical_actions_48h_including_burst": 23720,
+  "postburst_timestamp_states_48h": 19676,
+  "primary_user_or_mapped_first_prs": 3237,
+  "start_counts": [
+    {
+      "first_owner_state": "no_action_within_48h",
+      "prs": 4099,
+      "repositories": 971
+    },
+    {
+      "first_owner_state": "user_account",
+      "prs": 2334,
+      "repositories": 673
+    },
+    {
+      "first_owner_state": "mapped_product",
+      "prs": 903,
+      "repositories": 323
+    },
+    {
+      "first_owner_state": "other_bot",
+      "prs": 739,
+      "repositories": 231
+    },
+    {
+      "first_owner_state": "branch_movement_untyped",
+      "prs": 533,
+      "repositories": 171
+    }
+  ],
+  "ambiguous_next_owner_prs": 0,
+  "conditional_on_visible_next_action": {
+    "user_account:exact_owner_persistence": 0.30962059620596205,
+    "user_account:layer_persistence": 0.540650406504065,
+    "user_account:cross_layer_handoff": 0.31910569105691056,
+    "mapped_product:exact_owner_persistence": 0.4447900466562986,
+    "mapped_product:layer_persistence": 0.5334370139968896,
+    "mapped_product:cross_layer_handoff": 0.3297045101088647
+  },
+  "conditional_user_minus_mapped": {
+    "exact_owner_persistence": {
+      "user_minus_mapped": -0.13516945045033657,
+      "repository_cluster_ci_low": -0.2035942519689458,
+      "repository_cluster_ci_high": -0.06783322339773505
+    },
+    "layer_persistence": {
+      "user_minus_mapped": 0.0072133925071754534,
+      "repository_cluster_ci_low": -0.06740130342859418,
+      "repository_cluster_ci_high": 0.08250497143217868
+    },
+    "cross_layer_handoff": {
+      "user_minus_mapped": -0.010598819051954145,
+      "repository_cluster_ci_low": -0.07605444028002771,
+      "repository_cluster_ci_high": 0.05734188925986342
+    }
+  },
+  "quality_checks_all_pass": true,
+  "later_merge_analyzed": false,
+  "interpretation": "descriptive public-state ordering; non-causal; broad reviewer-type sequence novelty overlaps Zhong et al. (arXiv:2607.13196)"
+}

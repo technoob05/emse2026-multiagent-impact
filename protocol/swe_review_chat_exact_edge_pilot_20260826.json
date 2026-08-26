@@ -1,0 +1,171 @@
+{
+  "generated_at_utc": "2026-08-26T07:22:33.725353+00:00",
+  "analysis_mode": "fail_closed_exact_eligibility_and_bounded_rest_hydration",
+  "dataset": {
+    "id": "Suzhen/SWE-Review-Chat",
+    "revision": "408cf94c068080eda66e0f3d7e9aa0316a42cb63",
+    "local_path": "external_data/downloads/SWE-Review-Chat"
+  },
+  "aidev": {
+    "revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+    "backbone": "../Legacy/AI_Dev_Dataminning/AIDev-7.6M/all_pull_request.parquet"
+  },
+  "eligibility": {
+    "grain": "one first cross-product inline parent trigger per non-AIDev PR",
+    "author_mapping": "exact AIDev GitHub aliases only",
+    "parent_type": "review_comment",
+    "parent_product_rule": "mapped parent product differs from mapped root author product",
+    "source_reply_rule": "parent has one or more nested replies",
+    "landmark": "trigger + 48 hours; PR must still be open",
+    "outcome_horizon": "merge strictly after trigger + 48h and by trigger + 30d"
+  },
+  "extraction": {
+    "scanned_rows": 1082529,
+    "parquet_shards": 293,
+    "invalid_pr_key_rows": 0,
+    "mapped_author_rows": 5252,
+    "mapped_author_prs": 5250,
+    "cross_product_inline_parent_events": 96,
+    "cross_product_inline_parent_prs": 38,
+    "candidate_parent_threads": 18,
+    "candidate_prs": 7,
+    "candidate_children": 19,
+    "null_parent_comment_id_threads": 0,
+    "null_child_comment_ids": 0,
+    "source_child_relation_to_parent_counts": {
+      "user_unmapped_product": 18,
+      "same_as_parent_product": 1
+    },
+    "first_trigger_determination_counts": {
+      "determined_by_timestamp_then_comment_id": 18
+    }
+  },
+  "aidev_exclusion": {
+    "source_metadata_rows": 7685281,
+    "source_rows_scanned": 7685281,
+    "invalid_source_key_rows": 0,
+    "candidate_prs_before_exclusion": 7,
+    "overlapping_candidate_prs": 7,
+    "retained_nonoverlap_candidate_prs": 0
+  },
+  "aggregate": {
+    "nonoverlap_prs": 0,
+    "first_trigger_candidate_prs": 0,
+    "source_child_actor_categories": {},
+    "api_child_actor_categories": {},
+    "http": {
+      "hydration_run": true,
+      "authenticated": true,
+      "api_version": "2026-03-10",
+      "unique_requests": 0,
+      "status_counts_by_endpoint": {},
+      "rate_limit_before": {
+        "limit": 5000,
+        "remaining": 5000,
+        "reset": 1787732555,
+        "used": 0
+      },
+      "rate_limit_after": {
+        "limit": 5000,
+        "remaining": 5000,
+        "reset": 1787732555,
+        "used": 0
+      }
+    },
+    "validation": {
+      "candidate_parent_threads": 0,
+      "parent_records_fully_valid": 0,
+      "pull_records_fully_valid": 0,
+      "nested_child_records": 0,
+      "child_records_with_exact_parent_id": 0,
+      "child_records_fully_valid_exact_edges": 0,
+      "child_review_batch_same_as_parent": 0
+    },
+    "landmark": {
+      "first_trigger_candidate_threads": 0,
+      "landmark_eligible_unique_prs": 0,
+      "exact_parent_reply_by_48h_unique_prs": 0,
+      "merged_strictly_after_48h_by_30d_unique_prs": 0,
+      "ordered_product_pairs": 0,
+      "selection_note": "The pilot conditions on a source nested reply, so it cannot supply an unselected unexposed comparison group."
+    },
+    "decision": "REJECT_REPLICATION_ZERO_DISJOINT_SUPPORT",
+    "failed_replication_gates": [
+      "landmark_risk_set_below_50_prs",
+      "exact_exposed_support_below_20_prs",
+      "fewer_than_two_ordered_product_pairs"
+    ],
+    "thresholds": {
+      "minimum_landmark_risk_set_prs": 50,
+      "minimum_exact_exposed_prs": 20,
+      "minimum_ordered_product_pairs": 2
+    }
+  },
+  "funnel": [
+    {
+      "order": 1,
+      "stage": "dataset_pr_rows",
+      "count": 1082529
+    },
+    {
+      "order": 2,
+      "stage": "exact_alias_mapped_author_prs",
+      "count": 5250
+    },
+    {
+      "order": 3,
+      "stage": "prs_with_any_cross_product_inline_parent",
+      "count": 38
+    },
+    {
+      "order": 4,
+      "stage": "prs_where_qualifying_parent_has_nested_reply",
+      "count": 7
+    },
+    {
+      "order": 5,
+      "stage": "non_aidev_candidate_prs",
+      "count": 0
+    },
+    {
+      "order": 6,
+      "stage": "non_aidev_prs_where_first_trigger_has_nested_reply",
+      "count": 0
+    },
+    {
+      "order": 7,
+      "stage": "rest_validated_landmark_eligible_prs",
+      "count": 0
+    },
+    {
+      "order": 8,
+      "stage": "rest_validated_exact_reply_by_48h_prs",
+      "count": 0
+    }
+  ],
+  "api": {
+    "version": "2026-03-10",
+    "review_comment_docs": "https://docs.github.com/en/rest/pulls/comments",
+    "pull_request_docs": "https://docs.github.com/en/rest/pulls/pulls#get-a-pull-request",
+    "method": "authenticated gh api GET with jq field whitelist",
+    "body_exported": false
+  },
+  "raw_artifacts": {
+    "directory": "external_data/cache/swe_review_chat_exact_edge_pilot",
+    "gitignored": true,
+    "candidate_ledger": "non_aidev_candidate_threads.jsonl",
+    "pre_exclusion_audit_ledger": "all_source_candidate_threads.jsonl",
+    "hydration_ledger": "hydrated_candidate_threads.jsonl",
+    "http_log": "http_coverage.csv"
+  },
+  "script": {
+    "path": "scripts/run_swe_review_chat_exact_edge_pilot.py",
+    "sha256": "0a8edd49bb1e581d21a66ba5bdbe6f7532574821cea5928af77a9f941feeadfc"
+  },
+  "interpretation_limits": [
+    "Candidate selection requires a source nested reply and cannot create an unselected no-reply comparison group.",
+    "Exact product mapping is restricted to the fixed AIDev alias registry.",
+    "Public structural reply edges do not establish semantic resolution, correctness, review quality, or causality.",
+    "A tiny eligible set is a support/falsification result and must not be presented as replication."
+  ]
+}

@@ -1,0 +1,7 @@
+response_actor_role,events,prs,share_of_exposure_events
+author_account,76,74,0.59375
+other_human,29,26,0.2265625
+triggering_reviewer_brand,13,13,0.1015625
+other_bot,7,3,0.0546875
+author_agent_brand,2,2,0.015625
+other_agent_brand,1,1,0.0078125

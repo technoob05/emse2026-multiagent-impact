@@ -1,0 +1,3 @@
+exclusion_unit,full_mean_difference,minimum_loo_mean_difference,maximum_loo_mean_difference,maximum_absolute_shift_percentage_points,exclusions
+product_pair,0.008653853022138789,0.0010533417691453557,0.012787367826348569,0.7600511252993433,22
+repository,0.008653853022138789,0.0005270244908033309,0.011274794391602387,0.8126828531335457,195

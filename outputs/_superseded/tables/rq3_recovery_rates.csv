@@ -1,0 +1,5 @@
+prior_merged,switched,n,merge_rate,ci_half_width,prior_outcome,transition_type
+false,false,34198,0.5847417977659513,0.005222721843602569,Prior closed-unmerged,Same agent
+false,true,15535,0.6339877695526231,0.0075751054241200025,Prior closed-unmerged,Switched agent
+true,false,357710,0.902197310670655,0.0009734568226357956,Prior merged,Same agent
+true,true,59024,0.7687042558959067,0.003401772108840466,Prior merged,Switched agent

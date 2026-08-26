@@ -1,0 +1,35 @@
+{
+  "run_id": "addressed-edge-landmark-v1",
+  "dataset_revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+  "script_sha256": "74b8e0652d40820a9c36f4e7851253a01233071d36a2e120c195eff122251d7a",
+  "input_sha256": {
+    "feedback_48h_landmark_cohort.parquet": "caa8c5a7b7375a0ab01a789d7a6333ecd342904c70cfdc32a8598f4ef70fe721",
+    "cross_feedback_response_events.parquet": "f7aae131f9984939b5c9cb0bbe66aa1fd0ef93b028abf2f5ce60c54cc5e7101d",
+    "ownership_route_48h.parquet": "b5ed3687d823a5ccf417e02673d2d2f480ba1d12d387043160f74a1d187e91e3",
+    "pull_request.parquet": "f31e6dc4a907db48ee8647626883ce188be5cb0da2acd0ce665b5f0a7d5d6f8f",
+    "pr_reviews.parquet": "89104dd24c370464d0ff1c69d363253efd15ec0ee97d985e0da415018b4102c5",
+    "pr_review_comments.parquet": "aeef219f1362cbb8b53278a9b75d6890faf16929cf9686ecf74287f4da4d7e76",
+    "pr_comments.parquet": "610277c97b31c3f97d5b0cf9ce05c5c077610371b8d07353adfdb930d2646984",
+    "pr_timeline.parquet": "fdb5529fdd6648933a88111d4056947baff6e3cf7f94926b48de83e830dd089c"
+  },
+  "artifact_sha256": {
+    "addressed_edge_clustered_lpm.csv": "a86f6d36c159a026d9b3aa99f7574d1370399c32497aab77b3a42f245afad597",
+    "addressed_edge_clustered_lpm_all_terms.csv": "cf5fbd390683acde7e0635c87ed0f14a0f9a61a26a3feba8370819685abd0600",
+    "analysis_cohort.parquet": "36355684c8089b7da3ec357d057db9a3c47a42964ee9b397bb2c73563ca4b069",
+    "denominators.csv": "8323c57f7160e1dc1d50378b7fba71c7465d7bf43ffe080502ccf6a92bfb7859",
+    "exact_parent_reply_event_audit.parquet": "2e533b693728183efab079738ec2fc15238a57fec6eaa8bd2c2f8f26a86fb4c5",
+    "exposure_concentration_summary.csv": "9528b68b5417cd699ac919629509ac7041fadf457b498cee1c5003150ff2d3f5",
+    "leave_one_product_pair_out.csv": "15d762f0b85d8e1caf91ef9d615969be447293550cc1c5262b608b484b5db2bc",
+    "leave_one_product_pair_out_summary.csv": "d0c3c2fffc3ae13d28814546bd38413164f729913cd546e6bf1c65b78473bf3a",
+    "ordered_product_pair_support.csv": "5fec572280990c6f8392a9db6f21804640ec935a8960ae85cef28417ad7f5a21",
+    "pretrigger_balance.csv": "cd0ec27ed476c5581f251d29b7639280b048b443a2b74a99a493a100b7bea103",
+    "README.md": "d52704d816010325a53f2a4ea551b63700f7d45a733d6f4d0957a1d48597bad3",
+    "repository_exposure_support.csv": "2a5d4d97c88240b02fea96f5af3a33fe6d7057c4d8613a356abb1b11f7af302b",
+    "repository_fe_sensitivity.csv": "e0fb87cbaf0d0af0a86b2b3060d38d3f4a1f6b1a697487f9bf71521ca4c4ffd1",
+    "schema.json": "c6683192ad81ead486ad72bb7b0a8402e196f90da72171d0a20f4d2e4ee1eb60",
+    "temporal_leakage_validation.json": "fecff5c9470b7abef05dd429ae36665ccb0a517b317fdec97e9c0726eb75c884"
+  },
+  "manuscript_edited": false,
+  "external_upload": false,
+  "claim_scope": "observational exact-parent public edge; no semantic resolution or causal effect"
+}

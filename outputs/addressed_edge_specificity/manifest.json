@@ -1,0 +1,33 @@
+{
+  "run_id": "addressed-edge-specificity-v1",
+  "dataset_revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+  "script_sha256": "178e3fbde53c3221aced9458c957f831653b999988fd944dc3dd868c4c5f2255",
+  "input_sha256": {
+    "D:\\PhD_LetGoo\\PhD_Farming\\emse2026-multiagent-impact\\outputs\\addressed_edge_landmark\\analysis_cohort.parquet": "36355684c8089b7da3ec357d057db9a3c47a42964ee9b397bb2c73563ca4b069",
+    "D:\\PhD_LetGoo\\PhD_Farming\\emse2026-multiagent-impact\\outputs\\cross_agent_review\\cross_feedback_response_events.parquet": "f7aae131f9984939b5c9cb0bbe66aa1fd0ef93b028abf2f5ce60c54cc5e7101d",
+    "D:\\PhD_LetGoo\\PhD_Farming\\Legacy\\AI_Dev_Dataminning\\AIDev-7.6M\\pr_review_comments.parquet": "aeef219f1362cbb8b53278a9b75d6890faf16929cf9686ecf74287f4da4d7e76",
+    "D:\\PhD_LetGoo\\PhD_Farming\\Legacy\\AI_Dev_Dataminning\\AIDev-7.6M\\pr_reviews.parquet": "89104dd24c370464d0ff1c69d363253efd15ec0ee97d985e0da415018b4102c5",
+    "D:\\PhD_LetGoo\\PhD_Farming\\Legacy\\AI_Dev_Dataminning\\AIDev-7.6M\\pr_comments.parquet": "610277c97b31c3f97d5b0cf9ce05c5c077610371b8d07353adfdb930d2646984"
+  },
+  "artifact_sha256": {
+    "classified_landmark_cohort.parquet": "c576dcb66d598ab77ecc6d4852cd3c4ed0cb37554285a4ad53bbc80f0cd41717",
+    "clustered_specificity_lpm.csv": "22050516510a68cdfcb2453b18dfb2e0de5164351eb86e6266628d9ee9ed4aec",
+    "concentration_summary.csv": "8f454d52155cf55b74ec49de30363d29cd7f1774035387255a8cb10151319a79",
+    "denominators.csv": "37341ccab249e025625616339a9d98c8cb3813101957ac0ab37c488ade569ba6",
+    "four_state_response_gradient.csv": "887cf01233b638fe1b529a406f2d68d16b3546ec99af7011f08f4ee9c8208fd7",
+    "leave_one_product_pair_out.csv": "d06276723b5032fb8f27d3275e9c6519fd21bd035007418f56eaefb4a70e4cec",
+    "leave_one_product_pair_out_summary.csv": "36c0cf9e99245d8c8fd802e4c32b666316a588bafc0144a67c1cf50d694fa9e2",
+    "pretrigger_balance.csv": "f1904b97acddb2768f3355bfad27ee79d0b01d0f0b251a9227f4029874366e37",
+    "propensity_overlap_sensitivity.csv": "26ee773194be865c1030ec8d1f252493340316f24ac13e40372c6c2c9faa8f9d",
+    "propensity_score_diagnostics.csv": "c4870a57a7ab2d34afc1bd6ddb9bbdc655737004efe972f8abdfcf96cd4c696b",
+    "raw_discussion_event_audit.parquet": "5f02f980a49df6580b129ec3491ca6a18aad5265e1726e1042402a03e05d4b48",
+    "README.md": "fcb9dbde6cfc472b2b946348e58e2b30ba8dbb7225eaffe760797a168bf9e77f",
+    "repository_fe_sensitivity.csv": "35a50e9fc28aea548962089a9688b34cadee6de7f6870814ab62a20443bcf5a2",
+    "response_source_counts.csv": "3e539810e4d2ed2304c7f19fce302190a0b8abbda3e90f7013406ad9dc42b51a",
+    "schema.json": "1bcf604e545400014d5c605f41d8bd8ea097fdcb28b3d6f567bb425e2a5a9de8",
+    "temporal_leakage_validation.json": "244b630d8fd50546ae84f313e978f6751c7dd13c3becb4522f581969f2bc556e"
+  },
+  "manuscript_edited": false,
+  "external_upload": false,
+  "claim_scope": "structural specificity falsification; no semantic-resolution or causal claim"
+}

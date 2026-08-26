@@ -1,0 +1,23 @@
+[project]
+name = "aidev-multiagent-impact"
+version = "0.1.0"
+description = "Reproducible exploration of multi-agent impact in AIDev v5"
+requires-python = ">=3.11"
+dependencies = [
+  "ipykernel>=6.29",
+  "matplotlib>=3.8",
+  "nbclient>=0.10",
+  "nbformat>=5.10",
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "polars>=1.30",
+  "pyarrow>=18",
+  "scipy>=1.13",
+  "scikit-learn>=1.5",
+  "seaborn>=0.13",
+  "statsmodels>=0.14",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

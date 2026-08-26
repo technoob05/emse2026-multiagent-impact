@@ -1,0 +1,39 @@
+{
+  "coverage": {
+    "aidev_pop_prs": 361296,
+    "prs_with_recognized_agent_feedback": 77414,
+    "prs_with_cross_agent_feedback": 8622,
+    "recognized_agent_feedback_events": 319229,
+    "cross_agent_feedback_events": 33637
+  },
+  "first_cross_timing": {
+    "prs": 8622,
+    "median_hours": 0.09819444444444445,
+    "p25_hours": 0.03361111111111111,
+    "p75_hours": 0.9719444444444444,
+    "within_24h": 7878
+  },
+  "landmark": [
+    {
+      "early_cross_agent_feedback": true,
+      "prs": 1521,
+      "merge_rate": 0.5134779750164365
+    },
+    {
+      "early_cross_agent_feedback": false,
+      "prs": 75745,
+      "merge_rate": 0.3832596210971021
+    }
+  ],
+  "response_chains": {
+    "cross_feedback_prs_with_7d_followup": 8608,
+    "observable_response_rate": 0.6450975836431226,
+    "direct_reply_rate": 0.08480483271375465,
+    "subsequent_review_rate": 0.49732806691449816,
+    "subsequent_pr_comment_rate": 0.370817843866171,
+    "force_push_rate": 0.12395446096654275,
+    "merge_within_7d_rate": 0.7283921933085502
+  },
+  "scope": "AIDev-pop repositories with more than 100 stars",
+  "interpretation": "descriptive exploration; not a causal estimate"
+}

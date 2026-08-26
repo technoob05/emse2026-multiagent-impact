@@ -1,0 +1,5 @@
+transition_mode,n,repositories,recovered,recovery_rate,median_days_to_successor,median_shared_files
+same contributor / same agent,17209,2467,9526,0.5535475623220408,0.6296759259259259,1.0
+different contributor / different agent,1117,389,576,0.5156669650850493,4.93824074074074,1.0
+different contributor / same agent,917,214,402,0.43838604143947657,2.7804861111111108,1.0
+same contributor / different agent,162,66,93,0.5740740740740741,5.837274305555555,1.0

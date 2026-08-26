@@ -1,0 +1,18 @@
+check,status,value,expected,severity,note
+chain_pr_id_unique,PASS,8608,8608 unique PR IDs,critical,Required for one PR per topology state.
+cross_product_cohort_only,PASS,True,True,critical,Prevents mixing the same-product comparison cohort into this analysis.
+complete_seven_day_window,PASS,True,True,critical,All PRs must have the same observable follow-up horizon.
+event_prs_have_chain_parent,PASS,0,0 orphan PR IDs,critical,Checks event-to-PR referential integrity.
+events_strictly_after_trigger,PASS,0,0 violations,critical,Needed for temporal ordering.
+events_inside_response_window,PASS,0,0 violations,critical,Prevents follow-up leakage beyond seven days.
+hours_after_trigger_matches_timestamps,PASS,0.0,< 1e-9 hours,high,Protects threshold assignment from a stale derived field.
+exact_duplicate_event_surplus,WARN,9,0 preferred; exact-deduplicated analytical view used,low,Duplicates involve 2 PRs and sources ['force_push']; first-state invariance is checked below.
+later_reviews_debatched_by_review_id,PASS,0,0 duplicated PR-review IDs,high,A review batch is counted once even if it contains many inline comments.
+event_chain_trigger_metadata_consistent,PASS,0,0 mismatched event rows,high,Protects product-pair and time-window joins.
+one_state_row_per_pr_threshold,PASS,43040,43040,critical,The analysis grain is PR by burst threshold.
+pr_threshold_key_unique,PASS,0,0 duplicated keys,critical,Ensures mutually exclusive assignment.
+accepted_state_values_only,PASS,[],"['user_account', 'mapped_product', 'other_bot', 'branch_movement_untyped', 'no_action_within_7d']",critical,Keeps state labels exhaustive and mutually exclusive.
+first_state_occurs_after_burst_end,PASS,0,0 non-positive lags,critical,Confirms that collapsed events are excluded from ownership.
+no_action_count_monotone_with_threshold,PASS,"[3055, 3269, 3837, 4205, 4930]",nondecreasing,high,A wider collapsed window cannot create a new later event.
+first_state_invariant_to_exact_deduplication,PASS,0,0 changed PR-threshold states,high,Shows whether the small duplicate issue affects the estimand.
+threshold_zero_reconciles_chain_response_flag,PASS,5553,5553,high,Connects the topology denominator to the published response chain.

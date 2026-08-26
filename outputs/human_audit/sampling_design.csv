@@ -1,0 +1,16 @@
+agent_relation,path_class,similarity_band,population_n,sample_n,weight
+new_agent,generic_only,low,5,5,1.0
+new_agent,generic_only,medium,4,4,1.0
+new_agent,generic_only,very_low,66,15,4.4
+new_agent,non_generic,high,89,15,5.933333333333334
+new_agent,non_generic,low,84,15,5.6
+new_agent,non_generic,medium,71,15,4.733333333333333
+new_agent,non_generic,very_low,960,15,64.0
+same_agent,generic_only,high,138,15,9.2
+same_agent,generic_only,low,92,15,6.133333333333334
+same_agent,generic_only,medium,75,15,5.0
+same_agent,generic_only,very_low,703,15,46.86666666666667
+same_agent,non_generic,high,3870,15,258.0
+same_agent,non_generic,low,1463,15,97.53333333333333
+same_agent,non_generic,medium,1610,15,107.33333333333333
+same_agent,non_generic,very_low,10175,15,678.3333333333334

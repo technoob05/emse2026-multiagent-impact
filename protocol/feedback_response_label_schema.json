@@ -1,0 +1,33 @@
+{
+  "schema_version": "feedback-response-audit-v1",
+  "unit": "one first cross-product trigger paired with one later observable event, or with no observed event in seven days",
+  "labels": {
+    "trigger_substance": {
+      "allowed": ["actionable_evaluative", "informational", "boilerplate_status", "unclear"],
+      "definition": "Whether the trigger evaluates the PR or asks for a change, rather than only reporting status or information."
+    },
+    "response_relation": {
+      "allowed": ["addresses_trigger", "acknowledges_trigger", "unrelated_or_unclear", "not_applicable"],
+      "definition": "Whether the later event visibly refers to or addresses the trigger. Use not_applicable only when no response text exists."
+    },
+    "resolution_signal": {
+      "allowed": ["claims_fixed", "accepts_or_plans", "disputes", "defers", "no_resolution_signal", "unclear"],
+      "definition": "What the visible response claims; this is not proof that code was fixed."
+    },
+    "owner_mapping_valid": {
+      "allowed": ["yes", "no", "unclear"],
+      "definition": "Whether the deterministic response-owner category agrees with the visible account type and context."
+    },
+    "confidence": {
+      "allowed": ["high", "medium", "low"],
+      "definition": "Coder confidence in the semantic labels."
+    }
+  },
+  "adjudication": {
+    "independent_coders": 2,
+    "blind_to_outcome": true,
+    "required_agreement": "Cohen kappa >= 0.70 for trigger substance and response relation",
+    "headline_gate": "At least 70% substantive triggers and at least 70% related textual responses overall, with at least 60% in every headline channel."
+  },
+  "language_policy": "Labels describe visible evidence only. They do not establish intent, causality, private coordination, or code correctness."
+}

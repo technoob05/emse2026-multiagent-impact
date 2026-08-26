@@ -1,0 +1,7 @@
+ownership_route_48h,prs,later_merge_rate,median_automation_events,median_human_events
+no_observed_action,659,0.3216995447647951,0.0,0.0
+human_first,467,0.5010706638115632,0.0,2.0
+automation_no_human,314,0.4012738853503185,1.0,0.0
+automation_then_human,162,0.5493827160493827,3.0,2.0
+other_activity,76,0.39473684210526316,0.0,0.0
+movement_only,55,0.5818181818181818,0.0,0.0

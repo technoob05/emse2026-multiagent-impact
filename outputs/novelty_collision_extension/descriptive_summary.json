@@ -1,0 +1,63 @@
+{
+  "analysis_contract": {
+    "unit": "one canonical structural same-snapshot/same-locus cross-product pair",
+    "semantic_coding_used": false,
+    "causal_analysis_used": false,
+    "text_analysis": "exact normalized equality only; no semantic similarity model",
+    "repository_cluster_bootstrap_repetitions": 10000,
+    "seed": 20260826
+  },
+  "support": {
+    "canonical_loci": 167,
+    "pull_requests_with_locus": 159,
+    "repositories": 98,
+    "product_pairs": 8,
+    "eligible_prs_with_two_or_more_mapped_reviewer_products": 886,
+    "eligible_pr_share_with_at_least_one_structural_locus_overlap": 0.17945823927765236,
+    "loci_with_exactly_two_comments": 154,
+    "maximum_canonical_loci_on_one_pr": 3
+  },
+  "timing": {
+    "median_gap_minutes": 1.3666666666666667,
+    "share_within_1_minute": 0.40119760479041916,
+    "share_within_5_minutes": 0.8682634730538922,
+    "share_within_5_minutes_repository_cluster_bootstrap_95_interval": [
+      0.808641975308642,
+      0.9256756756756757
+    ],
+    "share_within_10_minutes": 0.9401197604790419,
+    "open_state_loci": 133,
+    "open_state_share_within_5_minutes": 0.8571428571428571,
+    "non_dominant_product_pair_loci": 58,
+    "non_dominant_product_pair_share_within_5_minutes": 0.8275862068965517
+  },
+  "format_and_exact_text_checks": {
+    "exact_normalized_body_duplicate_loci": 0,
+    "exact_normalized_diff_match_loci": 167,
+    "suggestion_block_relation_counts": {
+      "both": 1,
+      "exactly_one": 83,
+      "neither": 83
+    }
+  },
+  "concentration": {
+    "repositories": 98,
+    "product_pairs": 8,
+    "largest_repository_count": 9,
+    "largest_repository_share": 0.05389221556886228,
+    "largest_product_pair": "Copilot + OpenAI_Codex",
+    "largest_product_pair_count": 109,
+    "largest_product_pair_share": 0.6526946107784432,
+    "repository_hhi": 0.01717523037756822,
+    "product_pair_hhi": 0.4657391803219908
+  },
+  "falsification": {
+    "product_pair_generality_gate": {
+      "status": "fail",
+      "observed": 0.6526946107784432,
+      "threshold": 0.5
+    },
+    "semantic_relation_gate": "pending dual coding; location, timing, exact text inequality, and suggestion syntax do not establish redundancy, complementarity, contradiction, correctness, or response",
+    "safe_pre_coding_read": "Same-locus cross-product output is uncommon among eligible multi-product PRs and usually arrives in a short burst. This timing is compatible with parallel fan-out, but does not prove independent generation or coordination."
+  }
+}

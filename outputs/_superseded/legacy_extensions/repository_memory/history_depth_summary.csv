@@ -1,0 +1,11 @@
+account_role,prior_distinct_pr_bin,prs,repositories,median_recency_days
+author_account,0,452,295,
+author_account,1,144,106,11.814143518518517
+author_account,10+,370,62,0.8618576388888888
+author_account,2-4,227,109,3.813449074074074
+author_account,5-9,179,63,1.637048611111111
+other_user,0,584,351,
+other_user,1,185,141,14.540520833333332
+other_user,10+,898,107,0.6130439814814814
+other_user,2-4,326,159,6.936122685185184
+other_user,5-9,238,104,2.877199074074074

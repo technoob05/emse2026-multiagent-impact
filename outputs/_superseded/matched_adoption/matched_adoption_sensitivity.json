@@ -1,0 +1,86 @@
+[
+  {
+    "max_match_distance": 0.49641705665358027,
+    "replacement": true,
+    "matched_pairs": 26,
+    "median_match_distance": 0.3569023514584353,
+    "pretrend_max_abs_log_pr": 0.21549155195391437,
+    "pretrend_ci_excludes_zero": true,
+    "post_mean_log_pr": 0.3325964249290556,
+    "post_mean_pr_count": 1.625,
+    "post_mean_merged_count": 0.9615384615384615,
+    "causal_gate_passed": false
+  },
+  {
+    "max_match_distance": 0.7482674490103983,
+    "replacement": true,
+    "matched_pairs": 37,
+    "median_match_distance": 0.4245903370652777,
+    "pretrend_max_abs_log_pr": 0.11114802505517626,
+    "pretrend_ci_excludes_zero": false,
+    "post_mean_log_pr": 0.3445455002799665,
+    "post_mean_pr_count": 1.4797297297297298,
+    "post_mean_merged_count": 0.7432432432432432,
+    "causal_gate_passed": true
+  },
+  {
+    "max_match_distance": 0.941909162605624,
+    "replacement": true,
+    "matched_pairs": 40,
+    "median_match_distance": 0.43263508634025283,
+    "pretrend_max_abs_log_pr": 0.09218926874210381,
+    "pretrend_ci_excludes_zero": true,
+    "post_mean_log_pr": 0.30229322550913235,
+    "post_mean_pr_count": 2.44375,
+    "post_mean_merged_count": 1.275,
+    "causal_gate_passed": false
+  },
+  {
+    "max_match_distance": 1.3903848063349604,
+    "replacement": true,
+    "matched_pairs": 43,
+    "median_match_distance": 0.44535652972308226,
+    "pretrend_max_abs_log_pr": 0.062415283786949736,
+    "pretrend_ci_excludes_zero": false,
+    "post_mean_log_pr": 0.37465914383332943,
+    "post_mean_pr_count": 3.3779069767441863,
+    "post_mean_merged_count": 1.9302325581395348,
+    "causal_gate_passed": true
+  },
+  {
+    "max_match_distance": 0.7482674490103983,
+    "replacement": false,
+    "matched_pairs": 37,
+    "median_match_distance": 0.4245903370652777,
+    "pretrend_max_abs_log_pr": 0.09818659045350367,
+    "pretrend_ci_excludes_zero": false,
+    "post_mean_log_pr": 0.36582515079034206,
+    "post_mean_pr_count": 1.9932432432432434,
+    "post_mean_merged_count": 1.1621621621621623,
+    "causal_gate_passed": true
+  },
+  {
+    "max_match_distance": 0.941909162605624,
+    "replacement": false,
+    "matched_pairs": 40,
+    "median_match_distance": 0.4410666816815778,
+    "pretrend_max_abs_log_pr": 0.09874837535379109,
+    "pretrend_ci_excludes_zero": true,
+    "post_mean_log_pr": 0.32197690223122966,
+    "post_mean_pr_count": 2.9187499999999997,
+    "post_mean_merged_count": 1.6625,
+    "causal_gate_passed": false
+  },
+  {
+    "max_match_distance": 1.3903848063349604,
+    "replacement": false,
+    "matched_pairs": 43,
+    "median_match_distance": 0.4652264156293231,
+    "pretrend_max_abs_log_pr": 0.05550245765978854,
+    "pretrend_ci_excludes_zero": false,
+    "post_mean_log_pr": 0.41144659793730337,
+    "post_mean_pr_count": 3.8895348837209305,
+    "post_mean_merged_count": 2.2848837209302326,
+    "causal_gate_passed": true
+  }
+]

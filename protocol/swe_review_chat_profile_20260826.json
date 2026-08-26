@@ -1,0 +1,633 @@
+{
+  "generated_at_utc": "2026-08-26T07:07:07.557267+00:00",
+  "profile_mode": "complete_pinned_revision_streaming_scan",
+  "dataset": {
+    "id": "Suzhen/SWE-Review-Chat",
+    "canonical_url": "https://huggingface.co/datasets/Suzhen/SWE-Review-Chat",
+    "revision": "408cf94c068080eda66e0f3d7e9aa0316a42cb63",
+    "last_modified": "2026-08-09T05:09:15.000Z",
+    "license": "apache-2.0",
+    "private": false,
+    "gated": false,
+    "local_path": "external_data/downloads/SWE-Review-Chat"
+  },
+  "remote_endpoints": {
+    "canonical": "https://huggingface.co/datasets/Suzhen/SWE-Review-Chat",
+    "pinned_revision": "https://huggingface.co/api/datasets/Suzhen/SWE-Review-Chat/revision/408cf94c068080eda66e0f3d7e9aa0316a42cb63",
+    "pinned_tree": "https://huggingface.co/api/datasets/Suzhen/SWE-Review-Chat/tree/408cf94c068080eda66e0f3d7e9aa0316a42cb63?recursive=true&expand=false&limit=1000",
+    "viewer_parquet": "https://datasets-server.huggingface.co/parquet?dataset=Suzhen%2FSWE-Review-Chat",
+    "viewer_size": "https://datasets-server.huggingface.co/size?dataset=Suzhen%2FSWE-Review-Chat"
+  },
+  "acquisition": {
+    "gate_decision": "DOWNLOAD_FULL",
+    "sample_fallback_used": false,
+    "download_method": {
+      "tool": "huggingface_hub hf CLI",
+      "tool_version": "1.17.0",
+      "command": "hf download Suzhen/SWE-Review-Chat --repo-type dataset --revision 408cf94c068080eda66e0f3d7e9aa0316a42cb63 --local-dir external_data/downloads/SWE-Review-Chat --max-workers 8"
+    },
+    "max_full_download_bytes": 3758096384,
+    "minimum_free_after_download_bytes": 10737418240,
+    "disk_free_before_bytes": 17788321792,
+    "projected_free_after_download_bytes": 15958575595,
+    "disk_free_after_download_bytes": 15925833728,
+    "disk_free_at_profile_time_bytes": 15858892800,
+    "pinned_repository_file_count": 295,
+    "pinned_repository_bytes": 1829746197,
+    "pinned_original_parquet_file_count": 293,
+    "pinned_original_parquet_bytes": 1829741160,
+    "viewer_converted_parquet_file_count": 293,
+    "viewer_converted_parquet_bytes": 1829741160,
+    "viewer_reported_memory_bytes": 11363422652,
+    "viewer_reported_rows": 1082529,
+    "pinned_sha": "408cf94c068080eda66e0f3d7e9aa0316a42cb63",
+    "default_sha_at_profile_time": "408cf94c068080eda66e0f3d7e9aa0316a42cb63",
+    "viewer_revision_basis": "Dataset Viewer default branch observed while the dataset default SHA equaled the pinned revision; the converted endpoint is not independently revision-addressable."
+  },
+  "file_integrity": {
+    "expected_file_count": 295,
+    "local_file_count_excluding_hf_cache": 295,
+    "missing_paths": [],
+    "unexpected_paths": [],
+    "all_byte_sizes_match": true,
+    "lfs_files_checked": 293,
+    "all_checked_lfs_sha256_match": true,
+    "local_total_bytes": 1829746197,
+    "local_parquet_bytes": 1829741160
+  },
+  "schema": {
+    "metadata_rows": 1082529,
+    "row_groups": 293,
+    "schema_sha256": "8c9470ee324a61bf37aa7023ed6c662bbddb21bf6a26d9f46ab91b3c7e6afdbc",
+    "all_shard_schemas_identical": true,
+    "schema_mismatch_files": [],
+    "root_schema": [
+      {
+        "name": "repo_full_name",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "pr_number",
+        "type": "int64",
+        "nullable": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "review_conversations",
+        "type": "list<element: struct<type: string, timestamp: string, reviewer: string, reviewer_type: string, body: string, title: string, state: string, review_id: int64, comment_id: int64, path: string, diff_hunk: string, thread_replies: list<element: struct<reviewer: string, reviewer_type: string, body: string, comment_id: int64>>>>",
+        "nullable": true
+      },
+      {
+        "name": "repo_url",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "pr_url",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "created_at",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "created_by",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "created_by_type",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "state",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "closed_at",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "merged_at",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "merged_by",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "merged_by_type",
+        "type": "string",
+        "nullable": true
+      },
+      {
+        "name": "additions",
+        "type": "int64",
+        "nullable": true
+      },
+      {
+        "name": "deletions",
+        "type": "int64",
+        "nullable": true
+      }
+    ],
+    "root_fields": [
+      "repo_full_name",
+      "pr_number",
+      "title",
+      "review_conversations",
+      "repo_url",
+      "pr_url",
+      "created_at",
+      "created_by",
+      "created_by_type",
+      "state",
+      "closed_at",
+      "merged_at",
+      "merged_by",
+      "merged_by_type",
+      "additions",
+      "deletions"
+    ],
+    "event_fields": [
+      "type",
+      "timestamp",
+      "reviewer",
+      "reviewer_type",
+      "body",
+      "title",
+      "state",
+      "review_id",
+      "comment_id",
+      "path",
+      "diff_hunk",
+      "thread_replies"
+    ],
+    "reply_fields": [
+      "reviewer",
+      "reviewer_type",
+      "body",
+      "comment_id"
+    ],
+    "reply_timestamp_field_present": false,
+    "reply_parent_id_field_present": false,
+    "parquet_shards": 293
+  },
+  "row_profile": {
+    "scanned_rows": 1082529,
+    "unique_repositories": 207,
+    "unique_pr_keys": 1082389,
+    "duplicate_pr_key_rows": 140,
+    "invalid_pr_key_rows": 0,
+    "root_created_at_min": "2015-07-14T14:56:12Z",
+    "root_created_at_max": "2026-01-28T19:50:18Z",
+    "root_field_nulls": {
+      "repo_full_name": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "pr_number": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "title": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "review_conversations": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "repo_url": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "pr_url": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "created_at": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "created_by": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "created_by_type": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "state": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "closed_at": {
+        "null_count": 13,
+        "denominator": 1082529,
+        "null_rate": 1.2008916158366196e-05
+      },
+      "merged_at": {
+        "null_count": 170398,
+        "denominator": 1082529,
+        "null_rate": 0.1574073304271756
+      },
+      "merged_by": {
+        "null_count": 173899,
+        "denominator": 1082529,
+        "null_rate": 0.16064142392490177
+      },
+      "merged_by_type": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "additions": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      },
+      "deletions": {
+        "null_count": 0,
+        "denominator": 1082529,
+        "null_rate": 0.0
+      }
+    },
+    "created_by_type_counts": {
+      "User": 991865,
+      "Bot": 90650,
+      "Organization": 14
+    },
+    "nesting": {
+      "null_review_conversation_lists": 0,
+      "empty_review_conversation_lists": 0,
+      "conversation_entries": 10023458,
+      "null_conversation_entry_structs": 0,
+      "max_conversation_entries_per_pr": 1180,
+      "conversation_entry_type_counts": {
+        "comment": 3394929,
+        "review_comment": 1883981,
+        "review": 1617744,
+        "closed": 1107538,
+        "created": 1082529,
+        "merged": 911890,
+        "reopened": 24847
+      },
+      "conversation_entry_reviewer_type_counts": {
+        "User": 7592917,
+        "Bot": 2417538,
+        "Unknown": 12062,
+        "Organization": 941
+      },
+      "conversation_entry_timestamp_min": "2015-07-14T14:56:12Z",
+      "conversation_entry_timestamp_max": "2026-01-30T12:57:17Z",
+      "conversation_entry_field_nulls": {
+        "type": {
+          "null_count": 0,
+          "denominator": 10023458,
+          "null_rate": 0.0
+        },
+        "timestamp": {
+          "null_count": 0,
+          "denominator": 10023458,
+          "null_rate": 0.0
+        },
+        "reviewer": {
+          "null_count": 12062,
+          "denominator": 10023458,
+          "null_rate": 0.0012033771179566972
+        },
+        "reviewer_type": {
+          "null_count": 0,
+          "denominator": 10023458,
+          "null_rate": 0.0
+        },
+        "body": {
+          "null_count": 2044275,
+          "denominator": 10023458,
+          "null_rate": 0.20394907625691652
+        },
+        "title": {
+          "null_count": 8940929,
+          "denominator": 10023458,
+          "null_rate": 0.8920004453552856
+        },
+        "state": {
+          "null_count": 8405714,
+          "denominator": 10023458,
+          "null_rate": 0.838604202262333
+        },
+        "review_id": {
+          "null_count": 8405714,
+          "denominator": 10023458,
+          "null_rate": 0.838604202262333
+        },
+        "comment_id": {
+          "null_count": 4744548,
+          "denominator": 10023458,
+          "null_rate": 0.47334442863929793
+        },
+        "path": {
+          "null_count": 8139477,
+          "denominator": 10023458,
+          "null_rate": 0.8120428099763575
+        },
+        "diff_hunk": {
+          "null_count": 8139477,
+          "denominator": 10023458,
+          "null_rate": 0.8120428099763575
+        },
+        "thread_replies": {
+          "null_count": 9230352,
+          "denominator": 10023458,
+          "null_rate": 0.920875011398262
+        }
+      },
+      "null_thread_reply_lists": 9230352,
+      "empty_thread_reply_lists": 0,
+      "parents_with_one_or_more_nested_replies": 793106,
+      "nested_replies": 1273825,
+      "null_nested_reply_structs": 0,
+      "max_nested_replies_per_parent": 66,
+      "nested_reply_reviewer_type_counts": {
+        "User": 1246053,
+        "Bot": 26588,
+        "Unknown": 1181,
+        "Organization": 3
+      },
+      "nested_reply_field_nulls": {
+        "reviewer": {
+          "null_count": 1181,
+          "denominator": 1273825,
+          "null_rate": 0.0009271289227327145
+        },
+        "reviewer_type": {
+          "null_count": 0,
+          "denominator": 1273825,
+          "null_rate": 0.0
+        },
+        "body": {
+          "null_count": 0,
+          "denominator": 1273825,
+          "null_rate": 0.0
+        },
+        "comment_id": {
+          "null_count": 0,
+          "denominator": 1273825,
+          "null_rate": 0.0
+        }
+      },
+      "nested_reply_timestamp_field_present": false,
+      "nested_reply_explicit_parent_id_field_present": false
+    },
+    "identity_support": {
+      "mapping_scope": "Exact GitHub login aliases already used by the AIDev analysis; no fuzzy name inference and no semantic product inference.",
+      "account_aliases": {
+        "chatgpt-codex-connector[bot]": "OpenAI_Codex",
+        "claude[bot]": "Claude_Code",
+        "copilot": "Copilot",
+        "copilot-pull-request-reviewer[bot]": "Copilot",
+        "copilot-swe-agent[bot]": "Copilot",
+        "cursor[bot]": "Cursor",
+        "devin-ai-integration[bot]": "Devin",
+        "google-labs-jules[bot]": "Google_Jules"
+      },
+      "mapped_root_author_rows_by_product": {
+        "Copilot": 4083,
+        "Devin": 1041,
+        "Cursor": 65,
+        "Claude_Code": 58,
+        "Google_Jules": 5
+      },
+      "mapped_conversation_entries_by_product": {
+        "Copilot": 201301,
+        "Cursor": 23814,
+        "Claude_Code": 10593,
+        "Devin": 3861,
+        "OpenAI_Codex": 1166,
+        "Google_Jules": 9
+      },
+      "mapped_nested_replies_by_product": {
+        "Copilot": 6428,
+        "Cursor": 169,
+        "Devin": 113,
+        "Claude_Code": 32,
+        "OpenAI_Codex": 2
+      },
+      "mapped_conversation_entry_prs_by_product": {
+        "Copilot": 71372,
+        "Cursor": 8524,
+        "Claude_Code": 4074,
+        "Devin": 1332,
+        "OpenAI_Codex": 575,
+        "Google_Jules": 5
+      },
+      "mapped_nested_reply_prs_by_product": {
+        "Copilot": 1344,
+        "Cursor": 84,
+        "Devin": 56,
+        "Claude_Code": 22,
+        "OpenAI_Codex": 2
+      },
+      "mapped_conversation_entries_by_type_and_product": {
+        "review_comment|Copilot": 113963,
+        "review|Copilot": 78435,
+        "review_comment|Cursor": 17977,
+        "comment|Claude_Code": 5403,
+        "comment|Copilot": 4820,
+        "review_comment|Claude_Code": 4775,
+        "review|Cursor": 4555,
+        "created|Copilot": 4083,
+        "comment|Devin": 2638,
+        "comment|Cursor": 1217,
+        "created|Devin": 1041,
+        "review_comment|OpenAI_Codex": 474,
+        "review|OpenAI_Codex": 405,
+        "review|Claude_Code": 357,
+        "comment|OpenAI_Codex": 287,
+        "closed|Devin": 171,
+        "created|Cursor": 65,
+        "created|Claude_Code": 58,
+        "review|Devin": 7,
+        "created|Google_Jules": 5,
+        "comment|Google_Jules": 4,
+        "merged|Devin": 2,
+        "review_comment|Devin": 2
+      },
+      "cross_product_nested_reply_pairs": {
+        "Cursor->Claude_Code": 6
+      },
+      "same_product_nested_reply_pairs": {
+        "Copilot->Copilot": 318,
+        "Cursor->Cursor": 28,
+        "Devin->Devin": 4,
+        "OpenAI_Codex->OpenAI_Codex": 2,
+        "Claude_Code->Claude_Code": 1
+      },
+      "unique_pr_support": {
+        "mapped_author": 5250,
+        "mapped_parent_actor": 84744,
+        "mapped_nested_reply_actor": 1507,
+        "cross_product_author_actor": 88,
+        "cross_product_nested_thread": 4
+      },
+      "distinct_root_author_logins": 58836,
+      "distinct_conversation_actor_logins": 77056,
+      "distinct_nested_reply_actor_logins": 24941
+    }
+  },
+  "aidev_overlap": {
+    "aidev_project_revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+    "join_key": "exact normalized lower-case GitHub owner/repository plus positive PR number",
+    "normalization": "strip GitHub/API URL prefix, query, fragment, trailing slash, and .git; no fuzzy matching",
+    "rich_backbone": {
+      "source_path": "../Legacy/AI_Dev_Dataminning/AIDev-7.6M/pull_request.parquet",
+      "source_file_bytes": 362033413,
+      "source_metadata_rows": 361296,
+      "source_rows_scanned": 361296,
+      "invalid_source_join_key_rows": 0,
+      "matched_source_rows": 8127,
+      "matched_unique_swe_pr_keys": 8127,
+      "matched_swe_rows": 8129,
+      "swe_unique_pr_key_overlap_rate": 0.0075083911606640494,
+      "swe_row_overlap_rate": 0.007509267650104524,
+      "matched_product_support_pr_keys": {
+        "mapped_author": 5121,
+        "mapped_parent_actor": 6146,
+        "mapped_nested_reply_actor": 1427,
+        "cross_product_author_actor": 78,
+        "cross_product_nested_thread": 0
+      },
+      "nonoverlap_product_support_pr_keys": {
+        "mapped_author": 129,
+        "mapped_parent_actor": 78598,
+        "mapped_nested_reply_actor": 80,
+        "cross_product_author_actor": 10,
+        "cross_product_nested_thread": 4
+      }
+    },
+    "full_backbone": {
+      "source_path": "../Legacy/AI_Dev_Dataminning/AIDev-7.6M/all_pull_request.parquet",
+      "source_file_bytes": 6726453837,
+      "source_metadata_rows": 7685281,
+      "source_rows_scanned": 7685281,
+      "invalid_source_join_key_rows": 0,
+      "matched_source_rows": 8199,
+      "matched_unique_swe_pr_keys": 8199,
+      "matched_swe_rows": 8201,
+      "swe_unique_pr_key_overlap_rate": 0.007574910683682114,
+      "swe_row_overlap_rate": 0.007575778570366244,
+      "matched_product_support_pr_keys": {
+        "mapped_author": 5121,
+        "mapped_parent_actor": 6173,
+        "mapped_nested_reply_actor": 1427,
+        "cross_product_author_actor": 78,
+        "cross_product_nested_thread": 0
+      },
+      "nonoverlap_product_support_pr_keys": {
+        "mapped_author": 129,
+        "mapped_parent_actor": 78571,
+        "mapped_nested_reply_actor": 80,
+        "cross_product_author_actor": 10,
+        "cross_product_nested_thread": 4
+      }
+    }
+  },
+  "quality_checks": [
+    {
+      "check": "pinned_revision_resolves_exactly",
+      "status": "PASS",
+      "value": "408cf94c068080eda66e0f3d7e9aa0316a42cb63"
+    },
+    {
+      "check": "viewer_default_sha_equals_pinned_revision_at_profile_time",
+      "status": "PASS",
+      "value": "408cf94c068080eda66e0f3d7e9aa0316a42cb63"
+    },
+    {
+      "check": "full_download_size_and_free_space_gate",
+      "status": "PASS",
+      "value": true
+    },
+    {
+      "check": "local_file_set_matches_pinned_tree",
+      "status": "PASS",
+      "value": true
+    },
+    {
+      "check": "local_byte_sizes_match_pinned_tree",
+      "status": "PASS",
+      "value": true
+    },
+    {
+      "check": "checked_lfs_sha256_values_match",
+      "status": "PASS",
+      "value": true
+    },
+    {
+      "check": "all_parquet_shard_schemas_identical",
+      "status": "PASS",
+      "value": true
+    },
+    {
+      "check": "metadata_stream_and_viewer_row_counts_reconcile",
+      "status": "PASS",
+      "value": "1082529/1082529/1082529"
+    },
+    {
+      "check": "pr_join_keys_complete",
+      "status": "PASS",
+      "value": 0
+    },
+    {
+      "check": "pr_join_keys_unique",
+      "status": "LIMITATION",
+      "value": 140
+    },
+    {
+      "check": "nested_reply_timestamp_available",
+      "status": "LIMITATION",
+      "value": false
+    },
+    {
+      "check": "nested_reply_explicit_parent_id_available",
+      "status": "LIMITATION",
+      "value": false
+    }
+  ],
+  "profiler": {
+    "script": "scripts/profile_swe_review_chat.py",
+    "script_sha256": "4682ecbb02165d7608f82ebcf9c13b627479666db8e9d77ceb9c8beba971b1ee",
+    "batch_size": 1024,
+    "raw_dataset_mutated": false
+  },
+  "interpretation_limits": [
+    "Nested reply membership is present, but reply timestamps and explicit parent IDs are absent.",
+    "Exact product attribution covers only the fixed AIDev alias map; unmapped identities remain unknown.",
+    "The reviewer field is a generic conversation-actor field across multiple event types.",
+    "Overlap counts are compatibility diagnostics, not independent evidence or outcome estimates.",
+    "No raw body, diff, title, or comment text is exported by this profiler."
+  ]
+}

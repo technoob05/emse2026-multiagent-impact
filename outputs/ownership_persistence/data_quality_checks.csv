@@ -1,0 +1,12 @@
+check,status,value,expected,severity,note
+exact_duplicate_event_rows_removed,PASS,9,reported; exact-deduplicated view used,low,Duplicates are not allowed to create persistence.
+review_rows_debatched,PASS,16559 rows -> 13879 actions,one action per PR-review ID,high,Prevents a reply and its submitted review from becoming two owners/actions.
+ambiguous_review_or_action_batches_flagged,PASS,1,reported and propagated to timestamp ties,medium,No arbitrary owner is used for an ambiguous logical action.
+one_sequence_row_per_pr,PASS,8608,"8,608 unique PR rows",critical,Locks the denominator to the complete cross-feedback cohort.
+first_action_strictly_after_burst,PASS,0,0 first actions at or before five minutes,critical,Protects the burst boundary.
+first_action_within_48h,PASS,0,0 actions after landmark,critical,Prevents future-window leakage.
+next_action_strictly_later,PASS,0,0 non-positive action gaps,critical,"Same-timestamp rows are ties, not transitions."
+next_action_within_48h,PASS,0,0 actions after landmark,critical,Locks the outcome window before any later-merge analysis.
+exact_owner_ties_reported,PASS,"first=0, next=0",ties retained separately,medium,Exact account/product persistence is not inferred across mixed-owner ties.
+debatched_first_state_vs_raw_burst_reference,PASS,0,reported; differences explain review de-batching impact,medium,The extension de-batches cross-source rows sharing a review ID.
+timestamp_state_grain_unique,PASS,19676,unique PR-timestamp rows,critical,Protects exact ordering.

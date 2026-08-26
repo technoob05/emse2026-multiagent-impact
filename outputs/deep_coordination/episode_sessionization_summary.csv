@@ -1,0 +1,5 @@
+episode_gap_minutes,episodes,prs,mixed_state_episodes,mixed_state_episode_share,median_event_rows_per_episode,maximum_event_rows_per_episode
+0,23023,4771,11,0.00047778308647873863,1.0,13
+1,18570,4771,1286,0.06925148088314485,1.0,29
+5,14842,4771,2529,0.17039482549521628,1.0,34
+10,12618,4771,2850,0.22586780789348548,1.0,43

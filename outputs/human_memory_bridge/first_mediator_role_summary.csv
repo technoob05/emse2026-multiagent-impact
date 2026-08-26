@@ -1,0 +1,4 @@
+account_role,prs,repositories,prior_reviewer_share,median_prior_review_prs_among_experienced,median_prior_review_events_among_experienced,median_recency_days_among_experienced
+author_account,1372,438,0.6705539358600583,7.0,15.0,1.7571469907407407
+other_user,2231,571,0.7382339757956073,11.0,18.0,1.350324074074074
+all_first_mediators,3603,834,0.7124618373577575,9.0,17.0,1.5109837962962962

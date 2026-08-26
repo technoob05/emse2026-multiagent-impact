@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "checks": {
+    "successors_do_not_exceed_eligible": true,
+    "composition_reconciles": true,
+    "four_transition_modes": true,
+    "failed_ids_unique": true,
+    "no_self_successor": true,
+    "successor_after_close": true,
+    "successor_within_precise_30d": true,
+    "nonnegative_day_gap": true,
+    "same_contributor_new_agent_under_one_percent": true,
+    "repo_clustered_cross_contributor_ci_crosses_zero": true,
+    "within_context_ci_crosses_zero": true,
+    "unique_successor_sensitivity_present": true,
+    "nearest_failure_sensitivity_present": true
+  },
+  "failed": []
+}

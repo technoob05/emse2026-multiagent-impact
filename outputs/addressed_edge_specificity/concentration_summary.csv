@@ -1,0 +1,3 @@
+group,prs,repositories,ordered_product_pairs,largest_ordered_product_pair,largest_ordered_product_pair_count,largest_ordered_product_pair_share,largest_repository_count,largest_repository_share,ordered_product_pair_hhi,repository_hhi
+exact_edge,109,76,15,OpenAI_Codex -> Copilot,39,0.3577981651376147,6,0.05504587155963303,0.17969867856241062,0.01910613584715091
+nonexact_discussion_only,506,261,15,OpenAI_Codex -> Copilot,180,0.3557312252964427,20,0.039525691699604744,0.1826618131825212,0.00944398443968817

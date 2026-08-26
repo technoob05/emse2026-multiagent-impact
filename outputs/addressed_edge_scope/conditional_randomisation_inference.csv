@@ -1,0 +1,2 @@
+threshold_hours,scope,repositories,n_prs,exposed_prs,observed_estimate,permutations,permutation_mean,permutation_sd,permutation_p_value_two_sided,interpretation
+48,"repositories with within-repository exposure variation, with repository fixed effects so the coefficient uses within-repository variation only",46,321,77,0.16360614995993655,2000,-0.0013667906388764228,0.06272168814558693,0.0069965017491254375,conditional randomisation test; the reference distribution is centred because every retained repository can actually be re-randomised

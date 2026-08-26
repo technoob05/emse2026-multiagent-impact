@@ -1,0 +1,5 @@
+responder_position,account_role,pr_user_accounts,prs,repositories,prior_reviewer_share,median_prior_review_prs,median_recency_days
+first,author_account,1372,1372,438,0.6705539358600583,2.0,1.7571469907407407
+first,other_user,2231,2231,571,0.7382339757956073,5.0,1.350324074074074
+later_only,author_account,282,282,144,0.6276595744680851,2.0,2.333622685185185
+later_only,other_user,929,763,257,0.6856835306781486,3.0,2.5699537037037037

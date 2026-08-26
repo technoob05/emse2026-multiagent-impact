@@ -1,0 +1,6 @@
+burst_threshold_minutes,post_burst_action_prs,first_timestamp_tie_prs,mixed_state_tie_prs,maximum_events_at_first_timestamp
+0,5553,366,1,10
+1,5339,372,0,10
+5,4771,306,0,10
+10,4403,241,0,10
+30,3678,169,0,10

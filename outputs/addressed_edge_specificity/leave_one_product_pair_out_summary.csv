@@ -1,0 +1,2 @@
+threshold_hours,runs,all_estimates_positive,runs_with_interval_excluding_zero,min_estimate,max_estimate,min_ci_low,max_ci_low
+48,15,True,13,0.09521001672770656,0.14707431631879547,-0.020245178476901632,0.029615481449310782

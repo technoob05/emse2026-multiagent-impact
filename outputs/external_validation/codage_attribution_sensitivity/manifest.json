@@ -1,0 +1,25 @@
+{
+  "analysis": "cross-corpus attribution sensitivity",
+  "aidev_revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+  "a2a_replication_revision": "f3d01cd621b4e231e25835c59ecbb851c8269f10",
+  "grain": "one AIDev landmark PR",
+  "join_keys": [
+    "normalized repository name",
+    "PR number",
+    "author product",
+    "reviewer product"
+  ],
+  "inputs": {
+    "D:\\PhD_LetGoo\\PhD_Farming\\emse2026-multiagent-impact\\outputs\\addressed_edge_landmark\\analysis_cohort.parquet": "36355684c8089b7da3ec357d057db9a3c47a42964ee9b397bb2c73563ca4b069",
+    "D:\\PhD_LetGoo\\PhD_Farming\\emse2026-multiagent-impact\\external_data\\source_repositories\\AI-AI-CodeReviews\\cohorts\\axb_cross.parquet": "00dc6577965096ce3dce9940a10ed03bef24a2c3d5b3675a1bb8bfb38668484b",
+    "D:\\PhD_LetGoo\\PhD_Farming\\Legacy\\AI_Dev_Dataminning\\AIDev-7.6M\\pull_request.parquet": "f31e6dc4a907db48ee8647626883ce188be5cb0da2acd0ce665b5f0a7d5d6f8f"
+  },
+  "quality_gates": {
+    "aidev_pr_map_unique": true,
+    "landmark_grain_preserved": true,
+    "external_cross_file_has_no_same_product_pairs": true,
+    "exact_pair_implies_cross_pr_overlap": true,
+    "external_outcome_imported": false,
+    "claim_status": "APPENDIX_SENSITIVITY_ONLY"
+  }
+}

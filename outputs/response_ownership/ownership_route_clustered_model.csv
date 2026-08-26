@@ -1,0 +1,6 @@
+term,estimate,ci_low,ci_high,p_value
+"C(ownership_route_48h, Treatment('no_observed_action'))[T.automation_no_human]",0.09167081162173443,0.025560251977914672,0.1577813712655542,0.006572893490928796
+"C(ownership_route_48h, Treatment('no_observed_action'))[T.automation_then_human]",0.22437550837136433,0.13205174448773271,0.31669927225499594,1.9043057543679105e-06
+"C(ownership_route_48h, Treatment('no_observed_action'))[T.human_first]",0.16239446176019326,0.0956506256743848,0.2291382978460017,1.8533630753451711e-06
+"C(ownership_route_48h, Treatment('no_observed_action'))[T.movement_only]",0.20024478964380302,0.019357526877136877,0.38113205241046916,0.030028959097228348
+"C(ownership_route_48h, Treatment('no_observed_action'))[T.other_activity]",0.07869286596529738,-0.05294121049115551,0.21032694242175026,0.24131893951331984

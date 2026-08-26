@@ -1,0 +1,22 @@
+{
+  "ledger_rows": 466467,
+  "unique_current_ids": 466467,
+  "unique_current_id_check": true,
+  "unique_prior_episode_check": true,
+  "strict_temporal_order_check": true,
+  "prior_merge_known_check": true,
+  "post_onset_check": true,
+  "mature_30_day_cohort_check": true,
+  "nonnegative_gap_check": true,
+  "missing_core_fields": 0,
+  "rq2_denominators_match": true,
+  "rq2_rates_match": true,
+  "rq3_star_denominators_match": true,
+  "rq3_star_effects_match": true,
+  "rq1_has_pre_and_post_windows": true,
+  "rq1_event_range": [
+    -10,
+    10
+  ],
+  "all_required_checks_pass": true
+}

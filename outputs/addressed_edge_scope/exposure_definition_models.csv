@@ -1,0 +1,5 @@
+exposure,exposed_prs,unexposed_prs,exposed_raw_merge_rate,unexposed_raw_merge_rate,estimate,ci_low,ci_high,p_value,n_prs,repositories,definition,definition_note
+edge_any,109,958,0.5504587155963303,0.37891440501043844,0.17346523604933012,0.07255437972242951,0.27437609237623073,0.0007539549388397667,1067,469,Any exact parent reply (primary),the reported exposure; it does not require the replier to be another product
+edge_excluding_self_brand,99,968,0.5555555555555556,0.38016528925619836,0.1585571028554247,0.05406621420225842,0.263047991508591,0.0029385058525983714,1067,469,"Exact reply, excluding the triggering product's own reply",removes replies written by the same product that wrote the trigger
+edge_human_reply,97,970,0.5670103092783505,0.37938144329896906,0.1700170812565838,0.06388489349488716,0.2761492690182804,0.0016909848785505986,1067,469,Exact reply written by a user account,restricts the edge to a human acknowledgement
+edge_different_product,3,1064,0.6666666666666666,0.3956766917293233,,,,,1067,469,Exact reply written by a different mapped product,not modelled: too few exposed PRs to support a clustered estimate; the count is the result

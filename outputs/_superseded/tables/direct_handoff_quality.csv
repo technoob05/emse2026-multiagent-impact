@@ -1,0 +1,2 @@
+rich_prs,file_path_rows,file_covered_prs,usable_file_pr_coverage,eligible_closed_unmerged_prs,successors_within_30d,successor_prevalence,ambiguous_earliest_ties,reused_successor_rows,unique_successors,repositories
+361296,4616736,188768,0.5224746468269784,37110,19405,0.5229048773915387,15,7695,14450,2649

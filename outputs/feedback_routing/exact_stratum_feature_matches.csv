@@ -1,0 +1,21 @@
+exposure,target,pairs,repositories,paired_difference,ci_low,ci_high,matching
+has_question,human_mediation_48h,519,152,-0.023121387283236993,-0.06968348840466676,0.02344071383819277,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_question,author_agent_response_48h,519,152,0.007707129094412331,-0.03046461097724556,0.04587886916607022,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_question,reviewer_continuation_48h,519,152,-0.02119460500963391,-0.06307859869398713,0.020689388674719318,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_question,force_push_48h,519,152,0.036608863198458574,0.0014913252111229472,0.07172640118579421,exact repo-author-reviewer-source-month; nearest log length and trigger age
+asks_action,human_mediation_48h,924,245,0.007575757575757576,-0.02644476539018368,0.04159628054169883,exact repo-author-reviewer-source-month; nearest log length and trigger age
+asks_action,author_agent_response_48h,924,245,-0.01406926406926407,-0.03661200397912757,0.008473475840599426,exact repo-author-reviewer-source-month; nearest log length and trigger age
+asks_action,reviewer_continuation_48h,924,245,-0.022727272727272728,-0.04978406366853563,0.004329518213990177,exact repo-author-reviewer-source-month; nearest log length and trigger age
+asks_action,force_push_48h,924,245,-0.01406926406926407,-0.03852868838963965,0.010390160251111514,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_code,human_mediation_48h,698,218,-0.03868194842406877,-0.07399859566471463,-0.003365301183422903,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_code,author_agent_response_48h,698,218,-0.01862464183381089,-0.0429209595742979,0.005671675906676124,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_code,reviewer_continuation_48h,698,218,-0.017191977077363897,-0.04498062405849543,0.010596669903767637,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_code,force_push_48h,698,218,-0.022922636103151862,-0.04670577990862605,0.0008605077023223287,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_suggestion_patch,human_mediation_48h,924,226,-0.022727272727272728,-0.05605055079064765,0.010596005336102193,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_suggestion_patch,author_agent_response_48h,924,226,0.0021645021645021645,-0.020693597711014748,0.025022602040019076,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_suggestion_patch,reviewer_continuation_48h,924,226,-0.016233766233766232,-0.04194470289498506,0.00947717042745259,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_suggestion_patch,force_push_48h,924,226,-0.006493506493506494,-0.03195839161896292,0.018971378631949934,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_severity_cue,human_mediation_48h,221,87,-0.03167420814479638,-0.10097254293524613,0.03762412664565337,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_severity_cue,author_agent_response_48h,221,87,0.027149321266968326,-0.027528038935654593,0.08182668146959124,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_severity_cue,reviewer_continuation_48h,221,87,-0.00904977375565611,-0.07673514527912384,0.058635597767811624,exact repo-author-reviewer-source-month; nearest log length and trigger age
+has_severity_cue,force_push_48h,221,87,0.00904977375565611,-0.04715591975575913,0.06525546726707135,exact repo-author-reviewer-source-month; nearest log length and trigger age

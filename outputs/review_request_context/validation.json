@@ -1,0 +1,18 @@
+{
+  "cross_feedback_prs": 8608,
+  "review_request_rows_in_cohort": 12474,
+  "review_request_prs_in_cohort": 6516,
+  "timestamped_rows": 12474,
+  "rows_before_pr_creation": 0,
+  "valid_pretrigger_request_rows": 10402,
+  "prs_with_any_valid_pretrigger_request": 6343,
+  "share_cross_feedback_prs_with_any_pretrigger_request": 0.7368726765799256,
+  "actor_nonnull_rows": 10402,
+  "assignee_nonnull_rows": 0,
+  "assignee_coverage": 0.0,
+  "exact_triggering_product_request_rows": 0,
+  "exact_triggering_product_request_prs": 0,
+  "message_nonnull_rows": 0,
+  "label_nonnull_rows": 0,
+  "inference_gate": "Target identity is absent when assignee coverage is zero; infer only that some review was requested, not that the triggering product was requested."
+}

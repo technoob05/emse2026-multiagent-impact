@@ -1,0 +1,7 @@
+first_owner_state,next_observation_status,prs,repositories,share_within_start_group
+mapped_product,closed_before_48h_without_next_action,181,116,0.20044296788482835
+mapped_product,next_action_observed,643,244,0.7120708748615725
+mapped_product,open_at_48h_without_next_action,79,59,0.08748615725359911
+user_account,closed_before_48h_without_next_action,719,280,0.3080548414738646
+user_account,next_action_observed,1476,491,0.6323907455012854
+user_account,open_at_48h_without_next_action,139,120,0.059554413024850046

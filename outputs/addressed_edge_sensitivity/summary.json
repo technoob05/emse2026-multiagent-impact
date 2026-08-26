@@ -1,0 +1,20 @@
+{
+  "cohort_prs": 1067,
+  "primary_threshold_hours": 48,
+  "adjusted_risk_difference": 0.17346523604933012,
+  "approximate_risk_ratio": 1.4577953061577362,
+  "e_value_point": 2.2747236068658165,
+  "e_value_limit": 1.6691238645847422,
+  "permutation_p_value_two_sided": 0.0009995002498750624,
+  "negative_control_models": 12,
+  "negative_control_models_failing_null": 1,
+  "negative_control_failures": [
+    {
+      "threshold_hours": 1,
+      "negative_control_outcome": "pre_trigger_user_event",
+      "estimate": 0.16650662453391082
+    }
+  ],
+  "all_thresholds_e_value_above_two": true,
+  "scope": "sensitivity bounds for an observational association; no causal claim, no semantic resolution claim"
+}

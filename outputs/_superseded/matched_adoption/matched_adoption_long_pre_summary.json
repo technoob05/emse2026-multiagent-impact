@@ -1,0 +1,11 @@
+{
+  "matched_pairs": 1,
+  "median_match_distance": 0.5457674946871431,
+  "max_match_distance": 0.5457674946871431,
+  "pretrend_max_abs_log_pr": 1.0296194171811581,
+  "pretrend_ci_excludes_zero": false,
+  "post_mean_log_pr": 1.2798163646554261,
+  "post_mean_pr_count": 26.75,
+  "post_mean_merged_count": 27.75,
+  "causal_gate_passed": true
+}

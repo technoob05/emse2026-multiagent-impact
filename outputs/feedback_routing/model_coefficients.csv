@@ -1,0 +1,121 @@
+target,feature,coefficient
+human_mediation_48h,text__giselle,1.9623539554873821
+human_mediation_48h,text__team,1.7880923241451925
+human_mediation_48h,text__order,-1.7131347047233965
+human_mediation_48h,text__frontend,1.645156241252936
+human_mediation_48h,text__liam,1.612325421294984
+human_mediation_48h,text__giselles,1.6014065003239737
+human_mediation_48h,text__giselles ai,1.6014065003239737
+human_mediation_48h,text__css,1.5346350907952255
+human_mediation_48h,text__or,-1.5023275136667575
+human_mediation_48h,text__identifier,1.4417465129327636
+human_mediation_48h,text__directly,-1.44101969420497
+human_mediation_48h,text__owner,1.4236749761761567
+human_mediation_48h,text__packages,1.4046327493542379
+human_mediation_48h,text__expression,-1.3730647742618969
+human_mediation_48h,text__terraform,-1.3616038482924662
+human_mediation_48h,text__adds,-1.3522988449985107
+human_mediation_48h,text__crewai,-1.3473846757887507
+human_mediation_48h,text__pattern,-1.3146072442496237
+human_mediation_48h,text__rustfs src,-1.3013115915917672
+human_mediation_48h,text__notes,-1.299480796355059
+human_mediation_48h,text__to be,1.2933990015291459
+human_mediation_48h,text__helm,-1.288205522832217
+human_mediation_48h,text__unreachable,-1.2855548637372591
+human_mediation_48h,text__unnecessary,1.2824823109182597
+human_mediation_48h,text__artifacts,1.2785272320667915
+human_mediation_48h,text__properly,-1.2726631901238004
+human_mediation_48h,text__ai backend,-1.2672856857790173
+human_mediation_48h,text__license,1.245776864126732
+human_mediation_48h,text__cs,-1.2453682267709172
+human_mediation_48h,text__sentry,1.2404810487414668
+author_agent_response_48h,cat__author_agent_Claude_Code,-2.2421143037012197
+author_agent_response_48h,text__paths,2.0837735737188137
+author_agent_response_48h,text__append,1.972824360297384
+author_agent_response_48h,text__even when,1.9168593428930536
+author_agent_response_48h,text__exists,-1.8566246743147283
+author_agent_response_48h,text__aware,1.8456582583125978
+author_agent_response_48h,text__result,-1.8261179788362156
+author_agent_response_48h,text__set,1.743057531644479
+author_agent_response_48h,text__found,-1.6616133847815528
+author_agent_response_48h,text__account,-1.6557569606942943
+author_agent_response_48h,text__once,1.6439609792918617
+author_agent_response_48h,text__error,1.643920320389354
+author_agent_response_48h,text__bun,1.6302135956346764
+author_agent_response_48h,text__server,1.6077238222517678
+author_agent_response_48h,text__inline,1.596826825980784
+author_agent_response_48h,text__checksum,1.5890343659350774
+author_agent_response_48h,text__appropriate,-1.5721184076194685
+author_agent_response_48h,text__compilation,1.571028082974275
+author_agent_response_48h,text__promise,1.5505339442658428
+author_agent_response_48h,text__size,1.5503903160564008
+author_agent_response_48h,cat__month_2025-05,-1.5364732565205343
+author_agent_response_48h,text__identifier,1.5254526572309515
+author_agent_response_48h,text__self,1.5224571110843765
+author_agent_response_48h,text__runtime,1.5206060502626155
+author_agent_response_48h,text__ast,1.5097830991596815
+author_agent_response_48h,text__workflow,-1.4911816208479673
+author_agent_response_48h,text__example,-1.4835589234667768
+author_agent_response_48h,text__shared,-1.4794894357727069
+author_agent_response_48h,cat__author_agent_Copilot,1.4530854893713405
+author_agent_response_48h,text__auto,-1.4500681712695442
+reviewer_continuation_48h,text__backend,-2.2559864533693905
+reviewer_continuation_48h,text__your,-1.8042405872676481
+reviewer_continuation_48h,text__if,1.7776495860774992
+reviewer_continuation_48h,text__execution,1.7068003713709199
+reviewer_continuation_48h,text__implementation,1.6743341763766382
+reviewer_continuation_48h,text__export,-1.6067644995099843
+reviewer_continuation_48h,text__have,-1.6062014955085986
+reviewer_continuation_48h,text__usage,-1.5648974070542045
+reviewer_continuation_48h,text__element,-1.5166088557973543
+reviewer_continuation_48h,text__patterns,-1.5099214033919113
+reviewer_continuation_48h,text__references,-1.505262399611582
+reviewer_continuation_48h,text__potential,1.4877765810022185
+reviewer_continuation_48h,text__agent,-1.4430546494458332
+reviewer_continuation_48h,text__targets,1.4339775057909954
+reviewer_continuation_48h,text__to use,1.4265970139718893
+reviewer_continuation_48h,text__discovery,1.4251303602375904
+reviewer_continuation_48h,text__actual,-1.4153038599553864
+reviewer_continuation_48h,text__dev,1.4048373274969146
+reviewer_continuation_48h,text__import,-1.404680170818608
+reviewer_continuation_48h,text__admin,-1.3884210581826808
+reviewer_continuation_48h,text__license,1.3814497150986917
+reviewer_continuation_48h,text__up,-1.3809207208559309
+reviewer_continuation_48h,text__credits,-1.3749297533736793
+reviewer_continuation_48h,text__text,1.3722651629854328
+reviewer_continuation_48h,text__requires,1.3703185570700096
+reviewer_continuation_48h,text__to the,-1.3428596108682944
+reviewer_continuation_48h,text__to remove,1.3316076061557032
+reviewer_continuation_48h,text__removing the,1.322815581409721
+reviewer_continuation_48h,text__after,1.3189174131201435
+reviewer_continuation_48h,text__boolean,1.3149168753771956
+force_push_48h,text__kind,2.506013636724524
+force_push_48h,text__segment,2.341458215228844
+force_push_48h,text__these,-2.2303039961084665
+force_push_48h,text__sections,2.195000179883873
+force_push_48h,text__package json,2.1046782584307544
+force_push_48h,text__tag,1.8572507965707576
+force_push_48h,text__rejects,1.8527571050407903
+force_push_48h,text__pipeline,1.7686415189168962
+force_push_48h,text__config,-1.7045429428560266
+force_push_48h,text__either,1.6918250892983138
+force_push_48h,text__this should,1.6833508596278532
+force_push_48h,text__random,1.6686224301711023
+force_push_48h,text__ref,-1.6565462276008043
+force_push_48h,text__api,-1.6455814572660328
+force_push_48h,text__clear,-1.623726666263842
+force_push_48h,text__utils,1.6233769760647458
+force_push_48h,text__skyline,-1.6096516915802233
+force_push_48h,text__yml,-1.5497832976095693
+force_push_48h,text__safe,1.5359164424070009
+force_push_48h,text__its,1.5311278445256193
+force_push_48h,text__skip,1.5185423079989095
+force_push_48h,text__the variable,1.5136047587856396
+force_push_48h,text__all,1.5133593396174372
+force_push_48h,text__app,-1.5111628995291309
+force_push_48h,text__and can,-1.507943727904336
+force_push_48h,text__queue,1.4980015846968289
+force_push_48h,text__l1,1.493114561522542
+force_push_48h,text__the fallback,1.4839359659395588
+force_push_48h,text__sessions,1.481585435949549
+force_push_48h,text__interactive,1.4814709111813338

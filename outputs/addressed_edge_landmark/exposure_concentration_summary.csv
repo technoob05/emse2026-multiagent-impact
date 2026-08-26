@@ -1,0 +1,5 @@
+threshold_hours,exposed_prs,represented_ordered_product_pairs,represented_repositories,largest_ordered_product_pair,largest_ordered_product_pair_count,largest_ordered_product_pair_share,largest_repository_count,largest_repository_share,ordered_product_pair_hhi,repository_hhi
+1,62,15,49,OpenAI_Codex -> Copilot,19,0.3064516129032258,4,0.06451612903225806,0.1607700312174818,0.026534859521331947
+6,86,15,63,OpenAI_Codex -> Copilot,29,0.3372093023255814,5,0.05813953488372093,0.1695511087074094,0.0219037317468902
+24,104,15,75,OpenAI_Codex -> Copilot,36,0.34615384615384615,5,0.04807692307692308,0.1728920118343195,0.018676035502958585
+48,109,15,76,OpenAI_Codex -> Copilot,39,0.3577981651376147,6,0.05504587155963303,0.17969867856241062,0.01910613584715091
