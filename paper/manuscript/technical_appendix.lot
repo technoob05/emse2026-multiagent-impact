@@ -1,0 +1,30 @@
+\contentsline {table}{\numberline {1}{Dataset tables, units, and analytical roles in the pinned release.}}{7}{table.1}%
+\contentsline {table}{\numberline {2}{\ignorespaces Coverage of rich event and feature tables across 361,296 AIDev-pop pull requests.}}{8}{table.2}%
+\contentsline {table}{\numberline {3}{\ignorespaces Exact public-account allowlist used for reviewer-product attribution.}}{10}{table.3}%
+\contentsline {table}{\numberline {4}{Glossary of load-bearing terms, read from the analysis code.}}{10}{table.4}%
+\contentsline {table}{\numberline {5}{\ignorespaces Participation-to-addressed-edge denominator funnel.}}{12}{table.5}%
+\contentsline {table}{\numberline {6}{Named estimation specifications behind the reported outcome models.}}{12}{table.6}%
+\contentsline {table}{\numberline {7}{First public state after each rapid-burst threshold.}}{16}{table.7}%
+\contentsline {table}{\numberline {8}{\ignorespaces Tied first timestamps under the fixed state priority order.}}{17}{table.8}%
+\contentsline {table}{\numberline {9}{Leave-one-out ordering robustness for the first post-burst state.}}{17}{table.9}%
+\contentsline {table}{\numberline {10}{\ignorespaces Deep transition after a mapped-product first state and a second five-minute washout.}}{18}{table.10}%
+\contentsline {table}{\numberline {11}{\ignorespaces Falsification tests for escalation and persistent ownership stories.}}{19}{table.11}%
+\contentsline {table}{\numberline {12}{\ignorespaces Exact-author matched cross-product versus same-product trigger comparison.}}{20}{table.12}%
+\contentsline {table}{\numberline {13}{\ignorespaces Strict prior same-repository review history across user-account populations.}}{20}{table.13}%
+\contentsline {table}{\numberline {14}{\ignorespaces Exact-parent addressed edge and later merge from the 48-hour landmark through day 30.}}{24}{table.14}%
+\contentsline {table}{\numberline {15}{\ignorespaces Four-state contextual response gradient at the 48-hour landmark.}}{24}{table.15}%
+\contentsline {table}{\numberline {16}{\ignorespaces Forty-eight-hour ownership routes and later integration.}}{25}{table.16}%
+\contentsline {table}{\numberline {17}{Scope of the addressed-edge exposure and of the landmark cohort.}}{25}{table.17}%
+\contentsline {table}{\numberline {18}{Extensions to RQ3: the whole population over time, and who writes the edge.}}{26}{table.18}%
+\contentsline {table}{\numberline {19}{Pre-trigger covariate balance and propensity overlap for the exact-edge contrast.}}{27}{table.19}%
+\contentsline {table}{\numberline {20}{Sensitivity of the addressed-edge later-merge association to unmeasured structure.}}{29}{table.20}%
+\contentsline {table}{\numberline {21}{Issue links and whether a review point is answered, by reviewer relation.}}{32}{table.21}%
+\contentsline {table}{\numberline {22}{\ignorespaces Structural same-locus review overlap and frozen semantic gates.}}{33}{table.22}%
+\contentsline {table}{\numberline {23}{External evidence ladder after schema, overlap, and construct checks.}}{35}{table.23}%
+\contentsline {table}{\numberline {24}{\ignorespaces Fail-closed exact-edge replication audit in SWE-Review-Chat.}}{36}{table.24}%
+\contentsline {table}{\numberline {25}{\ignorespaces Independent-packaging sensitivity for product attribution and trigger anchoring.}}{36}{table.25}%
+\contentsline {table}{\numberline {26}{Load-bearing data-quality, temporal, and leakage checks.}}{37}{table.26}%
+\contentsline {table}{\numberline {27}{Variable dictionary for the 31-column landmark cohort.}}{37}{table.27}%
+\contentsline {table}{\numberline {28}{Experiment and claim disposition after robustness and construct checks.}}{40}{table.28}%
+\contentsline {table}{\numberline {29}{Ordered reproduction contract with frozen row counts.}}{43}{table.29}%
+\contentsline {table}{\numberline {30}{Resampling and permutation settings by analysis.}}{45}{table.30}%

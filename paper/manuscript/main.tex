@@ -40,10 +40,17 @@ That reply is rare. It is also the one public connection that goes together with
 the change being merged later. A count of products on a pull request measures
 none of this.
 
-The gap matters for research and for tool design. A short burst of bot events can
-look like a conversation. A new review can be part of the same API call. A user
-account can act next without having been chosen as a go-between. If these cases
-are mixed together, a product count becomes a weak measure of teamwork.
+The question is live. A recent position paper argues that agents can already
+meet every goal of code review, and that keeping a person in the loop as the
+mandatory reviewer ``is a dead end''\ \citep{monperrus2026endofreview}. Our data
+speak directly to that: in this corpus the person is not a formality on top of
+an agent loop, they are the only part of the loop that visibly closes.
+
+The gap also matters for measurement. A short burst of bot events can look like
+a conversation. A new review can be part of the same API call. A user account
+can act next without having been chosen as a go-between. Mining GitHub has long
+been known to reward this kind of care \citep{kalliamvakou2016perils}. If these
+cases are mixed together, a product count becomes a weak measure of teamwork.
 
 Field studies already tell us a lot. They count agent-authored PRs, measure how
 common AI review is, model reviewer order, and study how developers answer agent
@@ -75,6 +82,10 @@ on this repository before?
 signals say that something connected: a reply pointing at the exact review
 comment, and automation followed by a person. Does either go together with the
 change being merged later, and who is it that writes the reply?
+\item[RQ4 -- What makes someone answer across the boundary?] A pull request
+body often points at an issue. That pointer is written before any review, and
+it gives a reader context the diff alone does not. Does it change whether a
+review point gets answered, and does that depend on who is reviewing?
 \end{description}
 
 We make three contributions.
@@ -136,13 +147,24 @@ PRs get no review at all \citep{duma2026reviews}. Our RQ3 result agrees with the
 direction of this work. What we add is a much stricter definition of what counts
 as the human contribution, and a design that keeps it before the outcome.
 
-\emph{Whether agent feedback helps.} Cynthia et al. study how developers respond
-to individual agent review comments \citep{cynthia2026responses}, and Lin et al.
-mine developer feedback to a deployed agentic reviewer
+\emph{Whether agent feedback helps.} Cynthia et al. study how developers
+respond to individual agent review comments \citep{cynthia2026responses}, and
+Lin et al. mine developer feedback to a deployed agentic reviewer
 \citep{lin2026coderabbit}. Fatima et al. find that the quality of reviewer-bot
 feedback shows no clear link to workflow outcomes \citep{fatima2026footprints}.
 That null is worth holding next to our result: we do not measure whether a
 review comment was good, only whether someone addressed it.
+
+\emph{Bots and review participation before agents.} The questions we ask are
+older than coding agents. Review bots change how a PR behaves
+\citep{wessel2022gatekeepers,wessel2023ghactions}. Participation, rather than
+presence, is what relates to review outcomes
+\citep{mcintosh2016mcr,thongtanunam2017participation}, and human factors decide
+whether an invited reviewer engages at all \citep{ruangwan2019humanfactors}.
+First response time dominates how long a PR takes \citep{zhang2022latency},
+which is why we place our check point after it rather than before. Our
+contribution is to carry those questions across a product boundary that did not
+exist when they were asked.
 
 These papers occupy the broad claims that cross-product review exists, that
 reviewer order matters, and that people answer agent feedback. Our unit is
@@ -172,7 +194,9 @@ boundary is central to our novelty.
 We pin AIDev-7.6M at revision
 \nolinkurl{37bbe1533e26cc1e1374917dba1186d1c8a4dc81}. The release contains
 7.69 million agent-authored PRs. We use the richer AIDev-pop layer: 361,296 PRs
-from repositories with more than 100 stars. Its event tables contain submitted
+from repositories with more than 100 stars, a star-based filter of the kind used
+to separate engineered projects from scratch repositories
+\citep{munaiah2017curating}. Its event tables contain submitted
 reviews, inline review comments, PR comments, and selected lifecycle events.
 PRs are created through 31 March 2026; we use 15 April 2026 at 00:00 UTC as the
 common observation boundary.
@@ -237,6 +261,17 @@ nearest time without replacement.
 We also identify the first distinct user account within 48 hours. Prior public
 history requires that account to have submitted a review in the same repository
 on a different PR strictly before the trigger.
+
+For RQ4 the exposure is a pre-trigger property of the change: the PR body
+references an issue. The outcome is whether the review point gets answered
+within 48 hours. Two measurement choices matter and we enforce both. We rebuild
+the outcome from the raw comment table for cross-product and same-product
+triggers alike, because our cross-product event tables cannot supply the
+same-product side. And we restrict the comparison to triggers that open their
+own thread, because a mid-thread trigger cannot receive an edge at all: that
+affects 0.4\% of cross-product triggers but 46\% of same-product ones, so
+leaving it in would compare a possible outcome with an impossible one. We then
+compare the two boundaries inside the same repository and the same month.
 
 For RQ3 we fix a check point at hour 48. We study only PRs that are still open
 at that point, and we count merges only after it. This keeps cause before effect
@@ -548,6 +583,60 @@ repository, but that split is between repositories rather than inside them, so
 we cannot show that familiarity is the reason. Nothing here is causal.
 
 \FloatBarrier
+\subsection{RQ4: task context matters only across the boundary}
+
+An issue link changes nothing when the reviewer is the same product. It roughly
+doubles the chance of an answer when the reviewer is a different one.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{Fig7.pdf}
+\caption{An issue link in the PR body and whether the review point gets
+answered, among triggers that open their own thread. Panel A shows the four
+cells. Within one product the link does nothing. Across a product boundary the
+answered rate more than doubles. Panel B shows the difference between those two
+differences, under repository fixed effects and then with month added, and the
+range left by dropping each of the fifteen repositories that contribute most
+linked cross-product PRs. The dashed marker is the same contrast when the
+link label is shuffled inside each repository. These are links in observed data,
+not causes.}
+\label{fig:context}
+\end{figure}
+
+Among triggers that open their own thread, a same-product review point is
+answered about a fifth of the time whether or not the PR points at an issue.
+A cross-product review point is answered 12.7\% of the time without a link and
+28.3\% of the time with one (Figure~\ref{fig:context}A). The difference between
+those two differences is 13.3 percentage points (95\% interval: $4.4$ to
+$22.2$) once we compare inside the same repository and the same month.
+
+We tried to break it. The estimate holds when the month is dropped, when
+mid-thread triggers are put back in, and when each of the fifteen most
+influential repositories is removed in turn, which leaves a range of 11.4 to
+16.1 points. Shuffling the link label inside each repository, the way we shuffle
+event order in RQ1, gives a reference distribution centred on zero against which
+the observed value sits far out in the tail ($p=0.001$).
+
+The direction is not new on its own. Issue linkage is already known to relate to
+how agent-authored PRs fare, while showing no such relation for human-authored
+ones \citep{yoshioka2026meaningful}. What is new here is that the link is not
+really a property of the pull request. It is a property of the boundary being
+crossed. The same link, on the same kind of PR, does nothing when the reviewer
+shares the author's product and a great deal when it does not.
+
+That fits what is known about how people read a review. References in a PR
+discussion are how participants build common ground \citep{chopra2021referencing},
+and reviewers begin by orienting themselves to context and rationale before they
+decide anything \citep{heander2026decisionmaking}. Inside one product the loop
+can close without that work. Across the boundary somebody has to reconstruct why
+the change exists, and a link to the issue is the cheapest way we can observe of
+handing them that.
+
+\noindent\textbf{Answer to RQ4.} Pre-existing task context is what precedes an
+answer across the product boundary, and only across it. We cannot say the link
+causes the answer. PR bodies can be edited, and the release carries no timestamp
+for the link, so we cannot prove every link was present before the trigger.
+
 \section{Discussion}\label{sec:discussion}
 
 \subsection{What this changes}

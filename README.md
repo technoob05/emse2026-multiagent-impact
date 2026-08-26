@@ -57,6 +57,7 @@ uv sync
 .\.venv\Scripts\python.exe scripts\analysis\run_addressed_edge_confounding_sensitivity.py
 .\.venv\Scripts\python.exe scripts\analysis\run_addressed_edge_scope_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_rq3_extensions.py
+.\.venv\Scripts\python.exe scripts\analysis\run_task_context_interaction.py
 .\.venv\Scripts\python.exe scripts\audit\prepare_review_collision_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_collision_descriptive_extension.py
 .\.venv\Scripts\python.exe scripts\reporting\generate_technical_appendix_tables.py
@@ -82,6 +83,7 @@ Build the figures, paper PDF, and flat source bundle:
 - `outputs/addressed_edge_landmark/`: exact-parent edge landmark models and robustness.
 - `outputs/addressed_edge_specificity/`: exact edge versus generic public-discussion controls.
 - `outputs/addressed_edge_sensitivity/`: E-values, unmeasured-confounder tipping grid, negative-control outcomes, and repository-stratified randomisation inference.
+- `outputs/task_context_interaction/`: RQ4, whether an issue link in the PR body changes who answers a review point, split by whether the reviewer is a different product.
 - `outputs/rq3_extensions/`: whole-population time-varying edge model, and the edge split by who wrote the reply with its repository fixed-effect check.
 - `outputs/addressed_edge_scope/`: who writes the addressed edge, the estimate under stricter edge definitions, what the hour-48 landmark excludes, and the conditional within-repository randomisation test.
 - `outputs/external_validation/`: aggregate cross-dataset attribution, overlap, topology, and semantic-artifact audits.

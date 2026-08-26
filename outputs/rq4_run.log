@@ -1,0 +1,43 @@
+{
+  "inline_trigger_prs": 20241,
+  "repositories": 3460,
+  "reply_graph_is_depth_one": true,
+  "mid_thread_share_cross": 0.003686897334089667,
+  "mid_thread_share_same": 0.4618606042476817,
+  "outcome_rule": "a later inline comment whose reply target is the trigger comment, strictly after it and within 48 hours",
+  "exposure_rule": "the PR body references an issue (related_issue source=body)",
+  "primary": {
+    "specification": "Thread-root triggers, repository and month FE",
+    "estimate": 0.13338457880624036,
+    "ci_low": 0.04446271606988128,
+    "ci_high": 0.22230644154259943,
+    "n_prs": 12508,
+    "repositories": 2264
+  },
+  "label_shuffle": {
+    "observed_estimate": 0.14569151227595725,
+    "draws": 1000,
+    "seed": 20260826,
+    "null_mean": 0.010170127640383862,
+    "null_sd": 0.02600581400953846,
+    "absorbed": "repository fixed effects only",
+    "p_value_two_sided": 0.000999000999000999
+  },
+  "leave_one_repository_out_range": [
+    0.11405459427715385,
+    0.16075483112567407
+  ],
+  "scope": "observational interaction; no causal claim"
+}
+
+reviewer_relation  body_issue_link  prs  repositories  answered  answered_rate           population
+     same_product            False 7935          1533      1690       0.212980 thread-root triggers
+     same_product             True 1060           310       210       0.198113 thread-root triggers
+    cross_product            False 3149           837       400       0.127024 thread-root triggers
+    cross_product             True  364           167       103       0.282967 thread-root triggers
+
+                                specification  estimate   ci_low  ci_high  n_prs
+          Thread-root triggers, repository FE  0.145692 0.052341 0.239042  12508
+Thread-root triggers, repository and month FE  0.133385 0.044463 0.222306  12508
+           All inline triggers, repository FE  0.158567 0.068381 0.248752  20241
+ All inline triggers, repository and month FE  0.121372 0.038561 0.204183  20241

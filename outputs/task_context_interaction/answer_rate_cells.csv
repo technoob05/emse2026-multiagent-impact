@@ -1,0 +1,9 @@
+reviewer_relation,body_issue_link,prs,repositories,answered,answered_rate,population
+same_product,False,7935,1533,1690,0.21298046628859482,thread-root triggers
+same_product,True,1060,310,210,0.19811320754716982,thread-root triggers
+cross_product,False,3149,837,400,0.12702445220704986,thread-root triggers
+cross_product,True,364,167,103,0.28296703296703296,thread-root triggers
+same_product,False,13799,2602,1690,0.12247264294514096,all inline triggers
+same_product,True,2916,759,210,0.0720164609053498,all inline triggers
+cross_product,False,3161,842,400,0.12654223347042076,all inline triggers
+cross_product,True,365,168,103,0.2821917808219178,all inline triggers

@@ -18,6 +18,17 @@ $sourceFiles = @(
     "main.tex",
     "technical_appendix.tex",
     "generated_appendix_tables.tex",
+    "apx_tables_data.tex",
+    "apx_tables_identity.tex",
+    "apx_tables_cohorts.tex",
+    "apx_tables_rq1.tex",
+    "apx_tables_rq2.tex",
+    "apx_tables_rq3.tex",
+    "apx_tables_collision.tex",
+    "apx_tables_external.tex",
+    "apx_tables_quality.tex",
+    "apx_tables_disposition.tex",
+    "apx_tables_reproduction.tex",
     "references.bib",
     "sn-jnl.cls",
     "sn-basic.bst",
@@ -27,6 +38,7 @@ $sourceFiles = @(
     "Fig4.pdf",
     "Fig5.pdf",
     "Fig6.pdf",
+    "Fig7.pdf",
     "FigS1.pdf",
     "FigS2.pdf",
     "README.md"
@@ -53,7 +65,8 @@ $portalSourceFiles = @(
     "Fig3.pdf",
     "Fig4.pdf",
     "Fig5.pdf",
-    "Fig6.pdf"
+    "Fig6.pdf",
+    "Fig7.pdf"
 )
 
 $compiledPdf = Join-Path $projectRoot "build\pdf\emse_multiagent_submission_draft.pdf"

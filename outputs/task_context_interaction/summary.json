@@ -1,0 +1,31 @@
+{
+  "inline_trigger_prs": 20241,
+  "repositories": 3460,
+  "reply_graph_is_depth_one": true,
+  "mid_thread_share_cross": 0.003686897334089667,
+  "mid_thread_share_same": 0.4618606042476817,
+  "outcome_rule": "a later inline comment whose reply target is the trigger comment, strictly after it and within 48 hours",
+  "exposure_rule": "the PR body references an issue (related_issue source=body)",
+  "primary": {
+    "specification": "Thread-root triggers, repository and month FE",
+    "estimate": 0.1333845788062403,
+    "ci_low": 0.04446271606988128,
+    "ci_high": 0.22230644154259932,
+    "n_prs": 12508,
+    "repositories": 2264
+  },
+  "label_shuffle": {
+    "observed_estimate": 0.14569151227595742,
+    "draws": 1000,
+    "seed": 20260826,
+    "null_mean": 0.011236509397524207,
+    "null_sd": 0.026671939732953995,
+    "absorbed": "repository fixed effects only",
+    "p_value_two_sided": 0.000999000999000999
+  },
+  "leave_one_repository_out_range": [
+    0.11405459427715378,
+    0.16075483112567412
+  ],
+  "scope": "observational interaction; no causal claim"
+}

@@ -20,12 +20,13 @@ from pathlib import Path
 from typing import Iterable, Sequence
 
 import matplotlib
+import numpy as np
 
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
+from matplotlib.colors import to_rgb  # noqa: E402
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Rectangle  # noqa: E402
 from matplotlib.text import Text  # noqa: E402
 
@@ -39,19 +40,74 @@ SPECIFICITY = ROOT / "outputs" / "addressed_edge_specificity"
 SENSITIVITY = ROOT / "outputs" / "addressed_edge_sensitivity"
 SCOPE = ROOT / "outputs" / "addressed_edge_scope"
 EXTENSIONS = ROOT / "outputs" / "rq3_extensions"
+CONTEXT = ROOT / "outputs" / "task_context_interaction"
 OUTPUT = ROOT / "build" / "figures"
 
-INK = "#202631"
-BLUE = "#2C6EAA"
-ORANGE = "#C76B16"
-TEAL = "#16827C"
-SLATE = "#667085"
-MID = "#98A2B3"
-GRID = "#E6E9EF"
-PALE_BLUE = "#B9CCE2"
-PALE_TEAL = "#CFE3E1"
-PALE_ORANGE = "#F2DCC4"
+# Palette. Every hue is taken unaltered from Paul Tol's colour schemes, whose
+# qualitative sets are constructed to stay distinguishable under the three
+# dichromacies; the "dark" set is the one Tol specifies for text and lines on
+# white, and the "pale" set is the one he specifies as a background for black
+# text. The neutral ink is the black of the Okabe-Ito colour-universal-design
+# palette. Values transcribed from:
+#   https://sronpersonalpages.nl/~pault/
+#   https://jfly.uni-koeln.de/color/
+#
+#   Role                                   Constant       Tol scheme
+#   text, axes, primary neutral marks      INK            Okabe-Ito black
+#   mapped / same-product reference        BLUE           muted indigo
+#   cross-product boundary contrast        ORANGE         dark gold
+#   addressed edge, user-account ownership TEAL           dark teal
+#   context and comparison groups          SLATE          dark grey
+#   spines, connectors, leader lines       MID            light grey
+#   grid, separators, lollipop stems       GRID           pale grey
+#   pale fills carrying black text         PALE_*         pale scheme
+INK = "#000000"
+BLUE = "#332288"
+ORANGE = "#775500"
+TEAL = "#117788"
+SLATE = "#444444"
+MID = "#BBBBBB"
+GRID = "#DDDDDD"
+PALE_BLUE = "#AACCEE"
+PALE_TEAL = "#CCEEFF"
+PALE_ORANGE = "#EEEEBB"
 WHITE = "#FFFFFF"
+
+TEXT_COLOURS = (INK, BLUE, ORANGE, TEAL, SLATE)
+PALE_FILLS = (PALE_BLUE, PALE_TEAL, PALE_ORANGE, GRID)
+
+MIN_CONTRAST_RATIO = 4.5
+MIN_FILL_CONTRAST_RATIO = 1.15
+RELATIVE_LUMINANCE = np.array([0.2126, 0.7152, 0.0722])
+
+# Dichromacy simulation matrices at severity 1.0, Machado, Oliveira and
+# Fernandes (2009), "A Physiologically-based Model for Simulation of Color
+# Vision Deficiency", Table 1. They act on linear RGB, so proofs linearise the
+# rendered PNG first.
+#   https://www.inf.ufrgs.br/~oliveira/pubs_files/CVD_Simulation/CVD_Simulation.html
+CVD_MATRICES = {
+    "deuteranopia": np.array(
+        [
+            [0.367322, 0.860646, -0.227968],
+            [0.280085, 0.672501, 0.047413],
+            [-0.011820, 0.042940, 0.968881],
+        ]
+    ),
+    "protanopia": np.array(
+        [
+            [0.152286, 1.052583, -0.204868],
+            [0.114503, 0.786281, 0.099216],
+            [-0.003882, -0.048116, 1.051998],
+        ]
+    ),
+    "tritanopia": np.array(
+        [
+            [1.255528, -0.076749, -0.178779],
+            [-0.078411, 0.930809, 0.147602],
+            [0.004733, 0.691367, 0.303900],
+        ]
+    ),
+}
 
 POINTS_PER_INCH = 72.0
 TEXT_WIDTH_PT = 372.0
@@ -304,6 +360,84 @@ def save(fig: plt.Figure, stem: str) -> None:
 
 def new_figure(height: float) -> plt.Figure:
     return plt.figure(figsize=(FIGURE_WIDTH, height))
+
+
+# ---------------------------------------------------------------------------
+# Colour gate and colour-vision proofs
+# ---------------------------------------------------------------------------
+
+
+def srgb_to_linear(values: np.ndarray) -> np.ndarray:
+    return np.where(
+        values <= 0.04045, values / 12.92, ((values + 0.055) / 1.055) ** 2.4
+    )
+
+
+def linear_to_srgb(values: np.ndarray) -> np.ndarray:
+    clipped = np.clip(values, 0.0, 1.0)
+    return np.where(
+        clipped <= 0.0031308,
+        clipped * 12.92,
+        1.055 * clipped ** (1 / 2.4) - 0.055,
+    )
+
+
+def luminance(colour: str) -> float:
+    return float(RELATIVE_LUMINANCE @ srgb_to_linear(np.array(to_rgb(colour))))
+
+
+def contrast(first: str, second: str) -> float:
+    light, dark = sorted((luminance(first), luminance(second)), reverse=True)
+    return (light + 0.05) / (dark + 0.05)
+
+
+def assert_palette_contrast() -> None:
+    """Fail before rendering if a palette entry is illegible at print size.
+
+    Every hue that carries text has to clear the WCAG 4.5:1 ratio against the
+    white page, and every pale fill has to stay visibly tinted against that
+    same page while still holding black text.
+    """
+    for colour in TEXT_COLOURS:
+        ratio = contrast(colour, WHITE)
+        if ratio < MIN_CONTRAST_RATIO:
+            raise AssertionError(
+                f"{colour} reaches only {ratio:.2f}:1 on white, "
+                f"below the {MIN_CONTRAST_RATIO}:1 text floor"
+            )
+    for colour in PALE_FILLS:
+        against_page = contrast(colour, WHITE)
+        if against_page < MIN_FILL_CONTRAST_RATIO:
+            raise AssertionError(
+                f"fill {colour} reaches only {against_page:.2f}:1 against the "
+                "page and washes out at print size"
+            )
+        holding_text = contrast(colour, INK)
+        if holding_text < MIN_CONTRAST_RATIO:
+            raise AssertionError(
+                f"fill {colour} holds ink at only {holding_text:.2f}:1"
+            )
+
+
+def write_colour_proofs(stems: Sequence[str]) -> list[str]:
+    """Re-render every exported PNG under dichromacy and in greyscale."""
+    directory = ROOT / "build" / "qa" / "colour"
+    directory.mkdir(parents=True, exist_ok=True)
+    written: list[str] = []
+    for stem in stems:
+        source = OUTPUT / f"{stem}.png"
+        if not source.is_file():
+            raise FileNotFoundError(source)
+        linear = srgb_to_linear(plt.imread(source)[:, :, :3].astype(float))
+        for name, matrix in CVD_MATRICES.items():
+            path = directory / f"{stem}_{name}.png"
+            plt.imsave(path, linear_to_srgb(linear @ matrix.T))
+            written.append(path.name)
+        grey = linear @ RELATIVE_LUMINANCE
+        path = directory / f"{stem}_greyscale.png"
+        plt.imsave(path, linear_to_srgb(np.repeat(grey[:, :, None], 3, axis=2)))
+        written.append(path.name)
+    return sorted(written)
 
 
 # ---------------------------------------------------------------------------
@@ -561,6 +695,7 @@ def figure_participation() -> None:
             zorder=2,
         )
         inside = share > 60
+        reversed_out = inside and contrast(color, WHITE) >= MIN_CONTRAST_RATIO
         ax.text(
             share - 1.8 if inside else share + 1.8,
             position,
@@ -568,7 +703,7 @@ def figure_participation() -> None:
             ha="right" if inside else "left",
             va="center",
             fontsize=7.2,
-            color=WHITE if inside else INK,
+            color=WHITE if reversed_out else INK,
         )
     ax.set_yticks(y, stage_labels)
     ax.set_xlim(0, 100)
@@ -1144,7 +1279,7 @@ def figure_sensitivity() -> None:
     delta = frontier["prevalence_difference"].to_numpy() * 100
     point_line = frontier["outcome_difference_to_remove_point_estimate"].to_numpy() * 100
     interval_line = frontier["outcome_difference_to_remove_interval"].to_numpy() * 100
-    ax.fill_between(delta, point_line, 100, color=PALE_TEAL, alpha=0.55, zorder=0)
+    ax.fill_between(delta, point_line, 100, color=PALE_TEAL, zorder=0)
     ax.plot(delta, point_line, color=TEAL, linewidth=1.6, zorder=3)
     ax.plot(
         delta,
@@ -1161,6 +1296,8 @@ def figure_sensitivity() -> None:
     ax.set_ylabel("Its own later-merge\ndifference (pp)")
     panel_title(ax, "A", "What it would take to remove the edge result")
     clean_axis(ax, "y")
+    # The label sits on the tint, and no pale fill holds a hue at 4.5:1, so it
+    # is set in ink; the solid teal frontier beneath it carries the pairing.
     ax.text(
         44.0,
         72.0,
@@ -1168,7 +1305,7 @@ def figure_sensitivity() -> None:
         ha="center",
         va="center",
         fontsize=7.2,
-        color=TEAL,
+        color=INK,
     )
     ax.text(
         31.0,
@@ -1428,16 +1565,214 @@ def figure_extensions() -> None:
     save(fig, "Fig6_v2")
 
 
+# ---------------------------------------------------------------------------
+# Figure 7: RQ4 task context across the product boundary
+# ---------------------------------------------------------------------------
+
+
+def figure_task_context() -> None:
+    cells = read_csv(
+        CONTEXT / "answer_rate_cells.csv",
+        (
+            "reviewer_relation",
+            "body_issue_link",
+            "prs",
+            "answered",
+            "answered_rate",
+            "population",
+        ),
+    )
+    cells = cells[cells["population"] == "thread-root triggers"]
+    models = read_csv(
+        CONTEXT / "interaction_models.csv",
+        ("specification", "estimate", "ci_low", "ci_high", "n_prs"),
+    )
+    loo = read_csv(
+        CONTEXT / "leave_one_repository_out.csv", ("estimate", "ci_low", "ci_high")
+    )
+    shuffle = read_csv(
+        CONTEXT / "label_shuffle_test.csv",
+        ("observed_estimate", "null_mean", "null_sd", "p_value_two_sided"),
+    ).iloc[0]
+
+    fig = new_figure(4.50)
+    layout = Layout(left=0.245, right=0.815, top=0.925, bottom=0.090, gap=0.170)
+    top_rect, bottom_rect = layout.rects((1.0, 0.80))
+
+    ax = fig.add_axes(top_rect)
+    rows = [
+        ("cross_product", True, "Different product,\nissue link", TEAL, TEAL, "o", 1.0),
+        ("cross_product", False, "Different product,\nno link", TEAL, WHITE, "o", 1.5),
+        ("same_product", True, "Same product,\nissue link", SLATE, SLATE, "s", 1.0),
+        ("same_product", False, "Same product,\nno link", SLATE, WHITE, "s", 1.5),
+    ]
+    y = np.arange(len(rows))[::-1]
+    for position, item in zip(y, rows, strict=True):
+        relation, link, label, edge, face, marker, width = item
+        row = exactly_one(cells, reviewer_relation=relation, body_issue_link=link)
+        value = float(row["answered_rate"]) * 100
+        lollipop(ax, position, 0, value, marker, face, edge, width, size=50.0)
+        ax.text(
+            value + 0.9,
+            position,
+            f"{value:.1f}%  ·  {int(row['answered']):,}/{int(row['prs']):,}",
+            ha="left",
+            va="center",
+            fontsize=7.2,
+            color=INK,
+        )
+    ax.set_yticks(y, [item[2] for item in rows])
+    ax.set_xlim(0, 34)
+    ax.set_ylim(-0.6, len(rows) - 0.4)
+    ax.set_xlabel("Review points answered within 48 hours (%)")
+    panel_title(ax, "A", "The link only helps across the boundary")
+    category_axis(ax)
+    fit_right_labels(ax)
+
+    ax = fig.add_axes(bottom_rect)
+    forest = [
+        (
+            "Repository\nfixed effects",
+            exactly_one(models, specification="Thread-root triggers, repository FE"),
+            "o",
+            TEAL,
+            1.0,
+        ),
+        (
+            "Repository and\nmonth fixed effects",
+            exactly_one(
+                models, specification="Thread-root triggers, repository and month FE"
+            ),
+            "o",
+            TEAL,
+            1.0,
+        ),
+    ]
+    y = np.arange(len(forest) + 2)[::-1]
+    ax.axvline(0, color=INK, linewidth=0.8, zorder=0)
+    for position, item in zip(y[: len(forest)], forest, strict=True):
+        label, row, marker, colour, width = item
+        estimate = float(row["estimate"]) * 100
+        low = float(row["ci_low"]) * 100
+        high = float(row["ci_high"]) * 100
+        ax.errorbar(
+            estimate,
+            position,
+            xerr=np.array([[estimate - low], [high - estimate]]),
+            fmt=marker,
+            color=colour,
+            ecolor=colour,
+            markerfacecolor=colour,
+            markeredgecolor=WHITE,
+            markeredgewidth=0.5,
+            markersize=5.6,
+            capsize=2.6,
+            elinewidth=1.5,
+            zorder=3,
+        )
+        ax.text(
+            estimate,
+            position + 0.22,
+            minus(f"{estimate:+.1f}  [{low:+.1f}, {high:+.1f}]"),
+            ha="center",
+            va="bottom",
+            fontsize=7.1,
+            color=INK,
+        )
+
+    low_range = float(loo["estimate"].min()) * 100
+    high_range = float(loo["estimate"].max()) * 100
+    position = y[len(forest)]
+    ax.hlines(position, low_range, high_range, color=SLATE, linewidth=2.4, zorder=3)
+    ax.scatter(
+        [low_range, high_range],
+        [position, position],
+        marker="|",
+        s=60,
+        color=SLATE,
+        zorder=3,
+    )
+    ax.text(
+        (low_range + high_range) / 2,
+        position + 0.22,
+        minus(f"{low_range:+.1f} to {high_range:+.1f}"),
+        ha="center",
+        va="bottom",
+        fontsize=7.1,
+        color=INK,
+    )
+
+    null_mean = float(shuffle["null_mean"]) * 100
+    null_sd = float(shuffle["null_sd"]) * 100
+    position = y[len(forest) + 1]
+    ax.errorbar(
+        null_mean,
+        position,
+        xerr=1.96 * null_sd,
+        fmt="D",
+        color=SLATE,
+        ecolor=SLATE,
+        markerfacecolor=WHITE,
+        markeredgecolor=SLATE,
+        markeredgewidth=1.1,
+        markersize=5.0,
+        capsize=2.6,
+        elinewidth=1.4,
+        linestyle=(0, (3, 2)),
+        zorder=3,
+    )
+    ax.text(
+        null_mean,
+        position + 0.22,
+        f"shuffled label, p = {float(shuffle['p_value_two_sided']):.3f}",
+        ha="center",
+        va="bottom",
+        fontsize=7.1,
+        color=INK,
+    )
+
+    ax.set_yticks(
+        y,
+        [
+            forest[0][0],
+            forest[1][0],
+            "Leave one\nrepository out",
+            "Shuffled link\nlabel",
+        ],
+    )
+    ax.set_xlim(-12, 28)
+    ax.set_ylim(-0.75, len(y) - 0.35)
+    ax.set_xlabel("Difference in differences, answered rate (pp)")
+    panel_title(ax, "B", "The gap survives every check we ran")
+    category_axis(ax)
+
+    save(fig, "Fig7_v2")
+
+
 def main() -> None:
+    assert_palette_contrast()
     figure_measurement_contract()
     figure_participation()
     figure_boundary()
     figure_later_state()
     figure_sensitivity()
     figure_extensions()
+    figure_task_context()
+    stems = [f"Fig{index}_v2" for index in range(1, 8)]
     written = sorted(path.name for path in OUTPUT.glob("Fig*_v2.*"))
+    proofs = write_colour_proofs(stems)
     print(
-        json.dumps({"output": str(OUTPUT.relative_to(ROOT)), "files": written}, indent=2)
+        json.dumps(
+            {
+                "output": str(OUTPUT.relative_to(ROOT)),
+                "files": written,
+                "colour_proofs": str(
+                    (ROOT / "build" / "qa" / "colour").relative_to(ROOT)
+                ),
+                "proof_files": proofs,
+            },
+            indent=2,
+        )
     )
 
 

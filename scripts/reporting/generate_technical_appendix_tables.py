@@ -45,6 +45,7 @@ EXPECTED_LABELS = {
     "tab:s-sensitivity",
     "tab:s-exposure-scope",
     "tab:s-extensions",
+    "tab:s-task-context",
     "tab:s-collision",
     "tab:s-external-screen",
     "tab:s-external-edge",
@@ -208,10 +209,12 @@ def longtable(
 ) -> str:
     heading = row(header)
     body = "\n".join(row(values) for values in rows)
-    # A long table starts on a fresh page so that it never leaves one or two
-    # orphaned body rows behind a page break, and its continuation caption is
-    # unnumbered so no second hyperlink anchor is emitted for the same table.
-    return f"""\\clearpage
+    # Pending floats are flushed first, and the table only starts on a fresh page
+    # when too little room is left, so that it never leaves one or two orphaned
+    # body rows behind a page break. The continuation caption is unnumbered so no
+    # second hyperlink anchor is emitted for the same table.
+    return f"""\\FloatBarrier
+\\needspace{{8\\baselineskip}}
 \\begingroup
 \\small
 \\setlength{{\\tabcolsep}}{{3pt}}
@@ -245,7 +248,8 @@ def longtable_once(
     """Render a non-floating table with a compact continuation head if it splits."""
     heading = row(header)
     body = "\n".join(row(values) for values in rows)
-    return f"""\\clearpage
+    return f"""\\FloatBarrier
+\\needspace{{8\\baselineskip}}
 \\begingroup
 \\small
 \\setlength{{\\tabcolsep}}{{3pt}}
@@ -1194,6 +1198,99 @@ def extensions_table() -> str:
     )
 
 
+def task_context_table() -> str:
+    cells = read_csv(
+        "outputs/task_context_interaction/answer_rate_cells.csv",
+        (
+            "reviewer_relation",
+            "body_issue_link",
+            "prs",
+            "repositories",
+            "answered",
+            "answered_rate",
+            "population",
+        ),
+    )
+    models = read_csv(
+        "outputs/task_context_interaction/interaction_models.csv",
+        ("specification", "estimate", "ci_low", "ci_high", "n_prs", "repositories"),
+    )
+    shuffle = read_csv(
+        "outputs/task_context_interaction/label_shuffle_test.csv",
+        (
+            "observed_estimate",
+            "draws",
+            "null_mean",
+            "null_sd",
+            "p_value_two_sided",
+        ),
+    )[0]
+    loo = read_csv(
+        "outputs/task_context_interaction/leave_one_repository_out.csv",
+        ("excluded_exposed_prs", "estimate"),
+    )
+
+    relation_label = {
+        "cross_product": "Reviewer is a different product",
+        "same_product": "Reviewer is the same product",
+    }
+    rows: list[tuple[str, str, str, str]] = []
+    for item in cells:
+        if item["population"] != "thread-root triggers":
+            continue
+        link = str(item["body_issue_link"]).strip().lower() == "true"
+        rows.append(
+            (
+                tex(relation_label[item["reviewer_relation"]]),
+                tex("PR body links an issue" if link else "No issue link"),
+                f"{integer(item['answered'])} of {integer(item['prs'])}",
+                f"{percent(item['answered_rate'])}\\% over {integer(item['repositories'])} repositories",
+            )
+        )
+
+    for item in models:
+        rows.append(
+            (
+                tex("Difference in differences"),
+                tex(item["specification"]),
+                f"{pp(item['estimate'])} pp",
+                f"{ci_pp(item['ci_low'], item['ci_high'])} on {integer(item['n_prs'])} PRs",
+            )
+        )
+
+    estimates = [number(item["estimate"]) for item in loo]
+    rows.append(
+        (
+            tex("Difference in differences"),
+            tex(f"Leave one repository out, {len(loo)} refits"),
+            f"{pp(min(estimates))} to {pp(max(estimates))} pp",
+            tex("each drop removes one of the most influential repositories"),
+        )
+    )
+    rows.append(
+        (
+            tex("Difference in differences"),
+            tex("Issue-link label shuffled inside each repository"),
+            f"{pp(shuffle['null_mean'])} pp",
+            tex(
+                f"null spread {pp(shuffle['null_sd'], signed=False)} pp over "
+                f"{integer(shuffle['draws'])} draws; observed "
+                f"{pp(shuffle['observed_estimate'])} pp, two-sided p = "
+                f"{number(shuffle['p_value_two_sided']):.3f}"
+            ),
+        )
+    )
+
+    return longtable(
+        "Issue links and whether a review point is answered, by reviewer relation.",
+        "tab:s-task-context",
+        r"L{0.24\textwidth}L{0.28\textwidth}L{0.14\textwidth}L{0.30\textwidth}",
+        ("Group", "Condition", "Answered", "Detail"),
+        rows,
+        "The exposure is a pre-trigger property of the change: the pull request body references an issue. The outcome is a later inline comment whose reply target is the trigger comment, strictly after it and within 48 hours, rebuilt from the raw comment table so that both reviewer relations are measured the same way. The population is restricted to triggers that open their own thread, because a mid-thread trigger cannot receive such a reply at all; that restriction removes 0.4 per cent of cross-product triggers but 46 per cent of same-product ones, so leaving it in would compare a possible outcome against an impossible one. The unrestricted rows are reported beside the restricted ones. The release carries no timestamp for the issue link and pull request bodies can be edited, so the link is assumed rather than proven to precede the trigger. Nothing here identifies a causal effect.",
+    )
+
+
 def collision_table() -> str:
     audit = read_json("outputs/review_collision/quality_and_sampling_summary.json")
     descriptive = read_json("outputs/novelty_collision_extension/descriptive_summary.json")
@@ -1771,6 +1868,7 @@ REPRODUCTION_STEPS: dict[str, tuple[str, str]] = {
     "run_addressed_edge_specificity_analysis.py": ("Discussion controls, overlap weighting, four-state gradient", "outputs/addressed_edge_specificity/clustered_specificity_lpm.csv"),
     "run_addressed_edge_confounding_sensitivity.py": ("E-values, tipping grid, negative controls, permutation test", "outputs/addressed_edge_sensitivity/e_values.csv"),
     "run_addressed_edge_scope_audit.py": ("Exposure composition, stricter definitions, conditional permutation", "outputs/addressed_edge_scope/exposure_event_composition.csv"),
+    "run_task_context_interaction.py": ("RQ4 issue-link interaction across the product boundary", "outputs/task_context_interaction/answer_rate_cells.csv"),
     "run_rq3_extensions.py": ("Whole-population time-varying hazard, and the edge split by who wrote it", "outputs/rq3_extensions/edge_class_contrasts.csv"),
     "prepare_review_collision_audit.py": ("Blinded structural same-locus coder packets", "outputs/review_collision/product_pair_concentration.csv"),
     "run_collision_descriptive_extension.py": ("Descriptive timing and concentration for the same-locus population", "outputs/novelty_collision_extension/timing_distribution.csv"),
@@ -2160,44 +2258,73 @@ def validate(rendered: str) -> None:
         raise ValueError("Generated text contains a non-finite numeric token")
 
 
+HEADER = "% Generated deterministically; do not edit this file by hand."
+
+# Each group is emitted as its own file so that the appendix can place tables
+# beside the prose that explains them. The concatenation of every group is also
+# written to OUTPUT, which keeps the single-file product available.
+TABLE_GROUPS = (
+    ("data", (dataset_table, coverage_table)),
+    ("identity", (identity_table, glossary_table)),
+    ("cohorts", (funnel_table, specifications_table)),
+    (
+        "rq1",
+        (
+            burst_table,
+            ties_table,
+            ordering_table,
+            deep_transition_table,
+            falsification_table,
+        ),
+    ),
+    ("rq2", (boundary_table, history_table)),
+    (
+        "rq3",
+        (
+            addressed_edge_table,
+            gradient_table,
+            landmark_route_table,
+            exposure_scope_table,
+            extensions_table,
+            balance_table,
+            sensitivity_table,
+        ),
+    ),
+    ("collision", (collision_table,)),
+    (
+        "external",
+        (external_screen_table, external_exact_edge_table, external_attribution_table),
+    ),
+    ("task_context", (task_context_table,)),
+    ("quality", (quality_table, variables_table)),
+    ("disposition", (disposition_table,)),
+    ("reproduction", (runorder_table, resampling_table)),
+)
+
+
+def group_path(name: str) -> Path:
+    return OUTPUT.parent / f"apx_tables_{name}.tex"
+
+
 def main() -> None:
-    parts = [
-        "% Generated deterministically; do not edit this file by hand.",
-        dataset_table(),
-        coverage_table(),
-        identity_table(),
-        glossary_table(),
-        funnel_table(),
-        specifications_table(),
-        burst_table(),
-        ties_table(),
-        ordering_table(),
-        deep_transition_table(),
-        falsification_table(),
-        boundary_table(),
-        history_table(),
-        addressed_edge_table(),
-        gradient_table(),
-        landmark_route_table(),
-        sensitivity_table(),
-        balance_table(),
-        exposure_scope_table(),
-        extensions_table(),
-        collision_table(),
-        external_screen_table(),
-        external_exact_edge_table(),
-        external_attribution_table(),
-        quality_table(),
-        variables_table(),
-        resampling_table(),
-        runorder_table(),
-        disposition_table(),
-    ]
-    rendered = "\n\n".join(parts).rstrip() + "\n"
+    groups: list[tuple[str, str]] = []
+    for name, builders in TABLE_GROUPS:
+        body = "\n\n".join(builder() for builder in builders).rstrip() + "\n"
+        groups.append((name, body))
+
+    rendered = HEADER + "\n\n" + "\n\n".join(body for _, body in groups)
+    rendered = rendered.rstrip() + "\n"
     validate(rendered)
+
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(rendered, encoding="utf-8", newline="\n")
-    print(f"Wrote {OUTPUT.relative_to(ROOT)} with {len(EXPECTED_LABELS)} validated table labels.")
+    for name, body in groups:
+        group_path(name).write_text(HEADER + "\n\n" + body, encoding="utf-8", newline="\n")
+
+    print(
+        f"Wrote {OUTPUT.relative_to(ROOT)} and {len(groups)} section files "
+        f"with {len(EXPECTED_LABELS)} validated table labels."
+    )
 
 
 if __name__ == "__main__":
