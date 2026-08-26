@@ -126,8 +126,21 @@ a PR comment. The event must be after PR creation and no later than PR closure.
 The common observation boundary is 15 April 2026 at 00:00 UTC. PR creation is
 cut off on 31 March 2026, which leaves time to observe follow-up events.
 
-For an inline trigger, a direct reply must point to the trigger's exact comment
-identifier. A reply elsewhere on the PR does not count. If the inline trigger
+For an inline trigger, a direct reply must carry the trigger's own comment
+identifier as its reply target. A reply elsewhere on the PR does not count.
+
+GitHub sets that target to the first comment of an inline thread rather than to
+the immediately preceding comment, and the pinned release behaves the same way:
+of 88,907 inline replies, none names a comment that is itself a reply. Reply
+threads are therefore one level deep, and the construct is precisely ``a reply
+in the thread the trigger opened''. Two consequences are measured rather than
+assumed. The exposure is structurally impossible when the trigger sits
+mid-thread, which happens for 13 of 3,526 cross-product inline triggers and for
+3 of the 1,067 landmark PRs, none of the latter exposed; for same-product
+triggers it happens in 46\% of cases, which is a further reason the two rates
+are not directly comparable. And within a multi-reply thread a later reply may
+answer an earlier reply instead of the trigger: 92 of the 109 exposed PRs carry
+exactly one reply in the thread, 15 carry two, and two carry more. If the inline trigger
 belongs to a submitted review, the enclosing review is the same batch and is
 not counted as a later review. A later review needs a different review-batch
 identifier. These rules prevent one API batch from answering itself.

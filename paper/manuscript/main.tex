@@ -186,11 +186,18 @@ afterwards is measured from the trigger. Online Resource~1 gives the full identi
 table coverage, joins, and denominators. Inline comments join to a submitted
 review by review ID and then to the PR.
 
-An \emph{addressed edge} means one thing only: a later comment points back at the
-trigger comment itself, by identifier. It is the machine record that someone
-answered this exact point, and nothing more. A reply somewhere else on the same
-PR does not count. A later review must also carry a different review-batch ID.
-These rules stop one API call from appearing to answer itself. Figure~\ref{fig:contract} shows the anchor, the
+An \emph{addressed edge} means one thing only: a later comment carries the
+trigger comment's own identifier as its reply target. A reply somewhere else on
+the same PR does not count. A later review must also carry a different
+review-batch ID. These rules stop one API call from appearing to answer itself.
+
+We checked what that identifier actually points at, because the paper rests on
+it. GitHub sets the reply target to the \emph{first} comment of an inline
+thread, not to whichever comment came just before. The release agrees: across
+88,907 inline replies, not one names a comment that is itself a reply, so reply
+threads are one level deep. An addressed edge is therefore \emph{a reply in the
+thread that the trigger opened}. Section~\ref{sec:threats} reports what that
+costs us, which turns out to be very little in this cohort. Figure~\ref{fig:contract} shows the anchor, the
 three exclusion rules, and the four evidence levels that the rest of the paper
 keeps separate.
 
@@ -647,11 +654,18 @@ addressed the trigger. It does not record who. In this group that someone is
 almost always a user account, so RQ3 measures a person acknowledging an agent,
 not one product handing over to another.
 
-We also rely on the parent identifier that GitHub exports with each inline
-comment. That field may point at the first comment in a reply thread rather
-than at the comment just before. If so, our edge means ``in a thread that
-starts at the trigger'', which is a looser idea. It would not change the RQ1
-ordering, but it would make the measure looser.
+The reply identifier is looser than the name suggests. It points at the first
+comment of a thread, so our edge means ``a reply in the thread the trigger
+opened''. Two things follow, and we measured both. First, the exposure can only
+fire when the trigger is itself the first comment of its thread. Among
+cross-product inline triggers that is almost always true: 13 of 3,526 sit
+mid-thread, and in the hour-48 group only 3 of 1,067 do, none of them exposed.
+The restriction bites hard for same-product triggers, where 46\% sit mid-thread,
+which is one more reason we do not read the same-product edge rate as
+comparable. Second, inside a thread with several replies, a later reply may be
+answering an earlier reply rather than the trigger. Among the 109 exposed PRs,
+92 have exactly one reply in the thread, so for those the reply can only be
+answering the trigger. For the remaining 17 we cannot tell.
 
 \textbf{Selection and cause.} Matching holds several visible factors fixed, and
 the outcome models use pre-trigger controls and repository-aware intervals.
