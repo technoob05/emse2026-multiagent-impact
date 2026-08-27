@@ -12,9 +12,10 @@
 \usepackage{placeins}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta}
-% Figure 1 is drawn in TikZ from the worked example. fig1_values.tex is written
-% by scripts/figures/generate_figure1_macros.py -- do not edit it by hand.
-\input{fig1_values}
+% Lato is loaded with no options on purpose: it defines \latofamily and the
+% \lato switch but leaves \familydefault and \sfdefault untouched, so the
+% article's own type is unchanged and only Figure 1 asks for the face.
+\usepackage{lato}
 \raggedbottom
 \setlength{\bibsep}{0.25em}
 
@@ -413,9 +414,9 @@ shown together beside the line of code. GitHub sets the reply target to the
 \emph{first} comment of that thread, not to whichever comment came just before. The release agrees: across all 88,907 inline replies it contains, not one names
 a comment that is itself a reply, so reply threads are one level deep. An addressed edge is therefore \emph{a reply in the
 thread that the trigger opened}. Section~\ref{sec:threats} reports what that costs us, which turns out to be very
-little in this cohort. Figure~\ref{fig:contract} shows the anchor, the three
-exclusion rules, and the four evidence levels that the rest of the paper keeps
-separate.
+little in this cohort. Figure~\ref{fig:contract} lays out the whole design: where the anchor sits, what
+is excluded from counting as an answer, and the four evidence levels the rest of
+the paper keeps separate.
 
 This precision has a price, and the reader should know its size before reading
 any result. Only inline review comments carry a reply target. A review summary
@@ -501,15 +502,16 @@ count of replies is never set beside a count of pull requests.
 \begin{figure}[htbp]
 \centering
 \input{fig1_diagram}
-\caption{The whole argument on one real pull request. Panel A follows a change
-Devin wrote and Copilot reviewed in \texttt{liam-hq/liam}, the first pull request
-in our data that exercises every rule. Two products took part, but the only step
-the record can show as an answer is the one that leaves them: a person replies
-22.5 hours later, and the change merges on day 2.1. Two further Copilot events are
-dropped along the way, each labelled with the rule that caught it. The axis is
-linear in hours, and two of its marks are ours rather than this pull request's:
-the five-minute burst window is a design choice, and hour 48 is where merges start
-being counted. Panel B is the evidence ladder, weakest rung first.}
+\caption{The measurement design. Panel A: one coding product writes a change and
+another reviews it, but the only step the public record can show as an answer is
+the one that leaves both products, where a person replies naming the review
+comment and the change is then accepted. The product names are examples of the
+role, not a particular pull request; Figures~\ref{fig:topology}C
+and~\ref{fig:bridge}C carry real ones. The axis is ordinal, not to scale. Two
+kinds of event are excluded from counting as an answer: those in the same
+submitted review batch as the comment, and those inside the burst window. Panel B
+is the evidence ladder, weakest rung first, and the paper reports which rung each
+result reaches rather than collapsing them into one.}
 \label{fig:contract}
 \end{figure}
 
@@ -1490,8 +1492,8 @@ was not required. This study analyses pull-request records that GitHub already
 publishes, collected through a public research dataset, and involves no
 intervention and no interaction with any person. No participants were recruited,
 so consent to participate does not apply. We report accounts by role rather than
-by login throughout, and the worked example in Figure~\ref{fig:contract} names
-no individual.
+by login throughout, and no figure or table in this article or in Online
+Resource~1 names an individual.
 
 \noindent\textbf{Consent for publication.} Not applicable. No individual-level
 identifying information is reproduced in this article. The analyses use public

@@ -58,6 +58,22 @@ def figure_files() -> list[str]:
             body = included.read_text(encoding="utf-8")
             wanted += re.findall(r"\\includegraphics\[[^\]]*\]\{([^}]+)\}", body)
 
+    # A filename built from macro parameters, as fig1_diagram.tex does with
+    # \FigOneIcon, matches the pattern but names no file: TeX substitutes the
+    # argument at use time, so the source never spells the real name out.
+    wanted = [name for name in wanted if "#" not in name]
+
+    # Which is why the log is the authority on graphics. pdflatex records every
+    # file it actually opened as "<use name.png>", after macro expansion, so it
+    # catches what no amount of pattern-matching on the source can.
+    log = MANUSCRIPT / "main.log"
+    if not log.exists():
+        raise SystemExit(
+            f"{log} is missing; compile main.tex before building the archive, "
+            "because the log is what tells us which graphics it really uses"
+        )
+    wanted += re.findall(r"<use ([^>]+)>", log.read_text(encoding="utf-8", errors="replace"))
+
     resolved: list[str] = []
     for name in wanted:
         if (MANUSCRIPT / name).exists():

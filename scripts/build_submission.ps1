@@ -149,8 +149,6 @@ try {
     Invoke-Checked $pythonExe scripts\figures\visualize_manuscript_figures.py
     # Figure 1 is drawn in TikZ inside the manuscript and reads its numbers from
     # generated macros, so they are rewritten from the worked example here.
-    Assert-ProjectFile "scripts\figures\generate_figure1_macros.py"
-    Invoke-Checked $pythonExe scripts\figures\generate_figure1_macros.py
     Invoke-Checked uv run --with pytest python -m pytest -q
     Invoke-Checked $pythonExe scripts\reporting\build_handoff_notebook.py
     Invoke-Checked $pythonExe scripts\reporting\execute_notebook.py notebooks\02_artifact_handoff_exploration.ipynb
