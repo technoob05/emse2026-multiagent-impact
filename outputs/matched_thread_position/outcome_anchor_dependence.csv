@@ -1,0 +1,7 @@
+outcome,anchor_dependence,definition_note,positives_on_mid_thread_cross_triggers,positives_on_mid_thread_same_triggers,cross_pairs_where_only_evidence_is_the_anchored_reply,same_pairs_where_only_evidence_is_the_anchored_reply,safe_from_thread_position,verdict
+any_visible_followup,partial,"OR of the four response counters, one of which is direct_inline_replies; a mid-thread trigger loses that disjunct, so the OR can only be deflated, never inflated.",0,12,0.0,0.0,False,"safe empirically: the anchored reply is never the sole evidence in any matched pair, so removing the disjunct changes no row"
+later_pr_comment,none,pr_comments rows in the window; no reply anchor is read.,0,7,,,True,safe by definition: the outcome never reads a reply anchor
+new_review_round,none,pr_reviews submissions in the window; no reply anchor is read.,0,12,,,True,safe by definition: the outcome never reads a reply anchor
+exact_trigger_reply,full,requires in_reply_to_id == trigger_event_id; structurally 0 whenever the trigger is not the opening comment of its own inline thread.,0,0,,,False,broken by definition: structurally zero off thread roots
+visible_force_push,none,pr_timeline head_ref_force_pushed events; no reply anchor is read.,0,0,,,True,safe by definition: the outcome never reads a reply anchor
+merge_within_7d,none,merged_at vs the response window; no reply anchor is read.,1,7,,,True,safe by definition: the outcome never reads a reply anchor

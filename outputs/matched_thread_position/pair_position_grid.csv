@@ -1,0 +1,5 @@
+trigger_position_cross,trigger_position_same,pairs,both_can_ever_fire,share_of_546_matched_pairs
+not_inline_channel,not_inline_channel,293,False,0.5366300366300366
+thread_root,thread_root,241,True,0.4413919413919414
+thread_root,mid_thread,11,False,0.020146520146520148
+mid_thread,mid_thread,1,False,0.0018315018315018315

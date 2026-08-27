@@ -1,0 +1,9 @@
+arm,trigger_position,can_ever_fire_exact_trigger_reply,pairs,share_of_546_matched_pairs,share_of_inline_triggers_on_this_arm,observed_exact_trigger_reply_positive
+cross_product,thread_root,True,252,0.46153846153846156,0.9960474308300395,41
+cross_product,mid_thread,False,1,0.0018315018315018315,0.003952569169960474,0
+cross_product,inline_but_unresolved,False,0,0.0,0.0,0
+cross_product,not_inline_channel,False,293,0.5366300366300366,,0
+same_product,thread_root,True,241,0.4413919413919414,0.9525691699604744,46
+same_product,mid_thread,False,12,0.02197802197802198,0.04743083003952569,0
+same_product,inline_but_unresolved,False,0,0.0,0.0,0
+same_product,not_inline_channel,False,293,0.5366300366300366,,0
