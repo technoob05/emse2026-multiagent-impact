@@ -478,9 +478,10 @@ This is how we compare an automation-to-person handover against automation on it
 own.
 
 For RQ4 we ask about the issue link: whether the pull request description points
-at a numbered task in the project's tracker. We treat it as context that was
-there before the review, which is how such links are normally written, but we
-cannot prove it in every case. The release records no timestamp for the
+at a numbered task in the project's tracker, of the kind that is meant to give a
+reader the task context. We read it as context the reviewer had, which is how
+such links are normally written, but that reading is an assumption and not
+something we can check. The release records no timestamp for the
 description, and descriptions can be edited, so what we observe is a link present
 when the data were collected. Section~\ref{sec:threats} says what that costs. An issue is a numbered task in the project's own
 tracker saying what the change is for. The outcome is whether the review point gets answered
@@ -904,9 +905,9 @@ early, because a PR that is still being replied to has not merged yet. And most
 of these PRs merge either way, so by day 30 the gap is a few points rather than
 the seventeen the hour-48 group shows. The direction survives. A separate discrete-time hazard model, fitted on the
 whole population by pooled logistic regression over daily risk periods with a
-baseline for each period and standard errors clustered on the repository, puts
-the odds of merging in the next period about 1.74 times higher while a reply is
-active. That figure barely moves as controls are added, from 1.73 with the
+baseline for each period and standard errors clustered on the repository, estimates a discrete-time merge hazard. Its odds ratio on the reply indicator is
+about 1.74, so the odds of merging in the next period are roughly that much
+higher while a reply is active. That figure barely moves as controls are added, from 1.73 with the
 baseline alone to 1.74 with the full pre-trigger set, across 3,940 of the 3,942 pull requests, in 893 repositories. Two contribute no
 risk period at all, because their follow-up time is zero, so the hazard model
 has nothing to fit on them; the cumulative curves keep all 3,942. Online Resource~1 carries the specification. The large
@@ -1124,9 +1125,10 @@ a point as received, declined, routed, or awaiting a person turns an inferred
 sequence into a record. The scarcity of different-product relays says plainly
 that installing two products together does not create that record by itself.
 
-\textbf{Evaluation should ask for a connection, not a count.} An answered review
-point is a better field signal than a merge, because it is specific, it is
-machine-checkable, and it happens before the outcome. It is also rare, so it
+\textbf{Evaluation should ask for a connection, not a count.} An answered review point is a more specific field signal than a merge, because it
+is machine-checkable and it happens before the outcome. More specific is not the
+same as more predictive, and our placebo exposures show it is not more
+predictive: looser reply signals carry the same association. It is also rare, so it
 belongs in auditing rather than in a score. Nothing here licenses treating it as
 a quality metric, and a real test would randomise an acknowledgement feature and
 watch what happens.
@@ -1239,16 +1241,16 @@ removing overlap it gives no independent group for RQ3.
 
 Two AI products on one pull request is not proof of teamwork. Once the fast
 burst of events is set aside, product co-presence almost never becomes one
-product answering another. User accounts form the main visible bridge, and most
-of them have reviewed in that repository before.
+product answering another. User accounts form the main visible bridge, and among the accounts we observe
+bridging, most have reviewed in that repository before.
 
-The clearest connected signal is an exact reply to the trigger. It marks more
-later merges, and it survives stricter edge rules, a shuffle test, and a model
-that drops the hour-48 rule and uses the whole population. A person writes that
-signal four times in five. So the edge that
-carries the weight is a human answering an agent, and that is exactly what a
-count of products does not measure. Field evaluation of multi-agent work should
-ask for three things: an addressed edge, a visible owner, and a later state.
+The clearest connected signal is a reply, and four times in five a user account
+writes it. What carries the association is that somebody came back before the
+later state, not where on the page the reply was attached: an off-target reply
+does as well, and shuffling the anchor leaves the estimate where it was. The
+exact anchor still earns its place, because it is what lets us name the account
+and read what it wrote. It buys attribution, not prediction, and a count of
+products buys neither. Field evaluation of multi-agent work should ask, beyond mere co-presence, for three things: an addressed edge, a visible owner, and a later state.
 
 \backmatter
 

@@ -1375,7 +1375,7 @@ def rq3_robustness_table() -> str:
     hazard_p = max(number(item["p_value"]) for item in hazard_items)
     rows.append(
         (
-            tex("Whole-population hazard"),
+            tex("Whole-population discrete-time hazard (odds ratio)"),
             tex("Time only; products and month; full controls"),
             tex(f"{min(hazard_ratios):.2f} to {max(hazard_ratios):.2f}"),
             tex(f"[{hazard_low:.2f}, {hazard_high:.2f}]"),
