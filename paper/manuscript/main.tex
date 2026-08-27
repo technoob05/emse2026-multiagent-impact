@@ -1,6 +1,8 @@
 % Working draft for the EMSE 2026 Special Issue on Agentic SE.
 % Author metadata, declarations, and the public artifact DOI remain open gates.
-\documentclass[lineno,pdflatex,sn-basic]{sn-jnl}
+% The referee option gives the double line spacing the Springer Nature user
+% manual requests for the peer-review copy. Remove it for the final version.
+\documentclass[referee,lineno,pdflatex,sn-basic]{sn-jnl}
 
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
@@ -22,7 +24,7 @@
 \affil*[1]{\orgdiv{Affiliation pending}, \orgname{Institution pending},
   \orgaddress{\city{City pending}, \country{Country pending}}}
 
-\abstract{\textbf{Context:} A pull request (PR) written by one coding-agent product and reviewed by another looks like a multi-agent workflow, but two products on one PR do not show that one addressed the other. \textbf{Objective:} We ask what connected public path follows one cross-product review event. \textbf{Method:} From a pinned AIDev release we analyse 8,608 trigger PRs, 546 matched pairs, and a 1,067-PR outcome cohort, anchoring every event to one trigger by exact account, comment, and review-batch identifiers. We set aside automation bursts, fix an hour-48 check point, and test the exposure against placebo anchors. \textbf{Results:} Direct dialogue between products is rare; after a five-minute burst, people own most remaining first actions. Cross-product triggers get 13 percentage points less visible follow-up than matched same-product triggers. An exact reply to the trigger goes with 17 points more later merge, and a person writes it four times in five. Placebo exposures qualify it: a reply anchored elsewhere on the PR does as well, and shuffling the anchor leaves the estimate unmoved. Across all 105 user-written replies, the association sits with those a person wrote, not the one-click hand-offs to another machine. Naming an issue in the PR body roughly doubles the chance a review point is answered across the boundary, and changes nothing within a product. \textbf{Conclusions:} Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention rather than a resolved review point, and strict anchoring buys attribution, not prediction.}
+\abstract{\textbf{Context:} A pull request written by one coding-agent product and reviewed by another looks like a multi-agent workflow, but two products on one pull request do not show that either answered the other. \textbf{Objective:} We ask what connected public path follows one cross-product review comment. \textbf{Method:} From one fixed version of the AIDev dataset we analyse 8,608 pull requests where one product reviewed another's change, 546 matched pairs, and a 1,067-request outcome group. Every event is tied to one review comment by exact account and comment identifiers. We set aside the first minutes of automated posting, count outcomes only after hour 48 so that cause precedes effect, and re-test the rule with deliberately wrong anchors. \textbf{Results:} Direct dialogue between products is rare; once the opening minutes are set aside, people take most remaining first actions. Cross-product review draws 13 percentage points less visible follow-up than matched same-product review. A reply that GitHub records as answering the comment goes with 17 points more later merging, and a person writes it four times in five. The wrong-anchor tests then qualify that: a reply attached anywhere else does as well, and shuffling which comment each reply answers leaves the estimate unmoved. Reading all 105 replies, the association sits with those a person wrote, not with one-click hand-offs to another machine. Linking an issue in the request roughly doubles the chance a review point is answered across a product boundary, and changes nothing within one product. \textbf{Conclusions:} Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention, not a resolved review point.}
 
 \keywords{coding agents, multi-agent software engineering, code review, human-agent collaboration, pull requests, mining software repositories}
 \maketitle
@@ -364,18 +366,18 @@ might hold.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{Fig1.pdf}
-\caption{How we measure, shown on one real pull request. Panel A traces an
-actual case from our data, left to right, with the time each event arrived. One
-product writes an inline comment on another product's change: that is the
-\emph{trigger}, and everything is measured from it. Three rules then decide what
-counts. A second comment written in the same submitted batch is not an answer,
-because both were posted at once. An event in the first few minutes does not
-decide who took the change up, because automation posts that fast. Only a comment
-that GitHub records as replying to the trigger counts as an \emph{addressed
-edge}; here a person writes it 22 hours later. Filled marks are kept by the
-rules; the hollow one is dropped. Panel B names the four levels of proof the
-paper keeps apart, each demanding more of the record than the one before it. The
-example is the first pull request in our data that exercises every rule.}
+\caption{How we measure, shown on one real pull request. Panel A has two tracks.
+The upper one is everything that happened after one product wrote an inline
+comment on another product's change; that first comment is the \emph{trigger},
+and all times are measured from it. The lower track is what our rules let
+through. Two events fall out on the way down, each with the rule that caught it.
+A comment written in the same submitted batch is not an answer, because both were
+posted at once. An event in the first few minutes does not decide who took the
+change up, because automation posts that fast. What survives is the trigger, a
+reply that GitHub records as answering it, written here by a person 22 hours
+later, and the merge. Panel B names the four levels of proof the paper keeps
+apart, each demanding more of the record than the one before it. The example is
+the first pull request in our data that exercises every rule.}
 \label{fig:contract}
 \end{figure}
 
@@ -777,12 +779,18 @@ one we shuffle the exposure label many times and refit. The shuffled results
 centre on zero, and the real result sits far out in the tail ($p=0.007$,
 two-sided). So the finding does not rest on the standard interval formula.
 
-The last check is the weakest, and it half fails. The idea is simple. We apply the
-same model to three things that had already finished \emph{before} the trigger.
-The trigger cannot reach back in time, so a well-behaved analysis should find
-nothing there. Two of the three behave, sitting on zero at every reply window. The
-third does not: PRs that were already busy beforehand lean towards being answered,
-and at the shortest reply window that lean is big enough to be real.
+The last check is the weakest, and it half fails. The idea is simple. We take
+three things that had already happened \emph{before} the trigger, and ask the
+same model whether an answered pull request differs on them. They are: someone
+had already approved the change or asked for changes; the branch had already been
+rewritten; and a person had already been active on the pull request. The trigger
+cannot reach back in time, so a well-behaved analysis should find no difference on
+any of them.
+
+The first two behave, sitting on zero at every reply window. The third does not.
+Pull requests that a person had already touched are somewhat likelier to be
+answered later, and at the shortest reply window that difference is big enough to
+be real.
 
 That is specific rather than fatal. It means answered PRs were already somewhat
 different PRs, and our controls do not remove all of that difference. The lean
@@ -1140,21 +1148,33 @@ carries the weight is a human answering an agent, and that is exactly what a
 count of products does not measure. Field evaluation of multi-agent work should
 ask for three things: an addressed edge, a visible owner, and a later state.
 
+\backmatter
+
 \section*{Statements and Declarations}
 
-\textbf{Funding:} Pending author confirmation.\quad
-\textbf{Competing interests:} Pending author confirmation.\quad
-\textbf{Data availability:} The source data are the public AIDev-7.6M
-release at the pinned revision reported in Section~\ref{sec:method}. The
-derived cohorts needed to reproduce the results will be archived at
-[ARTIFACT DOI PENDING].\quad
-\textbf{Code availability:} Analysis and figure code will be archived with the
-derived cohorts at [ARTIFACT DOI PENDING].\quad
-\textbf{Ethics approval:} Final institutional wording is pending author
-confirmation for this public repository trace study.\quad
-\textbf{Consent to participate:} Pending author confirmation.\quad
-\textbf{Consent for publication:} Pending author confirmation.\quad
-\textbf{Author contributions:} Pending author confirmation.
+\noindent\textbf{Funding.} Pending author confirmation.
+
+\noindent\textbf{Competing interests.} Pending author confirmation.
+
+\noindent\textbf{Ethics approval and consent to participate.} This study
+analyses public pull-request records that GitHub already publishes. Final
+institutional wording is pending author confirmation.
+
+\noindent\textbf{Consent for publication.} Pending author confirmation.
+
+\noindent\textbf{Data availability.} The source data are the public
+AIDev-7.6M release at the pinned revision reported in
+Section~\ref{sec:method}. The derived cohorts needed to reproduce every result
+will be archived at [ARTIFACT DOI PENDING].
+
+\noindent\textbf{Materials availability.} Not applicable. This study uses no
+physical materials.
+
+\noindent\textbf{Code availability.} The analysis and figure code that
+produces every table and figure will be archived with the derived cohorts at
+[ARTIFACT DOI PENDING].
+
+\noindent\textbf{Author contributions.} Pending author confirmation.
 
 \bibliography{references}
 

@@ -1,6 +1,7 @@
 # EMSE Agentic Software Engineering venue checklist
 
-Verified from official pages on 2026-08-26:
+Verified from official pages on 2026-08-26, and re-verified against the local
+copy of the official template on 2026-08-27.
 
 - Journal: Empirical Software Engineering.
 - Article type: Research Papers.
@@ -10,8 +11,35 @@ Verified from official pages on 2026-08-26:
 - Abstract: 150 to 250 words; structured abstract permitted.
 - Keywords: 4 to 6.
 - References: author-year.
-- LaTeX: current Springer Nature sn-jnl; flat source bundle; no input files.
-- Required: data availability statement and editable sources at every round.
+- LaTeX: Springer Nature `sn-jnl`, December 2024 release. The version marker is
+  `%Version 3.1 December 2024` on line 1 of the template's own `sn-article.tex`;
+  the `\ProvidesClass` date inside `sn-jnl.cls` is stale in every release and is
+  not a version signal. Our copies of `sn-jnl.cls` and `sn-basic.bst` are
+  byte-identical to that release.
+- Class options: `sn-basic` is correct for computer science and gives author-year
+  citations. Do not add `Numbered`.
+- Peer-review copy: the user manual asks for the `referee` option, which sets
+  double line spacing. It roughly doubles the page count, which is expected.
+  Remove it for the final version.
+- Structure: `\backmatter` must precede the declarations and the bibliography.
+  Back-matter headings use `\bmhead`.
+- Declarations: eight headings are expected, each present even when the answer is
+  "Not applicable": Funding; Competing interests; Ethics approval and consent to
+  participate; Consent for publication; Data availability; Materials
+  availability; Code availability; Author contributions.
+- Title page: corresponding author needs an active email; ORCID where available;
+  affiliation needs department, institution, city, and country.
+- Figures: lettering 8 to 12 pt at final size in a sans face. Our figures are
+  exported at exactly the 372 pt text width and placed at `\linewidth`, so the
+  point size in the code is the point size on the page. The render gate enforces
+  an 8 pt floor over every text object including tick labels and legends.
+- Figures: Springer lists EPS for vector art and TIFF for halftones. We submit
+  PDF, which the `pdflatex` class option exists to support and which is near
+  universal in practice. This is a judgement call, not a verified requirement.
+- Figures: no subfolders, no subfigure packages, one input file per figure.
+- Packages: the manual discourages adding any beyond the class list, and
+  discourages manual spacing commands.
+- Required: editable sources at every round.
 - Generative AI beyond copy editing: disclose in Methods; an LLM is not an author.
 - Cover letter: explain special-issue fit and disclose any conference extension.
 - No Research Paper page or word limit was stated in the call or journal guide.

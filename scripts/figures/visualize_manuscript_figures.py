@@ -117,7 +117,9 @@ POINTS_PER_INCH = 72.0
 TEXT_WIDTH_PT = 372.0
 FIGURE_WIDTH = TEXT_WIDTH_PT / POINTS_PER_INCH
 
-MIN_TEXT_POINTS = 7.0
+# Springer Nature asks for figure lettering of about 8 to 12 pt at final size.
+# These figures are placed 1:1, so the floor here is the floor on the page.
+MIN_TEXT_POINTS = 8.0
 MINUS = "\u2212"
 
 
@@ -131,13 +133,13 @@ plt.rcParams.update(
         "ps.fonttype": 42,
         "svg.fonttype": "none",
         "font.family": "DejaVu Sans",
-        "font.size": 7.6,
-        "axes.titlesize": 8.8,
+        "font.size": 8.4,
+        "axes.titlesize": 9.6,
         "axes.titleweight": "bold",
-        "axes.labelsize": 7.9,
-        "xtick.labelsize": 7.2,
-        "ytick.labelsize": 7.2,
-        "legend.fontsize": 7.2,
+        "axes.labelsize": 8.6,
+        "xtick.labelsize": 8.0,
+        "ytick.labelsize": 8.0,
+        "legend.fontsize": 8.0,
         "text.color": INK,
         "axes.labelcolor": INK,
         "axes.edgecolor": MID,
@@ -304,6 +306,13 @@ def assert_layout(fig: plt.Figure, stem: str) -> None:
         if ax.axison:
             candidates.extend(ax.get_xticklabels())
             candidates.extend(ax.get_yticklabels())
+        # Legend entries are drawn text too, and a journal measuring lettering
+        # will not care that matplotlib keeps them in a separate artist.
+        legend = ax.get_legend()
+        if legend is not None:
+            candidates.extend(legend.get_texts())
+            if legend.get_title() is not None:
+                candidates.append(legend.get_title())
 
     for text in candidates:
         content = text.get_text()
@@ -450,7 +459,7 @@ def write_colour_proofs(stems: Sequence[str]) -> list[str]:
 
 
 def figure_measurement_contract() -> None:
-    """One real pull request as a timeline, with each rule shown where it bites.
+    """Two tracks on one real pull request: what happened, and what we count.
 
     Panel A reads outputs/worked_example/, so the times and the roles are those
     of an actual pull request rather than an illustration.
@@ -462,26 +471,25 @@ def figure_measurement_contract() -> None:
     example = json.loads((EXAMPLE / "summary.json").read_text(encoding="utf-8"))
     at = {row.rule: float(row.minutes_after_trigger) for row in steps.itertuples()}
 
-    fig = new_figure(3.15)
-    layout = Layout(left=0.035, right=0.975, top=0.885, bottom=0.050, gap=0.075)
-    top_rect, bottom_rect = layout.rects((1.0, 0.80))
+    fig = new_figure(3.95)
+    layout = Layout(left=0.030, right=0.980, top=0.900, bottom=0.045, gap=0.105)
+    top_rect, bottom_rect = layout.rects((1.0, 0.62))
 
     ax = fig.add_axes(top_rect)
     ax.set_xlim(0, 100)
     ax.set_ylim(0, 10)
     ax.axis("off")
-    panel_title(ax, "A", "One real pull request, and what each rule does to it")
+    panel_title(ax, "A", "One real pull request: what happened, and what we count")
 
-    # A true time axis would bury the first three events on top of each other,
-    # so the axis is ordinal and the elapsed time is printed under each mark.
-    spots = {"trigger": 8.0, "burst": 27.0, "edge": 52.0, "landmark": 76.0, "merge": 90.0}
-    baseline = 5.4
-    ax.annotate(
-        "",
-        xy=(99.0, baseline),
-        xytext=(4.0, baseline),
-        arrowprops={"arrowstyle": "-|>", "color": SLATE, "linewidth": 1.0},
-    )
+    SEEN, KEPT = 8.4, 3.9
+    spots = {
+        "trigger": 32.0,
+        "sibling": 41.0,
+        "burst": 50.0,
+        "edge": 66.0,
+        "landmark": 80.0,
+        "merge": 91.0,
+    }
 
     def clock(minutes: float) -> str:
         if minutes < 1.0:
@@ -492,103 +500,118 @@ def figure_measurement_contract() -> None:
             return f"{minutes / 60.0:.0f} h"
         return f"{minutes / 1440.0:.1f} days"
 
-    def mark(x, kept, colour, above, headline, small):
-        ax.plot(
-            [x],
-            [baseline],
-            marker="o",
-            markersize=6.4,
-            markerfacecolor=colour if kept else "white",
-            markeredgecolor=colour,
-            markeredgewidth=1.4,
-            clip_on=False,
-            zorder=4,
-        )
-        top = baseline + 0.75 if above else baseline - 0.75
-        ax.plot(
-            [x, x],
-            [top, top + (1.15 if above else -1.15)],
-            color=MID,
-            linewidth=0.7,
-            zorder=1,
+    for lane, label, side in (
+        (SEEN, "everything that" + chr(10) + "happened", "left"),
+        (KEPT, "what our rule" + chr(10) + "counts", "left"),
+    ):
+        ax.annotate(
+            "",
+            xy=(98.0, lane),
+            xytext=(27.0, lane),
+            arrowprops={"arrowstyle": "-|>", "color": MID, "linewidth": 0.9},
         )
         ax.text(
-            x,
-            top + (1.35 if above else -1.35),
-            headline,
-            ha="center",
-            va="bottom" if above else "top",
-            fontsize=7.4,
-            color=colour,
-            fontweight="bold",
-        )
-        ax.text(
-            x,
-            top + (2.55 if above else -2.55),
-            small,
-            ha="center",
-            va="bottom" if above else "top",
-            fontsize=7.0,
+            25.0,
+            lane,
+            label,
+            ha="right",
+            va="center",
+            fontsize=8.0,
             color=SLATE,
         )
 
-    mark(spots["trigger"], True, TEAL, True, "the trigger", "a product reviews" + chr(10) + "one line")
-    mark(spots["burst"], False, ORANGE, False, "dropped", "same batch, and in the burst")
-    mark(spots["edge"], True, TEAL, True, "the answer", "a person replies" + chr(10) + "to that comment")
-    mark(spots["merge"], True, SLATE, True, "merged", "after the line," + chr(10) + "so it counts")
+    # Everything that happened, on the upper track.
+    seen = (
+        ("trigger", TEAL, True),
+        ("sibling", ORANGE, False),
+        ("burst", ORANGE, False),
+        ("edge", TEAL, True),
+        ("merge", SLATE, True),
+    )
+    for key, colour, kept in seen:
+        ax.plot(
+            [spots[key]],
+            [SEEN],
+            marker="o",
+            markersize=6.0,
+            markerfacecolor=colour if kept else "white",
+            markeredgecolor=colour,
+            markeredgewidth=1.3,
+            zorder=4,
+        )
+        if kept:
+            # Kept events drop straight down to the counted track.
+            ax.annotate(
+                "",
+                xy=(spots[key], KEPT + 0.45),
+                xytext=(spots[key], SEEN - 0.45),
+                arrowprops={
+                    "arrowstyle": "-|>",
+                    "color": colour,
+                    "linewidth": 0.9,
+                    "shrinkA": 0,
+                    "shrinkB": 0,
+                },
+            )
+            ax.plot(
+                [spots[key]],
+                [KEPT],
+                marker="o",
+                markersize=6.0,
+                markerfacecolor=colour,
+                markeredgecolor=WHITE,
+                markeredgewidth=0.7,
+                zorder=4,
+            )
+        else:
+            # Dropped events fall away instead, and say which rule caught them.
+            ax.annotate(
+                "",
+                xy=(spots[key] + 3.4, SEEN - 2.1),
+                xytext=(spots[key] + 0.6, SEEN - 0.6),
+                arrowprops={
+                    "arrowstyle": "-|>",
+                    "color": ORANGE,
+                    "linewidth": 0.8,
+                    "linestyle": (0, (2, 1.6)),
+                },
+            )
+
+    ax.text(spots["trigger"], SEEN + 0.75, "review comment", ha="center", va="bottom",
+            fontsize=8.2, color=TEAL, fontweight="bold")
+    ax.text(spots["edge"], SEEN + 0.75, "a person replies", ha="center", va="bottom",
+            fontsize=8.2, color=TEAL, fontweight="bold")
+    ax.text(spots["merge"], SEEN + 0.75, "merged", ha="center", va="bottom",
+            fontsize=8.2, color=SLATE, fontweight="bold")
+    ax.text(spots["sibling"] + 3.8, SEEN - 2.35, "same review batch",
+            ha="left", va="top", fontsize=8.0, color=ORANGE)
+    ax.text(spots["burst"] + 3.8, SEEN - 3.35, "inside the burst",
+            ha="left", va="top", fontsize=8.0, color=ORANGE)
 
     ax.plot(
         [spots["landmark"], spots["landmark"]],
-        [baseline - 1.9, baseline + 1.9],
+        [KEPT - 0.9, KEPT + 1.5],
         color=INK,
-        linewidth=1.0,
-        zorder=2,
+        linewidth=1.1,
+        zorder=3,
     )
-    ax.text(
-        spots["landmark"],
-        baseline - 2.15,
-        "hour 48",
-        ha="center",
-        va="top",
-        fontsize=7.2,
-        color=INK,
-        fontweight="bold",
-    )
-    ax.text(
-        spots["landmark"],
-        baseline - 3.05,
-        "outcomes counted from here",
-        ha="center",
-        va="top",
-        fontsize=7.0,
-        color=SLATE,
-    )
+    ax.text(spots["landmark"], KEPT + 1.65, "hour 48", ha="center", va="bottom",
+            fontsize=8.2, color=INK, fontweight="bold")
 
-    for rule, spot in (
-        ("trigger", "trigger"),
-        ("burst exclusion", "burst"),
-        ("addressed edge", "edge"),
-        ("outcome", "merge"),
-    ):
-        ax.text(
-            spots[spot],
-            baseline - 0.95,
-            clock(at[rule]),
-            ha="center",
-            va="top",
-            fontsize=7.0,
-            color=SLATE,
-        )
+    for key, rule in (("trigger", "trigger"), ("edge", "addressed edge"),
+                      ("merge", "outcome")):
+        ax.text(spots[key], KEPT - 0.75, clock(at[rule]), ha="center", va="top",
+                fontsize=8.0, color=SLATE)
 
     ax.text(
-        4.0,
-        0.05,
+        5.0,
+        0.15,
         f"{example['reviewing_product'].replace('_', ' ')} reviewing a "
-        f"{example['author_product'].replace('_', ' ')} pull request. "
-        "Filled marks count; hollow ones a rule throws out.",
+        f"{example['author_product'].replace('_', ' ')} pull request." + chr(10)
+        + "Hollow marks are the ones a rule throws out.",
         ha="left",
         va="bottom",
-        fontsize=7.0,
+        fontsize=8.0,
         color=SLATE,
     )
 
@@ -607,19 +630,19 @@ def figure_measurement_contract() -> None:
         ),
         (
             "2. Answered",
-            "a reply names the\nreview comment",
+            "a reply names\nthe comment",
             PALE_TEAL,
             TEAL,
         ),
         (
             "3. Taken up",
-            "who acts next, once\nthe burst is over",
+            "who acts once the\nburst is over",
             PALE_TEAL,
             TEAL,
         ),
         (
             "4. Accepted",
-            "merged, counted only\nafter hour 48",
+            "merged, only\nafter hour 48",
             GRID,
             SLATE,
         ),
@@ -645,7 +668,7 @@ def figure_measurement_contract() -> None:
             name,
             ha="center",
             va="center",
-            fontsize=7.3,
+            fontsize=8.3,
             color=INK,
             fontweight="bold",
         )
@@ -655,7 +678,7 @@ def figure_measurement_contract() -> None:
             rule,
             ha="center",
             va="center",
-            fontsize=7.0,
+            fontsize=8.0,
             color=INK,
         )
         if index < len(levels) - 1:
@@ -676,7 +699,7 @@ def figure_measurement_contract() -> None:
         "run,\na shared plan, or whether the review point was understood.",
         ha="center",
         va="center",
-        fontsize=7.0,
+        fontsize=8.0,
         color=SLATE,
     )
 
@@ -748,7 +771,7 @@ def figure_participation() -> None:
             f"{share:.1f}%  ·  {count:,} PRs",
             ha="right" if inside else "left",
             va="center",
-            fontsize=7.2,
+            fontsize=8.2,
             color=WHITE if reversed_out else INK,
         )
     ax.set_yticks(y, stage_labels)
@@ -810,7 +833,7 @@ def figure_participation() -> None:
             label,
             va="center",
             ha="left",
-            fontsize=7.2,
+            fontsize=8.2,
             color=color if state != "branch_movement_untyped" else INK,
         )
         if abs(resolved[state] - endpoints[state]) > 0.4:
@@ -830,7 +853,7 @@ def figure_participation() -> None:
         f"{user_at_five:.0f}%",
         (2, user_at_five),
         xytext=(2.16, user_at_five + 5.5),
-        fontsize=7.4,
+        fontsize=8.4,
         fontweight="bold",
         color=TEAL,
         arrowprops={"arrowstyle": "-", "color": TEAL, "linewidth": 0.7},
@@ -840,7 +863,7 @@ def figure_participation() -> None:
         (2, product_at_five),
         xytext=(1.84, product_at_five + 5.5),
         ha="right",
-        fontsize=7.4,
+        fontsize=8.4,
         fontweight="bold",
         color=BLUE,
         arrowprops={"arrowstyle": "-", "color": BLUE, "linewidth": 0.7},
@@ -860,7 +883,7 @@ def figure_participation() -> None:
         transform=ax.transAxes,
         ha="left",
         va="bottom",
-        fontsize=7.2,
+        fontsize=8.2,
         color=SLATE,
     )
     ax.set_xlim(-0.06, 4.0)
@@ -899,12 +922,12 @@ def figure_boundary() -> None:
     # Plain names, because "any_visible_followup" is our vocabulary, not a
     # reader's. Order runs from the outcome that moves to the ones that do not.
     OUTCOMES = (
-        ("any_visible_followup", "Anyone does anything visible"),
-        ("later_pr_comment", "Someone comments on the PR"),
-        ("new_review_round", "A new round of review starts"),
-        ("exact_trigger_reply", "The review point gets a reply"),
+        ("any_visible_followup", "Anyone does anything"),
+        ("later_pr_comment", "Someone comments"),
+        ("new_review_round", "A new review round"),
+        ("exact_trigger_reply", "The point gets a reply"),
         ("visible_force_push", "The branch is rewritten"),
-        ("merge_within_7d", "Merged inside seven days"),
+        ("merge_within_7d", "Merged within a week"),
     )
 
     mediator = exactly_one(
@@ -929,8 +952,8 @@ def figure_boundary() -> None:
         population="all_distinct_48h_user_responders",
     )
 
-    fig = new_figure(4.55)
-    layout = Layout(left=0.315, right=0.870, top=0.930, bottom=0.105, gap=0.185)
+    fig = new_figure(4.85)
+    layout = Layout(left=0.360, right=0.855, top=0.930, bottom=0.115, gap=0.190)
     top_rect, bottom_rect = layout.rects((1.0, 0.52))
 
     # --- Panel A: one outcome moves, five do not, and the layout says so ----
@@ -993,13 +1016,13 @@ def figure_boundary() -> None:
             minus(f"{cross - same:+.1f}") + " pp",
             ha="left",
             va="center",
-            fontsize=7.1,
+            fontsize=8.1,
             color=INK if separated else SLATE,
             fontweight="bold" if separated else "normal",
         )
 
     ax.set_yticks(positions)
-    ax.set_yticklabels([label for _, label in rows], fontsize=7.2)
+    ax.set_yticklabels([label for _, label in rows], fontsize=8.2)
     for tick, separated in zip(ax.get_yticklabels(), moved, strict=True):
         tick.set_color(INK if separated else SLATE)
     ax.set_xlim(0, 100)
@@ -1019,7 +1042,7 @@ def figure_boundary() -> None:
         f"{pairs:,} matched pairs" + chr(10) + f"in {repositories} repositories",
         ha="left",
         va="center",
-        fontsize=7.0,
+        fontsize=8.0,
         color=SLATE,
     )
 
@@ -1027,8 +1050,8 @@ def figure_boundary() -> None:
     ax = fig.add_axes(bottom_rect)
     bars = (
         ("Whoever replies first", mediator, "prs"),
-        ("Whoever reviews decisively", decisive, "prs"),
-        ("Any person acting in 48 h", responders, "rows"),
+        ("Whoever reviews last", decisive, "prs"),
+        ("Anyone acting in 48 h", responders, "rows"),
     )
     positions = np.arange(len(bars))[::-1]
     for position, (label, row, count_key) in zip(positions, bars, strict=True):
@@ -1048,17 +1071,17 @@ def figure_boundary() -> None:
             f"{share:.0f}%   n = {int(row[count_key]):,}",
             ha="left",
             va="center",
-            fontsize=7.1,
+            fontsize=8.1,
             color=INK,
         )
 
     ax.set_yticks(positions)
-    ax.set_yticklabels([label for label, _, _ in bars], fontsize=7.2)
+    ax.set_yticklabels([label for label, _, _ in bars], fontsize=8.2)
     ax.set_xlim(0, 100)
     ax.set_xticks([0, 25, 50, 75, 100])
     ax.set_ylim(-0.6, len(bars) - 0.4)
     ax.set_xlabel("Had reviewed in this repository before (%)")
-    panel_title(ax, "B", "Whoever steps in has usually been here before")
+    panel_title(ax, "B", "Whoever steps in has been here before")
     clean_axis(ax, "x")
 
     save(fig, "Fig3_v2")
@@ -1114,18 +1137,18 @@ def figure_merge_curves() -> None:
         loc="lower right",
         bbox_to_anchor=(0.995, 0.04),
         frameon=False,
-        fontsize=7.2,
+        fontsize=8.2,
         handlelength=2.6,
         labelspacing=0.42,
         borderpad=0.0,
         title="Merged by day 30",
     )
-    legend.get_title().set_fontsize(7.2)
+    legend.get_title().set_fontsize(8.0)
     legend.get_title().set_color(SLATE)
     legend.get_title().set_ha("left")
 
     ax.axvline(2.0, color=MID, linewidth=0.8, linestyle=(0, (2, 2)), zorder=0)
-    ax.text(2.3, 12, "hour 48", ha="left", va="center", fontsize=7.1, color=SLATE)
+    ax.text(2.3, 12, "hour 48", ha="left", va="center", fontsize=8.1, color=SLATE)
 
     ax.set_xlim(0, 30.5)
     ax.set_ylim(0, 100)
@@ -1143,7 +1166,7 @@ def figure_merge_curves() -> None:
         transform=ax.transAxes,
         ha="left",
         va="top",
-        fontsize=7.1,
+        fontsize=8.1,
         color=SLATE,
     )
 
@@ -1205,7 +1228,7 @@ def figure_sensitivity() -> None:
         "only in here does\nthe result disappear",
         ha="center",
         va="center",
-        fontsize=7.2,
+        fontsize=8.2,
         color=TEAL,
     )
     ax.text(
@@ -1214,7 +1237,7 @@ def figure_sensitivity() -> None:
         "enough to blur the interval",
         ha="center",
         va="center",
-        fontsize=7.1,
+        fontsize=8.1,
         color=SLATE,
     )
     ax.text(
@@ -1227,7 +1250,7 @@ def figure_sensitivity() -> None:
         transform=ax.transAxes,
         ha="right",
         va="top",
-        fontsize=7.1,
+        fontsize=8.1,
         color=INK,
     )
 
@@ -1255,7 +1278,7 @@ def figure_sensitivity() -> None:
         xytext=(1.0, 34.0),
         ha="left",
         va="center",
-        fontsize=7.1,
+        fontsize=8.1,
         color=ORANGE,
         arrowprops={
             "arrowstyle": "-",
@@ -1346,17 +1369,19 @@ def figure_task_context() -> None:
                 f"{value:.1f}%",
                 ha="center",
                 va="bottom" if above else "top",
-                fontsize=7.3,
+                fontsize=8.3,
                 fontweight="bold",
                 color=colour,
             )
+            # Centred denominators at the ends ran into the y axis and the
+            # right margin, so each one leans back towards the middle.
             ax.text(
-                position,
-                value + (6.4 if above else -6.4),
+                position + (0.045 if position == 0 else -0.045),
+                value + (6.6 if above else -6.6),
                 f"of {count:,} PRs",
-                ha="center",
+                ha="left" if position == 0 else "right",
                 va="bottom" if above else "top",
-                fontsize=7.0,
+                fontsize=8.0,
                 color=SLATE,
             )
         ax.text(
@@ -1365,7 +1390,7 @@ def figure_task_context() -> None:
             label,
             ha="left",
             va="center",
-            fontsize=7.2,
+            fontsize=8.2,
             color=colour,
         )
         # Naming each line's own change makes the difference between the two
@@ -1377,7 +1402,7 @@ def figure_task_context() -> None:
             minus(f"{change:+.1f} pp"),
             ha="center",
             va="bottom" if above else "top",
-            fontsize=7.2,
+            fontsize=8.2,
             fontweight="bold",
             color=colour,
         )
@@ -1424,7 +1449,7 @@ def figure_task_context() -> None:
         minus(f"{point:+.1f} pp"),
         ha="center",
         va="bottom",
-        fontsize=7.4,
+        fontsize=8.4,
         fontweight="bold",
         color=TEAL,
     )
@@ -1434,7 +1459,7 @@ def figure_task_context() -> None:
         "no difference",
         ha="center",
         va="top",
-        fontsize=7.0,
+        fontsize=8.0,
         color=SLATE,
     )
     # Subtracting the two panel-A labels gives the raw contrast, which is larger
@@ -1461,7 +1486,7 @@ def figure_task_context() -> None:
         minus(f"{raw:+.1f}") + " raw",
         ha="center",
         va="top",
-        fontsize=7.0,
+        fontsize=8.0,
         color=SLATE,
     )
     ax.set_xlim(-4.0, 26.0)
