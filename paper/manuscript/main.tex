@@ -237,9 +237,9 @@ whether its own review comments were resolved by checking whether the commented
 lines changed before submission, then confirming a sample by hand
 \citep{vijayvergiya2024autocommenter}, and reports that 7.5\% of all its
 reviewer comments are addressed by applying a machine-suggested edit
-\citep{frommgen2024resolving}. Closest to our own setting, Sun et al.\ adjudicate
-more than 22,000 AI review comments across 178 repositories with a two-stage
-LLM-assisted framework that reads the following diff rather than any reply
+\citep{frommgen2024resolving}. Closest to our own setting, Sun et al.\ mine more than 22,000 AI review comments across 178 repositories and
+adjudicate 4,486 of them, drawn from 51, with a two-stage LLM-assisted framework
+that reads the following diff rather than any reply
 \citep{sun2026aicodereview}.
 
 We take the other side of this trade on purpose. Our exposure is an explicit
@@ -259,9 +259,8 @@ needed to erase it, we would rather miss connections than invent them.
 A separate literature asks a question we deliberately do not answer: was the
 comment any good? Low usefulness is older than coding agents. Bosu et al.\ find
 that much review feedback at Microsoft is not useful, that usefulness rises with
-reviewer tenure, and that it falls as changes grow \citep{bosu2015useful}; later work predicts usefulness from the comment text and the author's experience \citep{rahman2017usefulness}, and from the comment text alone \citep{ahmed2025useful}. Wessel et al.\ name the failure
-mode on the machine side, describing how automated contributions come to be read
-as noise that crowds out human conversation \citep{wessel2021noise}. That is our
+reviewer tenure, and that it falls as changes grow \citep{bosu2015useful}; later work predicts usefulness from the comment text and the reviewer's experience \citep{rahman2017usefulness}, and from the comment text alone \citep{ahmed2025useful}. Wessel et al.\ name the failure
+mode on the machine side, describing how automated contributions come to be read as noise that overloads and disrupts human conversation \citep{wessel2021noise}. That is our
 thesis in an earlier vocabulary: volume is not participation.
 
 The agent era supplies numbers. Sun et al.\ report that between 0.9\% and 19.2\%
@@ -869,11 +868,16 @@ both the reply and the merge. We cannot rule that out, but we can say how strong
 such a factor would have to be. That is what an \emph{E-value} does
 \citep{vanderweele2017evalue}. It asks: how strongly would a hidden factor need
 to be tied to \emph{both} the reply and the merge, over and above everything we
-already control for, before it could account for the whole result? We compute it on the risk-ratio scale, from the adjusted later-merge risk ratio
-implied by our linear-probability estimate, following the standard conversion
-\citep{vanderweele2017evalue}. Here the answer is 2.27, and 1.67 at the interval
-limit. Roughly speaking, a hidden factor would have to more than double the risk
-on both sides at once. The figure shows the same question as a map: the shaded corner is where such
+already control for, before it could account for the whole result? The E-value is defined on the risk-ratio scale
+\citep{vanderweele2017evalue}, and our estimate is a difference in
+probabilities, so we convert: we divide the adjusted difference by the
+later-merge rate among unanswered pull requests to obtain a risk ratio, then
+apply their formula to it. That conversion is ours. It is not the
+population-standardised procedure the authors implement for risk differences,
+and a reader who prefers that procedure should treat our figure as approximate. Here the answer is 2.27, and 1.67 at the interval
+limit. Roughly speaking, such a factor would have to be more than twice as common
+among answered pull requests as among unanswered ones, and more than double the
+chance of a later merge on its own. The figure shows the same question as a map: the shaded corner is where such
 a factor would have to live, and it is a demanding corner to reach.
 
 A shuffle test gives a second check, one that rests on the design rather than
