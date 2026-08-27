@@ -169,6 +169,23 @@ their submitted-review identifier; row order is never a join key.}
 \end{figure}
 \FloatBarrier
 
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{FigS3.pdf}
+\caption{Where the addressed edge can reach, and where it cannot. GitHub
+records review in three places and only inline comments store a reply target,
+so only they can produce an addressed edge. Panel A shows the split twice: by
+event, where inline comments are 42.9\% of the 73,491 reviewer-side
+interactions on the 8,608 cross-product trigger pull requests, and by pull
+request, where 56.0\% have an inline comment as their first cross-product
+review and 44.0\% are out of reach by construction. The hollow mark gives the
+same share inside the hour-48 cohort, which leans towards inline triggers.
+Panel B is a further ceiling: within inline comments only a thread root can be
+named by a reply, which is 81.3\% of them.}
+\label{fig:s-coverage}
+\end{figure}
+\FloatBarrier
+
 \input{apx_tables_data.tex}
 \FloatBarrier
 
@@ -307,6 +324,23 @@ while breaking temporal order, which is what stops a dominant product mix from
 reading as a persistence mechanism. The second sessionizes public automation
 episodes and asks whether repeated automation escalates to a user account. The
 third conditions on a visible next action and asks whether ownership persists.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{FigS4.pdf}
+\caption{The burst window is a convention, and the result survives all of
+them. Panel A gives the lead of user accounts over mapped products among first
+post-burst owners, under all nine schemes: the five fixed windows, two global
+change-point cuts, and two per-product ones. The lead runs from 19.4 to 41.1
+points and no repository-clustered interval reaches zero, so the ordering never
+flips. Shares are of pull requests that still have an action after the wait.
+Panel B says why no window is privileged: the time from a trigger to the next
+public event climbs to a single mode near four minutes with no valley anywhere
+in the burst region, and the only antimode is the overnight gap. A cut chosen
+by the data is therefore a choice among equals, not a discovery.}
+\label{fig:s-burst-window}
+\end{figure}
+\FloatBarrier
 
 \input{apx_tables_rq1.tex}
 

@@ -156,11 +156,15 @@ try {
     }
     Assert-ProjectFile "outputs\figures\dataset_schema_and_joins.pdf"
     Assert-ProjectFile "outputs\figures\dataset_feature_coverage.pdf"
+    Assert-ProjectFile "outputs\figures\anchorable_channel_coverage.pdf"
+    Assert-ProjectFile "outputs\figures\burst_threshold_sensitivity.pdf"
     foreach ($index in 1..6) {
         Copy-Item (Join-Path $projectRoot "build\figures\Fig${index}_v2.pdf") (Join-Path $manuscriptDir "Fig${index}.pdf") -Force
     }
     Copy-Item outputs\figures\dataset_schema_and_joins.pdf paper\manuscript\FigS1.pdf -Force
     Copy-Item outputs\figures\dataset_feature_coverage.pdf paper\manuscript\FigS2.pdf -Force
+    Copy-Item outputs\figures\anchorable_channel_coverage.pdf paper\manuscript\FigS3.pdf -Force
+    Copy-Item outputs\figures\burst_threshold_sensitivity.pdf paper\manuscript\FigS4.pdf -Force
 
     Push-Location $manuscriptDir
     try {

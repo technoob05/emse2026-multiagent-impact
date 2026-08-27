@@ -43,19 +43,9 @@ Submitted reviews & Rich & Linked rows & 281,170 & 83,081 & 23.00\% of the backb
 Inline review comments & Rich & Linked rows & 289,780 & 47,251 & 13.08\% of the backbone; 0 orphan PR identifiers \\
 Task classification & Rich & Linked rows & 32,702 & 32,702 & 9.05\% of the backbone; 0 orphan PR identifiers \\
 Linked issues & Rich & Linked rows & 38,006 & 28,987 & 8.02\% of the backbone; 0 orphan PR identifiers \\
-\midrule
-\multicolumn{6}{@{}l}{\textbf{Panel C. Which review channels can carry a reply anchor at all}} \\
-\midrule
-Interaction channel & Anchor & Reviewer events & Share (\%) & Trigger PRs & Share of triggers (\%) \\
-\midrule
-Inline review comment & Yes & 31,507 & 42.9 & 4,824 & 56.0 \\
-Review submission body & No & 23,505 & 32.0 & 2,173 & 25.2 \\
-PR-level comment & No & 18,479 & 25.1 & 1,611 & 18.7 \\
-All channels that carry no reply anchor & No & 41,984 & 57.1 & 3,784 & 44.0 \\
-Inline thread roots, the only events an exact reply can name & Yes & 30,825 & 81.3 & n/a & n/a \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} The rich layer contains repositories with more than 100 stars, and inventory row counts come from release metadata. In Panel B coverage means that a pull request has at least one linked row; inline comments resolve through their submitted-review identifier first. Panel C counts reviewer-side interaction events on all 8,608 cross-product trigger PRs, split by the channel that carries them; only inline review comments store a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, fires on 39.7\% of PR-level-comment triggers against 34.5\% of inline triggers; it is reported to size the blind spot and is never used for estimation.
+\noindent\footnotesize \textit{Note:} The rich layer contains repositories with more than 100 stars, and inventory row counts come from release metadata. In Panel B coverage means that a pull request has at least one linked row; inline comments resolve through their submitted-review identifier first. The channel split that used to sit here is now Figure 3 of this document, which counts reviewer-side interaction events on all 8,608 cross-product trigger PRs, split by the channel that carries them; only inline review comments store a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, fires on 39.7\% of PR-level-comment triggers against 34.5\% of inline triggers; it is reported to size the blind spot and is never used for estimation.
 \endgroup
 
 
@@ -247,17 +237,6 @@ Burst (min) & First state & PRs & Share (\%) & Cluster 95\% interval & Median mi
 30 & Other bot & 377 & 4.4 & [3.5, 5.4] & 45.7 \\
 30 & Branch movement or untyped & 483 & 5.6 & [4.3, 7.1] & 117.8 \\
 30 & No later action in 7 days & 4,930 & 57.3 & [53.2, 61.1] & n/a \\
-\midrule
-\multicolumn{6}{@{}l}{\textbf{Panel B. First-owner split under nine burst-window schemes}} \\
-\midrule
-Burst-window scheme & Cut (min) & User (\%) & Mapped (\%) & User $-$ mapped (pp) & Repository-cluster 95\% interval \\
-\midrule
-Fixed convention (published) & 5 & 29.3 & 10.7 & +18.6 & [+14.3, +23.8] \\
-Data-driven global log-hazard change point & 0.9 & 28.2 & 14.0 & +14.2 & [+9.3, +19.7] \\
-Same rule, search capped at 60 minutes & 0.9 & 28.2 & 14.0 & +14.2 & [+9.4, +19.9] \\
-Per-product log-hazard change point & 0.9 to 458.3 & 25.1 & 10.5 & +14.6 & [+11.0, +18.5] \\
-Per-product rule, search capped at 60 minutes & 0.6 to 8.6 & 27.8 & 13.4 & +14.5 & [+9.8, +19.7] \\
-The other four fixed conventions (Panel A carries their shares) & 0, 1, 10, 30 & n/a & n/a & +12.5 to +18.4 & [+7.6, +23.1] \\
 \midrule
 \multicolumn{6}{@{}l}{\textbf{Panel C. Ordering diagnostics and leave-one-out checks}} \\
 \midrule

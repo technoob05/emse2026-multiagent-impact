@@ -316,7 +316,7 @@ def release_table() -> str:
     )
     note = (
         "The rich layer contains repositories with more than 100 stars, and inventory row counts come from release metadata. In Panel B coverage means that a pull request has at least one linked row; inline comments resolve through their submitted-review identifier first. "
-        f"Panel C counts reviewer-side interaction events on all "
+        f"The channel split that used to sit here is now Figure 3 of this document, which counts reviewer-side interaction events on all "
         f"{integer(anchor[COVERAGE_COHORT]['cohort_definition']['trigger_prs_in_this_cohort'])} cross-product trigger PRs, split by the channel that "
         "carries them; only inline review comments store a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares "
         "in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring "
@@ -339,18 +339,6 @@ def release_table() -> str:
                 "Panel B. Coverage of the 361,296-PR rich-layer backbone",
                 ("Feature group", "Layer", "Unit", "Rows", "Matched PRs", "Coverage and join integrity"),
                 coverage_rows,
-            ),
-            (
-                "Panel C. Which review channels can carry a reply anchor at all",
-                (
-                    "Interaction channel",
-                    "Anchor",
-                    "Reviewer events",
-                    "Share (\\%)",
-                    "Trigger PRs",
-                    "Share of triggers (\\%)",
-                ),
-                anchorability_rows(),
             ),
         ),
         note,
@@ -499,18 +487,6 @@ def burst_table() -> str:
                 "Panel A. First public state after each rapid-burst threshold",
                 ("Burst (min)", "First state", "PRs", "Share (\\%)", "Cluster 95\\% interval", "Median min"),
                 rows,
-            ),
-            (
-                "Panel B. First-owner split under nine burst-window schemes",
-                (
-                    "Burst-window scheme",
-                    "Cut (min)",
-                    "User (\\%)",
-                    "Mapped (\\%)",
-                    "User $-$ mapped (pp)",
-                    "Repository-cluster 95\\% interval",
-                ),
-                burst_threshold_rows(),
             ),
             (
                 "Panel C. Ordering diagnostics and leave-one-out checks",

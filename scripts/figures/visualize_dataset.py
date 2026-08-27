@@ -451,10 +451,12 @@ CHANNEL_SHORT = {
     "submitted_review": "Review body",
     "pr_comment": "PR comment",
 }
+# Dark, mid, light left to right, so the three channels stay ordered and
+# separable in the greyscale proof as well as in colour.
 CHANNEL_FACE = {
     "inline_review_comment": house.TEAL,
-    "submitted_review": house.PALE_ORANGE,
-    "pr_comment": house.GRID,
+    "submitted_review": house.PALE_BLUE,
+    "pr_comment": house.PALE_ORANGE,
 }
 CHANNEL_TEXT = {
     "inline_review_comment": house.WHITE,
@@ -462,22 +464,25 @@ CHANNEL_TEXT = {
     "pr_comment": house.INK,
 }
 
+# Each row of the dot plot: the artifact key, the reader-facing name, and
+# whether it is the convention the paper publishes. The cut itself is drawn as
+# its own column from the artifact, never typed here.
 BURST_SCHEMES = (
-    ("fixed_0_minutes", "Fixed window, 0 min", False),
-    ("fixed_1_minutes", "Fixed window, 1 min", False),
-    ("fixed_5_minutes", "Fixed window, 5 min\n(published convention)", True),
-    ("fixed_10_minutes", "Fixed window, 10 min", False),
-    ("fixed_30_minutes", "Fixed window, 30 min", False),
-    ("global_log_hazard_change_point", "Global change point\n0.9 min", False),
+    ("fixed_0_minutes", "Fixed window", False),
+    ("fixed_1_minutes", "Fixed window", False),
+    ("fixed_5_minutes", "Fixed window (published)", True),
+    ("fixed_10_minutes", "Fixed window", False),
+    ("fixed_30_minutes", "Fixed window", False),
+    ("global_log_hazard_change_point", "Global change point", False),
     (
         "global_log_hazard_change_point_burst_region",
-        "Global, search " + "≤" + " 60 min\n0.9 min",
+        "Global, " + "≤" + " 60 min",
         False,
     ),
-    ("product_specific_log_hazard_change_point", "Per product\n{span}", False),
+    ("product_specific_log_hazard_change_point", "Per product", False),
     (
         "product_specific_log_hazard_change_point_burst_region",
-        "Per product, " + "≤" + " 60 min\n{span}",
+        "Per product, " + "≤" + " 60 min",
         False,
     ),
 )
@@ -612,8 +617,8 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
         "triggers": int(triggers["trigger_prs"].sum()),
     }
 
-    fig = house.new_figure(4.15)
-    layout = house.Layout(left=0.205, right=0.972, top=0.915, bottom=0.185, gap=0.140)
+    fig = house.new_figure(4.65)
+    layout = house.Layout(left=0.205, right=0.972, top=0.925, bottom=0.185, gap=0.135)
     top_rect, bottom_rect = layout.rects((1.0, 0.34))
 
     ax = fig.add_axes(top_rect)
@@ -661,11 +666,20 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
         )
         reachable = int(frame.loc["inline_review_comment", count_column])
         text_y = y + bar_height / 2 + 0.20 if key == "events" else y - bar_height / 2 - 0.20
+        note = (
+            f"{boundary:.1f}% can carry a reply anchor\n"
+            f"{reachable:,} of {totals[key]:,} {unit}"
+        )
+        if key == "triggers":
+            note += (
+                "\nhollow mark: "
+                f"{float(landmark.loc['inline_review_comment', 'share_of_trigger_prs']) * 100:.1f}%"
+                " in the 48 h landmark subset"
+            )
         ax.text(
             boundary,
             text_y,
-            f"{boundary:.1f}% can carry a reply anchor\n"
-            f"{reachable:,} of {totals[key]:,} {unit}",
+            note,
             ha="center",
             va="bottom" if key == "events" else "top",
             fontsize=8.1,
@@ -687,20 +701,9 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
         markeredgewidth=1.1,
         zorder=5,
     )
-    ax.text(
-        landmark_boundary - 1.8,
-        bar_height / 2 + 0.15,
-        f"{landmark_boundary:.1f}% in the 48 h landmark subset",
-        ha="right",
-        va="center",
-        fontsize=8.0,
-        color=house.SLATE,
-        zorder=5,
-    )
-
     ax.set_xlim(0, 100)
     ax.set_xticks([0, 25, 50, 75, 100])
-    ax.set_ylim(-1.15, 1.95)
+    ax.set_ylim(-1.35, 1.95)
     ax.set_yticks([y_of[key] for key, *_ in rows])
     ax.set_yticklabels([tick for _, _, _, _, tick, _ in rows], fontsize=8.1,
                        linespacing=1.3)
@@ -758,10 +761,9 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
 
     fig.text(
         0.006,
-        0.015,
-        "Channels are pr_review_comments, pr_reviews and pr_comments; only the\n"
-        "first stores a parent identifier, so the other two admit no exact\n"
-        "addressed edge at any threshold. Complete cross-product trigger cohort.",
+        0.013,
+        "GitHub records review in three places, and only the inline one "
+        "stores a reply\ntarget, so no addressed edge can exist for the other two.",
         ha="left",
         va="bottom",
         fontsize=8.0,
@@ -822,36 +824,55 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
             "no longer holds"
         )
 
-    def span_label(scheme: str) -> str:
-        raw = str(sensitivity.loc[scheme, "threshold_minutes"])
-        values = [float(part.split("=")[1]) for part in raw.split(";")]
-        return f"{min(values):.3g} to {max(values):.3g} min"
+    def minutes(value: float) -> str:
+        return f"{value:.0f}" if value >= 10 else f"{value:.2g}"
 
-    fig = house.new_figure(5.05)
-    layout = house.Layout(left=0.320, right=0.985, top=0.930, bottom=0.075, gap=0.115)
-    top_rect, bottom_rect = layout.rects((1.0, 0.66))
+    def cut_label(scheme: str) -> str:
+        """The cut this scheme uses, read off the artifact in every case."""
+        raw = str(sensitivity.loc[scheme, "threshold_minutes"])
+        if "=" not in raw:
+            return minutes(float(raw))
+        values = [float(part.split("=")[1]) for part in raw.split(";")]
+        return f"{minutes(min(values))} to {minutes(max(values))}"
+
+    fig = house.new_figure(5.70)
+    layout = house.Layout(left=0.290, right=0.962, top=0.945, bottom=0.175, gap=0.140)
+    top_rect, bottom_rect = layout.rects((1.0, 0.52))
 
     ax = fig.add_axes(top_rect)
     GROUP_GAP = 0.85
     y_positions, labels, colours = [], [], []
     cursor = float(len(BURST_SCHEMES)) + GROUP_GAP
     previous_kind = None
-    for scheme, template, published in BURST_SCHEMES:
+    for scheme, name, published in BURST_SCHEMES:
         kind = str(sensitivity.loc[scheme, "scheme_kind"])
         fixed = kind == "fixed"
         if previous_kind is not None and fixed != (previous_kind == "fixed"):
             cursor -= GROUP_GAP
         previous_kind = kind
         y_positions.append(cursor)
-        labels.append(template.format(span=span_label(scheme)) if "{span}" in template
-                      else template)
+        labels.append(name)
         colours.append(house.TEAL if published else house.SLATE)
         cursor -= 1.0
 
+    # The cut is a property of the scheme, not of the estimate, so it gets its
+    # own column to the left of zero rather than being folded into the row name.
+    CUT_COLUMN = -4.0
+
     lows, highs = [], []
-    for y, (scheme, _template, published), colour in zip(
+    for y, (scheme, _name, published), colour in zip(
         y_positions, BURST_SCHEMES, colours, strict=True
     ):
+        ax.text(
+            CUT_COLUMN,
+            y,
+            cut_label(scheme),
+            ha="right",
+            va="center",
+            fontsize=8.0,
+            color=house.INK if published else house.SLATE,
+            zorder=4,
+        )
         row = sensitivity.loc[scheme]
         if str(row["user_exceeds_mapped"]).lower() != "true":
             raise ValueError(f"{scheme}: user accounts no longer lead")
@@ -892,13 +913,23 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     nearest = min(lows)
     ax.axvline(0.0, color=house.INK, linewidth=1.0, zorder=1)
     ax.axvspan(0.0, nearest, color=house.PALE_TEAL, alpha=0.45, zorder=0, linewidth=0)
-    bounds = (min(y_positions) - 0.75, max(y_positions) + 0.65)
+    bounds = (min(y_positions) - 1.05, max(y_positions) + 1.35)
     ax.text(
-        nearest / 2.0,
-        bounds[0] + 0.30,
+        0.9,
+        bounds[0] + 0.06,
         "no interval reaches zero",
-        ha="center",
+        ha="left",
         va="bottom",
+        fontsize=8.0,
+        color=house.SLATE,
+        zorder=4,
+    )
+    ax.text(
+        CUT_COLUMN,
+        max(y_positions) + 0.80,
+        "cut (min)",
+        ha="right",
+        va="center",
         fontsize=8.0,
         color=house.SLATE,
         zorder=4,
@@ -908,12 +939,13 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     for tick, colour in zip(ax.get_yticklabels(), colours, strict=True):
         tick.set_color(house.INK if colour == house.TEAL else house.SLATE)
     ax.set_ylim(*bounds)
-    ax.set_xlim(-1.0, max(highs) + 4.0)
+    ax.set_xlim(-24.0, max(highs) + 4.0)
+    ax.set_xticks([0, 10, 20, 30, 40, 50])
     ax.set_xlabel(
-        "User account " + house.MINUS + " mapped product, first owner after the "
-        "burst\n(pp of PRs with a post-burst action, 95% repository-clustered CI)"
+        "User account " + house.MINUS + " mapped product, share of PRs\n"
+        "with a post-burst action (pp, 95% cluster CI)"
     )
-    house.panel_title(ax, "A", "Every window tested leaves the same owner ahead")
+    house.panel_title(ax, "A", "The same owner leads under every window")
     house.category_axis(ax)
     house.fit_right_labels(ax)
 
@@ -925,9 +957,13 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     ax.plot(minutes, density, color=house.TEAL, linewidth=1.5, zorder=3)
     ax.set_xscale("log")
     top = float(density.max()) * 1.52
+    # The fixed windows are drawn where they fall on the density. The 0-minute
+    # window has no place on a log axis and is named in the note instead.
     for cut in (1.0, 5.0, 10.0, 30.0):
-        ax.plot([cut, cut], [0.0, top * 0.72], color=house.MID, linewidth=0.8,
+        ax.plot([cut, cut], [0.0, top * 0.66], color=house.MID, linewidth=0.8,
                 linestyle=(0, (2, 2)), zorder=2)
+        ax.text(cut, top * 0.03, f"{cut:.0f}", ha="center", va="bottom",
+                fontsize=8.0, color=house.SLATE, zorder=4)
     mode = float(gap["kde_mode_minutes"][0])
     antimode = float(gap["kde_antimode_minutes"][0])
     ax.plot([antimode, antimode], [0.0, top * 0.62], color=house.ORANGE,
@@ -954,25 +990,15 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
         zorder=4,
     )
     ax.text(
-        antimode,
-        top * 0.64,
+        antimode / 1.25,
+        top * 0.14,
         "the only valley is the\novernight gap at "
         f"{antimode / 60.0:.1f} h",
-        ha="center",
+        ha="right",
         va="bottom",
         fontsize=8.0,
         color=house.ORANGE,
         linespacing=1.3,
-        zorder=4,
-    )
-    ax.text(
-        1.0,
-        top * 0.74,
-        "fixed windows tested (min)",
-        ha="left",
-        va="bottom",
-        fontsize=8.0,
-        color=house.SLATE,
         zorder=4,
     )
     ax.set_xlim(0.02, 12000)
@@ -981,13 +1007,28 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     ax.set_xticklabels(["0.1", "1", "10", "100", "1,000", "10,000"])
     ax.set_yticks([])
     ax.set_xlabel(
-        "Minutes from the trigger to the next public event (log scale), "
-        f"median {float(shape['quantile_50_minutes']):.1f} min"
+        "Minutes to the next public event (log scale)\n"
+        f"median {float(shape['quantile_50_minutes']):.1f} min, "
+        f"{float(shape['share_of_prs_with_gap_at_or_below_5_minutes']) * 100:.1f}% "
+        "within 5 min"
     )
     ax.set_ylabel("Density per\nlog" + "₁₀" + " minute")
     house.panel_title(ax, "B", "No cut is privileged by the data")
     house.clean_axis(ax, "y")
     ax.spines["left"].set_visible(False)
+
+    fig.text(
+        0.006,
+        0.012,
+        "Dashed grey lines are the fixed windows tested; the fifth, 0 min, has "
+        "no place on a\nlog axis. " + "≤" + " 60 min restricts the change-point "
+        "search to the burst region.",
+        ha="left",
+        va="bottom",
+        fontsize=8.0,
+        color=house.SLATE,
+        linespacing=1.3,
+    )
 
     stem = "burst_threshold_sensitivity"
     _house_save(fig, output_dir, stem)
