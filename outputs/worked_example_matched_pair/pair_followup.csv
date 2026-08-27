@@ -1,0 +1,9 @@
+arm,pr_id,reviewing_product,channel,events
+cross_product,3952406790,Copilot,a reply on the trigger's thread,0
+cross_product,3952406790,Copilot,a new review round,0
+cross_product,3952406790,Copilot,a pull request comment,0
+cross_product,3952406790,Copilot,the branch is rewritten,0
+same_product,3952411857,OpenAI_Codex,a reply on the trigger's thread,0
+same_product,3952411857,OpenAI_Codex,a new review round,2
+same_product,3952411857,OpenAI_Codex,a pull request comment,0
+same_product,3952411857,OpenAI_Codex,the branch is rewritten,0

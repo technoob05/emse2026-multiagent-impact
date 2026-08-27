@@ -6,7 +6,7 @@ roles from web profiles. Every author should approve the final entry.
 
 ## Manuscript identity
 
-- Title: *Participation Is Not Collaboration: An Empirical Study of Multi-Agent LLM Code Review on GitHub*
+- Title: *Participation Is Not Collaboration: When One LLM Coding Agent Reviews Another on GitHub, a Person Answers*
 - Journal: *Empirical Software Engineering*
 - Article type: `Research Papers`
 - Special issue: `Agentic Software Engineering`

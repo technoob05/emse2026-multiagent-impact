@@ -1,0 +1,9 @@
+order,minutes_after_trigger,owner_kind,actor,event,verdict,rule
+0,0.0,mapped_product,Devin,inline review comment on one line of the change,this is the trigger,trigger
+1,0.72,mapped_product,OpenAI Codex,a new review round,inside the burst: does not decide the next owner,burst exclusion
+2,0.92,mapped_product,OpenAI Codex,a new review round,inside the burst: does not decide the next owner,burst exclusion
+3,0.92,mapped_product,OpenAI Codex,a pull request comment,inside the burst: does not decide the next owner,burst exclusion
+4,0.92,mapped_product,OpenAI Codex,a pull request comment,inside the burst: does not decide the next owner,burst exclusion
+5,0.97,mapped_product,OpenAI Codex,a pull request comment,inside the burst: does not decide the next owner,burst exclusion
+6,1.6,mapped_product,OpenAI Codex,a new review round,inside the burst: does not decide the next owner,burst exclusion
+7,20.27,user_account,user account,a pull request comment,the first post-burst action: this decides the owner,first post-burst owner

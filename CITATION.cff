@@ -32,8 +32,8 @@
 
 cff-version: 1.2.0
 title: >-
-  Participation Is Not Collaboration: An Empirical Study of Multi-Agent LLM
-  Code Review on GitHub
+  Participation Is Not Collaboration: When One LLM Coding Agent Reviews Another
+  on GitHub, a Person Answers
 message: >-
   If you use this artifact, please cite the accompanying paper and this
   software record.

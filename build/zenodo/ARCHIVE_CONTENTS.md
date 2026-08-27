@@ -1,8 +1,8 @@
 # What is in this archive, and what is not
 
 This is the reproducible analysis artifact for the paper *Participation Is Not
-Collaboration: An Empirical Study of Multi-Agent LLM Code Review on
-GitHub*.
+Collaboration: When One LLM Coding Agent Reviews Another on GitHub, a
+Person Answers*.
 It was assembled by `scripts/release/build_zenodo_archive.py`, which also
 verified the exclusions below against the built zip.
 

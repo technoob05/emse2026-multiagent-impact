@@ -1,0 +1,58 @@
+{
+  "repository": "mysticaltech/terraform-hcloud-kube-hetzner",
+  "author_product": "OpenAI_Codex",
+  "trigger_channel": "inline_review_comment",
+  "trigger_month": "2026-02",
+  "minutes_between_the_two_triggers": 0.5,
+  "matched_on": [
+    "repository",
+    "the pull request author's account",
+    "the product that wrote the change",
+    "the channel the review arrived on",
+    "the calendar month"
+  ],
+  "cross_product_side": {
+    "pr_id": 3952406790,
+    "reviewing_product": "Copilot",
+    "relation": "cross_product",
+    "trigger_dt": "2026-02-17 11:59:07+00:00",
+    "visible_followup": false,
+    "followup_events": {
+      "a reply on the trigger's thread": 0,
+      "a new review round": 0,
+      "a pull request comment": 0,
+      "the branch is rewritten": 0
+    },
+    "followup_event_total": 0
+  },
+  "same_product_side": {
+    "pr_id": 3952411857,
+    "reviewing_product": "OpenAI_Codex",
+    "relation": "same_product",
+    "trigger_dt": "2026-02-17 11:59:36+00:00",
+    "visible_followup": true,
+    "followup_events": {
+      "a reply on the trigger's thread": 0,
+      "a new review round": 2,
+      "a pull request comment": 0,
+      "the branch is rewritten": 0
+    },
+    "followup_event_total": 2
+  },
+  "pairs": 546,
+  "repositories": 149,
+  "tally": {
+    "both_sides_answered": 313,
+    "only_the_same_product_side_answered": 132,
+    "only_the_cross_product_side_answered": 59,
+    "neither_side_answered": 42
+  },
+  "cross_rate": 0.6813186813186813,
+  "same_rate": 0.815018315018315,
+  "paired_difference": -0.1336996336996337,
+  "ci_low": -0.19926850120651357,
+  "ci_high": -0.03970223325062035,
+  "candidates_satisfying_the_rule": 50,
+  "selection": "the inline-channel pair with the smallest gap between its two triggers, among pairs where the cross-product side records no visible follow-up and the same-product side records some; ties broken on the cross-product pull request identifier",
+  "note": "the drawn pair is one of the discordant pairs the estimate is made of, so it is selected on its outcome; the tally beside it gives all four cells over the whole set of pairs"
+}

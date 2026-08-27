@@ -2,7 +2,7 @@
 
 Dear Guest Editors of the Special Issue on "Agentic Software Engineering: The Rise of AI Teammates,"
 
-Please consider our manuscript, "Participation Is Not Collaboration: An Empirical Study of Multi-Agent LLM Code Review on GitHub," for publication as a Research Paper in Empirical Software Engineering.
+Please consider our manuscript, "Participation Is Not Collaboration: When One LLM Coding Agent Reviews Another on GitHub, a Person Answers," for publication as a Research Paper in Empirical Software Engineering.
 
 **In plain terms.** When one AI coding tool writes a pull request and a different AI tool reviews it, it looks like two agents working together. We checked whether that is true. Using a large public set of GitHub pull requests, we followed each cross-tool review comment and asked what happened next. One tool almost never answers the other. Once we set aside the quick burst of automatic events, a person is usually the one who acts next, and that person has often reviewed code in the same project before. The one connection that goes together with a later merge is a direct reply to the review comment, and four times in five a person writes it. That is a link we observed, not proof of cause. Counting tools on a pull request does not measure teamwork.
 

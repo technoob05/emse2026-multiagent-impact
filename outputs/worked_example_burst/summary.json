@@ -1,0 +1,19 @@
+{
+  "pr_id": 4010877588,
+  "repository": "https://api.github.com/repos/dvlin-dev/moryflow",
+  "author_product": "OpenAI_Codex",
+  "reviewing_product": "Devin",
+  "trigger_dt": "2026-03-02 12:01:15+00:00",
+  "burst_minutes": 5,
+  "burst_events": 6,
+  "burst_span_minutes": 1.6,
+  "burst_products": [
+    "OpenAI_Codex"
+  ],
+  "owner_without_the_rule": "mapped_product",
+  "owner_with_the_rule": "user_account",
+  "first_post_burst_minutes": 20.27,
+  "candidates_satisfying_the_rule": 7,
+  "selection": "the pull request with the most burst events among those where the five-minute rule changes the first later owner from a mapped product to a user account and no burst event comes from a user account; ties broken on the pull request identifier",
+  "note": "accounts are reported by role and product rather than by login; the pull request is public but naming individuals adds nothing"
+}

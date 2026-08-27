@@ -49,6 +49,8 @@ EXTENSIONS = ROOT / "outputs" / "rq3_extensions"
 CONTEXT = ROOT / "outputs" / "task_context_interaction"
 CURVES = ROOT / "outputs" / "merge_curves"
 EXAMPLE = ROOT / "outputs" / "worked_example"
+BURST_EXAMPLE = ROOT / "outputs" / "worked_example_burst"
+PAIR_EXAMPLE = ROOT / "outputs" / "worked_example_matched_pair"
 BENCHMARKS = ROOT / "outputs" / "confounder_benchmarks"
 THREAD_POSITION = ROOT / "outputs" / "matched_thread_position"
 OUTPUT = ROOT / "build" / "figures"
@@ -976,9 +978,13 @@ def figure_participation() -> None:
     shares = funnel.loc[stage_order, "share_of_trigger_cohort"].to_numpy() * 100
     counts = funnel.loc[stage_order, "prs"].astype(int).to_numpy()
 
-    fig = new_figure(4.55)
-    layout = Layout(left=0.215, right=0.775, top=0.925, bottom=0.085, gap=0.135)
-    top_rect, bottom_rect = layout.rects((1.0, 1.35))
+    fig = new_figure(5.85)
+    layout = Layout(left=0.215, right=0.775, top=0.945, bottom=0.070, gap=0.105)
+    top_rect, bottom_rect, example_rect = layout.rects((1.0, 1.30, 0.62))
+    # The example strip carries no row labels, so it does not need Panel A's
+    # left-hand column and would waste a third of the page keeping it. It stays
+    # flush left with the panels above and runs on to the right margin.
+    example_rect = (layout.left, example_rect[1], 0.975 - layout.left, example_rect[3])
 
     ax = fig.add_axes(top_rect)
     y = np.arange(4)[::-1]
@@ -1131,6 +1137,150 @@ def figure_participation() -> None:
     panel_title(ax, "B", "After the burst, user accounts lead")
     clean_axis(ax, "y")
 
+    # --- Panel C: the thing Panel B waits out, on one real pull request -----
+    # Panel B sweeps five waiting periods and Panel A counts what survives, but
+    # neither can show a burst, and a reader who has never seen one has to take
+    # the whole washout on trust. This reads outputs/worked_example_burst/, so
+    # every mark below is an event on one public pull request.
+    #
+    # The horizontal axis is real elapsed time here, unlike Figure 1's chain.
+    # That is the point: the six discarded events have to pile up against the
+    # origin, because piling up against the origin is what makes them a burst.
+    steps = read_csv(
+        BURST_EXAMPLE / "timeline.csv",
+        ("order", "minutes_after_trigger", "owner_kind", "actor", "rule"),
+    ).sort_values("order")
+    example = json.loads((BURST_EXAMPLE / "summary.json").read_text(encoding="utf-8"))
+
+    # Guards. The example is only worth drawing while it still illustrates the
+    # rule this figure sweeps, so each claim the panel makes is checked against
+    # the artifact instead of being trusted.
+    window = int(example["burst_minutes"])
+    if window not in thresholds:
+        raise ValueError(
+            f"The example uses a {window}-minute burst window, which Panel B "
+            "does not sweep; the two panels would be describing different rules"
+        )
+    if example["owner_without_the_rule"] != "mapped_product":
+        raise ValueError(
+            "The example no longer has a mapped product as its first raw event, "
+            "so setting the burst aside no longer changes its owner"
+        )
+    if example["owner_with_the_rule"] != "user_account":
+        raise ValueError(
+            "The example's first post-burst owner is no longer a user account; "
+            "it now reads " + str(example["owner_with_the_rule"])
+        )
+    discarded = steps[steps["rule"] == "burst exclusion"]
+    if len(discarded) != int(example["burst_events"]) or len(discarded) < 2:
+        raise ValueError("The example's burst no longer holds the events it claims")
+    if (discarded["owner_kind"] == "user_account").any():
+        raise ValueError("A user account now acts inside the example's burst")
+    if (discarded["minutes_after_trigger"] > window).any():
+        raise ValueError("A discarded event now falls outside the burst window")
+    tail = steps[steps["rule"] == "first post-burst owner"]
+    if len(tail) != 1:
+        raise ValueError("The example does not have exactly one post-burst owner")
+    tail_minutes = float(tail["minutes_after_trigger"].iloc[0])
+    if tail_minutes <= window:
+        raise ValueError("The example's post-burst owner now acts inside the burst")
+
+    ax = fig.add_axes(example_rect)
+    ax.set_xlim(-0.8, tail_minutes * 1.08)
+    ax.set_ylim(-1.75, 1.75)
+
+    ax.add_patch(
+        Rectangle(
+            (0.0, -0.75),
+            window,
+            1.5,
+            facecolor=PALE_BRICK,
+            edgecolor=BRICK,
+            linewidth=0.7,
+            zorder=0,
+        )
+    )
+    ax.axhline(0.0, color=MID, linewidth=0.7, zorder=1)
+
+    ax.plot(
+        [0.0],
+        [0.0],
+        marker="o",
+        markersize=6.4,
+        markerfacecolor=PALE_GOLD,
+        markeredgecolor=GOLD_INK,
+        markeredgewidth=1.3,
+        zorder=5,
+    )
+    # Three of the six events share a timestamp to the second. Stacking them is
+    # the only honest drawing: one dot would say five events happened, not six.
+    minutes = discarded["minutes_after_trigger"].to_numpy(dtype=float)
+    for value in np.unique(minutes):
+        tied = np.flatnonzero(minutes == value)
+        offsets = (np.arange(len(tied)) - (len(tied) - 1) / 2.0) * 0.34
+        ax.plot(
+            np.full(len(tied), value),
+            offsets,
+            linestyle="none",
+            marker="o",
+            markersize=5.6,
+            markerfacecolor=WHITE,
+            markeredgecolor=BRICK,
+            markeredgewidth=1.3,
+            zorder=5,
+        )
+    ax.plot(
+        [tail_minutes],
+        [0.0],
+        marker="o",
+        markersize=6.4,
+        markerfacecolor=STEEL,
+        markeredgecolor=WHITE,
+        markeredgewidth=0.8,
+        zorder=5,
+    )
+
+    reviewing = str(example["reviewing_product"]).replace("_", " ")
+    bursting = ", ".join(
+        str(product).replace("_", " ") for product in example["burst_products"]
+    )
+    span_seconds = int(round(float(example["burst_span_minutes"]) * 60.0))
+    ax.text(
+        0.25,
+        1.28,
+        f"{reviewing} posts the review",
+        ha="left",
+        va="center",
+        fontsize=8.2,
+        color=GOLD_INK,
+    )
+    ax.text(
+        tail_minutes - 0.5,
+        1.28,
+        f"a user account acts, {tail_minutes:.1f} min",
+        ha="right",
+        va="center",
+        fontsize=8.2,
+        color=STEEL,
+    )
+    ax.text(
+        0.25,
+        -1.30,
+        f"{len(discarded)} {bursting} events in {span_seconds} s, set aside",
+        ha="left",
+        va="center",
+        fontsize=8.2,
+        color=BRICK,
+    )
+
+    ax.set_yticks([])
+    ax.set_xticks([0, 5, 10, 15, 20])
+    ax.set_xlabel("Minutes after the review comment")
+    panel_title(ax, "C", f"One real burst: {example['repository'].split('/repos/')[-1]}")
+    clean_axis(ax, "x")
+    ax.spines["left"].set_visible(False)
+    ax.grid(False)
+
     save(fig, "Fig2_v2")
 
 
@@ -1225,9 +1375,32 @@ def figure_boundary() -> None:
 
     # The band between the panels carries Panel A's axis label and the two-line
     # note, so it is wider than a plain label row would need.
-    fig = new_figure(4.55)
-    layout = Layout(left=0.315, right=0.755, top=0.925, bottom=0.120, gap=0.250)
-    top_rect, bottom_rect = layout.rects((1.0, 0.58))
+    # Panels A and B keep the heights and the A-to-B gap they had before Panel C
+    # existed, because that gap is sized by hand for the axis label and the
+    # two-line note that live in it. Uniform figure-fraction gaps cannot do that
+    # once a third panel changes the figure's height, so the geometry below is
+    # stated in inches and converted once.
+    HEIGHT = 6.12
+    TOP_MARGIN, A_HEIGHT, A_TO_B, B_HEIGHT, B_TO_C, C_HEIGHT = (
+        0.341,
+        1.600,
+        1.140,
+        0.927,
+        0.700,
+        1.300,
+    )
+    fig = new_figure(HEIGHT)
+    left, width = 0.315, 0.440
+    a_bottom = 1.0 - (TOP_MARGIN + A_HEIGHT) / HEIGHT
+    b_bottom = a_bottom - (A_TO_B + B_HEIGHT) / HEIGHT
+    c_bottom = b_bottom - (B_TO_C + C_HEIGHT) / HEIGHT
+    if c_bottom <= 0.0:
+        raise ValueError("The three panels do not fit inside the canvas")
+    top_rect = (left, a_bottom, width, A_HEIGHT / HEIGHT)
+    bottom_rect = (left, b_bottom, width, B_HEIGHT / HEIGHT)
+    # The pair panel is a drawing rather than a chart, so it keeps no row-label
+    # column and runs the full width instead of inheriting Panel A's margins.
+    example_rect = (0.030, c_bottom, 0.950, C_HEIGHT / HEIGHT)
 
     # --- Panel A: the difference itself, measured from zero -----------------
     # A dumbbell drew the point estimate as the distance between two rates, so
@@ -1319,7 +1492,11 @@ def figure_boundary() -> None:
     # denominators are wider than Panel A's own axes, so they live in a
     # full-width strip in the band between the panels.
     narrow = restricted_row(RESTRICTED_OUTCOME)
-    band = fig.add_axes((0.030, top_rect[1] - 0.185, 0.955, 0.105))
+    # Measured in inches below Panel A, not in figure fractions, so that adding
+    # a panel below cannot slide the strip into the panel underneath it.
+    band = fig.add_axes(
+        (0.030, top_rect[1] - 0.842 / HEIGHT, 0.955, 0.478 / HEIGHT)
+    )
     band.set_xlim(0, 100)
     band.set_ylim(0, 10)
     band.axis("off")
@@ -1391,6 +1568,200 @@ def figure_boundary() -> None:
     # Same category styling as Panel A, so the two row-label columns read as
     # one column down the page.
     category_axis(ax)
+
+    # --- Panel C: what one matched pair actually is -------------------------
+    # Panel A is a paired difference over 546 pairs, and "matched" is the most
+    # abstract device in the paper: a reader is asked to accept that the two
+    # sides are comparable without ever being shown a pair. This draws one, from
+    # outputs/worked_example_matched_pair/, with the five keys the match holds
+    # fixed printed above it.
+    #
+    # The drawn pair is discordant in the direction the estimate runs, so it is
+    # selected on its outcome. The bar underneath is the correction: it gives
+    # all four cells over all 546 pairs, and the estimate is the difference
+    # between the two coloured ones. Concordant pairs cancel and are grey.
+    pair = json.loads((PAIR_EXAMPLE / "summary.json").read_text(encoding="utf-8"))
+
+    # Guards, so the drawing cannot outlive the analysis it illustrates.
+    if int(pair["pairs"]) != pairs:
+        raise ValueError(
+            f"The pair example is drawn from {pair['pairs']} pairs but Panel A "
+            f"reports {pairs}"
+        )
+    tally = pair["tally"]
+    if sum(tally.values()) != pairs:
+        raise ValueError("The pair tally does not cover every matched pair")
+    implied = (
+        tally["only_the_cross_product_side_answered"]
+        - tally["only_the_same_product_side_answered"]
+    ) / pairs
+    if abs(implied * 100 - gaps[0]) > 0.05:
+        raise ValueError(
+            f"The tally implies {implied * 100:.2f} points but Panel A's top bar "
+            f"draws {gaps[0]:.2f}"
+        )
+    cross_side, same_side = pair["cross_product_side"], pair["same_product_side"]
+    if cross_side["visible_followup"] or not same_side["visible_followup"]:
+        raise ValueError(
+            "The drawn pair is no longer discordant in the illustrated direction"
+        )
+    if cross_side["reviewing_product"] == same_side["reviewing_product"]:
+        raise ValueError("The two sides of the drawn pair share a reviewing product")
+
+    ax = fig.add_axes(example_rect)
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 10)
+    ax.axis("off")
+    panel_title(ax, "C", f"One matched pair: {pair['repository']}")
+
+    ax.add_patch(
+        FancyBboxPatch(
+            (2.0, 8.15),
+            96.0,
+            1.35,
+            boxstyle="round,pad=0.14,rounding_size=0.55",
+            facecolor=GRID,
+            edgecolor=SLATE,
+            linewidth=0.7,
+        )
+    )
+    ax.text(
+        50.0,
+        8.82,
+        " · ".join(f"same {key}" for key in ("repository", "account", "product", "channel", "month")),
+        ha="center",
+        va="center",
+        fontsize=8.2,
+        color=INK,
+    )
+
+    # The cards carry no hatch: they hold three lines of lettering each, and a
+    # hatch behind text is a smudge at 372 pt. They do not need one either. Each
+    # card names its arm in words, and the tally bar below places each arm's
+    # segment directly under the card it belongs to, so the pairing survives a
+    # greyscale print through position rather than through hue.
+    def card(
+        x: float,
+        heading: str,
+        reviewer: str,
+        outcome: str,
+        face: str,
+        edge: str,
+    ) -> None:
+        ax.add_patch(
+            FancyBboxPatch(
+                (x, 3.55),
+                45.0,
+                3.85,
+                boxstyle="round,pad=0.18,rounding_size=0.8",
+                facecolor=face,
+                edgecolor=edge,
+                linewidth=1.0,
+            )
+        )
+        for offset, content, weight, size in (
+            (6.60, heading, "bold", 8.4),
+            (5.35, f"reviewed by {reviewer}", "normal", 8.2),
+            (4.10, outcome, "bold", 8.2),
+        ):
+            ax.text(
+                x + 22.5,
+                offset,
+                content,
+                ha="center",
+                va="center",
+                fontsize=size,
+                fontweight=weight,
+                color=INK,
+            )
+
+    def followup_label(side: dict) -> str:
+        events = {
+            channel: count
+            for channel, count in side["followup_events"].items()
+            if count
+        }
+        if not events:
+            return "nothing follows"
+        return ", ".join(f"{count} × {channel}" for channel, count in events.items())
+
+    card(
+        2.0,
+        "cross-product",
+        str(cross_side["reviewing_product"]).replace("_", " "),
+        followup_label(cross_side),
+        PALE_BRICK,
+        BRICK,
+    )
+    card(
+        53.0,
+        "same-product",
+        str(same_side["reviewing_product"]).replace("_", " "),
+        followup_label(same_side),
+        PALE_GOLD,
+        GOLD_INK,
+    )
+
+    # The tally, drawn rather than asserted. Order runs cross-only, concordant,
+    # same-only, so the two coloured ends sit under the card each one belongs to.
+    segments = (
+        (
+            tally["only_the_cross_product_side_answered"],
+            PALE_BRICK,
+            BRICK,
+            HATCH_BRICK,
+        ),
+        (
+            tally["both_sides_answered"] + tally["neither_side_answered"],
+            GRID,
+            SLATE,
+            None,
+        ),
+        (
+            tally["only_the_same_product_side_answered"],
+            PALE_GOLD,
+            GOLD_INK,
+            HATCH_GOLD,
+        ),
+    )
+    cursor = 2.0
+    span = 96.0
+    for count, face, edge, hatch in segments:
+        width = span * count / pairs
+        ax.add_patch(
+            Rectangle(
+                (cursor, 1.30),
+                width,
+                1.20,
+                facecolor=face,
+                edgecolor=edge,
+                linewidth=0.8,
+                hatch=hatch,
+            )
+        )
+        ax.text(
+            cursor + width / 2.0,
+            1.90,
+            f"{count}",
+            ha="center",
+            va="center",
+            fontsize=8.2,
+            color=INK,
+            # The two end segments are hatched so that a greyscale print keeps
+            # them apart from the grey middle. Digits sitting straight on a
+            # hatch lose their counters, so each count clears its own ground.
+            bbox={"facecolor": WHITE, "edgecolor": "none", "pad": 1.4},
+        )
+        cursor += width
+    ax.text(
+        50.0,
+        0.35,
+        f"all {pairs} pairs, by which side alone had follow-up",
+        ha="center",
+        va="center",
+        fontsize=8.2,
+        color=SLATE,
+    )
 
     save(fig, "Fig3_v2")
 
