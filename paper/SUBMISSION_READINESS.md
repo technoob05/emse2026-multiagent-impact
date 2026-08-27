@@ -4,7 +4,7 @@ Last checked: 2026-08-26.
 
 ## Current state
 
-The four-RQ analysis, its figures, the Supplementary Information, the validation gates, the LaTeX manuscript, and the fixed-allowlist source package are technically ready. The full public-data build and page-complete PDF review were run on 2026-08-26. The package is not ready to upload because author metadata, declarations, and the public artifact link are still missing. Semantic coding is not a blocker for the current core claims; it becomes mandatory only if semantic-overlap claims are added.
+The four-RQ analysis, its figures, the Supplementary Information, the validation gates, the LaTeX manuscript, and the fixed-allowlist source package are technically ready. The full public-data build and page-complete PDF review were last run on 2026-08-27. The package is not ready to upload because author metadata, declarations, and the public artifact link are still missing. Semantic coding is not a blocker for the current core claims; it becomes mandatory only if semantic-overlap claims are added.
 
 ## Completed
 
@@ -32,7 +32,7 @@ The four-RQ analysis, its figures, the Supplementary Information, the validation
 - [x] The complete SWE-Review-Chat topology audit was fail-closed after AIDev overlap removal; incompatible sources were not pooled into the RQs.
 - [x] AI use, coverage limits, and non-causal scope are disclosed.
 - [x] Build and package scripts compile both PDFs, scan logs, make a complete archival source bundle, and stage a main-only flat source ZIP plus `ESM_1.pdf` for the portal.
-- [x] Page-complete visual QA covers all 28 manuscript pages and all 31 Supplementary Information pages, which carry 12 tables.
+- [x] Page-complete visual QA covers all 28 manuscript pages and all 30 Supplementary Information pages, which carry 12 tables.
 - [x] Official venue requirements were rechecked on 2026-08-26 and mapped to project files.
 
 ## Scientific and production gates before upload

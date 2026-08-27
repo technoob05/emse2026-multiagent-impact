@@ -313,7 +313,7 @@ def release_table() -> str:
     return paneled_longtable(
         "Release inventory, backbone coverage, and which review channels can carry a reply anchor.",
         "tab:s-dataset",
-        r"L{0.176\textwidth}L{0.070\textwidth}L{0.096\textwidth}L{0.088\textwidth}L{0.078\textwidth}L{0.434\textwidth}",
+        r"L{0.176\textwidth}L{0.070\textwidth}L{0.092\textwidth}L{0.088\textwidth}L{0.084\textwidth}L{0.432\textwidth}",
         6,
         (
             (
@@ -989,7 +989,7 @@ def addressed_edge_table() -> str:
     return paneled_longtable(
         "RQ3: the exact-parent addressed edge, specificity controls, the four-state gradient, and the 48-hour ownership routes.",
         "tab:s-addressed-edge",
-        r"L{0.101\textwidth}L{0.238\textwidth}L{0.107\textwidth}L{0.146\textwidth}L{0.136\textwidth}L{0.214\textwidth}",
+        r"L{0.108\textwidth}L{0.231\textwidth}L{0.107\textwidth}L{0.146\textwidth}L{0.136\textwidth}L{0.214\textwidth}",
         6,
         (
             (
