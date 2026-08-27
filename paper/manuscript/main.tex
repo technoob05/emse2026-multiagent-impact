@@ -649,11 +649,13 @@ special product-persistence mechanism.
 \centering
 \includegraphics[width=\linewidth]{Fig3.pdf}
 \caption{A quieter boundary, and a history common on both sides of it. Panel A
-shows all six outcomes measured on 546 matched pairs. The filled mark is the
-cross-product side, the hollow mark the same-product side, and the number is the
-first minus the second. The dashed line separates the one outcome whose 95\%
-interval clears zero, in bold, from the five that do not. Panel B asks how often
-whoever steps in had already reviewed another pull request in that repository,
+shows all six matched outcomes twice: on the left how often each happened, with
+the filled mark for the cross-product side and the hollow mark for the
+same-product side; on the right the difference between them with its 95\%
+interval, against a line at no difference. Only the top row's
+interval clears that line, and the dashed rule separates it from the five that do
+not. The starred row uses the 241 pairs where a reply is reachable on both sides.
+Panel B asks how often whoever steps in had reviewed in that repository before,
 under three ways of choosing whom to count.}
 \label{fig:bridge}
 \end{figure}
@@ -948,15 +950,16 @@ doubles the chance of an answer when the reviewer is a different one.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{Fig6.pdf}
-\caption{Whether naming an issue helps depends on who is reviewing. Panel A
-follows two groups of pull requests, those reviewed by the product that wrote
-them and those reviewed by a different one, and labels each line's own change.
-Within a product the line is flat; across a boundary it climbs. Panel B reports
-the difference between those two changes, adjusted by comparing inside the same
-repository and month, with its 95\% interval against a line at no difference.
-The hollow mark is the unadjusted difference, and the pale band the range left
-when any one repository is dropped. Both panels keep only triggers that open
-their own thread. These are links in observed data, not causes.}
+\caption{Whether naming an issue helps depends on who is reviewing. Panel A follows pull requests reviewed by the product that wrote them and those
+reviewed by a different one, with the count behind each point. Within a product
+the line is flat; across a boundary it climbs. The dotted line is not data. It marks where the cross-product group would have
+landed had the link moved it as much as it moved the same-product group, and the
+arrow measures the gap to where it actually landed: 17.1 points, the raw
+contrast. Panel B reports that contrast after comparing inside the same repository and
+month, giving 13.3 points with its interval; the hollow mark is the raw 17.1,
+and the pale band the range left when any one repository is dropped. Both panels
+keep only triggers that open their own thread. These are links in observed data,
+not causes.}
 \label{fig:context}
 \end{figure}
 

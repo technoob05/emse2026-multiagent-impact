@@ -335,21 +335,46 @@ def assert_layout(fig: plt.Figure, stem: str) -> None:
                 f"{stem}: text '{content[:32]}' is clipped by the canvas edge"
             )
 
-    for ax in fig.axes:
+    def measure(artists: Iterable[Text]) -> list[tuple[str, object]]:
         boxes = []
-        for text in ax.texts:
+        for text in artists:
             if not text.get_text().strip() or not text.get_visible():
                 continue
             boxes.append((text.get_text(), text.get_window_extent(renderer=renderer)))
+        return boxes
+
+    def collide(first: object, second: object) -> bool:
+        overlap_x = min(first.x1, second.x1) - max(first.x0, second.x0)
+        overlap_y = min(first.y1, second.y1) - max(first.y0, second.y0)
+        return overlap_x > 1.0 and overlap_y > 1.0
+
+    for ax in fig.axes:
+        boxes = measure(ax.texts)
         for index, (first_label, first) in enumerate(boxes):
             for second_label, second in boxes[index + 1 :]:
-                overlap_x = min(first.x1, second.x1) - max(first.x0, second.x0)
-                overlap_y = min(first.y1, second.y1) - max(first.y0, second.y0)
-                if overlap_x > 1.0 and overlap_y > 1.0:
+                if collide(first, second):
                     raise AssertionError(
                         f"{stem}: annotations '{first_label[:24]}' and "
                         f"'{second_label[:24]}' overlap"
                     )
+
+    # A figure-level note lives outside every axes, so the per-axes sweep above
+    # never sees it. It is placed by hand into the band between panels, which is
+    # exactly where axis labels and panel titles also land, so check it against
+    # them rather than discovering the collision by eye in the PDF.
+    lettering: list[tuple[str, object]] = []
+    for ax in fig.axes:
+        lettering.extend(measure([ax.title, ax.xaxis.label, ax.yaxis.label]))
+        if ax.axison:
+            lettering.extend(measure(ax.get_xticklabels()))
+            lettering.extend(measure(ax.get_yticklabels()))
+    for note_label, note in measure(fig.texts):
+        for other_label, other in lettering:
+            if collide(note, other):
+                raise AssertionError(
+                    f"{stem}: figure note '{note_label[:24]}' overlaps "
+                    f"'{other_label[:24]}'"
+                )
 
 
 def save(fig: plt.Figure, stem: str) -> None:
@@ -974,8 +999,10 @@ def figure_boundary() -> None:
         population="all_distinct_48h_user_responders",
     )
 
-    fig = new_figure(4.85)
-    layout = Layout(left=0.360, right=0.855, top=0.930, bottom=0.115, gap=0.190)
+    # The band between the panels now carries two stacked x-axis labels and the
+    # two-line note, so it is wider than it was for a single-column Panel A.
+    fig = new_figure(5.05)
+    layout = Layout(left=0.360, right=0.855, top=0.930, bottom=0.115, gap=0.225)
     top_rect, bottom_rect = layout.rects((1.0, 0.52))
 
     # --- Panel A: how often it happened, and the gap, against zero ----------
@@ -1144,7 +1171,7 @@ def figure_boundary() -> None:
     narrow = restricted_row(RESTRICTED_OUTCOME)
     fig.text(
         top_rect[0],
-        top_rect[1] - 0.119,
+        top_rect[1] - 0.135,
         f"{pairs:,} matched pairs in {repositories} repositories"
         + chr(10)
         + f"*{int(narrow['pairs']):,} pairs where a reply is possible on both sides",
