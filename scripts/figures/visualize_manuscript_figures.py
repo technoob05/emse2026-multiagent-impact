@@ -66,16 +66,23 @@ OUTPUT = ROOT / "build" / "figures"
 #   spines, connectors, leader lines       MID            light grey
 #   grid, separators, lollipop stems       GRID           pale grey
 #   pale fills carrying black text         PALE_*         pale scheme
+# Hues are Okabe and Ito's colour-universal set, the palette Nature Methods
+# recommends. The two-category pair used throughout, vermillion against blue,
+# separates under protanopia, deuteranopia and tritanopia, and also in
+# greyscale, because the two differ in lightness and not only in hue.
+# Two of those hues sit below the WCAG 4.5:1 text floor on white, because the
+# set was designed for fills rather than for small lettering, so vermillion and
+# bluish green are darkened by the least amount that clears it.
 INK = "#000000"
-BLUE = "#332288"
-ORANGE = "#775500"
-TEAL = "#117788"
+BLUE = "#008662"
+ORANGE = "#C25600"
+TEAL = "#0072B2"
 SLATE = "#444444"
 MID = "#BBBBBB"
 GRID = "#DDDDDD"
-PALE_BLUE = "#AACCEE"
-PALE_TEAL = "#CCEEFF"
-PALE_ORANGE = "#EEEEBB"
+PALE_BLUE = "#A8E6D3"
+PALE_TEAL = "#B3DCF2"
+PALE_ORANGE = "#F7CBB0"
 WHITE = "#FFFFFF"
 
 TEXT_COLOURS = (INK, BLUE, ORANGE, TEAL, SLATE)
