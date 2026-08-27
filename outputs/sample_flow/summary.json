@@ -1,0 +1,255 @@
+{
+  "structure": "tree with one trunk and two branches from a shared parent",
+  "trunk_terminal": "Inline-trigger cohort (in scope for the addressed edge)",
+  "branches": {
+    "A: outcome lane": [
+      "Merge-curve cohort (30-day outcome horizon)",
+      "Hour-48 landmark cohort",
+      "Exposed pull requests (exact addressed edge by hour 48)"
+    ],
+    "B: thread-position lane": [
+      "Thread-position cohort"
+    ]
+  },
+  "steps": [
+    {
+      "step": 0,
+      "branch": "trunk",
+      "stage": "AIDev pull-request backbone",
+      "parent_stage": "",
+      "filter_description": "every pull request in the AIDev release's pull_request.parquet, before any study restriction",
+      "unit": "pull requests",
+      "count_before": 361296,
+      "count_removed": 0,
+      "count_after": 361296,
+      "is_terminal": false,
+      "verified_against": "",
+      "paper_number": "",
+      "note": "chain origin; nothing removed"
+    },
+    {
+      "step": 1,
+      "branch": "trunk",
+      "stage": "Has recognised-agent review feedback",
+      "parent_stage": "AIDev pull-request backbone",
+      "filter_description": "keep pull requests carrying at least one review event written by one of the six mapped agent accounts, timestamped between the PR opening and its close, and no later than the 2026-04-15 observation cutoff",
+      "unit": "pull requests",
+      "count_before": 361296,
+      "count_removed": 283882,
+      "count_after": 77414,
+      "is_terminal": false,
+      "verified_against": "",
+      "paper_number": "",
+      "note": ""
+    },
+    {
+      "step": 2,
+      "branch": "trunk",
+      "stage": "Has cross-product agent feedback",
+      "parent_stage": "Has recognised-agent review feedback",
+      "filter_description": "keep pull requests where at least one of those agent review events was written by a product different from the PR's authoring product",
+      "unit": "pull requests",
+      "count_before": 77414,
+      "count_removed": 68792,
+      "count_after": 8622,
+      "is_terminal": false,
+      "verified_against": "",
+      "paper_number": "",
+      "note": ""
+    },
+    {
+      "step": 3,
+      "branch": "trunk",
+      "stage": "Cross-product trigger cohort",
+      "parent_stage": "Has cross-product agent feedback",
+      "filter_description": "keep pull requests whose FIRST cross-product agent review event leaves a complete 7-day response window before the observation cutoff, i.e. trigger no later than 2026-04-08",
+      "unit": "pull requests",
+      "count_before": 8622,
+      "count_removed": 14,
+      "count_after": 8608,
+      "is_terminal": true,
+      "verified_against": "outputs/cross_agent_review/cross_feedback_response_chains.parquet",
+      "paper_number": 8608,
+      "note": ""
+    },
+    {
+      "step": 4,
+      "branch": "trunk",
+      "stage": "Inline-trigger cohort (in scope for the addressed edge)",
+      "parent_stage": "Cross-product trigger cohort",
+      "filter_description": "keep pull requests whose first cross-product review arrived as an inline review comment; review summaries and PR-level comments carry no reply target, so no addressed edge can ever be built for them",
+      "unit": "pull requests",
+      "count_before": 8608,
+      "count_removed": 3784,
+      "count_after": 4824,
+      "is_terminal": true,
+      "verified_against": "outputs/anchorability_coverage/trigger_channel_composition.csv",
+      "paper_number": 4824,
+      "note": ""
+    },
+    {
+      "step": 5,
+      "branch": "A: outcome lane",
+      "stage": "Merge-curve cohort (30-day outcome horizon)",
+      "parent_stage": "Inline-trigger cohort (in scope for the addressed edge)",
+      "filter_description": "keep pull requests whose trigger leaves a complete 30-day outcome horizon before the observation cutoff, i.e. trigger no later than 2026-03-16; the remainder cannot be followed for the full window",
+      "unit": "pull requests",
+      "count_before": 4824,
+      "count_removed": 882,
+      "count_after": 3942,
+      "is_terminal": true,
+      "verified_against": "outputs/addressed_edge_scope/landmark_selection_funnel.csv; scripts/analysis/run_merge_curves.py EXPECTED_POPULATION",
+      "paper_number": 3942,
+      "note": ""
+    },
+    {
+      "step": 6,
+      "branch": "A: outcome lane",
+      "stage": "Hour-48 landmark cohort",
+      "parent_stage": "Merge-curve cohort (30-day outcome horizon)",
+      "filter_description": "keep pull requests still open 48 hours after the trigger; the removed ones had already closed before the outcome window opened",
+      "unit": "pull requests",
+      "count_before": 3942,
+      "count_removed": 2875,
+      "count_after": 1067,
+      "is_terminal": true,
+      "verified_against": "outputs/addressed_edge_landmark/analysis_cohort.parquet; outputs/addressed_edge_scope/landmark_selection_funnel.csv",
+      "paper_number": 1067,
+      "note": ""
+    },
+    {
+      "step": 7,
+      "branch": "B: thread-position lane",
+      "stage": "Thread-position cohort",
+      "parent_stage": "Inline-trigger cohort (in scope for the addressed edge)",
+      "filter_description": "keep pull requests whose earliest agent review trigger of EITHER relation is the cross-product one; a pull request that a same-product reviewer had already commented on earlier is relabelled same-product when the two trigger tables are merged and one row per PR is kept",
+      "unit": "pull requests",
+      "count_before": 4824,
+      "count_removed": 1298,
+      "count_after": 3526,
+      "is_terminal": true,
+      "verified_against": "outputs/task_context_interaction/answer_rate_cells.csv",
+      "paper_number": 3526,
+      "note": "no 30-day outcome horizon is applied on this branch, so it is a sibling of the merge-curve cohort, not its parent or child"
+    },
+    {
+      "step": 8,
+      "branch": "A: outcome lane",
+      "stage": "Exposed pull requests (exact addressed edge by hour 48)",
+      "parent_stage": "Hour-48 landmark cohort",
+      "filter_description": "keep pull requests carrying at least one later inline comment whose stored reply target is the trigger comment's own identifier, posted within 48 hours of the trigger",
+      "unit": "pull requests",
+      "count_before": 1067,
+      "count_removed": 958,
+      "count_after": 109,
+      "is_terminal": true,
+      "verified_against": "outputs/addressed_edge_landmark/denominators.csv",
+      "paper_number": 109,
+      "note": ""
+    },
+    {
+      "step": 9,
+      "branch": "A: outcome lane (event unit)",
+      "stage": "Exposure reply events",
+      "parent_stage": "Exposed pull requests (exact addressed edge by hour 48)",
+      "filter_description": "switch of unit: the 109 exposed pull requests carry 128 exact reply events between them, because a pull request can receive more than one",
+      "unit": "reply events",
+      "count_before": 128,
+      "count_removed": 0,
+      "count_after": 128,
+      "is_terminal": true,
+      "verified_against": "outputs/addressed_edge_landmark/exact_parent_reply_event_audit.parquet",
+      "paper_number": 128,
+      "note": "unit change, not a filter; 128 events on 109 PRs"
+    },
+    {
+      "step": 10,
+      "branch": "A: outcome lane (event unit)",
+      "stage": "User-account-written exposure events",
+      "parent_stage": "Exposure reply events",
+      "filter_description": "keep reply events written by ordinary user accounts; the removed ones come from the triggering product itself, other bots, and mapped products other than the trigger's author",
+      "unit": "reply events",
+      "count_before": 128,
+      "count_removed": 23,
+      "count_after": 105,
+      "is_terminal": true,
+      "verified_against": "outputs/addressed_edge_scope/exposure_event_composition.csv; outputs/user_account_automation/summary.json",
+      "paper_number": 105,
+      "note": "these 105 events fall on 97 pull requests"
+    },
+    {
+      "step": 11,
+      "branch": "A: outcome lane (event unit)",
+      "stage": "Substantive user-written exposure events",
+      "parent_stage": "User-account-written exposure events",
+      "filter_description": "keep reply events the pre-specified rule set classifies as a substantive response, dropping platform text, routing hand-offs to another automation, and bare acknowledgements",
+      "unit": "reply events",
+      "count_before": 105,
+      "count_removed": 46,
+      "count_after": 59,
+      "is_terminal": true,
+      "verified_against": "outputs/user_account_automation/reply_content_category_counts.csv",
+      "paper_number": "",
+      "note": "these 59 events fall on 56 pull requests"
+    }
+  ],
+  "event_unit_chain": {
+    "exposed_prs": 109,
+    "exposure_events": 128,
+    "user_written_events": 105,
+    "user_written_prs": 97,
+    "substantive_events": 59,
+    "substantive_prs": 56
+  },
+  "alternate_ordering_check": {
+    "all_channel_hour48_cohort_prs": 1733,
+    "inline_subset_prs": 1067,
+    "commutes_with_inline_filter": true,
+    "artifact": "outputs/cross_agent_review/feedback_48h_landmark_cohort.parquet",
+    "note": "the inline filter and the hour-48 filter commute; applying them in the other order passes through an all-channel cohort of 1733 PRs and lands on exactly the same 1,067"
+  },
+  "nesting": {
+    "shared_parent": {
+      "stage": "Inline-trigger cohort",
+      "prs": 4824
+    },
+    "merge_curve_vs_thread_position": {
+      "merge_curve_prs": 3942,
+      "thread_position_prs": 3526,
+      "in_both": 2763,
+      "merge_curve_only": 1179,
+      "thread_position_only": 763,
+      "is_nested_either_way": false,
+      "verdict": "NOT NESTED. The 3,942 merge-curve cohort and the 3,526 thread-position cohort are two branches from the same 4,824 parent, filtered on different things. Neither contains the other."
+    },
+    "hour48_vs_thread_position": {
+      "hour48_prs": 1067,
+      "thread_position_prs": 3526,
+      "hour48_inside_thread_position": 807,
+      "hour48_outside_thread_position": 260,
+      "is_subset": false,
+      "verdict": "The manuscript's threats sentence reads '13 of 3,526 sit mid-thread, and in the hour-48 group only 3 of 1,067 do', which invites the reader to treat the 1,067 as a subset of the 3,526. It is not: 260 of the 1,067 are outside the 3,526."
+    }
+  },
+  "documentation_findings": [
+    {
+      "issue": "cohort definition text does not match the code",
+      "where": "outputs/anchorability_coverage/summary.json and scripts/analysis/run_anchorability_coverage.py describe the 8,608 as 'every PR whose FIRST agent review feedback is cross-product'",
+      "what_the_code_does": "build_cross_feedback_response_chains filters to cross-product events FIRST and then takes the earliest of those, so a pull request whose genuinely first agent review was same-product is still in the 8,608",
+      "size_of_the_gap_prs": 2340,
+      "consequence": "this is exactly the filter that separates the 3,526 branch from the 4,824 parent, and it is why the two branches diverge"
+    }
+  ],
+  "paper_numbers_checked": {
+    "cross_product_trigger_cohort": 8608,
+    "inline_trigger_cohort": 4824,
+    "merge_curve_cohort": 3942,
+    "thread_position_cohort": 3526,
+    "hour48_landmark_cohort": 1067,
+    "exposure_events": 128,
+    "exposed_prs": 109,
+    "user_written_edge_events": 105
+  },
+  "unreconciled_paper_numbers": [],
+  "reconciliation": "every step satisfies count_before - count_removed == count_after"
+}

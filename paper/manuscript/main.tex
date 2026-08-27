@@ -592,6 +592,19 @@ matched same-product partner. The gap is 13.4 percentage points
 (Figure~\ref{fig:bridge}A). No other outcome supports a claim that this
 quieter boundary leads to more branch movement or more merges.
 
+One of those outcomes needs a different denominator, and saying why matters more
+than the number. Whether the review point itself gets a reply can only be
+observed when the trigger opens its own inline thread, since that is the only
+case where GitHub records what a reply answers. On 293 of the 546 pairs the
+trigger is a review summary or a comment on the pull request, so no reply can be
+recorded for either side. On 11 more the cross-product trigger opens a thread but
+its matched partner does not, so the outcome is possible on one side only. Those
+11 pull the comparison towards zero from one direction. We therefore estimate
+that row on the 241 pairs where a reply is possible on both sides, where the gap
+is $-3.3$ points rather than $-0.9$, still with an interval that spans zero. The
+other five outcomes do not depend on thread position, and we checked that the
+broadest one never rests on an anchored reply alone.
+
 That average hides something a reader should know. The 546 pairs are not spread
 evenly: one repository supplies a fifth of them, and one ordered pair of products
 supplies more than a quarter.
@@ -1084,9 +1097,11 @@ opened''. Two things follow, and we measured both. First, the exposure can only
 fire when the trigger is itself the first comment of its thread. Among
 cross-product inline triggers that is almost always true: 13 of 3,526 sit
 mid-thread, and in the hour-48 group only 3 of 1,067 do, none of them exposed.
-The restriction bites hard for same-product triggers, where 46\% sit mid-thread,
-which is one more reason we do not read the same-product edge rate as
-comparable. Second, inside a thread with several replies, a later reply may be
+The restriction bites hard for same-product triggers across the whole release,
+where 46\% sit mid-thread. Inside the 546 matched pairs it is milder, 12 of the
+253 same-product triggers that are inline at all, but it runs one way: no
+cross-product trigger is blocked where its partner is not. That is why the reply
+row of Figure~\ref{fig:bridge} uses the pairs where both sides can produce it. Second, inside a thread with several replies, a later reply may be
 answering an earlier reply rather than the trigger. Among the 109 exposed PRs,
 92 have exactly one reply in the thread, so for those the reply can only be
 answering the trigger. For the remaining 17 we cannot tell.

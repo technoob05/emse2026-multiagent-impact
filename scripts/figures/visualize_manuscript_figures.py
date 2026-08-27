@@ -45,6 +45,7 @@ CONTEXT = ROOT / "outputs" / "task_context_interaction"
 CURVES = ROOT / "outputs" / "merge_curves"
 EXAMPLE = ROOT / "outputs" / "worked_example"
 BENCHMARKS = ROOT / "outputs" / "confounder_benchmarks"
+THREAD_POSITION = ROOT / "outputs" / "matched_thread_position"
 OUTPUT = ROOT / "build" / "figures"
 
 # Palette. Every hue is taken unaltered from Paul Tol's colour schemes, whose
@@ -919,13 +920,34 @@ def figure_boundary() -> None:
     )
     primary = contrasts[contrasts["specification"] == "exact_author_user"]
 
+    # The reply outcome cannot occur unless the trigger opens its own inline
+    # thread, which is true on only 241 of the 546 pairs, and on 11 more it is
+    # blocked on the same-product side alone. Estimating it over all 546 mixes
+    # in pairs where the outcome is impossible, so this row comes from the
+    # population where it is reachable on both arms.
+    restricted = read_csv(
+        THREAD_POSITION / "restricted_visibility_contrasts.csv",
+        (
+            "specification",
+            "population",
+            "outcome",
+            "pairs",
+            "repositories",
+            "cross_rate",
+            "same_rate",
+            "repository_cluster_bootstrap_ci_low",
+            "repository_cluster_bootstrap_ci_high",
+        ),
+    )
+    RESTRICTED_OUTCOME = "exact_trigger_reply"
+
     # Plain names, because "any_visible_followup" is our vocabulary, not a
     # reader's. Order runs from the outcome that moves to the ones that do not.
     OUTCOMES = (
         ("any_visible_followup", "Anyone does anything"),
         ("later_pr_comment", "Someone comments"),
         ("new_review_round", "A new review round"),
-        ("exact_trigger_reply", "The point gets a reply"),
+        ("exact_trigger_reply", "The point gets a reply*"),
         ("visible_force_push", "The branch is rewritten"),
         ("merge_within_7d", "Merged within a week"),
     )
@@ -964,9 +986,19 @@ def figure_boundary() -> None:
     # that did not, so the split is visible before any number is read.
     GROUP_GAP = 0.9
     positions, moved = [], []
+    def restricted_row(key: str):
+        return exactly_one(
+            restricted,
+            specification="exact_author_user",
+            population="both_triggers_open_their_own_thread",
+            outcome=key,
+        )
+
     cursor = float(len(rows)) + GROUP_GAP
     for key, _ in rows:
-        row = exactly_one(primary, outcome=key)
+        row = restricted_row(key) if key == "exact_trigger_reply" else exactly_one(
+            primary, outcome=key
+        )
         low = float(row["repository_cluster_bootstrap_ci_low"])
         high = float(row["repository_cluster_bootstrap_ci_high"])
         separated = low > 0 or high < 0
@@ -978,7 +1010,9 @@ def figure_boundary() -> None:
 
     pairs = repositories = 0
     for position, (key, label), separated in zip(positions, rows, moved, strict=True):
-        row = exactly_one(primary, outcome=key)
+        row = restricted_row(key) if key == RESTRICTED_OUTCOME else exactly_one(
+            primary, outcome=key
+        )
         cross = float(row["cross_rate"]) * 100
         same = float(row["same_rate"]) * 100
         pairs = int(row["pairs"])
@@ -1027,7 +1061,7 @@ def figure_boundary() -> None:
         tick.set_color(INK if separated else SLATE)
     ax.set_xlim(0, 100)
     ax.set_xticks([0, 25, 50, 75, 100])
-    ax.set_ylim(min(positions) - 0.6, max(positions) + 0.6)
+    ax.set_ylim(min(positions) - 1.75, max(positions) + 0.6)
     ax.set_xlabel("Matched pairs where it happened (%)")
     panel_title(ax, "A", "One outcome changes. Five do not.")
     clean_axis(ax, "x")
@@ -1036,10 +1070,13 @@ def figure_boundary() -> None:
     if first_null is not None:
         divider = (positions[first_null - 1] + positions[first_null]) / 2.0
         ax.axhline(divider, color=MID, linewidth=0.7, linestyle=(0, (3, 3)), zorder=0)
+    narrow = restricted_row(RESTRICTED_OUTCOME)
     ax.text(
         0.5,
-        min(positions),
-        f"{pairs:,} matched pairs" + chr(10) + f"in {repositories} repositories",
+        min(positions) - 1.05,
+        f"{pairs:,} matched pairs in {repositories} repositories"
+        + chr(10)
+        + f"*{int(narrow['pairs']):,} pairs where a reply is possible on both sides",
         ha="left",
         va="center",
         fontsize=8.0,

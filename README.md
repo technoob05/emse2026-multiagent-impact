@@ -67,6 +67,7 @@ uv sync
 .\.venv\Scripts\python.exe scripts\analysis\run_heterogeneity_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_worked_example.py
 .\.venv\Scripts\python.exe scripts\analysis\run_confounder_benchmarks.py
+.\.venv\Scripts\python.exe scripts\analysis\run_matched_thread_position_audit.py
 .\.venv\Scripts\python.exe scripts\audit\prepare_review_collision_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_collision_descriptive_extension.py
 .\.venv\Scripts\python.exe scripts\reporting\generate_technical_appendix_tables.py
