@@ -3,72 +3,58 @@
 \FloatBarrier
 \needspace{8\baselineskip}
 \begingroup
-\small
+\footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.22\textwidth}L{0.21\textwidth}L{0.11\textwidth}L{0.38\textwidth}@{}}
-\caption{External evidence ladder after schema, overlap, and construct checks.}\label{tab:s-external-screen}\\
-\toprule
-Source & Native unit & Exact edge & Role after audit \\
-\midrule
+\begin{longtable}{@{}L{0.15\textwidth}L{0.21\textwidth}L{0.20\textwidth}L{0.11\textwidth}L{0.26\textwidth}@{}}
+\caption{Structural overlap gates and external evidence screening.}\label{tab:s-external}\\
 \endfirsthead
-\caption*{External evidence ladder after schema, overlap, and construct checks. (continued)}\\
-\toprule
-Source & Native unit & Exact edge & Role after audit \\
-\midrule
+\caption*{Structural overlap gates and external evidence screening. (continued)}\\
 \endhead
-GH Archive plus GitHub REST enrichment & One public GitHub event; enriched review comment or PR record & YES after REST & Future disjoint time-window replication after REST enrichment; not used in the present estimates \\
-SWE-Review-Chat & One PR with ordered general discussion, reviews, inline comments and nested thread replies & PARTIAL & Full-corpus topology audit; no independent exact-edge cohort survived overlap exclusion \\
-AI-to-AI Code Reviews closed-loop cohorts & One PR-reviewer-product pair & NO & Product-pair attribution and trigger-time sensitivity on overlapping public PRs \\
-SWE-PRBench & One merged PR plus selected human-written initiating comments; synthetic comment IDs are scoped only within task & NO & Semantic codebook and initiating-feedback audit only; reply topology is not preserved \\
-SWE-Review-Traj & One decision-correct agentic reviewer trajectory over a generated candidate PR & NO & Controlled generate--review--revise contrast only; not a field replication \\
-GitHub Agentic PR Dataset & One PR, commit, or changed file depending on table & NO & Excluded: adds PRs and diffs but no review-response graph \\
-Trace Commons Agent Traces & One voluntarily donated coding-agent session & NO & Excluded: opt-in private sessions with no stable public PR edge or outcome \\
+\toprule
+\multicolumn{5}{@{}l}{\textbf{Panel A. Structural same-locus review overlap and frozen semantic gates}} \\
+\midrule
+\multicolumn{2}{@{}L{0.376\textwidth}}{Quantity or gate} & Observed & \multicolumn{2}{L{0.386\textwidth}@{}}{Interpretation or status} \\
+\midrule
+\multicolumn{2}{@{}L{0.376\textwidth}}{Eligible PRs with two or more mapped reviewer products} & 886 & \multicolumn{2}{L{0.386\textwidth}@{}}{Context} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Canonical same-snapshot, same-locus pairs} & 167 & \multicolumn{2}{L{0.386\textwidth}@{}}{Structural population} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Pull requests with at least one locus} & 159 & \multicolumn{2}{L{0.386\textwidth}@{}}{17.9\% of eligible PRs} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Repositories / product pairs} & 98 / 8 & \multicolumn{2}{L{0.386\textwidth}@{}}{Support} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Median gap} & 1.37 min & \multicolumn{2}{L{0.386\textwidth}@{}}{Timing} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Pairs within five minutes} & 86.8\% & \multicolumn{2}{L{0.386\textwidth}@{}}{cluster interval [80.9, 92.6]\%} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Open-state pairs within five minutes} & 85.7\% & \multicolumn{2}{L{0.386\textwidth}@{}}{133 loci} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Non-dominant-pair loci within five minutes} & 82.8\% & \multicolumn{2}{L{0.386\textwidth}@{}}{58 loci} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Exact normalized comment-body duplicates} & 0 & \multicolumn{2}{L{0.386\textwidth}@{}}{Not a semantic comparison} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Largest repository share} & 5.4\% & \multicolumn{2}{L{0.386\textwidth}@{}}{PASS} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Largest product-pair share} & 65.3\% & \multicolumn{2}{L{0.386\textwidth}@{}}{FAIL} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Blinded packet coverage} & 167 & \multicolumn{2}{L{0.386\textwidth}@{}}{Complete population} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Dual-coder agreement} & Pending & \multicolumn{2}{L{0.386\textwidth}@{}}{Need kappa at least 0.70} \\
+\multicolumn{2}{@{}L{0.376\textwidth}}{Semantic relation labels} & Pending & \multicolumn{2}{L{0.386\textwidth}@{}}{No duplication or complementarity claim} \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{Panel B. External evidence screening}} \\
+\midrule
+Block & Item & Unit or count & Observed & Role or meaning \\
+\midrule
+Evidence ladder & GH Archive plus GitHub REST enrichment & One public GitHub event; enriched review comment or PR record & exact edge: YES after REST & Future disjoint time-window replication after REST enrichment; not used in the present estimates \\
+Evidence ladder & SWE-Review-Chat & One PR with ordered general discussion, reviews, inline comments and nested thread replies & exact edge: PARTIAL & Full-corpus topology audit; no independent exact-edge cohort survived overlap exclusion \\
+Evidence ladder & AI-to-AI Code Reviews closed-loop cohorts & One PR-reviewer-product pair & exact edge: NO & Product-pair attribution and trigger-time sensitivity on overlapping public PRs \\
+Evidence ladder & SWE-PRBench & One merged PR plus selected human-written initiating comments; synthetic comment IDs are scoped only within task & exact edge: NO & Semantic codebook and initiating-feedback audit only; reply topology is not preserved \\
+Evidence ladder & SWE-Review-Traj & One decision-correct agentic reviewer trajectory over a generated candidate PR & exact edge: NO & Controlled generate--review--revise contrast only; not a field replication \\
+Evidence ladder & GitHub Agentic PR Dataset & One PR, commit, or changed file depending on table & exact edge: NO & Excluded: adds PRs and diffs but no review-response graph \\
+Evidence ladder & Trace Commons Agent Traces & One voluntarily donated coding-agent session & exact edge: NO & Excluded: opt-in private sessions with no stable public PR edge or outcome \\
+SWE-Review-Chat replication gate & Public PR rows scanned & 1,082,529 & -- & Available corpus \\
+SWE-Review-Chat replication gate & PRs whose author maps by the frozen exact alias list & 5,250 & -- & Product-aware author support \\
+SWE-Review-Chat replication gate & PRs with a cross-product inline parent & 38 & -- & Candidate trigger support \\
+SWE-Review-Chat replication gate & PRs where such a parent has a nested reply & 7 & -- & Seven candidate PRs before overlap removal \\
+SWE-Review-Chat replication gate & Nested children before overlap removal & 18 / 1 / 0 & -- & Unmapped user / same product / different product \\
+SWE-Review-Chat replication gate & Candidate PRs outside the AIDev full corpus & 0 & -- & No independent cohort remains \\
+SWE-Review-Chat replication gate & REST-validated 48-hour landmark PRs & 0 & -- & Replication gate fails \\
+CodAGE attribution concordance & PR overlap & 123 & 11.5\% of landmark cohort & Coverage only \\
+CodAGE attribution concordance & Exact author--reviewer pair agrees & 119 & 96.7\% of overlapping PRs & Supports product attribution \\
+CodAGE attribution concordance & Trigger time agrees within five minutes & 104 & 99.0\% & Supports event anchoring \\
+CodAGE attribution concordance & Exact-edge exposed PRs & 9 & 7.6\% of exact-pair overlap & Too few for replication \\
+CodAGE attribution concordance & Raw later-merge difference & 119 & +14.6 pp & 95\% interval [-18.6, +47.9] \\
+CodAGE attribution concordance & Pre-trigger-adjusted difference & 119 & +11.1 pp & 95\% interval [-23.9, +46.1] \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} The registry contains 15 screened candidates. Sources are not pooled merely to add rows. A source must preserve the PR, event time, actor, review batch, exact reply parent, and later-state horizon before it can reproduce the declared topology.
+\noindent\footnotesize \textit{Note:} Panel A reports structural same-locus review overlap and the frozen semantic gates. Structural co-location and timing do not establish semantic duplication, contradiction, correctness, repair, or coordination. The product-pair generality gate fails because the largest pair exceeds 50 percent. Panel B is the external evidence ladder, the failed replication gate, and the independent attribution concordance. The registry contains 15 screened candidates. Sources are not pooled merely to add rows: a source must preserve the PR, event time, actor, review batch, exact reply parent, and later-state horizon before it can reproduce the declared topology. In the replication-gate block all seven pre-exclusion candidate PRs already occur in the AIDev full corpus, and no GitHub comment or PR body was exported; zero disjoint support is a failed replication gate, not evidence that exact public connections never occur. The concordance block uses an external cohort that was released independently but observes overlapping public GitHub PRs; its 119-PR exact-pair overlap contains only nine exposed PRs, so the merge rows are an appendix sensitivity, not an independent outcome replication or a causal estimate.
 \endgroup
-
-
-\begin{table*}[!htbp]
-\caption{Fail-closed exact-edge replication audit in SWE-Review-Chat.}\label{tab:s-external-edge}
-\centering
-\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\textwidth}{@{}Y L{0.16\textwidth} L{0.38\textwidth}@{}}
-\toprule
-Stage & PRs or records & Meaning \\
-\midrule
-Public PR rows scanned & 1,082,529 & Available corpus \\
-PRs whose author maps by the frozen exact alias list & 5,250 & Product-aware author support \\
-PRs with a cross-product inline parent & 38 & Candidate trigger support \\
-PRs where such a parent has a nested reply & 7 & Seven candidate PRs before overlap removal \\
-Nested children before overlap removal & 18 / 1 / 0 & Unmapped user / same product / different product \\
-Candidate PRs outside the AIDev full corpus & 0 & No independent cohort remains \\
-REST-validated 48-hour landmark PRs & 0 & Replication gate fails \\
-\bottomrule
-\end{tabularx}
-\par\smallskip
-\footnotesize \textit{Note:} All seven pre-exclusion candidate PRs already occur in the AIDev full corpus. No GitHub comment or PR body was exported. Zero disjoint support is a failed replication gate, not evidence that exact public connections never occur.
-\end{table*}
-
-
-\begin{table*}[!htbp]
-\caption{Independent-packaging sensitivity for product attribution and trigger anchoring.}\label{tab:s-external-attribution}
-\centering
-\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\textwidth}{@{}Y L{0.12\textwidth} L{0.25\textwidth} L{0.26\textwidth}@{}}
-\toprule
-Check & PRs & Observed & Use \\
-\midrule
-PR overlap & 123 & 11.5\% of landmark cohort & Coverage only \\
-Exact author--reviewer pair agrees & 119 & 96.7\% of overlapping PRs & Supports product attribution \\
-Trigger time agrees within five minutes & 104 & 99.0\% & Supports event anchoring \\
-Exact-edge exposed PRs & 9 & 7.6\% of exact-pair overlap & Too few for replication \\
-Raw later-merge difference & 119 & +14.6 pp & [-18.6, +47.9] \\
-Pre-trigger-adjusted difference & 119 & +11.1 pp & [-23.9, +46.1] \\
-\bottomrule
-\end{tabularx}
-\par\smallskip
-\footnotesize \textit{Note:} The external cohort was released independently but observes overlapping public GitHub PRs. Its 119-PR exact-pair overlap contains only nine exposed PRs. The merge rows are therefore an appendix sensitivity, not an independent outcome replication or a causal estimate.
-\end{table*}

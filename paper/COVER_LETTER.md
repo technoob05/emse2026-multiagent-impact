@@ -16,10 +16,6 @@ The paper fits the special issue's themes of human-agent collaboration, mining a
 
 The reproducibility bundle pins data and time boundaries, stores PR-grain cohorts, uses repository-aware uncertainty, runs leave-product-pair and fixed-effect sensitivities, quantifies how much unmeasured structure would be needed to remove the headline result, and records rejected claims as falsification results. Online Resource 1 contains the full data contracts, joins, estimates, robustness checks, structural-overlap gate, and experiment disposition ledger. The public artifact will be available at [ARTIFACT DOI].
 
-**Related submission by the same authors.** [AUTHOR CONFIRMATION REQUIRED, AND DELETE THIS PARAGRAPH IF NO COMPANION PAPER IS SUBMITTED.] We are separately submitting a manuscript to this special issue that studies whether an issue link on an agent-authored pull request relates to whether that pull request is merged. The present paper also uses issue links, in RQ4, and we want the relationship to be visible to the editors rather than discovered later.
-
-The two are different studies. The companion paper's unit is the pull request and its outcome is merge. This paper's unit is a single cross-product review comment and its outcome is whether that comment is answered, measured before any merge outcome and conditional on who is reviewing. The result reported here is an interaction: the issue link does nothing when author and reviewer share a product and roughly doubles the answered rate when they do not. Neither paper reuses the other's cohort, model, or figures, and neither depends on the other's conclusion. We are happy to have both handled by the same editor, or to withdraw RQ4 from this paper if the editors prefer the topics kept apart.
-
 [KEEP EXACTLY ONE OF THE FOLLOWING AFTER AUTHOR CONFIRMATION]
 
 This manuscript is original and is not an extension of a conference paper.

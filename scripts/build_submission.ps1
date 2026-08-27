@@ -117,6 +117,8 @@ try {
     Invoke-Checked $pythonExe scripts\analysis\run_rq3_extensions.py
     Assert-ProjectFile "scripts\analysis\run_task_context_interaction.py"
     Invoke-Checked $pythonExe scripts\analysis\run_task_context_interaction.py
+    Assert-ProjectFile "scripts\analysis\run_merge_curves.py"
+    Invoke-Checked $pythonExe scripts\analysis\run_merge_curves.py
     Invoke-Checked $pythonExe scripts\analysis\run_cross_corpus_attribution_sensitivity.py
     Invoke-Checked $pythonExe scripts\audit\prepare_feedback_response_audit.py
     Invoke-Checked $pythonExe scripts\audit\prepare_review_collision_audit.py
@@ -131,12 +133,12 @@ try {
     Invoke-Checked $pythonExe scripts\reporting\build_handoff_notebook.py
     Invoke-Checked $pythonExe scripts\reporting\execute_notebook.py notebooks\02_artifact_handoff_exploration.ipynb
 
-    foreach ($index in 1..7) {
+    foreach ($index in 1..6) {
         Assert-ProjectFile "build\figures\Fig${index}_v2.pdf"
     }
     Assert-ProjectFile "outputs\figures\dataset_schema_and_joins.pdf"
     Assert-ProjectFile "outputs\figures\dataset_feature_coverage.pdf"
-    foreach ($index in 1..7) {
+    foreach ($index in 1..6) {
         Copy-Item (Join-Path $projectRoot "build\figures\Fig${index}_v2.pdf") (Join-Path $manuscriptDir "Fig${index}.pdf") -Force
     }
     Copy-Item outputs\figures\dataset_schema_and_joins.pdf paper\manuscript\FigS1.pdf -Force

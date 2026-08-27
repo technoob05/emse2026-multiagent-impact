@@ -1,0 +1,13 @@
+{
+  "population_prs": 3942,
+  "repositories": 893,
+  "prs_with_any_exact_edge": 521,
+  "prs_merged_within_horizon": 2949,
+  "horizon_days": 30,
+  "bootstrap_draws": 400,
+  "bootstrap_unit": "repository",
+  "seed": 20260826,
+  "merged_by_day_30_no_edge": 0.8035347832996748,
+  "merged_by_day_30_with_edge": 0.8462576723721191,
+  "interpretation": "cumulative merge under a time-varying edge split; a pull request contributes unexposed risk until its own first exact reply; observational, not a causal effect"
+}

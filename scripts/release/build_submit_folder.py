@@ -45,7 +45,7 @@ the helper that produced it. Nothing here is edited by hand.
 |---|---|---|
 | `1_manuscript.pdf` | The article | Manuscript |
 | `2_online_resource_1.pdf` | Supplementary Information | Electronic Supplementary Material |
-| `3_manuscript_source.zip` | Flat LaTeX source for the article only: `main.tex`, `references.bib`, the class and style files, and `Fig1.pdf`–`Fig7.pdf` | Source files |
+| `3_manuscript_source.zip` | Flat LaTeX source for the article only: `main.tex`, `references.bib`, the class and style files, and `Fig1.pdf`–`Fig6.pdf` | Source files |
 | `4_cover_letter.md` | Cover letter, still holding author placeholders | Cover letter |
 | `5_metadata_form.md` | Author metadata and declarations intake | Not uploaded; fill in before submitting |
 | `6_readiness_checklist.md` | What is done and what is still open | Not uploaded |

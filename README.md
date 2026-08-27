@@ -58,6 +58,7 @@ uv sync
 .\.venv\Scripts\python.exe scripts\analysis\run_addressed_edge_scope_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_rq3_extensions.py
 .\.venv\Scripts\python.exe scripts\analysis\run_task_context_interaction.py
+.\.venv\Scripts\python.exe scripts\analysis\run_merge_curves.py
 .\.venv\Scripts\python.exe scripts\audit\prepare_review_collision_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_collision_descriptive_extension.py
 .\.venv\Scripts\python.exe scripts\reporting\generate_technical_appendix_tables.py

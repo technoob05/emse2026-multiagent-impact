@@ -38,7 +38,6 @@ $sourceFiles = @(
     "Fig4.pdf",
     "Fig5.pdf",
     "Fig6.pdf",
-    "Fig7.pdf",
     "FigS1.pdf",
     "FigS2.pdf",
     "README.md"
@@ -65,8 +64,7 @@ $portalSourceFiles = @(
     "Fig3.pdf",
     "Fig4.pdf",
     "Fig5.pdf",
-    "Fig6.pdf",
-    "Fig7.pdf"
+    "Fig6.pdf"
 )
 
 $compiledPdf = Join-Path $projectRoot "build\pdf\emse_multiagent_submission_draft.pdf"

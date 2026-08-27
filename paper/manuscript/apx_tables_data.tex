@@ -3,58 +3,42 @@
 \FloatBarrier
 \needspace{8\baselineskip}
 \begingroup
-\small
+\footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.22\textwidth}L{0.07\textwidth}L{0.16\textwidth}rrL{0.21\textwidth}@{}}
-\caption{Dataset tables, units, and analytical roles in the pinned release.}\label{tab:s-dataset}\\
+\begin{longtable}{@{}L{0.12\textwidth}L{0.20\textwidth}L{0.07\textwidth}L{0.13\textwidth}L{0.09\textwidth}L{0.31\textwidth}@{}}
+\caption{Release inventory, units, analytical roles, and event-table coverage.}\label{tab:s-dataset}\\
 \toprule
-Table & Scope & Unit & Rows & Fields & Role \\
+Block & Table or feature group & Scope & Unit & Rows & Fields, coverage, and role \\
 \midrule
 \endfirsthead
-\caption*{Dataset tables, units, and analytical roles in the pinned release. (continued)}\\
+\caption*{Release inventory, units, analytical roles, and event-table coverage. (continued)}\\
 \toprule
-Table & Scope & Unit & Rows & Fields & Role \\
+Block & Table or feature group & Scope & Unit & Rows & Fields, coverage, and role \\
 \midrule
 \endhead
-\nolinkurl{all_pull_request} & Full corpus & One pull request & 7,685,281 & 14 & PR identity, agent, author, state, timestamps, and repository \\
-\nolinkurl{all_repository} & Full corpus & One repository & 957,209 & 8 & Repository name, language, license, fork status, stars, and forks \\
-\nolinkurl{all_user} & Full corpus & One GitHub user & 399,962 & 5 & Contributor account age and follower/following counts \\
-\nolinkurl{pull_request} & Rich layer & One pull request & 361,296 & 14 & PR backbone for the richer event and content tables \\
-\nolinkurl{repository} & Rich layer & One repository & 25,402 & 8 & Repository context for the richer subset \\
-\nolinkurl{pr_timeline} & Rich layer & One PR timeline event & 3,018,358 & 8 & Review, assignment, label, closure, and other lifecycle events \\
-\nolinkurl{pr_comments} & Rich layer & One issue-style PR comment & 373,549 & 7 & Conversation text, actor, actor type, and time \\
-\nolinkurl{pr_reviews} & Rich layer & One submitted PR review & 281,170 & 8 & Review decision, reviewer type, text, and submission time \\
-\nolinkurl{pr_review_comments} & Rich layer & One inline review comment & 289,780 & 15 & Inline discussion tied to a file and diff position \\
-\nolinkurl{pr_commits} & Rich layer & One commit attached to a PR & 718,779 & 5 & Commit author, committer, SHA, and message \\
-\nolinkurl{pr_commit_details} & Rich layer & One changed file within a PR commit & 6,112,623 & 14 & Change size, filename, file status, and patch text \\
-\nolinkurl{pr_task_type} & Rich layer & One classified pull request & 32,702 & 17 & Task type, model reason, and classification confidence \\
-\nolinkurl{issue} & Rich layer & One linked issue & 29,111 & 9 & Issue title, body, author, state, and timestamps \\
-\nolinkurl{related_issue} & Rich layer & One PR-issue link & 38,006 & 3 & Bridge between PRs and issues, with link source \\
+Release inventory & \nolinkurl{all_pull_request} & Full corpus & One pull request & 7,685,281 & 14 fields; PR identity, agent, author, state, timestamps, and repository \\
+Release inventory & \nolinkurl{all_repository} & Full corpus & One repository & 957,209 & 8 fields; Repository name, language, license, fork status, stars, and forks \\
+Release inventory & \nolinkurl{all_user} & Full corpus & One GitHub user & 399,962 & 5 fields; Contributor account age and follower/following counts \\
+Release inventory & \nolinkurl{pull_request} & Rich layer & One pull request & 361,296 & 14 fields; PR backbone for the richer event and content tables \\
+Release inventory & \nolinkurl{repository} & Rich layer & One repository & 25,402 & 8 fields; Repository context for the richer subset \\
+Release inventory & \nolinkurl{pr_timeline} & Rich layer & One PR timeline event & 3,018,358 & 8 fields; Review, assignment, label, closure, and other lifecycle events \\
+Release inventory & \nolinkurl{pr_comments} & Rich layer & One issue-style PR comment & 373,549 & 7 fields; Conversation text, actor, actor type, and time \\
+Release inventory & \nolinkurl{pr_reviews} & Rich layer & One submitted PR review & 281,170 & 8 fields; Review decision, reviewer type, text, and submission time \\
+Release inventory & \nolinkurl{pr_review_comments} & Rich layer & One inline review comment & 289,780 & 15 fields; Inline discussion tied to a file and diff position \\
+Release inventory & \nolinkurl{pr_commits} & Rich layer & One commit attached to a PR & 718,779 & 5 fields; Commit author, committer, SHA, and message \\
+Release inventory & \nolinkurl{pr_commit_details} & Rich layer & One changed file within a PR commit & 6,112,623 & 14 fields; Change size, filename, file status, and patch text \\
+Release inventory & \nolinkurl{pr_task_type} & Rich layer & One classified pull request & 32,702 & 17 fields; Task type, model reason, and classification confidence \\
+Release inventory & \nolinkurl{issue} & Rich layer & One linked issue & 29,111 & 9 fields; Issue title, body, author, state, and timestamps \\
+Release inventory & \nolinkurl{related_issue} & Rich layer & One PR-issue link & 38,006 & 3 fields; Bridge between PRs and issues, with link source \\
+PR coverage & Timeline events & Rich layer & Linked event or feature rows & 3,018,358 & 197,471 matched PRs; 54.66\% PR coverage; 0 orphan PR IDs \\
+PR coverage & File-level changes & Rich layer & Linked event or feature rows & 6,112,623 & 197,330 matched PRs; 54.62\% PR coverage; 0 orphan PR IDs \\
+PR coverage & Commits & Rich layer & Linked event or feature rows & 718,779 & 197,335 matched PRs; 54.62\% PR coverage; 0 orphan PR IDs \\
+PR coverage & Conversation comments & Rich layer & Linked event or feature rows & 373,549 & 110,011 matched PRs; 30.45\% PR coverage; 0 orphan PR IDs \\
+PR coverage & Submitted reviews & Rich layer & Linked event or feature rows & 281,170 & 83,081 matched PRs; 23.00\% PR coverage; 0 orphan PR IDs \\
+PR coverage & Inline review comments & Rich layer & Linked event or feature rows & 289,780 & 47,251 matched PRs; 13.08\% PR coverage; 0 orphan PR IDs \\
+PR coverage & Task classification & Rich layer & Linked event or feature rows & 32,702 & 32,702 matched PRs; 9.05\% PR coverage; 0 orphan PR IDs \\
+PR coverage & Linked issues & Rich layer & Linked event or feature rows & 38,006 & 28,987 matched PRs; 8.02\% PR coverage; 0 orphan PR IDs \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} The rich layer contains repositories with more than 100 stars. Row counts come from Parquet metadata, so large content tables are not expanded in memory.
+\noindent\footnotesize \textit{Note:} The rich layer contains repositories with more than 100 stars. Inventory row counts come from Parquet metadata, so large content tables are not expanded in memory. The coverage block describes the 361,296 AIDev-pop pull requests: coverage means that a pull request has at least one linked row, and inline comments resolve through their submitted-review identifier before joining to the pull request.
 \endgroup
-
-
-\begin{table*}[!htbp]
-\caption{Coverage of rich event and feature tables across 361,296 AIDev-pop pull requests.}\label{tab:s-coverage}
-\centering
-\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\textwidth}{@{}Yrrrr@{}}
-\toprule
-Feature group & Rows & Matched PRs & PR coverage (\%) & Orphan PR IDs \\
-\midrule
-Timeline events & 3,018,358 & 197,471 & 54.66 & 0 \\
-File-level changes & 6,112,623 & 197,330 & 54.62 & 0 \\
-Commits & 718,779 & 197,335 & 54.62 & 0 \\
-Conversation comments & 373,549 & 110,011 & 30.45 & 0 \\
-Submitted reviews & 281,170 & 83,081 & 23.00 & 0 \\
-Inline review comments & 289,780 & 47,251 & 13.08 & 0 \\
-Task classification & 32,702 & 32,702 & 9.05 & 0 \\
-Linked issues & 38,006 & 28,987 & 8.02 & 0 \\
-\bottomrule
-\end{tabularx}
-\par\smallskip
-\footnotesize \textit{Note:} Coverage means that a pull request has at least one linked row. Inline comments resolve through their submitted-review identifier before joining to the pull request.
-\end{table*}

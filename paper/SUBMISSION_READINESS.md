@@ -49,11 +49,6 @@ The revised three-RQ analysis, answer-first figures, full Supplementary Informat
 - [ ] Freeze both coder files before opening the private key; report agreement and adjudication.
 - [ ] Do not add duplication, complementarity, or contradiction claims unless the frozen reliability and product-pair generality rules are met.
 
-## Companion-submission disclosure
-
-- [ ] Confirm whether the companion paper on issue links and merge is in fact being submitted to this same special issue, and keep or delete the cover-letter paragraph accordingly.
-- [ ] If it is submitted, decide whether RQ4 stays in this paper. RQ4 is an interaction on whether a review comment is answered, not on merge, so the two do not overlap in outcome. The risk is perception, not duplication, and it is managed by declaring it.
-
 ## Required author input
 
 - [ ] Affiliation, department, city, and country.

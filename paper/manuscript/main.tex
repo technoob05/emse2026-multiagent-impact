@@ -22,7 +22,7 @@
 \affil*[1]{\orgdiv{Affiliation pending}, \orgname{Institution pending},
   \orgaddress{\city{City pending}, \country{Country pending}}}
 
-\abstract{\textbf{Context:} A pull request (PR) written by one coding-agent product and reviewed by another looks like a multi-agent workflow. Two products on one PR do not show that one addressed the other. \textbf{Objective:} We trace the public path from cross-product review to an addressed edge, a next owner, and a later state. \textbf{Method:} We screen 361,296 PRs in a pinned AIDev release and analyse 8,608 trigger PRs, 546 matched pairs, and a 1,067-PR outcome cohort. Exact account, comment, and review-batch identifiers anchor every event to one trigger. We set aside short automation bursts, match cross- to same-product triggers, trace earlier review history, and fix a check point at hour 48. \textbf{Results:} Direct dialogue between different products is rare. After a five-minute burst, user accounts own most remaining first actions, and most have reviewed in the repository before. Cross-product triggers get 13 percentage points less visible follow-up than matched same-product triggers. Among PRs still open at that point, an exact reply to the trigger is linked to 17 points more later merge. The link holds under stricter edge rules, a shuffle test inside each repository, and a whole-population model that drops the check point and lets the edge switch on in time. A user account writes that edge four times in five, so it marks human acknowledgement, not agent-to-agent dialogue. \textbf{Conclusions:} Public multi-agent impact should be reported as a map of connections, not as a count of products. Addressed edges and visible ownership are useful field signals, but they come from watching, not from an experiment.}
+\abstract{\textbf{Context:} A pull request (PR) written by one coding-agent product and reviewed by another looks like a multi-agent workflow. Two products on one PR do not show that one addressed the other. \textbf{Objective:} We trace the public path from cross-product review to an addressed edge, a next owner, and a later state. \textbf{Method:} We screen 361,296 PRs in a pinned AIDev release and analyse 8,608 trigger PRs, 546 matched pairs, and a 1,067-PR outcome cohort. Exact account, comment, and review-batch identifiers anchor every event to one trigger. We set aside short automation bursts, match cross- to same-product triggers, and fix an hour-48 check point. \textbf{Results:} Direct dialogue between products is rare. After a five-minute burst, user accounts own most remaining first actions, and most have reviewed in the repository before. Cross-product triggers get 13 percentage points less visible follow-up than matched same-product triggers. An exact reply to the trigger is linked to 17 points more later merge, and holds under stricter edge rules, a shuffle test, and a whole-population model. A user account writes that reply four times in five. A PR body that names an issue roughly doubles the chance its review point is answered across the boundary, and changes nothing within one product. \textbf{Conclusions:} Public multi-agent impact should be reported as a map of connections, not a count of products. The connection that carries the work is a person answering an agent, and giving them the task context is the one lever we found.}
 
 \keywords{coding agents, multi-agent software engineering, code review, human-agent collaboration, pull requests, mining software repositories}
 \maketitle
@@ -40,11 +40,11 @@ That reply is rare. It is also the one public connection that goes together with
 the change being merged later. A count of products on a pull request measures
 none of this.
 
-The question is live. A recent position paper argues that agents can already
-meet every goal of code review, and that keeping a person in the loop as the
-mandatory reviewer ``is a dead end''\ \citep{monperrus2026endofreview}. Our data
-speak directly to that: in this corpus the person is not a formality on top of
-an agent loop, they are the only part of the loop that visibly closes.
+The question is live. A recent position paper argues that agents can already meet every goal of code
+review. On that view, keeping a person as the mandatory reviewer ``is a dead
+end'' \citep{monperrus2026endofreview}. Our data speak to that directly. In this
+corpus the person is not a formality on top of an agent loop. They are the only
+part of the loop that visibly closes.
 
 The gap also matters for measurement. A short burst of bot events can look like
 a conversation. A new review can be part of the same API call. A user account
@@ -66,7 +66,7 @@ read what was written. Neither tells us whether one actor actually answered
 another. Our question is narrower and stricter: after one cross-product review
 event, what connected public path can we point at in the data?
 
-We ask three questions:
+We ask four questions:
 
 \begin{description}
 \item[RQ1 -- Is there a handoff?] Once we split one review batch into its parts,
@@ -102,11 +102,17 @@ answering another. The rare exact reply does mark a different later outcome, and
 a person writes it four times in five. So the measurement choice changes the
 conclusion, which is the point.
 
-\textbf{A reusable check for order-based claims.} Reviewer order is often read as
-evidence of coordination. We show that shuffling the order of events inside the
-same PR reproduces the apparent pattern almost exactly. Prior work on review
+\textbf{A reusable check for order-based claims.} Reviewer order is often read
+as evidence of coordination. We show that shuffling the order of events inside
+the same PR reproduces the apparent pattern almost exactly. Prior work on review
 order compares against an alphabetical baseline \citep{bouraffa2025orders}; we
 argue a shuffled baseline is the one that can falsify a coordination claim.
+
+\textbf{One lever that survives.} Almost everything that looked like a mechanism
+died under a within-repository comparison. One thing did not. A PR that says
+which issue it belongs to gets its review point answered about twice as often
+across a product boundary, and not at all more often within one product. It is
+the cheapest actionable finding we have.
 
 We do not claim the first observation of AI-to-AI review. Full data rules, all
 estimates, robustness checks, and rejected experiments are in Online Resource~1
@@ -193,10 +199,9 @@ boundary is central to our novelty.
 
 We pin AIDev-7.6M at revision
 \nolinkurl{37bbe1533e26cc1e1374917dba1186d1c8a4dc81}. The release contains
-7.69 million agent-authored PRs. We use the richer AIDev-pop layer: 361,296 PRs
-from repositories with more than 100 stars, a star-based filter of the kind used
-to separate engineered projects from scratch repositories
-\citep{munaiah2017curating}. Its event tables contain submitted
+7.69 million agent-authored PRs. We use the richer AIDev-pop layer: 361,296 PRs from repositories with more than
+100 stars. Star thresholds of this kind are the usual way to separate engineered
+projects from scratch repositories \citep{munaiah2017curating}. Its event tables contain submitted
 reviews, inline review comments, PR comments, and selected lifecycle events.
 PRs are created through 31 March 2026; we use 15 April 2026 at 00:00 UTC as the
 common observation boundary.
@@ -424,16 +429,15 @@ routing.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{Fig4.pdf}
-\caption{Connected public signals and later merge. Panel A shows raw later-merge
-rates: 55\% with an exact edge, 41.7\% for other public discussion without one,
-and 37.9\% across all PRs without one. The discussion group sits inside the
-no-edge group. Panel B shows adjusted differences. The top three rows are the
-same group of PRs under three rules for what counts as an edge: any exact parent
-reply, the same edge after dropping replies written by the triggering product
-itself, and edges written by a user account. The fourth row is the
-discussion-only control. The fifth, marked with a diamond, is the separate
-automation-to-user route, which has its own group and its own reference. Each row prints its estimate and 95\% interval. These are links in observed
-data, not causes.}
+\caption{What the addressed edge looks like over time. Every cross-product
+inline-trigger PR is followed from its review comment, and a PR counts as
+unexposed until its own first exact reply arrives, so no time before the reply is
+credited to it. Bands are 95\% intervals from resampling repositories. The two
+curves cross: a PR that is still being replied to has not merged yet, and the
+gap opens only later. Most of these pull requests merge either way, which is why
+the large contrast in the hour-48 group is a statement about slower PRs rather
+than about the population. Online Resource~1 carries the stricter edge
+definitions, the discussion-only control, and the automation-to-user route.}
 \label{fig:relay}
 \end{figure}
 
@@ -456,9 +460,9 @@ mapped product other than the one that wrote the trigger. So the connected
 signal here is a person acknowledging an agent's review point. It is not a
 conversation between agents.
 
-Later merge is more common when there is an exact reply to the trigger than
-when there is none (Figure~\ref{fig:relay}A). After adjusting for what was
-already visible before the trigger, the difference is 17.3 percentage points.
+Later merge is more common when there is an exact reply to the trigger than when
+there is none: 55\% against 37.9\%. After adjusting for what was already
+visible before the trigger, the difference is 17.3 percentage points.
 It stays positive for reply windows from one to 48 hours, in a model that only
 compares PRs inside the same repository, and after removing each ordered
 product pair in turn. We also tested it against a harder comparison. Instead of an edge versus
@@ -468,9 +472,8 @@ discussion. The result stays positive.
 Because most exposed replies are written by people, we refit the model under
 two stricter rules for what counts as an edge. One drops replies written by the
 triggering product itself. The other keeps only replies from a user account.
-Both give the same answer, with intervals that stay clear of zero
-(Figure~\ref{fig:relay}B, rows two and three). The result is a property of the
-addressed edge, not of a product answering itself. Only three PRs carry an exact reply from a mapped product other than the
+Both give the same answer, with intervals that stay clear of zero. The result is
+a property of the addressed edge, not of a product answering itself. Only three PRs carry an exact reply from a mapped product other than the
 trigger's. That is far too few to model. The count is the RQ1 finding showing up
 again at the outcome stage.
 
@@ -481,29 +484,21 @@ very wide interval. Any visible sign that a PR is still being worked on points
 the same way. We report that model in Online Resource~1 and keep the harder
 discussion-only comparison as our main specificity check.
 
-The automation-to-user route gives a separate check on a wider group. It is
-linked to 12.9 points more later merge than automation alone, after the same
-kind of pre-trigger adjustment. Figure
-\ref{fig:relay} first compares raw later-merge rates, including other public
-discussion without an exact edge. Panel B shows two exact-edge comparisons and
-the separate automation-to-user check. The diamond marks the row with a
-different cohort and reference.
+The automation-to-user route gives a separate check on a wider group, with its
+own cohort and its own reference. It is linked to 12.9 points more later merge
+than automation alone, after the same kind of pre-trigger adjustment.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{Fig5.pdf}
-\caption{How much hidden structure it would take to remove the exact-edge
-result. Panel A shows the arithmetic directly. One missing yes-or-no factor,
-fixed before the trigger, removes the result only inside the shaded corner. To
-get there it must be much more common among edge PRs \emph{and} carry a large
-later-merge difference of its own. The dashed line is the weaker requirement
-that removes only the interval. As a single summary, the E-value is 2.27, and
-1.67 at the interval limit. Panel B applies the same adjusted model to three
-outcomes that had already finished before the trigger, so the trigger cannot
-produce them. The teal line marks the observed edge result for scale. Two of the three sit on
-zero. Earlier user activity leans positive here and clears zero at a one-hour
-reply window, so the text reports its estimate rather than treating it as a
-pass. These are limits on fragility, not evidence of cause.}
+\caption{How much hidden structure it would take to remove the edge result. One
+missing yes-or-no factor, fixed before the trigger, removes it only inside the
+shaded corner: the factor must be much more common among answered PRs
+\emph{and} carry a large later-merge difference of its own. The dashed line is
+the weaker requirement that only blurs the interval. This is bias arithmetic, not
+evidence about any particular cause. Online Resource~1 reports the three
+before-the-fact outcomes, one of which leans positive and is not treated as a
+pass.}
 \label{fig:sensitivity}
 \end{figure}
 
@@ -531,37 +526,25 @@ small leftover, based on too few PRs to be sure. It points in exactly the
 direction a doubtful reader would expect, so we report it as an estimate and
 not as a clean zero.
 
-Two further checks matter more than any of the bounds above, because they
-attack the design rather than the arithmetic.
+Two further checks matter more than any of the bounds above, because they attack
+the design rather than the arithmetic.
 
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=\linewidth]{Fig6.pdf}
-\caption{Two harder tests of the same result. Panel A drops the hour-48 rule
-entirely. It follows every cross-product inline-trigger PR from its trigger and
-asks how the chance of merging in the next stretch of time changes once an exact
-reply exists. A PR counts as unexposed until its own reply arrives, so no time
-before the reply is credited to it. Panel B splits the edge by who wrote it,
-against PRs with no edge. The gap between a familiar replier and a newcomer is
-large, but it nearly disappears when the comparison is held inside one
-repository, so the trace cannot separate the person from the project.}
-\label{fig:extensions}
-\end{figure}
-
-The first drops the hour-48 rule. Instead of keeping only PRs that are still
-open, we follow every cross-product inline-trigger PR from its trigger and ask
-how the chance of merging in the next stretch of time changes once an exact
-reply exists. A PR counts as unexposed until its own reply arrives. The odds of
-merging are about $1.7$ times higher while an edge is active
-(Figure~\ref{fig:extensions}A), and the value barely moves as controls are
-added. So the result is not an artefact of studying only slower PRs.
+The first drops the hour-48 rule and asks what the whole population looks like
+over time. Figure~\ref{fig:relay} follows every cross-product inline-trigger PR
+from its review comment, counting a PR as unexposed until its own reply arrives.
+Two things are visible there that a single contrast hides. The curves cross
+early, because a PR that is still being replied to has not merged yet. And most
+of these PRs merge either way, so by day 30 the gap is a few points rather than
+the seventeen the hour-48 group shows. The direction survives, and the odds of
+merging in the next stretch of time stay about $1.7$ times higher while an edge
+is active, whichever controls we add. The large contrast is real, and it is a
+statement about slower PRs.
 
 The second asks who wrote the edge. We split the exposed PRs by whether the
-replier had already reviewed in that repository before the trigger. Almost all
-of the association sits with the familiar repliers. A reply from someone new to
-the repository shows no positive link at all (Figure~\ref{fig:extensions}B).
-That looks like a mechanism, and we were tempted to report it as one. It does
-not survive the obvious check. When the comparison is held inside a single
+replier had already reviewed in that repository before the trigger. Almost all of
+the association sits with the familiar repliers, and a reply from someone new to
+the repository shows no positive link at all. That looks like a mechanism, and we
+were tempted to report it as one. It does not survive the obvious check. When the comparison is held inside a single
 repository, the gap between the two kinds of replier shrinks to near zero with
 an interval that spans it. Familiar repliers and newcomers are mostly in
 \emph{different repositories}, and those repositories differ in how often
@@ -590,23 +573,20 @@ doubles the chance of an answer when the reviewer is a different one.
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{Fig7.pdf}
+\includegraphics[width=\linewidth]{Fig6.pdf}
 \caption{An issue link in the PR body and whether the review point gets
-answered, among triggers that open their own thread. Panel A shows the four
-cells. Within one product the link does nothing. Across a product boundary the
-answered rate more than doubles. Panel B shows the difference between those two
-differences, under repository fixed effects and then with month added, and the
-range left by dropping each of the fifteen repositories that contribute most
-linked cross-product PRs. The dashed marker is the same contrast when the
-link label is shuffled inside each repository. These are links in observed data,
-not causes.}
+answered, among triggers that open their own thread. Two lines, one for each
+kind of reviewer. Within a product the line is flat: the link changes nothing.
+Across a product boundary it climbs steeply. The gap between the two slopes is
+the result, and the note reports it with the checks it survived. These are links
+in observed data, not causes.}
 \label{fig:context}
 \end{figure}
 
 Among triggers that open their own thread, a same-product review point is
 answered about a fifth of the time whether or not the PR points at an issue.
 A cross-product review point is answered 12.7\% of the time without a link and
-28.3\% of the time with one (Figure~\ref{fig:context}A). The difference between
+28.3\% of the time with one (Figure~\ref{fig:context}). The difference between
 those two differences is 13.3 percentage points (95\% interval: $4.4$ to
 $22.2$) once we compare inside the same repository and the same month.
 
@@ -639,81 +619,108 @@ for the link, so we cannot prove every link was present before the trigger.
 
 \section{Discussion}\label{sec:discussion}
 
-\subsection{What this changes}
+\subsection{The unit of measurement is the problem}
 
-The picture a product count paints is wrong in a specific way. It shows two
-agents in conversation. The trace shows something else: a thin map in which the
-agents rarely speak to each other, and in which the connection that matters is
-a person answering an agent. That person is usually not new to the repository.
-Their reply is rare, it is easy to record, and it is the one public signal in
-our data that goes together with the change being merged later. This is a link
-we observed, not a cause we proved. But it points at a different thing to build
-and a different thing to measure.
+Ask how much multi-agent software engineering is happening and you will be
+handed a count of products. That count is not a small overestimate. It is the
+wrong object.
 
-We also tried, and failed, to name the mechanism. Splitting the edge by whether
-the replier already reviews in that repository produces a very large gap. Held
-inside one repository, the gap goes away. The honest reading is that our signal
-is a composite: it marks a project where people answer review points and PRs get
-merged, and the trace cannot pull the person and the project apart. That is a
-limit worth stating plainly, because a reader who saw only the split would draw
-a stronger conclusion than the data support.
+A count answers ``who appeared''. The thing anybody actually cares about is
+``what connected''. Those two come apart almost completely here. Two products
+share a pull request tens of thousands of times. One of them answers the other's
+review point three times. Everything in between --- the reviews, the comments,
+the branch movement --- is real activity that never becomes a connection.
 
-Prior work has shown that several reviewer types can appear in one PR, and that
-their order can relate to review outcomes. Our narrower result explains what
-that order hides. One review batch can create several events. A short burst can
-look like a handoff. A product that seems to keep going may just reflect which
-products are installed. And once a person takes over, the work can bounce back
-to either product. Exact identifiers let us tell these paths apart.
+Once you insist on a connection, the multi-agent story turns into a human one.
+The reply that closes a review point is written by a person four times in five.
+That person is usually not new to the project. This is the part a product count
+cannot see, and it is the part that goes together with the change landing.
 
-The main field pattern is therefore not a self-running team. It is a thin map of who takes over next. Different-product dialogue is rare, user accounts often
-bridge the visible boundary, and the most concrete edge is linked to a
-different later state. This event-level view links natural repository data to the explicit message graphs used in designed multi-agent systems.
+\subsection{What we could not show, and why it matters}
 
-\subsection{Implications for agentic software engineering}
+The most interesting thing we found is something we then had to give up.
 
-\textbf{Record the edge, not only the actors.} Review platforms and the
-platforms that run agents should store four things: what a message replies to,
-the review-batch ID, the run or session ID, and who is expected to act next. A
-timestamp on its own cannot separate a burst of parallel events from a real
-handoff.
+Splitting the answered review points by whether the replier already reviews in
+that repository produces an enormous gap. It looks like a mechanism: familiarity
+is what lets a person pick up an agent's review point. Hold the comparison
+inside a single repository and the gap collapses. Familiar repliers and
+newcomers are mostly in different projects, and those projects differ in how
+often anything gets merged at all.
 
-\textbf{Make ownership transfer visible.} A product should be able to mark a
-review point as received, declined, routed, or awaiting a user. This would turn
-an inferred event sequence into an auditable coordination contract. The rare
-different-product relay shows that co-installation alone does not provide this
-contract.
+We report this because the same trap is waiting in most of this literature. A
+between-project difference dressed as a personal one is easy to produce and hard
+to notice. Two cheap habits caught it here and would catch it elsewhere: compare
+inside one repository, and shuffle the label you think is doing the work. Our
+apparent product persistence died the same way, to a shuffle of event order
+inside the very same pull request.
 
-\textbf{Use connected signals to guide tests, not as success scores.} The exact
-edge is a promising marker for checking work, because it is clear and stable.
-But it is rare. Only 8.5\% of trigger PRs carry one, and about one in ten PRs
-in the hour-48 group do. It rarely fires by mistake, which makes it
-useful for auditing. It is not a score, and not yet a quality metric. A prospective study should randomize an
-explicit acknowledgement or routing feature and then measure resolution,
-rework, review time, and merge.
+It was not the only casualty. Repeated automation looked like it escalated to a
+person, until the same shuffle reproduced it. Ownership looked like it moved one
+way from products to people, until we looked at both directions. Prior review
+history looked like it bought a merge advantage, until we compared inside one
+repository. Review requests looked like deliberate routing, until we found the
+exported event does not say who was asked. Two products commenting on the same
+line looked like duplicated work, and we still cannot say whether it is, because
+nobody has read the text. And when we applied our own rules to a large review
+corpus assembled by other people, every candidate pull request turned out to
+already be in ours, so the replication gate failed rather than passed. We keep
+all of it in Online Resource~1. A paper that reports only what survived is not
+reporting a method.
 
-\textbf{Support repository-aware human bridges carefully.} Visible user
-bridges often have prior review history, so systems can offer context from past
-reviews when asking for help. However, the high baseline among all responders
-means history should not be sold as proof of expert selection.
+\subsection{One lever that does hold}
 
-\subsection{Trying to prove ourselves wrong shaped the story}
+Against that background, the issue link is the exception worth acting on.
 
-Several attractive claims did not survive stronger checks. A product that
-appeared to keep going was matched by a random-order shuffle of the same PR's
-own events. The newest example is the one above: repository familiarity looked
-like the reason the edge works, until the comparison was held inside a single
-repository. Repeated automation
-did not show a special escalation dose. Post-burst ownership moved in both
-directions rather than showing one-way user takeover. Prior review history did
-not support a stable within-repository merge advantage. Request events lacked
-the target identity needed to prove deliberate routing. Structural comment
-overlap also remains semantically uncoded. We keep these results and all gates
-in Online Resource~1 rather than turning them into positive
-headlines. We also ran the same rules over a large review dataset packaged by other people.
-After removing the PRs that overlap ours, it left no separate group of
-exact-edge PRs at the hour-48 check point. That is a failed replication gate,
-not proof that such edges never occur. It shows why being in the same thread
-cannot replace a reply that points at the exact comment.
+A pull request that says which issue it belongs to is answered across a product
+boundary about twice as often as one that does not. The same link changes
+nothing when the reviewer shares the author's product. It survives a
+within-repository comparison, a shuffled label, and dropping the projects that
+contribute most.
+
+The reading that fits is unglamorous and useful. Inside one product the loop can
+close without anyone reconstructing why the change exists. Across the boundary
+somebody has to do that reconstruction, and a link to the issue is the cheapest
+way we can observe of handing it to them. This is what reviewers are known to do
+first: orient themselves to context and rationale before deciding anything
+\citep{heander2026decisionmaking}, using references in the discussion to build
+common ground \citep{chopra2021referencing}. We cannot prove the link causes the
+answer, but it is a pre-trigger property of the change, it costs one line, and
+nothing else we measured behaves this way.
+
+\subsection{What to build, and what to stop counting}
+
+\textbf{Platforms should record the edge, not only the actors.} A review tool
+should store what a message replies to, which batch it came from, which run
+produced it, and who is expected to act next. Our whole method exists because
+those four fields are missing or ambiguous, and a timestamp alone cannot
+separate a burst of parallel events from a handoff. This is a small schema
+change with a large effect on what anyone can later measure.
+
+\textbf{Agents should hand over context, not just output.} The one thing under a
+vendor's control that predicts a crossed boundary is whether the pull request
+says what it is for. Writing the issue reference into the body is close to free
+and it is the only lever in this study that survived every check we could think
+of.
+
+\textbf{Agents should be able to say what they did with a review point.} Marking
+a point as received, declined, routed, or awaiting a person turns an inferred
+sequence into a record. The scarcity of different-product relays says plainly
+that installing two products together does not create that record by itself.
+
+\textbf{Evaluation should ask for a connection, not a count.} An answered review
+point is a better field signal than a merge, because it is specific, it is
+machine-checkable, and it happens before the outcome. It is also rare, so it
+belongs in auditing rather than in a score. Nothing here licenses treating it as
+a quality metric, and a real test would randomise an acknowledgement feature and
+watch what happens.
+
+\textbf{Researchers should stop reporting co-presence.} If a study counts
+products on a pull request, it is measuring installation, not collaboration. The
+ladder in this paper is one way to be specific; any way is better than a count.
+This bears on a live argument. It has been proposed that agents can already meet
+every goal of code review, and that keeping a person as the mandatory reviewer is
+a dead end \citep{monperrus2026endofreview}. On this evidence the person is not a
+formality layered on an agent loop. In the public trace, they are the loop.
 
 \section{Threats to Validity}\label{sec:threats}
 
@@ -731,9 +738,9 @@ private messages, prompts, or shared memory.
 
 \textbf{Which PRs we kept.} The hour-48 check point keeps only PRs that are
 still open at that moment, and most cross-product inline-trigger PRs close before
-then. The landmark numbers therefore describe slower PRs. The whole-population
-model in Figure~\ref{fig:extensions}A is our answer to this: it uses every
-trigger PR, and it still finds the same direction. Shorter reply windows raise a
+then. The landmark numbers therefore describe slower PRs. The whole-population curves in Figure~\ref{fig:relay} are our answer to this:
+they use every trigger PR, and they still show the same direction, though a much
+smaller gap. Shorter reply windows raise a
 further problem, because a reply inside such a window could itself change whether
 the PR is still open at hour 48. We treat those windows as extra checks only, and
 the 48-hour window is the main one.

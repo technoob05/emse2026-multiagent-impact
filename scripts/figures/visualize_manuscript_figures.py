@@ -41,6 +41,7 @@ SENSITIVITY = ROOT / "outputs" / "addressed_edge_sensitivity"
 SCOPE = ROOT / "outputs" / "addressed_edge_scope"
 EXTENSIONS = ROOT / "outputs" / "rq3_extensions"
 CONTEXT = ROOT / "outputs" / "task_context_interaction"
+CURVES = ROOT / "outputs" / "merge_curves"
 OUTPUT = ROOT / "build" / "figures"
 
 # Palette. Every hue is taken unaltered from Paul Tol's colour schemes, whose
@@ -1012,233 +1013,94 @@ def figure_boundary() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Figure 4: RQ3 connected signals and later state
+# Figure 4: RQ3 as a shape over time, not a coefficient
 # ---------------------------------------------------------------------------
 
 
-def _landmark_rows() -> dict[str, pd.Series]:
-    denominators = read_csv(
-        EDGE / "denominators.csv",
-        ("threshold_hours", "exposure_group", "prs", "later_merge_rate"),
-    )
-    at_48 = denominators[denominators["threshold_hours"] == 48]
-    edge_models = read_csv(
-        EDGE / "addressed_edge_clustered_lpm.csv",
-        ("threshold_hours", "specification", "estimate", "ci_low", "ci_high", "n_prs"),
-    )
-    specificity_models = read_csv(
-        SPECIFICITY / "clustered_specificity_lpm.csv",
+def figure_merge_curves() -> None:
+    curve = read_csv(
+        CURVES / "cumulative_merge.csv",
         (
-            "contrast",
-            "threshold_hours",
-            "repository_fixed_effects",
-            "estimate",
-            "ci_low",
-            "ci_high",
-            "n_prs",
-            "control_prs",
-            "control_raw_merge_rate",
+            "days_since_trigger",
+            "merged_no_edge",
+            "merged_no_edge_low",
+            "merged_no_edge_high",
+            "merged_with_edge",
+            "merged_with_edge_low",
+            "merged_with_edge_high",
         ),
     )
-    route_models = read_csv(
-        TOPOLOGY / "route_direct_contrasts.csv",
-        (
-            "reference_route",
-            "compared_route",
-            "specification",
-            "estimate",
-            "ci_low",
-            "ci_high",
-            "n_prs",
-        ),
-    )
-    definitions = read_csv(
-        SCOPE / "exposure_definition_models.csv",
-        ("exposure", "estimate", "ci_low", "ci_high", "exposed_prs", "n_prs"),
-    )
-    return {
-        "no_self_brand": exactly_one(definitions, exposure="edge_excluding_self_brand"),
-        "human_edge": exactly_one(definitions, exposure="edge_human_reply"),
-        "edge": exactly_one(at_48, exposure_group="exact_parent_reply_by_threshold"),
-        "no_edge": exactly_one(
-            at_48, exposure_group="no_exact_parent_reply_by_threshold"
-        ),
-        "edge_model": exactly_one(
-            edge_models, threshold_hours="48", specification="A_pretrigger_only"
-        ),
-        "specificity": exactly_one(
-            specificity_models,
-            contrast="exact_edge_vs_nonexact_discussion",
-            threshold_hours="48",
-            repository_fixed_effects="False",
-        ),
-        "route": exactly_one(
-            route_models,
-            reference_route="automation_no_human",
-            compared_route="automation_then_human",
-            specification="pretrigger_adjusted",
-        ),
-    }
+    summary = json.loads((CURVES / "summary.json").read_text(encoding="utf-8"))
+    fig = new_figure(3.65)
+    layout = Layout(left=0.135, right=0.985, top=0.905, bottom=0.135, gap=0.0)
+    (rect,) = layout.rects((1.0,))
+    ax = fig.add_axes(rect)
 
-
-def figure_later_state() -> None:
-    rows = _landmark_rows()
-    edge = rows["edge"]
-    no_edge = rows["no_edge"]
-    edge_model = rows["edge_model"]
-    specificity = rows["specificity"]
-    route = rows["route"]
-
-    if (
-        int(edge_model["n_prs"]) != 1067
-        or int(specificity["n_prs"]) != 615
-        or int(route["n_prs"]) != 1733
+    days = curve["days_since_trigger"].to_numpy()
+    for column, colour, style, label in (
+        ("merged_with_edge", TEAL, "-", "after an exact reply"),
+        ("merged_no_edge", SLATE, (0, (4, 2)), "while none has arrived"),
     ):
-        raise ValueError("Figure 4 cohort sizes do not match the frozen contracts")
-
-    fig = new_figure(5.05)
-    layout = Layout(left=0.285, right=0.815, top=0.930, bottom=0.080, gap=0.130)
-    top_rect, bottom_rect = layout.rects((0.62, 1.0))
-
-    ax = fig.add_axes(top_rect)
-    raw = [
-        (
-            "Exact parent edge",
-            float(edge["later_merge_rate"]) * 100,
-            int(edge["prs"]),
-            "o",
-            TEAL,
-            TEAL,
-            1.0,
-        ),
-        (
-            "No exact edge:\npublic discussion",
-            float(specificity["control_raw_merge_rate"]) * 100,
-            int(specificity["control_prs"]),
-            "s",
-            WHITE,
-            BLUE,
-            1.5,
-        ),
-        (
-            "No exact edge:\nall PRs",
-            float(no_edge["later_merge_rate"]) * 100,
-            int(no_edge["prs"]),
-            "o",
-            WHITE,
-            SLATE,
-            1.5,
-        ),
-    ]
-    y = np.arange(len(raw))[::-1]
-    for position, row in zip(y, raw, strict=True):
-        label, value, count, marker, face, edge_color, width = row
-        lollipop(ax, position, 30, value, marker, face, edge_color, width, size=50.0)
+        centre = curve[column].to_numpy() * 100
+        low = curve[f"{column}_low"].to_numpy() * 100
+        high = curve[f"{column}_high"].to_numpy() * 100
+        ax.fill_between(days, low, high, color=colour, alpha=0.16, linewidth=0)
+        ax.plot(days, centre, color=colour, linewidth=1.8, linestyle=style, zorder=3)
+        anchor = 17.0 if colour == TEAL else 24.0
+        lift = 6.0 if colour == TEAL else -8.5
+        index = int(np.argmin(np.abs(days - anchor)))
         ax.text(
-            value + 1.15,
-            position,
-            f"{value:.1f}%  ·  n={count:,}",
-            ha="left",
+            anchor,
+            centre[index] + lift,
+            f"{label}" + chr(10) + f"{centre[-1]:.0f}% by day 30",
+            ha="center",
             va="center",
             fontsize=7.2,
-            color=INK,
+            color=colour,
         )
-    ax.set_yticks(y, [row[0] for row in raw])
-    ax.set_xlim(30, 58)
-    ax.set_ylim(-0.6, 2.6)
-    ax.set_xlabel("Merged from hour 48 through day 30 (%)")
-    panel_title(ax, "A", "Exact edges mark a different later state")
-    category_axis(ax)
-    fit_right_labels(ax)
 
-    ax = fig.add_axes(bottom_rect)
-    forest = [
-        ("Exact edge vs\nno exact edge", edge_model, "o", TEAL, 1067),
-        ("Excluding the trigger\nproduct's own reply", rows["no_self_brand"], "o", TEAL, 1067),
-        ("User-account\nreply only", rows["human_edge"], "o", TEAL, 1067),
-        ("Exact edge vs\nnon-exact discussion", specificity, "s", TEAL, 615),
-        ("Automation → user vs\nautomation only", route, "D", BLUE, 1733),
-    ]
-    y = np.arange(len(forest))[::-1]
-    ax.axvline(0, color=INK, linewidth=0.8, zorder=0)
-    ax.axhline(1.5, color=GRID, linewidth=0.8, zorder=0)
-    ax.axhline(0.5, color=GRID, linewidth=0.8, zorder=0)
-    for position, item in zip(y, forest, strict=True):
-        label, row, marker, color, cohort = item
-        estimate = float(row["estimate"]) * 100
-        low = float(row["ci_low"]) * 100
-        high = float(row["ci_high"]) * 100
-        ax.errorbar(
-            estimate,
-            position,
-            xerr=np.array([[estimate - low], [high - estimate]]),
-            fmt=marker,
-            color=color,
-            ecolor=color,
-            markerfacecolor=color,
-            markeredgecolor=WHITE,
-            markeredgewidth=0.5,
-            markersize=5.6,
-            capsize=2.6,
-            elinewidth=1.5,
-            zorder=3,
-        )
-        ax.text(
-            estimate,
-            position + 0.21,
-            minus(f"{estimate:+.1f}  [{low:+.1f}, {high:+.1f}]"),
-            ha="center",
-            va="bottom",
-            fontsize=7.1,
-            color=INK,
-        )
-        ax.text(
-            34.6,
-            position,
-            f"n={cohort:,}",
-            ha="left",
-            va="center",
-            fontsize=7.1,
-            color=SLATE,
-        )
-    ax.set_yticks(y, [row[0] for row in forest])
-    ax.set_xlim(-5, 34)
-    ax.set_ylim(-0.75, len(forest) - 0.3)
-    ax.set_xticks([-5, 0, 5, 10, 15, 20, 25, 30])
-    ax.set_xlabel("Adjusted later-merge difference (percentage points)")
-    panel_title(ax, "B", "The same edge under stricter definitions")
-    category_axis(ax)
+    ax.axvline(2.0, color=MID, linewidth=0.8, linestyle=(0, (2, 2)), zorder=0)
+    ax.text(
+        2.3,
+        16,
+        "hour 48",
+        ha="left",
+        va="center",
+        fontsize=7.1,
+        color=SLATE,
+    )
+    ax.set_xlim(0, 30.5)
+    ax.set_ylim(0, 100)
+    ax.set_xticks([0, 5, 10, 15, 20, 25, 30])
+    ax.set_yticks([0, 25, 50, 75, 100])
+    ax.set_xlabel("Days after the cross-product review comment")
+    ax.set_ylabel("Pull requests merged (%)")
+    panel_title(ax, "", "Most of these pull requests merge either way")
+    clean_axis(ax, "y")
     ax.text(
         0.985,
-        0.02,
-        "Diamond: separate cohort and reference",
+        0.035,
+        f"{int(summary['population_prs']):,} PRs across "
+        f"{int(summary['repositories']):,} repositories",
         transform=ax.transAxes,
         ha="right",
         va="bottom",
         fontsize=7.1,
         color=SLATE,
     )
-    fit_right_labels(ax)
 
     save(fig, "Fig4_v2")
 
 
 # ---------------------------------------------------------------------------
-# Figure 5: RQ3 sensitivity to unmeasured structure
+# Figure 5: how much hidden structure would remove the RQ3 result
 # ---------------------------------------------------------------------------
 
 
 def figure_sensitivity() -> None:
     evalues = read_csv(
         SENSITIVITY / "e_values.csv",
-        (
-            "threshold_hours",
-            "adjusted_risk_difference",
-            "ci_low",
-            "approximate_risk_ratio",
-            "e_value_point",
-            "e_value_limit",
-        ),
+        ("threshold_hours", "e_value_point", "e_value_limit"),
     )
     frontier = read_csv(
         SENSITIVITY / "unmeasured_confounder_frontier.csv",
@@ -1248,325 +1110,70 @@ def figure_sensitivity() -> None:
             "outcome_difference_to_remove_interval",
         ),
     )
-    negative = read_csv(
-        SENSITIVITY / "negative_control_outcomes.csv",
-        (
-            "threshold_hours",
-            "negative_control_outcome",
-            "estimate",
-            "ci_low",
-            "ci_high",
-            "passes_null_expectation",
-        ),
-    )
     permutation = read_csv(
         SCOPE / "conditional_randomisation_inference.csv",
-        (
-            "threshold_hours",
-            "observed_estimate",
-            "permutation_p_value_two_sided",
-            "repositories",
-        ),
+        ("threshold_hours", "permutation_p_value_two_sided", "repositories"),
     )
     primary = exactly_one(evalues, threshold_hours="48")
-    primary_permutation = exactly_one(permutation, threshold_hours="48")
+    test = exactly_one(permutation, threshold_hours="48")
 
-    fig = new_figure(4.35)
-    layout = Layout(left=0.285, right=0.815, top=0.920, bottom=0.095, gap=0.190)
-    top_rect, bottom_rect = layout.rects((1.0, 0.90))
+    fig = new_figure(3.35)
+    layout = Layout(left=0.135, right=0.985, top=0.900, bottom=0.150, gap=0.0)
+    (rect,) = layout.rects((1.0,))
+    ax = fig.add_axes(rect)
 
-    ax = fig.add_axes(top_rect)
     delta = frontier["prevalence_difference"].to_numpy() * 100
     point_line = frontier["outcome_difference_to_remove_point_estimate"].to_numpy() * 100
     interval_line = frontier["outcome_difference_to_remove_interval"].to_numpy() * 100
-    ax.fill_between(delta, point_line, 100, color=PALE_TEAL, zorder=0)
-    ax.plot(delta, point_line, color=TEAL, linewidth=1.6, zorder=3)
+    ax.fill_between(delta, point_line, 100, color=PALE_TEAL, alpha=0.75, zorder=0)
+    ax.plot(delta, point_line, color=TEAL, linewidth=1.8, zorder=3)
     ax.plot(
-        delta,
-        interval_line,
-        color=SLATE,
-        linewidth=1.4,
-        linestyle=(0, (3, 2)),
-        zorder=3,
+        delta, interval_line, color=SLATE, linewidth=1.4, linestyle=(0, (4, 2)), zorder=3
     )
     ax.set_xlim(5, 60)
     ax.set_ylim(0, 100)
     ax.set_yticks([0, 25, 50, 75, 100])
-    ax.set_xlabel("Prevalence difference of the unmeasured factor (pp)")
-    ax.set_ylabel("Its own later-merge\ndifference (pp)")
-    panel_title(ax, "A", "What it would take to remove the edge result")
+    ax.set_xlabel("How much more common the hidden cause is among answered PRs (pp)")
+    ax.set_ylabel("Its own effect on\nlater merge (pp)")
+    panel_title(ax, "", "A hidden cause would have to be large and lopsided")
     clean_axis(ax, "y")
-    # The label sits on the tint, and no pale fill holds a hue at 4.5:1, so it
-    # is set in ink; the solid teal frontier beneath it carries the pairing.
     ax.text(
-        44.0,
-        72.0,
-        "removes the point estimate",
+        40.0,
+        74.0,
+        "only in here does\nthe result disappear",
         ha="center",
         va="center",
         fontsize=7.2,
-        color=INK,
+        color=TEAL,
     )
     ax.text(
-        31.0,
-        6.0,
-        "removes the interval",
+        33.0,
+        7.0,
+        "enough to blur the interval",
         ha="center",
         va="center",
-        fontsize=7.2,
+        fontsize=7.1,
         color=SLATE,
     )
     ax.text(
         0.985,
-        0.97,
-        f"E-value {float(primary['e_value_point']):.2f}  ·  "
-        f"limit {float(primary['e_value_limit']):.2f}",
+        0.955,
+        f"E-value {float(primary['e_value_point']):.2f}, "
+        f"{float(primary['e_value_limit']):.2f} at the interval\n"
+        f"shuffle test inside {int(test['repositories'])} repositories: "
+        f"p = {float(test['permutation_p_value_two_sided']):.3f}",
         transform=ax.transAxes,
         ha="right",
         va="top",
-        fontsize=7.2,
-        fontweight="bold",
+        fontsize=7.1,
         color=INK,
-    )
-
-    ax = fig.add_axes(bottom_rect)
-    at_48 = negative[negative["threshold_hours"] == 48]
-    control_labels = {
-        "pre_trigger_decisive_review": "Pre-trigger\ndecisive review",
-        "pre_trigger_force_push": "Pre-trigger\nbranch movement",
-        "pre_trigger_user_event": "Pre-trigger\nuser event",
-    }
-    if set(control_labels) - set(at_48["negative_control_outcome"]):
-        raise ValueError("A declared negative-control outcome is missing at 48 hours")
-    ordered = list(control_labels)
-    y = np.arange(len(ordered))[::-1]
-    ax.axvline(0, color=INK, linewidth=0.8, zorder=0)
-    for position, key in zip(y, ordered, strict=True):
-        row = exactly_one(at_48, negative_control_outcome=key)
-        estimate = float(row["estimate"]) * 100
-        low = float(row["ci_low"]) * 100
-        high = float(row["ci_high"]) * 100
-        ax.errorbar(
-            estimate,
-            position,
-            xerr=np.array([[estimate - low], [high - estimate]]),
-            fmt="o",
-            color=SLATE,
-            ecolor=SLATE,
-            markerfacecolor=WHITE,
-            markeredgecolor=SLATE,
-            markeredgewidth=1.2,
-            markersize=5.0,
-            capsize=2.6,
-            elinewidth=1.4,
-            zorder=3,
-        )
-    reference = float(primary["adjusted_risk_difference"]) * 100
-    # The reference line spans only the placebo rows, so it cannot print
-    # through the note beneath them.
-    ax.vlines(
-        reference,
-        -0.05,
-        len(ordered) - 0.45,
-        color=TEAL,
-        linewidth=1.2,
-        linestyle=(0, (3, 2)),
-        zorder=2,
-    )
-    ax.text(
-        reference - 0.8,
-        len(ordered) - 0.68,
-        minus(f"observed edge result {reference:+.1f} pp"),
-        ha="right",
-        va="center",
-        fontsize=7.1,
-        color=TEAL,
-    )
-    ax.set_yticks(y, [control_labels[key] for key in ordered])
-    ax.set_xlim(-12, 32)
-    ax.set_ylim(-0.6, len(ordered) - 0.2)
-    ax.set_xlabel("Adjusted difference on an outcome fixed before the trigger (pp)")
-    panel_title(ax, "B", "Two placebo outcomes sit on zero, one leans")
-    category_axis(ax)
-    ax.text(
-        0.985,
-        0.03,
-        "Within-repository randomisation test: "
-        f"p = {float(primary_permutation['permutation_p_value_two_sided']):.3f}",
-        transform=ax.transAxes,
-        ha="right",
-        va="bottom",
-        fontsize=7.1,
-        color=SLATE,
     )
 
     save(fig, "Fig5_v2")
 
 
 # ---------------------------------------------------------------------------
-# Figure 6: RQ3 without the landmark, and who writes the edge
-# ---------------------------------------------------------------------------
-
-
-def figure_extensions() -> None:
-    hazard = read_csv(
-        EXTENSIONS / "whole_population_hazard.csv",
-        (
-            "specification",
-            "hazard_odds_ratio",
-            "or_ci_low",
-            "or_ci_high",
-            "prs",
-            "person_period_rows",
-        ),
-    )
-    classes = read_csv(
-        EXTENSIONS / "edge_class_contrasts.csv",
-        ("edge_class", "prs", "raw_later_merge_rate", "estimate", "ci_low", "ci_high"),
-    )
-    robustness = read_csv(
-        EXTENSIONS / "history_moderation_robustness.csv",
-        ("check", "estimate", "ci_low", "ci_high"),
-    )
-    primary_gap = exactly_one(robustness, check="Primary")
-    within_gap = exactly_one(robustness, check="Repository fixed effects")
-
-    fig = new_figure(4.60)
-    layout = Layout(left=0.300, right=0.815, top=0.925, bottom=0.085, gap=0.165)
-    top_rect, bottom_rect = layout.rects((0.86, 1.0))
-
-    ax = fig.add_axes(top_rect)
-    spec_labels = {
-        "A_baseline_hazard_only": "Time only",
-        "B_products_and_month": "Products\nand month",
-        "C_full_pretrigger": "Full pre-trigger\ncontrols",
-    }
-    y = np.arange(len(spec_labels))[::-1]
-    ax.axvline(1.0, color=INK, linewidth=0.8, zorder=0)
-    for position, key in zip(y, spec_labels, strict=True):
-        row = exactly_one(hazard, specification=key)
-        estimate = float(row["hazard_odds_ratio"])
-        low = float(row["or_ci_low"])
-        high = float(row["or_ci_high"])
-        ax.errorbar(
-            estimate,
-            position,
-            xerr=np.array([[estimate - low], [high - estimate]]),
-            fmt="o",
-            color=TEAL,
-            ecolor=TEAL,
-            markerfacecolor=TEAL,
-            markeredgecolor=WHITE,
-            markeredgewidth=0.5,
-            markersize=5.6,
-            capsize=2.6,
-            elinewidth=1.5,
-            zorder=3,
-        )
-        ax.text(
-            estimate,
-            position + 0.20,
-            f"{estimate:.2f}  [{low:.2f}, {high:.2f}]",
-            ha="center",
-            va="bottom",
-            fontsize=7.1,
-            color=INK,
-        )
-    ax.set_yticks(y, [spec_labels[key] for key in spec_labels])
-    ax.set_xlim(0.9, 2.5)
-    ax.set_ylim(-0.7, len(spec_labels) - 0.25)
-    ax.set_xlabel("Odds of merging in the next period, edge active vs not")
-    panel_title(ax, "A", "The edge holds without the hour-48 rule")
-    category_axis(ax)
-    first = hazard.iloc[0]
-    ax.text(
-        0.985,
-        0.04,
-        f"{int(first['prs']):,} PRs · {int(first['person_period_rows']):,} periods",
-        transform=ax.transAxes,
-        ha="right",
-        va="bottom",
-        fontsize=7.1,
-        color=SLATE,
-    )
-
-    ax = fig.add_axes(bottom_rect)
-    class_labels = {
-        "edge_by_known_reviewer": "Reply by someone who\nreviews here already",
-        "edge_by_newcomer": "Reply by someone\nnew to the repository",
-        "edge_by_automation": "Reply by automation",
-    }
-    y = np.arange(len(class_labels))[::-1]
-    ax.axvline(0, color=INK, linewidth=0.8, zorder=0)
-    for position, key in zip(y, class_labels, strict=True):
-        row = exactly_one(classes, edge_class=key)
-        estimate = float(row["estimate"]) * 100
-        low = float(row["ci_low"]) * 100
-        high = float(row["ci_high"]) * 100
-        colour = TEAL if key == "edge_by_known_reviewer" else SLATE
-        ax.errorbar(
-            estimate,
-            position,
-            xerr=np.array([[estimate - low], [high - estimate]]),
-            fmt="o",
-            color=colour,
-            ecolor=colour,
-            markerfacecolor=colour if key == "edge_by_known_reviewer" else WHITE,
-            markeredgecolor=colour,
-            markeredgewidth=1.1,
-            markersize=5.4,
-            capsize=2.6,
-            elinewidth=1.4,
-            zorder=3,
-        )
-        ax.text(
-            estimate,
-            position + 0.22,
-            minus(f"{estimate:+.1f}  [{low:+.1f}, {high:+.1f}]"),
-            ha="center",
-            va="bottom",
-            fontsize=7.1,
-            color=INK,
-        )
-        ax.text(
-            56.0,
-            position,
-            f"n={int(row['prs']):,}",
-            ha="left",
-            va="center",
-            fontsize=7.1,
-            color=SLATE,
-        )
-    ax.set_yticks(y, [class_labels[key] for key in class_labels])
-    ax.set_xlim(-40, 55)
-    ax.set_ylim(-0.85, len(class_labels) - 0.2)
-    ax.set_xlabel("Adjusted later-merge difference against no edge (pp)")
-    panel_title(ax, "B", "The gap is between repositories, not inside them")
-    category_axis(ax)
-    ax.text(
-        0.015,
-        0.03,
-        minus(
-            "Known vs new: "
-            f"{float(primary_gap['estimate']) * 100:+.1f} pp; "
-            "inside one repository "
-            f"{float(within_gap['estimate']) * 100:+.1f} "
-            f"[{float(within_gap['ci_low']) * 100:+.1f}, "
-            f"{float(within_gap['ci_high']) * 100:+.1f}]"
-        ),
-        transform=ax.transAxes,
-        ha="left",
-        va="bottom",
-        fontsize=7.1,
-        color=SLATE,
-    )
-    fit_right_labels(ax)
-
-    save(fig, "Fig6_v2")
-
-
-# ---------------------------------------------------------------------------
-# Figure 7: RQ4 task context across the product boundary
+# Figure 6: RQ4 as an interaction, not a coefficient
 # ---------------------------------------------------------------------------
 
 
@@ -1585,168 +1192,96 @@ def figure_task_context() -> None:
     cells = cells[cells["population"] == "thread-root triggers"]
     models = read_csv(
         CONTEXT / "interaction_models.csv",
-        ("specification", "estimate", "ci_low", "ci_high", "n_prs"),
+        ("specification", "estimate", "ci_low", "ci_high"),
     )
     loo = read_csv(
-        CONTEXT / "leave_one_repository_out.csv", ("estimate", "ci_low", "ci_high")
+        CONTEXT / "leave_one_repository_out.csv", ("estimate",)
     )
     shuffle = read_csv(
-        CONTEXT / "label_shuffle_test.csv",
-        ("observed_estimate", "null_mean", "null_sd", "p_value_two_sided"),
+        CONTEXT / "label_shuffle_test.csv", ("p_value_two_sided",)
     ).iloc[0]
+    primary = exactly_one(
+        models, specification="Thread-root triggers, repository and month FE"
+    )
 
-    fig = new_figure(4.50)
-    layout = Layout(left=0.245, right=0.815, top=0.925, bottom=0.090, gap=0.170)
-    top_rect, bottom_rect = layout.rects((1.0, 0.80))
+    fig = new_figure(3.55)
+    layout = Layout(left=0.165, right=0.775, top=0.900, bottom=0.140, gap=0.0)
+    (rect,) = layout.rects((1.0,))
+    ax = fig.add_axes(rect)
 
-    ax = fig.add_axes(top_rect)
-    rows = [
-        ("cross_product", True, "Different product,\nissue link", TEAL, TEAL, "o", 1.0),
-        ("cross_product", False, "Different product,\nno link", TEAL, WHITE, "o", 1.5),
-        ("same_product", True, "Same product,\nissue link", SLATE, SLATE, "s", 1.0),
-        ("same_product", False, "Same product,\nno link", SLATE, WHITE, "s", 1.5),
-    ]
-    y = np.arange(len(rows))[::-1]
-    for position, item in zip(y, rows, strict=True):
-        relation, link, label, edge, face, marker, width = item
-        row = exactly_one(cells, reviewer_relation=relation, body_issue_link=link)
-        value = float(row["answered_rate"]) * 100
-        lollipop(ax, position, 0, value, marker, face, edge, width, size=50.0)
+    series = (
+        ("cross_product", "A different product\nis reviewing", TEAL, "o", "-"),
+        ("same_product", "The same product\nis reviewing", SLATE, "s", (0, (4, 2))),
+    )
+    for relation, label, colour, marker, style in series:
+        values = []
+        for link in (False, True):
+            row = exactly_one(cells, reviewer_relation=relation, body_issue_link=link)
+            values.append(float(row["answered_rate"]) * 100)
+        ax.plot(
+            [0, 1],
+            values,
+            color=colour,
+            linewidth=2.0,
+            linestyle=style,
+            marker=marker,
+            markersize=6.0,
+            markerfacecolor=colour,
+            markeredgecolor=WHITE,
+            markeredgewidth=0.6,
+            clip_on=False,
+            zorder=3,
+        )
+        for position, value in zip((0, 1), values, strict=True):
+            above = relation == "cross_product"
+            ax.text(
+                position,
+                value + (2.4 if above else -2.4),
+                f"{value:.1f}%",
+                ha="center",
+                va="bottom" if above else "top",
+                fontsize=7.3,
+                fontweight="bold",
+                color=colour,
+            )
         ax.text(
-            value + 0.9,
-            position,
-            f"{value:.1f}%  ·  {int(row['answered']):,}/{int(row['prs']):,}",
+            1.06,
+            values[1],
+            label,
             ha="left",
             va="center",
             fontsize=7.2,
-            color=INK,
-        )
-    ax.set_yticks(y, [item[2] for item in rows])
-    ax.set_xlim(0, 34)
-    ax.set_ylim(-0.6, len(rows) - 0.4)
-    ax.set_xlabel("Review points answered within 48 hours (%)")
-    panel_title(ax, "A", "The link only helps across the boundary")
-    category_axis(ax)
-    fit_right_labels(ax)
-
-    ax = fig.add_axes(bottom_rect)
-    forest = [
-        (
-            "Repository\nfixed effects",
-            exactly_one(models, specification="Thread-root triggers, repository FE"),
-            "o",
-            TEAL,
-            1.0,
-        ),
-        (
-            "Repository and\nmonth fixed effects",
-            exactly_one(
-                models, specification="Thread-root triggers, repository and month FE"
-            ),
-            "o",
-            TEAL,
-            1.0,
-        ),
-    ]
-    y = np.arange(len(forest) + 2)[::-1]
-    ax.axvline(0, color=INK, linewidth=0.8, zorder=0)
-    for position, item in zip(y[: len(forest)], forest, strict=True):
-        label, row, marker, colour, width = item
-        estimate = float(row["estimate"]) * 100
-        low = float(row["ci_low"]) * 100
-        high = float(row["ci_high"]) * 100
-        ax.errorbar(
-            estimate,
-            position,
-            xerr=np.array([[estimate - low], [high - estimate]]),
-            fmt=marker,
             color=colour,
-            ecolor=colour,
-            markerfacecolor=colour,
-            markeredgecolor=WHITE,
-            markeredgewidth=0.5,
-            markersize=5.6,
-            capsize=2.6,
-            elinewidth=1.5,
-            zorder=3,
-        )
-        ax.text(
-            estimate,
-            position + 0.22,
-            minus(f"{estimate:+.1f}  [{low:+.1f}, {high:+.1f}]"),
-            ha="center",
-            va="bottom",
-            fontsize=7.1,
-            color=INK,
         )
 
-    low_range = float(loo["estimate"].min()) * 100
-    high_range = float(loo["estimate"].max()) * 100
-    position = y[len(forest)]
-    ax.hlines(position, low_range, high_range, color=SLATE, linewidth=2.4, zorder=3)
-    ax.scatter(
-        [low_range, high_range],
-        [position, position],
-        marker="|",
-        s=60,
-        color=SLATE,
-        zorder=3,
-    )
+    ax.set_xlim(-0.12, 1.12)
+    ax.set_ylim(0, 34)
+    ax.set_xticks([0, 1], ["No issue link", "PR body links an issue"])
+    ax.set_ylabel("Review points answered\nwithin 48 hours (%)")
+    panel_title(ax, "", "Task context only helps across the boundary")
+    clean_axis(ax, "y")
+
+    estimates = loo["estimate"].to_numpy() * 100
     ax.text(
-        (low_range + high_range) / 2,
-        position + 0.22,
-        minus(f"{low_range:+.1f} to {high_range:+.1f}"),
-        ha="center",
+        0.015,
+        0.035,
+        minus(
+            f"gap between the two slopes: {float(primary['estimate']) * 100:+.1f} pp "
+            f"[{float(primary['ci_low']) * 100:+.1f}, "
+            f"{float(primary['ci_high']) * 100:+.1f}]\n"
+            f"holds from {estimates.min():+.1f} to {estimates.max():+.1f} when any one "
+            f"repository is dropped\n"
+            f"shuffling the link label gives "
+            f"p = {float(shuffle['p_value_two_sided']):.3f}"
+        ),
+        transform=ax.transAxes,
+        ha="left",
         va="bottom",
         fontsize=7.1,
-        color=INK,
-    )
-
-    null_mean = float(shuffle["null_mean"]) * 100
-    null_sd = float(shuffle["null_sd"]) * 100
-    position = y[len(forest) + 1]
-    ax.errorbar(
-        null_mean,
-        position,
-        xerr=1.96 * null_sd,
-        fmt="D",
         color=SLATE,
-        ecolor=SLATE,
-        markerfacecolor=WHITE,
-        markeredgecolor=SLATE,
-        markeredgewidth=1.1,
-        markersize=5.0,
-        capsize=2.6,
-        elinewidth=1.4,
-        linestyle=(0, (3, 2)),
-        zorder=3,
-    )
-    ax.text(
-        null_mean,
-        position + 0.22,
-        f"shuffled label, p = {float(shuffle['p_value_two_sided']):.3f}",
-        ha="center",
-        va="bottom",
-        fontsize=7.1,
-        color=INK,
     )
 
-    ax.set_yticks(
-        y,
-        [
-            forest[0][0],
-            forest[1][0],
-            "Leave one\nrepository out",
-            "Shuffled link\nlabel",
-        ],
-    )
-    ax.set_xlim(-12, 28)
-    ax.set_ylim(-0.75, len(y) - 0.35)
-    ax.set_xlabel("Difference in differences, answered rate (pp)")
-    panel_title(ax, "B", "The gap survives every check we ran")
-    category_axis(ax)
-
-    save(fig, "Fig7_v2")
+    save(fig, "Fig6_v2")
 
 
 def main() -> None:
@@ -1754,11 +1289,10 @@ def main() -> None:
     figure_measurement_contract()
     figure_participation()
     figure_boundary()
-    figure_later_state()
+    figure_merge_curves()
     figure_sensitivity()
-    figure_extensions()
     figure_task_context()
-    stems = [f"Fig{index}_v2" for index in range(1, 8)]
+    stems = [f"Fig{index}_v2" for index in range(1, 7)]
     written = sorted(path.name for path in OUTPUT.glob("Fig*_v2.*"))
     proofs = write_colour_proofs(stems)
     print(
