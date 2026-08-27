@@ -1,0 +1,234 @@
+% Figure 1, drawn in TikZ.
+%
+% Every actor, clock reading and discarded event below is a macro defined in
+% fig1_values.tex, which scripts/figures/generate_figure1_macros.py writes from
+% outputs/worked_example/. Nothing here is an illustration and nothing here is
+% a literal number: change the worked example and this diagram follows it.
+%
+% Geometry. The canvas is 130 mm wide, a hair under the 372 pt text width, so
+% the picture never overfills \linewidth. Cards sit on one shared four-column
+% grid (width 27 mm, gutter 22/3 mm) that Panel A's chain and Panel B's ladder
+% both use, so the two panels line up column for column. Corner radius is 2 mm
+% on every card, stroke weight 0.4 pt on every card border, and arrows are
+% shortened by 0.6 mm at each end so they start and stop on a node border
+% rather than crossing it.
+%
+% Height matters as much as width. The picture is 138.5 mm tall; with the
+% caption that is just inside what sn-jnl will place at the top of a text page,
+% and a few millimetres more sends the float off to a page of its own several
+% pages after the sentence that refers to it. Keep it under 140 mm.
+%
+% Colour. The icons carry the palette, so the accents follow them rather than
+% competing: purple for the product that wrote the change, blue for the product
+% that reviewed it, green for the person, orange for the merge, and the same
+% four hues run up the ladder. Every piece of text is a dark ink on white or on
+% a very light tint of its own hue, so nothing falls below 4.5:1.
+
+\begingroup
+% Narrow ragged nodes are deliberately loose; their badness is not a defect.
+\hbadness=10000
+\vbadness=10000
+
+\definecolor{FigOnePurple}{HTML}{5B2E9E}
+\definecolor{FigOneBlue}{HTML}{1A5FB4}
+\definecolor{FigOneGreen}{HTML}{15703F}
+\definecolor{FigOneOrange}{HTML}{A8480A}
+\definecolor{FigOneBrick}{HTML}{A93B1E}
+\definecolor{FigOneInk}{HTML}{1F2328}
+\definecolor{FigOneSlate}{HTML}{464D57}
+\definecolor{FigOnePurpleTint}{HTML}{F5F1FD}
+\definecolor{FigOneBlueTint}{HTML}{EEF4FD}
+\definecolor{FigOneGreenTint}{HTML}{EDF7F1}
+\definecolor{FigOneOrangeTint}{HTML}{FDF4EC}
+\definecolor{FigOneBrickTint}{HTML}{FBF0EC}
+\definecolor{FigOneHair}{HTML}{C8CED7}
+
+\newcommand{\FigOneTitleFont}{\normalfont\sffamily\bfseries\fontsize{9}{10.8}\selectfont}
+\newcommand{\FigOneNameFont}{\normalfont\sffamily\bfseries\fontsize{9}{10.4}\selectfont}
+\newcommand{\FigOneBodyFont}{\normalfont\sffamily\fontsize{8}{9.5}\selectfont}
+\newcommand{\FigOneBoldBodyFont}{\normalfont\sffamily\bfseries\fontsize{8}{9.5}\selectfont}
+
+\begin{tikzpicture}[
+  x=1mm, y=1mm,
+  every node/.style={inner sep=0pt, outer sep=0pt},
+  card/.style={rounded corners=2mm, line width=0.4pt},
+  chainarrow/.style={-{Stealth[length=1.9mm, width=1.5mm]}, line width=0.7pt,
+                     shorten >=0.6mm, shorten <=0.6mm, color=FigOneSlate},
+  edgearrow/.style={-{Stealth[length=2.4mm, width=2.0mm]}, line width=1.5pt,
+                    shorten >=0.6mm, shorten <=0.6mm, color=FigOneGreen},
+  tag/.style={rounded corners=1mm, line width=0.4pt,
+              draw=FigOneBrick, fill=FigOneBrickTint},
+  axisline/.style={line width=0.6pt, color=FigOneSlate},
+  hair/.style={line width=0.4pt, color=FigOneHair},
+]
+
+\useasboundingbox (0,-138.5) rectangle (130,0);
+
+% ---------------------------------------------------------------- Panel A ---
+\draw[fill=FigOneInk, draw=none, rounded corners=1.2mm]
+  (0,-6.4) rectangle (5.4,-1.0);
+\node[anchor=center, text=white, font=\FigOneNameFont] at (2.7,-3.7) {A};
+\node[anchor=north west, text width=122mm, align=left, text=FigOneInk,
+      font=\FigOneTitleFont] at (7.4,-1.1)
+  {One real pull request, \FigOneRepo: both coding products act on it, but the
+   only visible connection to the change being merged runs through a person.};
+
+% The chain. Four columns on the shared grid: who wrote the change, who
+% reviewed it, who answered, and the outcome.
+\draw[card, fill=FigOnePurpleTint, draw=FigOnePurple] (0,-11) rectangle (27,-39);
+\draw[card, fill=FigOneBlueTint,   draw=FigOneBlue]   (34.3333,-11) rectangle (61.3333,-39);
+\draw[card, fill=FigOneGreenTint,  draw=FigOneGreen]  (68.6667,-11) rectangle (95.6667,-39);
+\draw[card, fill=FigOneOrangeTint, draw=FigOneOrange] (103,-11) rectangle (130,-39);
+
+\node[anchor=center] at (13.5,-19.5)    {\includegraphics[height=12mm]{fig1-robot-purple-code.png}};
+\node[anchor=center] at (47.8333,-19.5) {\includegraphics[height=12mm]{fig1-robot-blue-chat.png}};
+\node[anchor=center] at (82.1667,-19.5) {\includegraphics[height=12mm]{fig1-developer-github-laptop.png}};
+\node[anchor=center] at (116.5,-19.5)   {\includegraphics[height=12mm]{fig1-git-branch-orange.png}};
+
+\node[anchor=north, text=FigOnePurple, font=\FigOneNameFont] at (13.5,-26.6)    {\FigOneAuthor};
+\node[anchor=north, text=FigOneBlue,   font=\FigOneNameFont] at (47.8333,-26.6) {\FigOneReviewer};
+\node[anchor=north, text=FigOneGreen,  font=\FigOneNameFont] at (82.1667,-26.6) {\FigOnePerson};
+\node[anchor=north, text=FigOneOrange, font=\FigOneNameFont] at (116.5,-26.6)   {merged};
+
+\node[anchor=north, text width=23mm, align=center, text=FigOneInk,
+      font=\FigOneBodyFont] at (13.5,-30.4) {wrote the change};
+\node[anchor=north, text width=23mm, align=center, text=FigOneInk,
+      font=\FigOneBodyFont] at (47.8333,-30.4) {posted the review comment};
+\node[anchor=north, text width=23mm, align=center, text=FigOneInk,
+      font=\FigOneBodyFont] at (82.1667,-30.4) {replied, naming that comment};
+\node[anchor=north, text width=23mm, align=center, text=FigOneInk,
+      font=\FigOneBodyFont] at (116.5,-30.4) {on day \FigOneMergeDays};
+
+\draw[chainarrow] (27,-19.5) -- (34.3333,-19.5);
+\draw[edgearrow]  (61.3333,-19.5) -- (68.6667,-19.5);
+\draw[chainarrow] (95.6667,-19.5) -- (103,-19.5);
+
+% The edge that carries the change forward is the one that leaves the products,
+% so it is named. The label hangs below the chain, clear of every card.
+\draw[line width=0.4pt, color=FigOneGreen] (65,-19.5) -- (65,-39.8);
+\node[anchor=north, text width=60mm, align=center, text=FigOneGreen,
+      font=\FigOneBoldBodyFont] at (65,-40.7)
+  {the only edge the record can show};
+
+% What the rules throw away hangs off the chain rather than sitting on it. The
+% drop line runs down the left of the reviewing product's card so that it does
+% not cross the green label above.
+\draw[hair, dash pattern=on 1mm off 0.8mm] (38,-39) -- (38,-45.5);
+\draw[card, fill=white, draw=FigOneBrick, dash pattern=on 1.4mm off 1.1mm]
+  (0,-45.5) rectangle (130,-67.5);
+\node[anchor=center] at (12,-56.5) {\includegraphics[width=20mm]{fig1-bubble-group-dashed.png}};
+\node[anchor=north west, text width=104mm, align=left, text=FigOneBrick,
+      font=\FigOneBoldBodyFont] at (24,-47.3)
+  {Discarded on the way: two more \FigOneReviewer{} events, and the rule that
+   caught each. Neither can count as an answer.};
+
+\draw[tag] (24,-59.1) rectangle (54,-54.7);
+\node[anchor=center, text=FigOneBrick, font=\FigOneBoldBodyFont] at (39,-56.9)
+  {\FigOneDropOneRule};
+\node[anchor=north west, text width=51mm, align=left, text=FigOneInk,
+      font=\FigOneBodyFont] at (24,-60.1) {\FigOneDropOneEvent};
+
+\draw[tag] (78,-59.1) rectangle (114,-54.7);
+\node[anchor=center, text=FigOneBrick, font=\FigOneBoldBodyFont] at (96,-56.9)
+  {\FigOneDropTwoRule};
+\node[anchor=north west, text width=51mm, align=left, text=FigOneInk,
+      font=\FigOneBodyFont] at (78,-60.1) {\FigOneDropTwoEvent};
+
+% The time axis. It is linear in hours and its span comes from the worked
+% example, so the merge sits where it actually landed relative to the landmark.
+\pgfmathsetmacro{\FigOneAxLeft}{6}
+\pgfmathsetmacro{\FigOneAxRight}{124}
+\pgfmathsetmacro{\FigOneAxK}{(\FigOneAxRight-\FigOneAxLeft)/\FigOneAxisMax}
+\pgfmathsetmacro{\FigOneXBurst}{\FigOneAxLeft+\FigOneBurstEndAt*\FigOneAxK}
+\pgfmathsetmacro{\FigOneXReply}{\FigOneAxLeft+\FigOneReplyAt*\FigOneAxK}
+\pgfmathsetmacro{\FigOneXLand}{\FigOneAxLeft+\FigOneLandmarkAt*\FigOneAxK}
+\pgfmathsetmacro{\FigOneXMerge}{\FigOneAxLeft+\FigOneMergeAt*\FigOneAxK}
+
+\node[anchor=north west, text width=122mm, align=left, text=FigOneSlate,
+      font=\FigOneBoldBodyFont] at (0,-71.5)
+  {Time after \FigOneReviewer's review comment, linear in hours.};
+
+% The band from the landmark to the right-hand end is the interval in which a
+% merge counts. The burst window is the same shape at the other end of the
+% axis, and on a true linear scale it is a hairline: five minutes really is
+% that small beside fifty hours, which is what the leader line points out.
+\fill[FigOneGreenTint] (\FigOneXLand,-90.6) rectangle (\FigOneAxRight,-85.4);
+\fill[FigOneBrick]     (\FigOneAxLeft,-90.6) rectangle (\FigOneXBurst,-85.4);
+\draw[axisline, -{Stealth[length=2mm, width=1.6mm]}]
+  (\FigOneAxLeft,-88) -- (\FigOneAxRight+1.5,-88);
+\foreach \tick in {\FigOneAxLeft, \FigOneXReply, \FigOneXLand, \FigOneXMerge}
+  \draw[axisline] (\tick,-90.6) -- (\tick,-85.4);
+
+\fill[FigOneBlue]   (\FigOneAxLeft,-88) circle (1.15mm);
+\fill[FigOneGreen]  (\FigOneXReply,-88) circle (1.15mm);
+\fill[FigOneOrange] (\FigOneXMerge,-88) circle (1.15mm);
+\draw[line width=0.4pt, color=white] (\FigOneAxLeft,-88) circle (1.15mm);
+\draw[line width=0.4pt, color=white] (\FigOneXReply,-88) circle (1.15mm);
+\draw[line width=0.4pt, color=white] (\FigOneXMerge,-88) circle (1.15mm);
+
+\node[anchor=south west, text width=30mm, align=left, text=FigOneInk,
+      font=\FigOneBodyFont] at (4,-84.9)
+  {\textbf{review comment} \\ 0\,h, the trigger};
+\node[anchor=south, text width=40mm, align=center, text=FigOneInk,
+      font=\FigOneBodyFont] at (\FigOneXReply,-84.9)
+  {\textbf{qualifying reply} \\ \FigOneReplyHours\,h, from \FigOnePerson};
+
+\node[anchor=center] at (\FigOneXLand,-81.3)
+  {\includegraphics[height=6mm]{fig1-calendar-48h.png}};
+\node[anchor=east, text width=28mm, align=right, text=FigOneInk,
+      font=\FigOneBodyFont] at (110,-81.3)
+  {hour \FigOneLandmarkHours: merges start being counted};
+
+\draw[line width=0.4pt, color=FigOneBrick] (\FigOneXBurst,-90.6) -- (8.5,-92.2);
+\node[anchor=north west, text width=50mm, align=left, text=FigOneBrick,
+      font=\FigOneBodyFont] at (4,-91.4)
+  {first \FigOneBurstMinutes\,min: the burst window};
+\node[anchor=north east, text width=40mm, align=right, text=FigOneInk,
+      font=\FigOneBodyFont] at (\FigOneAxRight,-91.4)
+  {\textbf{merged}, day \FigOneMergeDays};
+
+% ---------------------------------------------------------------- Panel B ---
+\draw[fill=FigOneInk, draw=none, rounded corners=1.2mm]
+  (0,-108.4) rectangle (5.4,-103.0);
+\node[anchor=center, text=white, font=\FigOneNameFont] at (2.7,-105.7) {B};
+\node[anchor=north west, text width=86mm, align=left, text=FigOneInk,
+      font=\FigOneTitleFont] at (7.4,-103.1)
+  {The evidence ladder: four rungs the paper never treats as one.};
+\node[anchor=east] at (130,-105.7)
+  {\includegraphics[width=32mm]{fig1-pill-weaker-to-stronger.png}};
+
+\draw[card, fill=FigOnePurpleTint, draw=FigOnePurple] (0,-113.5) rectangle (27,-137.5);
+\draw[card, fill=FigOneBlueTint,   draw=FigOneBlue]   (34.3333,-113.5) rectangle (61.3333,-137.5);
+\draw[card, fill=FigOneGreenTint,  draw=FigOneGreen]  (68.6667,-113.5) rectangle (95.6667,-137.5);
+\draw[card, fill=FigOneOrangeTint, draw=FigOneOrange] (103,-113.5) rectangle (130,-137.5);
+
+\node[anchor=center] at (13.5,-117.6)    {\includegraphics[height=6.5mm]{fig1-number-1.png}};
+\node[anchor=center] at (47.8333,-117.6) {\includegraphics[height=6.5mm]{fig1-number-2.png}};
+\node[anchor=center] at (82.1667,-117.6) {\includegraphics[height=6.5mm]{fig1-number-3.png}};
+\node[anchor=center] at (116.5,-117.6)   {\includegraphics[height=6.5mm]{fig1-number-4.png}};
+
+\node[anchor=north, text=FigOnePurple, font=\FigOneNameFont] at (13.5,-121.9)    {Both present};
+\node[anchor=north, text=FigOneBlue,   font=\FigOneNameFont] at (47.8333,-121.9) {Acted on};
+\node[anchor=north, text=FigOneGreen,  font=\FigOneNameFont] at (82.1667,-121.9) {Answered};
+\node[anchor=north, text=FigOneOrange, font=\FigOneNameFont] at (116.5,-121.9)   {Accepted};
+
+\node[anchor=north, text width=24mm, align=center, text=FigOneInk,
+      font=\FigOneBodyFont] at (13.5,-125.7)
+  {two products act on the same pull request};
+\node[anchor=north, text width=24mm, align=center, text=FigOneInk,
+      font=\FigOneBodyFont] at (47.8333,-125.7)
+  {somebody takes the next visible step};
+\node[anchor=north, text width=24mm, align=center, text=FigOneInk,
+      font=\FigOneBodyFont] at (82.1667,-125.7)
+  {a reply names that comment, and GitHub records it};
+\node[anchor=north, text width=24mm, align=center, text=FigOneInk,
+      font=\FigOneBodyFont] at (116.5,-125.7)
+  {the pull request merges, counted from hour \FigOneLandmarkHours};
+
+\draw[chainarrow] (27,-125.5) -- (34.3333,-125.5);
+\draw[chainarrow] (61.3333,-125.5) -- (68.6667,-125.5);
+\draw[chainarrow] (95.6667,-125.5) -- (103,-125.5);
+
+\end{tikzpicture}
+
+\endgroup

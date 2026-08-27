@@ -10,6 +10,11 @@
 \usepackage{booktabs}
 \usepackage{xurl}
 \usepackage{placeins}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+% Figure 1 is drawn in TikZ from the worked example. fig1_values.tex is written
+% by scripts/figures/generate_figure1_macros.py -- do not edit it by hand.
+\input{fig1_values}
 \raggedbottom
 \setlength{\bibsep}{0.25em}
 
@@ -495,15 +500,16 @@ count of replies is never set beside a count of pull requests.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{Fig1.pdf}
+\input{fig1_diagram}
 \caption{The whole argument on one real pull request. Panel A follows a change
-Devin wrote and Copilot reviewed, in the repository \texttt{liam-hq/liam}, which
-is the first pull request in our data that exercises every rule. Two products
-took part, but the only step the record can show as an answer is the one that
-leaves them: a person replies 22.5 hours later, and the change merges on day 2.1.
-Two further Copilot events are dropped on the way, each labelled with the rule
-that caught it. Panel B names the four levels of proof the paper keeps apart,
-weakest first.}
+Devin wrote and Copilot reviewed in \texttt{liam-hq/liam}, the first pull request
+in our data that exercises every rule. Two products took part, but the only step
+the record can show as an answer is the one that leaves them: a person replies
+22.5 hours later, and the change merges on day 2.1. Two further Copilot events are
+dropped along the way, each labelled with the rule that caught it. The axis is
+linear in hours, and two of its marks are ours rather than this pull request's:
+the five-minute burst window is a design choice, and hour 48 is where merges start
+being counted. Panel B is the evidence ladder, weakest rung first.}
 \label{fig:contract}
 \end{figure}
 

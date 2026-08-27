@@ -42,7 +42,7 @@ The paper does not depend on semantic same-locus labels or exact-file task-conti
 - Automated tests: 37 passed; one non-failing sortedness warning.
 - The executable notebook completed successfully.
 - Both LaTeX logs contain no errors, overfull boxes, undefined citations/references, or rerun warnings.
-- Manuscript: 36 A4 pages. Supplementary Information: 34 A4 pages. Both counts are read from the built PDFs on the date of this report; re-measure rather than trusting them after any edit.
+- Manuscript: 36 A4 pages. Supplementary Information: 33 A4 pages. Both counts are read from the built PDFs on the date of this report; re-measure rather than trusting them after any edit.
 - Page-complete visual QA inspected all 30 pages after the final build. No clipping, unreadable figure text, float-order error, duplicate caption, or blank page remains.
 - All PDF fonts are embedded and no Type 3 font is present.
 - PDF text and packaged source contain no local drive, user-profile, cache, or external-raw-data path.

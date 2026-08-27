@@ -147,17 +147,24 @@ try {
     Invoke-Checked $pythonExe scripts\validation\validate_coordination_extension_outputs.py
     Assert-ProjectFile "scripts\figures\visualize_manuscript_figures.py"
     Invoke-Checked $pythonExe scripts\figures\visualize_manuscript_figures.py
+    # Figure 1 is drawn in TikZ inside the manuscript and reads its numbers from
+    # generated macros, so they are rewritten from the worked example here.
+    Assert-ProjectFile "scripts\figures\generate_figure1_macros.py"
+    Invoke-Checked $pythonExe scripts\figures\generate_figure1_macros.py
     Invoke-Checked uv run --with pytest python -m pytest -q
     Invoke-Checked $pythonExe scripts\reporting\build_handoff_notebook.py
     Invoke-Checked $pythonExe scripts\reporting\execute_notebook.py notebooks\02_artifact_handoff_exploration.ipynb
 
-    foreach ($index in 1..6) {
+    # Figure 1 is a TikZ diagram in the manuscript, not a rendered PDF, so the
+    # rendered set starts at 2. The matplotlib version is still generated and
+    # still gated; it is simply not the one the article prints.
+    foreach ($index in 2..6) {
         Assert-ProjectFile "build\figures\Fig${index}_v2.pdf"
     }
     Assert-ProjectFile "outputs\figures\dataset_schema_and_joins.pdf"
     Assert-ProjectFile "outputs\figures\anchorable_channel_coverage.pdf"
     Assert-ProjectFile "outputs\figures\burst_threshold_sensitivity.pdf"
-    foreach ($index in 1..6) {
+    foreach ($index in 2..6) {
         Copy-Item (Join-Path $projectRoot "build\figures\Fig${index}_v2.pdf") (Join-Path $manuscriptDir "Fig${index}.pdf") -Force
     }
     Copy-Item outputs\figures\dataset_schema_and_joins.pdf paper\manuscript\FigS1.pdf -Force

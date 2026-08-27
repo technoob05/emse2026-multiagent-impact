@@ -43,8 +43,17 @@ def main() -> None:
         len(re.findall(r"\\label\{tab:s-", path.read_text(encoding="utf-8")))
         for path in appendix_sources
     )
-    figures = len(list(MANUSCRIPT.glob("Fig[0-9].pdf")))
-    supplementary = len(list(MANUSCRIPT.glob("FigS[0-9].pdf")))
+    # Count figures the documents actually declare, not PDF files on disk:
+    # Figure 1 is a TikZ diagram with no PDF of its own, so globbing under-counts.
+    figures = len(
+        re.findall(r"\\label\{fig:", (MANUSCRIPT / "main.tex").read_text(encoding="utf-8"))
+    )
+    supplementary = len(
+        re.findall(
+            r"\\includegraphics\[[^\]]*\]\{FigS",
+            (MANUSCRIPT / "technical_appendix.tex").read_text(encoding="utf-8"),
+        )
+    )
 
     edits = (
         (

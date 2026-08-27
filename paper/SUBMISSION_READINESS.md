@@ -26,13 +26,13 @@ The four-RQ analysis, its figures, the Supplementary Information, the validation
 - [x] Attractive persistence, escalation, one-way takeover, routing, memory-to-merge, task-breadth, and exact-file claims that failed stronger checks are rejected or moved to the appendix.
 - [x] Structural overlap covers the full 167-locus population and remains semantically unlabeled.
 - [x] 6 answer-first figures are exported at the journal's exact 372 pt text width, embed non-Type-3 fonts, and pass an automated geometry gate for clipping, overlap, and the 8 pt type floor Springer states. Each carries a different visual form; none is a forest plot. Colour-vision and greyscale proofs are regenerated with every build.
-- [x] 4 appendix figures explain dataset layers, joins, and feature-specific denominators.
+- [x] 3 appendix figures explain dataset layers, joins, and feature-specific denominators.
 - [x] A separate generated appendix contains data contracts, joins, all estimates, robustness checks, falsification tests, quality gates, and experiment decisions.
 - [x] Fifteen external candidates were compatibility-screened; 11 acquisitions were pinned with revision, license, integrity, and release-boundary records.
 - [x] The complete SWE-Review-Chat topology audit was fail-closed after AIDev overlap removal; incompatible sources were not pooled into the RQs.
 - [x] AI use, coverage limits, and non-causal scope are disclosed.
 - [x] Build and package scripts compile both PDFs, scan logs, make a complete archival source bundle, and stage a main-only flat source ZIP plus `ESM_1.pdf` for the portal.
-- [x] Page-complete visual QA covers all 36 manuscript pages and all 34 Supplementary Information pages, which carry 13 tables.
+- [x] Page-complete visual QA covers all 36 manuscript pages and all 33 Supplementary Information pages, which carry 12 tables.
 - [x] Official venue requirements were rechecked on 2026-08-26 and mapped to project files.
 
 ## Scientific and production gates before upload

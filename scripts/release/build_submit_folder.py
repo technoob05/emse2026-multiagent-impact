@@ -17,6 +17,7 @@ import hashlib
 import pathlib
 import shutil
 import sys
+import re
 import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -34,7 +35,46 @@ SOURCE_FILES = (
 
 
 def figure_files() -> list[str]:
-    return sorted(path.name for path in MANUSCRIPT.glob("Fig[0-9].pdf"))
+    """Every file main.tex needs beyond the four fixed ones.
+
+    Read from main.tex rather than globbed, because Figure 1 is a TikZ diagram
+    that inputs its own .tex files and includes PNG icons: a glob for Fig*.pdf
+    would silently ship an archive that does not compile.
+    """
+    source = (MANUSCRIPT / "main.tex").read_text(encoding="utf-8")
+    wanted: list[str] = []
+
+    for stem in re.findall(r"\\input\{([^}]+)\}", source):
+        name = stem if stem.endswith(".tex") else f"{stem}.tex"
+        wanted.append(name)
+
+    for name in re.findall(r"\\includegraphics\[[^\]]*\]\{([^}]+)\}", source):
+        wanted.append(name)
+
+    # An inputted file can include graphics of its own.
+    for name in list(wanted):
+        included = MANUSCRIPT / name
+        if included.suffix == ".tex" and included.exists():
+            body = included.read_text(encoding="utf-8")
+            wanted += re.findall(r"\\includegraphics\[[^\]]*\]\{([^}]+)\}", body)
+
+    resolved: list[str] = []
+    for name in wanted:
+        if (MANUSCRIPT / name).exists():
+            resolved.append(name)
+            continue
+        # \includegraphics is usually written without the extension.
+        for suffix in (".pdf", ".png", ".jpg"):
+            if (MANUSCRIPT / f"{name}{suffix}").exists():
+                resolved.append(f"{name}{suffix}")
+                break
+        else:
+            raise SystemExit(
+                f"main.tex needs {name!r} and it is not in {MANUSCRIPT}; "
+                "the source archive would not compile"
+            )
+
+    return sorted(dict.fromkeys(resolved))
 
 
 def staleness_report() -> list[str]:
