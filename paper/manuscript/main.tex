@@ -17,7 +17,7 @@
 
 \title[Participation Is Not Collaboration]{Participation Is Not Collaboration: Tracing Public Ownership After Cross-Product Agent Review}
 
-\author*[1,2]{\fnm{Duy Minh} \sur{Dao Sy}}\email{Corresponding email pending}
+\author*[1,2]{\fnm{Duy Minh} \sur{Dao Sy}}\email{23122041@student.hcmus.edu.vn}
 \equalcont{Duy Minh Dao Sy and Trung Kiet Huynh contributed equally to this work.}
 
 \author[1,2]{\fnm{Trung Kiet} \sur{Huynh}}
@@ -34,7 +34,7 @@
 \affil[2]{\orgname{Vietnam National University Ho Chi Minh City (VNU-HCM)},
   \orgaddress{\city{Ho Chi Minh City}, \country{Vietnam}}}
 
-\abstract{\textbf{Context:} A pull request written by one coding-agent product and reviewed by another looks like a multi-agent workflow, but two products on one pull request do not show that either answered the other. \textbf{Objective:} We ask what connected public path follows one cross-product review comment. \textbf{Method:} From one fixed version of the AIDev dataset we analyse 8,608 pull requests where one product reviewed another's change, 546 matched pairs, and a 1,067-request outcome group. Every event is tied to one review comment by exact account and comment identifiers. We set aside the first minutes of automated posting, count outcomes only after hour 48 so that cause precedes effect, and re-test the rule with deliberately wrong anchors. \textbf{Results:} Direct dialogue between products is rare; once the opening minutes are set aside, people take most remaining first actions. Cross-product review draws 13 percentage points less visible follow-up than matched same-product review. A reply that GitHub records as answering the comment goes with 17 points more later merging, and a person writes it four times in five. The wrong-anchor tests then qualify that: a reply attached anywhere else does as well, and shuffling which comment each reply answers leaves the estimate unmoved. Reading all 105 replies, the association sits with those a person wrote, not with one-click hand-offs to another machine. Linking an issue in the request roughly doubles the chance a review point is answered across a product boundary, and changes nothing within one product. \textbf{Conclusions:} Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention, not a resolved review point.}
+\abstract{\textbf{Context:} A pull request written by one coding-agent product and reviewed by another looks like a multi-agent workflow, but two products on one pull request do not show that either answered the other. \textbf{Objective:} We ask what connected public path follows one cross-product review comment. \textbf{Method:} From one fixed version of the AIDev dataset we analyse 8,608 pull requests where one product reviewed another's change, 546 matched pairs, and a 1,067-request outcome group. Measured activity is anchored to that comment by exact account, comment, and review-batch identifiers. We set aside the first minutes of automated posting, count outcomes only after hour 48 so the exposure precedes the outcome, and re-test the rule with deliberately wrong anchors. \textbf{Results:} Direct dialogue between products is rare; once the opening minutes are set aside, people take most remaining first actions. Cross-product review draws 13 percentage points less visible follow-up than matched same-product review. A reply that GitHub records as answering the comment goes with 17 points more later merging, and a person writes it four times in five. The wrong-anchor tests then qualify that: a reply attached anywhere else does as well, and shuffling which comment each reply answers leaves the estimate unmoved. Reading all 105 replies, the association sits with those a person wrote, not with one-click hand-offs to another machine. Linking an issue in the request roughly doubles the chance a review point is answered across a product boundary, and changes nothing within one product. \textbf{Conclusions:} Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention, not a resolved review point.}
 
 \keywords{coding agents, multi-agent software engineering, code review, human-agent collaboration, pull requests, mining software repositories}
 \maketitle
@@ -590,8 +590,9 @@ one minute; per-product versions of it range from under a minute to about nine,
 with intervals wider than the global one. Fitting the window per product makes it
 less stable, not more.
 
-What matters is that the conclusion does not depend on the choice. We tried nine schemes in all: the five fixed windows, the cut the data chose,
-and two per-product variants. In every one of them, user accounts are the most
+What matters is that the conclusion does not depend on the choice. We tried nine schemes in all: the five fixed windows, two global cuts chosen by
+the change-point rule, one unrestricted and one confined to the burst region, and
+the same two rules applied per product. In every one of them, user accounts are the most
 common post-burst owner and stay ahead of the products, with an interval clear
 of zero. The
 size of the lead moves a good deal, from 19 to 41 points, and the direction never
@@ -638,11 +639,13 @@ quieter boundary leads to more branch movement or more merges.
 One of those outcomes needs a different denominator, and saying why matters more
 than the number. Whether the review point itself gets a reply can only be
 observed when the trigger opens its own inline thread, since that is the only
-case where GitHub records what a reply answers. On 293 of the 546 pairs the
-trigger is a review summary or a comment on the pull request, so no reply can be
-recorded for either side. On 11 more the cross-product trigger opens a thread but
-its matched partner does not, so the outcome is possible on one side only. Those
-11 pull the comparison towards zero from one direction. We therefore estimate
+case where GitHub records what a reply answers. The 546 pairs fall into four groups. On 293 the trigger is a review summary or a
+comment on the pull request, so no reply can be recorded for either side. On one
+pair both triggers sit mid-thread, which blocks both sides as well. On 11 the
+cross-product trigger opens a thread and its matched partner does not, so the
+outcome is possible on one side only, and every one of those 11 runs the same
+way, pulling the comparison towards zero from a single direction. That leaves 241
+pairs where a reply is reachable on both sides. We therefore estimate
 that row on the 241 pairs where a reply is possible on both sides, where the gap
 is $-3.3$ points rather than $-0.9$, still with an interval that spans zero. The
 other five outcomes do not depend on thread position, and we checked that the
@@ -813,8 +816,11 @@ both the reply and the merge. We cannot rule that out, but we can say how strong
 such a factor would have to be. That is what an \emph{E-value} does
 \citep{vanderweele2017evalue}. It asks: how strongly would a hidden factor need
 to be tied to \emph{both} the reply and the merge, over and above everything we
-already control for, before it could account for the whole result? Here the answer is 2.27. Roughly speaking, such a factor would have to more than
-double the odds on both sides at once. The figure shows the same question as a map: the shaded corner is where such
+already control for, before it could account for the whole result? We compute it on the risk-ratio scale, from the adjusted later-merge risk ratio
+implied by our linear-probability estimate, following the standard conversion
+\citep{vanderweele2017evalue}. Here the answer is 2.27, and 1.67 at the interval
+limit. Roughly speaking, a hidden factor would have to more than double the risk
+on both sides at once. The figure shows the same question as a map: the shaded corner is where such
 a factor would have to live, and it is a demanding corner to reach.
 
 A shuffle test gives a second check, one that rests on the design rather than
@@ -926,10 +932,12 @@ A cross-product review point is answered 12.7\% of the time without a link and
 those two differences is 13.3 percentage points (95\% interval: $4.4$ to
 $22.2$) once we compare inside the same repository and the same month.
 
-We tried to break it. The estimate holds when the month is dropped, when
-mid-thread triggers are put back in, and when each of the fifteen most
-influential repositories is removed in turn, which leaves a range of 11.4 to
-16.1 points. Shuffling the link label inside each repository, the way we shuffle
+We tried to break it. The estimate holds when the month is dropped and when each of the fifteen most
+influential repositories is removed in turn, which leaves a range of 11.4 to 16.1
+points. It also holds when mid-thread triggers are put back in. That check keeps
+the outcome definition exactly as it is, so those triggers enter the denominator
+carrying an outcome that cannot occur for them; the estimate falls only slightly,
+to 12.1 points, which is what dilution by impossible cases should do. Shuffling the link label inside each repository, the way we shuffle
 event order in RQ1, gives a reference distribution centred on zero against which
 the observed value sits far out in the tail ($p=0.001$).
 
@@ -1194,29 +1202,45 @@ ask for three things: an addressed edge, a visible owner, and a later state.
 
 \section*{Statements and Declarations}
 
-\noindent\textbf{Funding.} Pending author confirmation.
+\noindent\textbf{Funding.} The authors received no funding for this work.
 
-\noindent\textbf{Competing interests.} Pending author confirmation.
+\noindent\textbf{Competing interests.} The authors declare no competing
+interests. None of the authors is affiliated with, employed by, or funded by any
+of the coding-agent vendors whose products this study measures.
 
-\noindent\textbf{Ethics approval and consent to participate.} This study
-analyses public pull-request records that GitHub already publishes. Final
-institutional wording is pending author confirmation.
+\noindent\textbf{Ethics approval and consent to participate.} Ethics approval
+was not required. This study analyses pull-request records that GitHub already
+publishes, collected through a public research dataset, and involves no
+intervention and no interaction with any person. No participants were recruited,
+so consent to participate does not apply. We report accounts by role rather than
+by login throughout, and the worked example in Figure~\ref{fig:contract} names
+no individual.
 
-\noindent\textbf{Consent for publication.} Pending author confirmation.
+\noindent\textbf{Consent for publication.} Not applicable. This article
+contains no data from any identifiable individual.
 
 \noindent\textbf{Data availability.} The source data are the public
 AIDev-7.6M release at the pinned revision reported in
 Section~\ref{sec:method}. The derived cohorts needed to reproduce every result
-will be archived at [ARTIFACT DOI PENDING].
+are archived at [ARTIFACT DOI PENDING].
 
 \noindent\textbf{Materials availability.} Not applicable. This study uses no
 physical materials.
 
 \noindent\textbf{Code availability.} The analysis and figure code that
-produces every table and figure will be archived with the derived cohorts at
-[ARTIFACT DOI PENDING].
+produces every table and figure in this article and in Online Resource~1 is
+archived with the derived cohorts at [ARTIFACT DOI PENDING] and is also
+available at \url{https://github.com/technoob05/emse2026-multiagent-impact}.
 
-\noindent\textbf{Author contributions.} Pending author confirmation.
+\noindent\textbf{Author contributions.} Duy Minh Dao Sy and Trung Kiet Huynh
+contributed equally and are joint first authors. Duy Minh Dao Sy:
+conceptualisation, methodology, formal analysis, software, visualisation,
+writing of the original draft. Trung Kiet Huynh: conceptualisation, methodology,
+data curation, software, validation, writing through review and editing. Chi
+Nguyen Tran: investigation, data curation, validation. Phu Hoa Pham:
+investigation, software, validation. Lam Phu Quy Nguyen: investigation,
+validation, writing through review and editing. All authors read and approved
+the final manuscript.
 
 \bibliography{references}
 
