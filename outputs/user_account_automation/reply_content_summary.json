@@ -1,0 +1,85 @@
+{
+  "user_written_edges": 105,
+  "all_edges": 128,
+  "substantive_min_words": 12,
+  "categories_over_user_written_edges": {
+    "platform_generated": {
+      "edges": 4,
+      "share": 0.0380952380952381,
+      "prs": 4
+    },
+    "agent_invocation": {
+      "edges": 14,
+      "share": 0.13333333333333333,
+      "prs": 11
+    },
+    "acknowledgement_only": {
+      "edges": 28,
+      "share": 0.26666666666666666,
+      "prs": 28
+    },
+    "substantive_response": {
+      "edges": 59,
+      "share": 0.5619047619047619,
+      "prs": 56
+    }
+  },
+  "categories_over_all_edges": {
+    "platform_generated": {
+      "edges": 4,
+      "share": 0.03125
+    },
+    "agent_invocation": {
+      "edges": 14,
+      "share": 0.109375
+    },
+    "acknowledgement_only": {
+      "edges": 31,
+      "share": 0.2421875
+    },
+    "substantive_response": {
+      "edges": 79,
+      "share": 0.6171875
+    }
+  },
+  "routing_edges_user_written": 18,
+  "routing_share_user_written": 0.17142857142857143,
+  "rule_versus_reading": {
+    "edges_hand_read": 105,
+    "disagreements": 10,
+    "disagreement_rate": 0.09523809523809523,
+    "agreement_rate": 0.9047619047619048,
+    "direction": "every disagreement is the word floor misfiling a short technical claim as an acknowledgement, or passing a long non-technical note as substantive; the rule is conservative about what it calls substantive"
+  },
+  "contrast_any_edge": {
+    "estimate": 0.17346523604933012,
+    "ci_low": 0.07255437972242951,
+    "ci_high": 0.27437609237623073,
+    "p_value": 0.0007539549388397667,
+    "exposed_prs": 109
+  },
+  "contrast_substantive_edge": {
+    "estimate": 0.16837129255430577,
+    "ci_low": 0.037373332739716714,
+    "ci_high": 0.29936925236889483,
+    "p_value": 0.011764322543777976,
+    "exposed_prs": 56
+  },
+  "contrast_substantive_edge_restricted": {
+    "estimate": 0.18161843202034483,
+    "ci_low": 0.049593247366865795,
+    "ci_high": 0.3136436166738239,
+    "p_value": 0.007013668585816374,
+    "exposed_prs": 56,
+    "dropped_prs": 53
+  },
+  "contrast_routing_edge": {
+    "estimate": 0.08730772324600704,
+    "ci_low": -0.20618875749871107,
+    "ci_high": 0.3808042039907252,
+    "p_value": 0.559866820411415,
+    "exposed_prs": 15
+  },
+  "interpretation": "of 105 user-written addressed edges, 59 (56.2%) are substantive engineering prose, 18 (17.1%) route the review point onward to a machine or are GitHub's own button text, and 28 are acknowledgement only; the rule and a full hand reading of all 105 texts disagree on 10 rows (9.5%); the adjusted later-merge contrast is 0.1735 [0.0726, 0.2744] for any edge and 0.1684 [0.0374, 0.2994] when only a substantive edge counts as exposure, against 0.0873 [-0.2062, 0.3808] when only a routing edge counts",
+  "scope": "descriptive content classification of the exposure text plus a subgroup re-estimation; the subgroup contrasts are underpowered by construction and are reported as description, not as a causal decomposition"
+}

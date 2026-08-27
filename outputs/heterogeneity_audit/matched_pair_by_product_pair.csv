@@ -1,0 +1,12 @@
+ordered_product_pair,pairs,repositories,qualifies,minimum_pairs_required,cross_rate,same_rate,paired_difference,repository_cluster_ci_low,repository_cluster_ci_high,clustered_ci_reliable,status
+OpenAI_Codex -> Claude_Code,152,19,True,30,0.5986842105263158,0.8552631578947368,-0.2565789473684211,-0.32704974271012005,0.035730519480519245,True,estimated
+OpenAI_Codex -> Copilot,145,50,True,30,0.6413793103448275,0.8413793103448276,-0.2,-0.3181874717322478,-0.05127388535031859,True,estimated
+Copilot -> OpenAI_Codex,73,36,True,30,0.7671232876712328,0.7534246575342466,0.0136986301369863,-0.0989038189533239,0.13793103448275862,True,estimated
+OpenAI_Codex -> Cursor,53,21,True,30,0.660377358490566,0.6792452830188679,-0.018867924528301886,-0.15,0.10909090909090909,True,estimated
+Copilot -> Claude_Code,44,10,True,30,0.7727272727272727,0.75,0.022727272727272728,-0.07142857142857142,0.25,True,estimated
+Copilot -> Cursor,33,16,True,30,0.7575757575757576,0.8181818181818182,-0.06060606060606061,-0.21875,0.05714285714285714,True,estimated
+OpenAI_Codex -> Devin,21,3,False,30,,,,,,False,too few to estimate
+Cursor -> OpenAI_Codex,11,5,False,30,,,,,,False,too few to estimate
+Devin -> Cursor,6,2,False,30,,,,,,False,too few to estimate
+Cursor -> Copilot,5,4,False,30,,,,,,False,too few to estimate
+Cursor -> Claude_Code,3,3,False,30,,,,,,False,too few to estimate

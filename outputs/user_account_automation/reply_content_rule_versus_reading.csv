@@ -1,0 +1,8 @@
+rule_category,human_category,edges
+substantive_response,substantive_response,58
+acknowledgement_only,acknowledgement_only,20
+agent_invocation,agent_invocation,13
+acknowledgement_only,substantive_response,8
+platform_generated,platform_generated,4
+agent_invocation,substantive_response,1
+substantive_response,acknowledgement_only,1

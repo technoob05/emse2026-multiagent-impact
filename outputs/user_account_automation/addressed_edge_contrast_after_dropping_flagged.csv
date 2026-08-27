@@ -1,0 +1,4 @@
+cohort,n_prs,repositories,exposed_prs,unexposed_prs,exposed_raw_merge_rate,unexposed_raw_merge_rate,estimate,ci_low,ci_high,p_value,specification,dropped_prs,flag
+full landmark cohort (published estimate),1067,469,109,958,0.5504587155963303,0.37891440501043844,0.17346523604933012,0.07255437972242951,0.27437609237623073,0.0007539549388397667,"A_pretrigger_only, repository-clustered LPM",,
+dropping PRs whose edge was written by an account tripping >= 2 heuristics,1066,468,108,958,0.5555555555555556,0.37891440501043844,0.17916160922950533,0.07825269831667672,0.2800705201423339,0.0005016495366271722,"A_pretrigger_only, repository-clustered LPM",1.0,flag_combined
+dropping PRs whose edge was written by an account tripping any heuristic,1058,465,100,958,0.53,0.37891440501043844,0.15217988458327736,0.04612671486705268,0.25823305429950205,0.004916875757801126,"A_pretrigger_only, repository-clustered LPM",9.0,flag_any

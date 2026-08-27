@@ -1,0 +1,7 @@
+moderator,familiar_dominant_repositories,newcomer_dominant_repositories,mixed_tie_repositories,familiar_dominant_median,newcomer_dominant_median,median_difference,repository_cluster_ci_low,repository_cluster_ci_high,separates_groups
+pre_total_prs,40,26,3,18.5,5.0,13.5,-3.0,21.5,False
+pre_distinct_contributors,40,26,3,2.0,3.0,-1.0,-2.0,1.5,False
+pre_merge_rate,40,26,3,0.5634920634920635,0.2653958944281525,0.298096169063911,0.04978354978354976,0.4436781609195402,True
+pre_reviews_per_pr,40,26,3,1.4392857142857143,0.23876210235131395,1.2005236119344003,0.495798319327731,1.6212121212121213,True
+pre_share_prs_any_review,40,26,3,0.49,0.13854649743714914,0.35145350256285085,-0.016223054156727666,0.5761070092946574,False
+pre_repo_age_days,40,26,3,70.4669675925926,71.08852430555555,-0.6215567129629562,-127.63484953703704,81.3187696759259,False

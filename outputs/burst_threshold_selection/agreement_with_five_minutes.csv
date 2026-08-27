@@ -1,0 +1,10 @@
+scheme,prs,state_agreement_with_fixed_five_minutes,reclassified_prs
+fixed_0_minutes,8608,0.7994888475836431,1726
+fixed_1_minutes,8608,0.8511849442379182,1281
+fixed_5_minutes,8608,1.0,0
+fixed_10_minutes,8608,0.9119423791821561,758
+fixed_30_minutes,8608,0.7984433085501859,1735
+global_log_hazard_change_point,8608,0.8453763940520446,1331
+global_log_hazard_change_point_burst_region,8608,0.8453763940520446,1331
+product_specific_log_hazard_change_point,8608,0.8026254646840149,1699
+product_specific_log_hazard_change_point_burst_region,8608,0.8718633828996283,1103

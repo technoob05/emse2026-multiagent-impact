@@ -1,0 +1,13 @@
+scope,labelling,category,edges,edges_total,share,prs
+user_written_edges,rule_category,platform_generated,4,105,0.0380952380952381,4
+user_written_edges,rule_category,agent_invocation,14,105,0.13333333333333333,11
+user_written_edges,rule_category,acknowledgement_only,28,105,0.26666666666666666,28
+user_written_edges,rule_category,substantive_response,59,105,0.5619047619047619,56
+user_written_edges,human_category,platform_generated,4,105,0.0380952380952381,4
+user_written_edges,human_category,agent_invocation,13,105,0.12380952380952381,10
+user_written_edges,human_category,acknowledgement_only,21,105,0.2,21
+user_written_edges,human_category,substantive_response,67,105,0.638095238095238,64
+all_edges,rule_category,platform_generated,4,128,0.03125,4
+all_edges,rule_category,agent_invocation,14,128,0.109375,11
+all_edges,rule_category,acknowledgement_only,31,128,0.2421875,31
+all_edges,rule_category,substantive_response,79,128,0.6171875,71

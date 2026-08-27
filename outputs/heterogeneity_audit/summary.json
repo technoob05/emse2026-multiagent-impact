@@ -1,0 +1,313 @@
+{
+  "interpretation": "Observational public traces from AIDev-7.6M; nothing here identifies a causal effect. PART 1: The 13.4 point follow-up gap is a general pattern by the pre-registered rule: it survives dropping any single repository or product pair, and 4 of 6 product pairs large enough to estimate on their own reproduce its sign. The direction is not uniform in size, however: the gap is largest in OpenAI_Codex -> Claude_Code and OpenAI_Codex -> Copilot, only 1 of 6 qualifying pairs has a repository-clustered interval that excludes zero on its own, and the remaining pairs are near zero, so the average is driven by the Codex-authored strata and should be reported as such. The 546 matched pairs are unevenly spread, with the largest single repository holding 20.9 percent of pairs, the largest ordered product pair holding 27.8 percent, and a repository Gini of 0.583. PART 2: The six pre-trigger repository descriptors explain 18.1 percent of the familiar-versus-newcomer gap (40.7 points down to 33.4 points), while repository fixed effects leave 8.7 points with an interval covering zero, so the split is a between-repository difference that our measured governance and volume descriptors do not account for.",
+  "part1_matched_pair_spread": {
+    "overall_gap": {
+      "pairs": 546,
+      "repositories": 149,
+      "cross_rate": 0.6813186813186813,
+      "same_rate": 0.815018315018315,
+      "paired_difference": -0.1336996336996337,
+      "repository_cluster_ci_low": -0.19926850120651357,
+      "repository_cluster_ci_high": -0.03970223325062035
+    },
+    "concentration": {
+      "pairs_total": 546,
+      "repositories": 149,
+      "ordered_product_pairs": 11,
+      "largest_repository": "EvotecIT/OfficeIMO",
+      "largest_repository_pairs": 114,
+      "largest_repository_share": 0.2087912087912088,
+      "largest_product_pair": "OpenAI_Codex -> Claude_Code",
+      "largest_product_pair_pairs": 152,
+      "largest_product_pair_share": 0.2783882783882784,
+      "repository_gini": 0.5834255230228385,
+      "repository_top_decile_share": 0.5183150183150184,
+      "product_pair_gini": 0.5371295371295373,
+      "top_five_repository_share": 0.358974358974359,
+      "top_three_product_pair_share": 0.6776556776556777,
+      "median_pairs_per_repository": 2.0
+    },
+    "minimum_pairs_per_product_pair": 30,
+    "qualifying_product_pairs": [
+      {
+        "ordered_product_pair": "OpenAI_Codex -> Claude_Code",
+        "pairs": 152,
+        "repositories": 19,
+        "paired_difference": -0.2565789473684211,
+        "repository_cluster_ci_low": -0.32704974271012005,
+        "repository_cluster_ci_high": 0.035730519480519245,
+        "clustered_ci_reliable": true
+      },
+      {
+        "ordered_product_pair": "OpenAI_Codex -> Copilot",
+        "pairs": 145,
+        "repositories": 50,
+        "paired_difference": -0.2,
+        "repository_cluster_ci_low": -0.3181874717322478,
+        "repository_cluster_ci_high": -0.05127388535031859,
+        "clustered_ci_reliable": true
+      },
+      {
+        "ordered_product_pair": "Copilot -> OpenAI_Codex",
+        "pairs": 73,
+        "repositories": 36,
+        "paired_difference": 0.0136986301369863,
+        "repository_cluster_ci_low": -0.0989038189533239,
+        "repository_cluster_ci_high": 0.13793103448275862,
+        "clustered_ci_reliable": true
+      },
+      {
+        "ordered_product_pair": "OpenAI_Codex -> Cursor",
+        "pairs": 53,
+        "repositories": 21,
+        "paired_difference": -0.018867924528301886,
+        "repository_cluster_ci_low": -0.15,
+        "repository_cluster_ci_high": 0.10909090909090909,
+        "clustered_ci_reliable": true
+      },
+      {
+        "ordered_product_pair": "Copilot -> Claude_Code",
+        "pairs": 44,
+        "repositories": 10,
+        "paired_difference": 0.022727272727272728,
+        "repository_cluster_ci_low": -0.07142857142857142,
+        "repository_cluster_ci_high": 0.25,
+        "clustered_ci_reliable": true
+      },
+      {
+        "ordered_product_pair": "Copilot -> Cursor",
+        "pairs": 33,
+        "repositories": 16,
+        "paired_difference": -0.06060606060606061,
+        "repository_cluster_ci_low": -0.21875,
+        "repository_cluster_ci_high": 0.05714285714285714,
+        "clustered_ci_reliable": true
+      }
+    ],
+    "too_few_to_estimate": [
+      {
+        "ordered_product_pair": "OpenAI_Codex -> Devin",
+        "pairs": 21,
+        "repositories": 3
+      },
+      {
+        "ordered_product_pair": "Cursor -> OpenAI_Codex",
+        "pairs": 11,
+        "repositories": 5
+      },
+      {
+        "ordered_product_pair": "Devin -> Cursor",
+        "pairs": 6,
+        "repositories": 2
+      },
+      {
+        "ordered_product_pair": "Cursor -> Copilot",
+        "pairs": 5,
+        "repositories": 4
+      },
+      {
+        "ordered_product_pair": "Cursor -> Claude_Code",
+        "pairs": 3,
+        "repositories": 3
+      }
+    ],
+    "leave_one_out_ranges": {
+      "overall_paired_difference": -0.1336996336996337,
+      "repository": {
+        "refits": 149,
+        "min": -0.1388888888888889,
+        "median": -0.13394495412844037,
+        "max": -0.09259259259259259,
+        "all_refits_negative": true,
+        "most_influential_unit": "EvotecIT/OfficeIMO",
+        "largest_absolute_shift": 0.04110704110704111
+      },
+      "ordered_product_pair": {
+        "refits": 11,
+        "min": -0.15644820295983086,
+        "median": -0.13703703703703704,
+        "max": -0.08629441624365482,
+        "all_refits_negative": true,
+        "most_influential_unit": "OpenAI_Codex -> Claude_Code",
+        "largest_absolute_shift": 0.04740521745597888
+      }
+    },
+    "generality": {
+      "rule": "GENERAL requires every leave-one-repository-out and every leave-one-product-pair-out refit to stay strictly negative AND at least 0.667 of qualifying product pairs to have a negative point estimate; otherwise CONCENTRATED.",
+      "qualifying_product_pairs": 6,
+      "qualifying_product_pairs_negative": 4,
+      "share_of_qualifying_pairs_negative": 0.6666666666666666,
+      "all_leave_one_out_refits_negative": true,
+      "verdict": "general"
+    }
+  },
+  "part2_repository_moderators": {
+    "rq3_interaction_checks": {
+      "landmark_prs": 1067,
+      "exposed_prs": 109,
+      "class_counts": {
+        "no_edge": 958,
+        "edge_by_known_reviewer": 64,
+        "edge_by_newcomer": 32,
+        "edge_by_automation": 13
+      },
+      "history_rule": "same repository, different PR, user-account submitted review strictly before the trigger"
+    },
+    "descriptor_definition": "Each repository's cutoff is its first trigger in the RQ3 landmark cohort. Descriptors use only pull requests created strictly before that cutoff and reviews submitted strictly before it.",
+    "moderators": [
+      "pre_total_prs",
+      "pre_distinct_contributors",
+      "pre_merge_rate",
+      "pre_reviews_per_pr",
+      "pre_share_prs_any_review",
+      "pre_repo_age_days"
+    ],
+    "repositories_described": 469,
+    "familiarity_group_counts": {
+      "no_user_written_edge": 400,
+      "familiar_dominant": 40,
+      "newcomer_dominant": 26,
+      "mixed_tie": 3
+    },
+    "moderators_separating_groups": [
+      "pre_merge_rate",
+      "pre_reviews_per_pr"
+    ],
+    "group_contrasts": [
+      {
+        "moderator": "pre_total_prs",
+        "familiar_dominant_repositories": 40,
+        "newcomer_dominant_repositories": 26,
+        "mixed_tie_repositories": 3,
+        "familiar_dominant_median": 18.5,
+        "newcomer_dominant_median": 5.0,
+        "median_difference": 13.5,
+        "repository_cluster_ci_low": -3.0,
+        "repository_cluster_ci_high": 21.5,
+        "separates_groups": false
+      },
+      {
+        "moderator": "pre_distinct_contributors",
+        "familiar_dominant_repositories": 40,
+        "newcomer_dominant_repositories": 26,
+        "mixed_tie_repositories": 3,
+        "familiar_dominant_median": 2.0,
+        "newcomer_dominant_median": 3.0,
+        "median_difference": -1.0,
+        "repository_cluster_ci_low": -2.0,
+        "repository_cluster_ci_high": 1.5,
+        "separates_groups": false
+      },
+      {
+        "moderator": "pre_merge_rate",
+        "familiar_dominant_repositories": 40,
+        "newcomer_dominant_repositories": 26,
+        "mixed_tie_repositories": 3,
+        "familiar_dominant_median": 0.5634920634920635,
+        "newcomer_dominant_median": 0.2653958944281525,
+        "median_difference": 0.298096169063911,
+        "repository_cluster_ci_low": 0.04978354978354976,
+        "repository_cluster_ci_high": 0.4436781609195402,
+        "separates_groups": true
+      },
+      {
+        "moderator": "pre_reviews_per_pr",
+        "familiar_dominant_repositories": 40,
+        "newcomer_dominant_repositories": 26,
+        "mixed_tie_repositories": 3,
+        "familiar_dominant_median": 1.4392857142857143,
+        "newcomer_dominant_median": 0.23876210235131395,
+        "median_difference": 1.2005236119344003,
+        "repository_cluster_ci_low": 0.495798319327731,
+        "repository_cluster_ci_high": 1.6212121212121213,
+        "separates_groups": true
+      },
+      {
+        "moderator": "pre_share_prs_any_review",
+        "familiar_dominant_repositories": 40,
+        "newcomer_dominant_repositories": 26,
+        "mixed_tie_repositories": 3,
+        "familiar_dominant_median": 0.49,
+        "newcomer_dominant_median": 0.13854649743714914,
+        "median_difference": 0.35145350256285085,
+        "repository_cluster_ci_low": -0.016223054156727666,
+        "repository_cluster_ci_high": 0.5761070092946574,
+        "separates_groups": false
+      },
+      {
+        "moderator": "pre_repo_age_days",
+        "familiar_dominant_repositories": 40,
+        "newcomer_dominant_repositories": 26,
+        "mixed_tie_repositories": 3,
+        "familiar_dominant_median": 70.4669675925926,
+        "newcomer_dominant_median": 71.08852430555555,
+        "median_difference": -0.6215567129629562,
+        "repository_cluster_ci_low": -127.63484953703704,
+        "repository_cluster_ci_high": 81.3187696759259,
+        "separates_groups": false
+      }
+    ],
+    "models": [
+      {
+        "specification": "Primary (pre-trigger adjusted)",
+        "estimate": 0.40726512772820267,
+        "ci_low": 0.2235583707942065,
+        "ci_high": 0.5909718846621989,
+        "share_of_primary_remaining": 1.0,
+        "share_of_primary_explained": 0.0,
+        "interval_excludes_zero": true,
+        "n_prs": 1067,
+        "repositories": 469,
+        "prs_dropped_for_missing_moderators": 0
+      },
+      {
+        "specification": "Primary + repository moderators",
+        "estimate": 0.3336558723038717,
+        "ci_low": 0.15275110252151564,
+        "ci_high": 0.5145606420862279,
+        "share_of_primary_remaining": 0.8192596163709462,
+        "share_of_primary_explained": 0.18074038362905376,
+        "interval_excludes_zero": true,
+        "n_prs": 1067,
+        "repositories": 469,
+        "prs_dropped_for_missing_moderators": 0
+      },
+      {
+        "specification": "Repository fixed effects",
+        "estimate": 0.08740016429231144,
+        "ci_low": -0.16756490519680112,
+        "ci_high": 0.342365233781424,
+        "share_of_primary_remaining": 0.21460262208022843,
+        "share_of_primary_explained": 0.7853973779197716,
+        "interval_excludes_zero": false,
+        "n_prs": 1067,
+        "repositories": 469,
+        "prs_dropped_for_missing_moderators": 0
+      },
+      {
+        "specification": "Repository moderators + fixed effects",
+        "estimate": 0.08740016429232231,
+        "ci_low": -0.16891991067953446,
+        "ci_high": 0.34372023926417905,
+        "share_of_primary_remaining": 0.21460262208025513,
+        "share_of_primary_explained": 0.7853973779197448,
+        "interval_excludes_zero": false,
+        "n_prs": 1067,
+        "repositories": 469,
+        "prs_dropped_for_missing_moderators": 0
+      }
+    ]
+  },
+  "reviewer_answers": {
+    "matched_pair_distribution": "The 13.4 point follow-up gap is a general pattern by the pre-registered rule: it survives dropping any single repository or product pair, and 4 of 6 product pairs large enough to estimate on their own reproduce its sign. The direction is not uniform in size, however: the gap is largest in OpenAI_Codex -> Claude_Code and OpenAI_Codex -> Copilot, only 1 of 6 qualifying pairs has a repository-clustered interval that excludes zero on its own, and the remaining pairs are near zero, so the average is driven by the Codex-authored strata and should be reported as such.",
+    "repository_moderators": "The six pre-trigger repository descriptors explain 18.1 percent of the familiar-versus-newcomer gap (40.7 points down to 33.4 points), while repository fixed effects leave 8.7 points with an interval covering zero, so the split is a between-repository difference that our measured governance and volume descriptors do not account for."
+  },
+  "outputs": [
+    "matched_pair_by_product_pair.csv",
+    "matched_pair_composition.csv",
+    "matched_pair_leave_one_out.csv",
+    "moderator_group_contrasts.csv",
+    "repository_moderators.csv",
+    "rq3_moderator_models.csv"
+  ]
+}

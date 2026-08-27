@@ -1,0 +1,3 @@
+position,can_receive_an_exact_parent_edge,inline_events,share_of_inline_events,reviewer_side_inline_events,share_of_reviewer_side_inline_events
+thread_root,True,8897,0.8123630387143901,8399,0.924389170151882
+reply_in_thread,False,2055,0.18763696128560994,687,0.07561082984811798

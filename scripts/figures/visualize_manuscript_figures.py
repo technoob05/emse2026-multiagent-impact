@@ -27,6 +27,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
 from matplotlib.colors import to_rgb  # noqa: E402
+from matplotlib.lines import Line2D  # noqa: E402
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Rectangle  # noqa: E402
 from matplotlib.text import Text  # noqa: E402
 
@@ -1018,73 +1019,79 @@ def figure_boundary() -> None:
 
 
 def figure_merge_curves() -> None:
-    curve = read_csv(
-        CURVES / "cumulative_merge.csv",
-        (
-            "days_since_trigger",
-            "merged_no_edge",
-            "merged_no_edge_low",
-            "merged_no_edge_high",
-            "merged_with_edge",
-            "merged_with_edge_low",
-            "merged_with_edge_high",
-        ),
-    )
+    columns = ["days_since_trigger"]
+    for arm in ("no_reply", "reply_off_target", "reply_on_target"):
+        columns += [f"merged_{arm}", f"merged_{arm}_low", f"merged_{arm}_high"]
+    curve = read_csv(CURVES / "cumulative_merge.csv", tuple(columns))
     summary = json.loads((CURVES / "summary.json").read_text(encoding="utf-8"))
-    fig = new_figure(3.65)
-    layout = Layout(left=0.135, right=0.985, top=0.905, bottom=0.135, gap=0.0)
+
+    fig = new_figure(3.7)
+    layout = Layout(left=0.135, right=0.985, top=0.9, bottom=0.135, gap=0.0)
     (rect,) = layout.rects((1.0,))
     ax = fig.add_axes(rect)
 
     days = curve["days_since_trigger"].to_numpy()
-    for column, colour, style, label in (
-        ("merged_with_edge", TEAL, "-", "after an exact reply"),
-        ("merged_no_edge", SLATE, (0, (4, 2)), "while none has arrived"),
-    ):
-        centre = curve[column].to_numpy() * 100
-        low = curve[f"{column}_low"].to_numpy() * 100
-        high = curve[f"{column}_high"].to_numpy() * 100
-        ax.fill_between(days, low, high, color=colour, alpha=0.16, linewidth=0)
+    series = (
+        ("reply_off_target", ORANGE, (0, (5, 1.6)), "reply anchored elsewhere", 1.0),
+        ("reply_on_target", TEAL, "-", "reply on the trigger thread", -1.0),
+        ("no_reply", SLATE, (0, (2, 2)), "no inline reply", 0.0),
+    )
+    for arm, colour, style, label, _ in series:
+        low = curve[f"merged_{arm}_low"].to_numpy() * 100
+        high = curve[f"merged_{arm}_high"].to_numpy() * 100
+        ax.fill_between(days, low, high, color=colour, alpha=0.14, linewidth=0)
+
+    ends = {}
+    for arm, colour, style, label, _ in series:
+        centre = curve[f"merged_{arm}"].to_numpy() * 100
+        ends[arm] = centre[-1]
         ax.plot(days, centre, color=colour, linewidth=1.8, linestyle=style, zorder=3)
-        anchor = 17.0 if colour == TEAL else 24.0
-        lift = 6.0 if colour == TEAL else -8.5
-        index = int(np.argmin(np.abs(days - anchor)))
-        ax.text(
-            anchor,
-            centre[index] + lift,
-            f"{label}" + chr(10) + f"{centre[-1]:.0f}% by day 30",
-            ha="center",
-            va="center",
-            fontsize=7.2,
+
+    handles = [
+        Line2D(
+            [],
+            [],
             color=colour,
+            linewidth=1.8,
+            linestyle=style,
+            label=f"{label}  {ends[arm]:.0f}%",
         )
+        for arm, colour, style, label, _ in series
+    ]
+    legend = ax.legend(
+        handles=handles,
+        loc="lower right",
+        bbox_to_anchor=(0.995, 0.04),
+        frameon=False,
+        fontsize=7.2,
+        handlelength=2.6,
+        labelspacing=0.42,
+        borderpad=0.0,
+        title="Merged by day 30",
+    )
+    legend.get_title().set_fontsize(7.2)
+    legend.get_title().set_color(SLATE)
+    legend.get_title().set_ha("left")
 
     ax.axvline(2.0, color=MID, linewidth=0.8, linestyle=(0, (2, 2)), zorder=0)
-    ax.text(
-        2.3,
-        16,
-        "hour 48",
-        ha="left",
-        va="center",
-        fontsize=7.1,
-        color=SLATE,
-    )
+    ax.text(2.3, 12, "hour 48", ha="left", va="center", fontsize=7.1, color=SLATE)
+
     ax.set_xlim(0, 30.5)
     ax.set_ylim(0, 100)
     ax.set_xticks([0, 5, 10, 15, 20, 25, 30])
     ax.set_yticks([0, 25, 50, 75, 100])
     ax.set_xlabel("Days after the cross-product review comment")
     ax.set_ylabel("Pull requests merged (%)")
-    panel_title(ax, "", "Most of these pull requests merge either way")
+    panel_title(ax, "", "A reply matters; where it is anchored does not")
     clean_axis(ax, "y")
     ax.text(
-        0.985,
-        0.035,
+        0.015,
+        0.955,
         f"{int(summary['population_prs']):,} PRs across "
         f"{int(summary['repositories']):,} repositories",
         transform=ax.transAxes,
-        ha="right",
-        va="bottom",
+        ha="left",
+        va="top",
         fontsize=7.1,
         color=SLATE,
     )

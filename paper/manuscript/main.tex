@@ -22,7 +22,7 @@
 \affil*[1]{\orgdiv{Affiliation pending}, \orgname{Institution pending},
   \orgaddress{\city{City pending}, \country{Country pending}}}
 
-\abstract{\textbf{Context:} A pull request (PR) written by one coding-agent product and reviewed by another looks like a multi-agent workflow. Two products on one PR do not show that one addressed the other. \textbf{Objective:} We trace the public path from cross-product review to an addressed edge, a next owner, and a later state. \textbf{Method:} We screen 361,296 PRs in a pinned AIDev release and analyse 8,608 trigger PRs, 546 matched pairs, and a 1,067-PR outcome cohort. Exact account, comment, and review-batch identifiers anchor every event to one trigger. We set aside short automation bursts, match cross- to same-product triggers, and fix an hour-48 check point. \textbf{Results:} Direct dialogue between products is rare. After a five-minute burst, user accounts own most remaining first actions, and most have reviewed in the repository before. Cross-product triggers get 13 percentage points less visible follow-up than matched same-product triggers. An exact reply to the trigger is linked to 17 points more later merge, and holds under stricter edge rules, a shuffle test, and a whole-population model. A user account writes that reply four times in five. A PR body that names an issue roughly doubles the chance its review point is answered across the boundary, and changes nothing within one product. \textbf{Conclusions:} Public multi-agent impact should be reported as a map of connections, not a count of products. The connection that carries the work is a person answering an agent, and giving them the task context is the one lever we found.}
+\abstract{\textbf{Context:} A pull request (PR) written by one coding-agent product and reviewed by another looks like a multi-agent workflow. Two products on one PR do not show that one addressed the other. \textbf{Objective:} We trace the public path from cross-product review to an addressed edge, a next owner, and a later state. \textbf{Method:} From a pinned AIDev release we analyse 8,608 trigger PRs, 546 matched pairs, and a 1,067-PR outcome cohort. Exact account, comment, and review-batch identifiers anchor every event to one trigger. We set aside automation bursts, fix an hour-48 check point, and test the exposure against placebo anchors. \textbf{Results:} Direct dialogue between products is rare; after a five-minute burst, user accounts own most remaining first actions. Cross-product triggers get 13 percentage points less visible follow-up than matched same-product triggers. An exact reply to the trigger goes with 17 points more later merge, and a person writes it four times in five. Placebo exposures then qualify it: a reply anchored anywhere else on the PR does as well, and shuffling the anchor leaves the estimate unmoved. Across all 105 user-written replies, the association sits with the ones a person wrote, not the one-click hand-offs to another machine. Naming an issue in the PR body roughly doubles the chance a review point is answered across the boundary, and changes nothing within a product. \textbf{Conclusions:} Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention, not a resolved review point, and strict anchoring buys attribution rather than prediction.}
 
 \keywords{coding agents, multi-agent software engineering, code review, human-agent collaboration, pull requests, mining software repositories}
 \maketitle
@@ -88,19 +88,26 @@ it gives a reader context the diff alone does not. Does it change whether a
 review point gets answered, and does that depend on who is reviewing?
 \end{description}
 
-We make three contributions.
+We make four contributions.
 
-\textbf{An evidence ladder with a hard rung.} We separate four things that a
-product count runs together: both products appearing on one PR, a reply that
-points at the exact review comment, the next visible owner, and the later state
-of the PR. The second rung is machine-checkable, and it is strict. It is what
-makes the rest of the paper falsifiable.
+\textbf{An evidence ladder, and a test of its own rungs.} We separate four things
+that a product count runs together: both products appearing on one PR, a reply
+that points at the exact review comment, the next visible owner, and the later
+state of the PR. The second rung is machine-checkable and strict, which is what
+makes the paper falsifiable. We then falsify part of it. Placebo exposures show
+that, for predicting a later merge, that strict rung is not distinguishable from a
+much looser one: a reply anchored anywhere on the pull request does as well.
+Building the ladder and then testing whether its rungs differ is, we think, what a
+measurement paper owes its readers.
 
 \textbf{A finding that the ladder produces.} Each rung deletes most of what the
 rung above admitted. Almost no cross-product activity becomes one product
-answering another. The rare exact reply does mark a different later outcome, and
-a person writes it four times in five. So the measurement choice changes the
-conclusion, which is the point.
+answering another. A reply does mark a different later outcome, and a person
+writes it four times in five --- but reading all of those replies shows that about
+one in six is a one-click hand-off to yet another machine, and the association
+sits with the rest. What the public trace can show is retained human attention,
+not a resolved review point. The measurement choice changes the conclusion, which
+is the point.
 
 \textbf{A reusable check for order-based claims.} Reviewer order is often read
 as evidence of coordination. We show that shuffling the order of events inside
@@ -177,6 +184,70 @@ reviewer order matters, and that people answer agent feedback. Our unit is
 different. It is one cross-product trigger, and the exact edges, batches,
 owners, and later state that follow it.
 
+\subsection{Reconstructing what a review comment addressed}
+
+Review platforms record replies. They do not record resolutions. A large body of
+work therefore recovers the missing link from the code itself, and it is the
+route we chose not to take.
+
+Hirao et al.\ recover review links that the platform never stored and label them
+with classifiers reaching F1 between 0.71 and 0.79, which is the clearest
+demonstration that recovered edges buy real analytic power at a measurable error
+rate \citep{hirao2019linkage}. The code-review-automation datasets take the same
+route by assumption, pairing a comment with the next revision of the file it
+touched to build training triples at a scale no anchored rule could reach
+\citep{tufano2022pretrained,li2022codereviewer}. Industry does it explicitly.
+Google estimates that about 40\% of its review comments are resolved by checking
+whether the commented lines changed before submission, then confirming a sample
+by hand \citep{vijayvergiya2024autocommenter}, and reports that 7.5\% of all its
+reviewer comments are addressed by applying a machine-suggested edit
+\citep{frommgen2024resolving}. Closest to our own setting, Sun et al.\ adjudicate
+more than 22,000 AI review comments across 178 repositories with a two-stage
+LLM-assisted framework that reads the following diff rather than any reply
+\citep{sun2026aicodereview}.
+
+We take the other side of this trade on purpose. Our exposure is an explicit
+reply on the thread the trigger opened. It is narrow, and every edge it counts
+has a named account and a timestamp that comes before the outcome. The cost is
+recall: a comment quietly fixed in the next push is invisible to us. But the
+alternative has a cost too, and it is the one that would hurt a paper about
+measurement. Fregnan et al.\ find that most changes made during review are not
+triggered by any reviewer comment at all \citep{fregnan2022reviewchanges}, so a
+rule that reads the diff will credit comments for edits they did not cause. Our
+errors are omissions. Theirs are false attributions. Since our design places the
+exposure before the outcome and then asks how much hidden structure would be
+needed to erase it, we would rather miss connections than invent them.
+
+\subsection{Whether the feedback carried signal at all}
+
+A separate literature asks a question we deliberately do not answer: was the
+comment any good? Low usefulness is older than coding agents. Bosu et al.\ find
+that much review feedback at Microsoft is not useful, that usefulness rises with
+reviewer tenure, and that it falls as changes grow \citep{bosu2015useful}; later
+work predicts usefulness from the text and the author's experience
+\citep{rahman2017usefulness,ahmed2025useful}. Wessel et al.\ name the failure
+mode on the machine side, describing how automated contributions come to be read
+as noise that crowds out human conversation \citep{wessel2021noise}. That is our
+thesis in an earlier vocabulary: volume is not participation.
+
+The agent era supplies numbers. Sun et al.\ report that between 0.9\% and 19.2\%
+of valid AI review comments lead to a code change, depending on the tool, against
+60\% for valid human comments in the same repositories
+\citep{sun2026aicodereview}. Meta's production system converts 19.7\% of
+actionable comments into an applied fix, and its binding constraint turned out to
+be where a person sat in the loop: showing patches to reviewers slowed review by
+more than 5\% until the interface showed them only to authors
+\citep{maddila2026aifixes}.
+
+These studies and ours measure different things, and the difference is worth
+stating plainly. They ask whether a comment deserved action. We ask only whether
+it got an answer, from whom, and before what. A comment can be excellent and
+ignored, or trivial and answered. Our numbers are not comparable to theirs for
+the same reason: their denominator is every AI review comment, ours is a
+cross-product trigger that opens its own thread. What is striking is that two
+literatures built on different units keep arriving at the same place. Whatever
+the machine writes, it is the human response that tracks the outcome.
+
 \subsection{Designed multi-agent review}
 
 Role-based systems such as ChatDev and MetaGPT make communication part of the
@@ -225,10 +296,24 @@ it. GitHub sets the reply target to the \emph{first} comment of an inline
 thread, not to whichever comment came just before. The release agrees: across
 88,907 inline replies, not one names a comment that is itself a reply, so reply
 threads are one level deep. An addressed edge is therefore \emph{a reply in the
-thread that the trigger opened}. Section~\ref{sec:threats} reports what that
-costs us, which turns out to be very little in this cohort. Figure~\ref{fig:contract} shows the anchor, the
-three exclusion rules, and the four evidence levels that the rest of the paper
-keeps separate.
+thread that the trigger opened}. Section~\ref{sec:threats} reports what that costs us, which turns out to be very
+little in this cohort. Figure~\ref{fig:contract} shows the anchor, the three
+exclusion rules, and the four evidence levels that the rest of the paper keeps
+separate.
+
+This precision has a price, and the reader should know its size before reading any
+result. Only inline review comments carry a reply target. A review summary and a
+comment on the pull request itself carry none, so no exact edge can ever be built
+for them. On our trigger PRs, inline comments are 42.7\% of everything a reviewer
+writes; the other 57.3\% arrive through those two unanchored channels. Counted by
+episode rather than by comment, 1,067 of 1,733 cross-product review triggers
+(61.6\%) are inline and therefore in scope. The remaining 38.4\% are not measured
+here, and no threshold would recover them: the release simply records no parent for
+that kind of comment. We take the trade deliberately. A rule that never fires
+wrongly on 61.6\% of episodes is worth more to a measurement paper than a looser
+rule that reaches all of them and cannot say which matches are real. Online
+Resource~1 reports the full channel breakdown, and Section~\ref{sec:threats}
+returns to what the unseen share might hold.
 
 \begin{figure}[htbp]
 \centering
@@ -362,11 +447,29 @@ boundaries.}
 \label{fig:topology}
 \end{figure}
 
-The burst test changes the owner, not only the time. After five minutes,
-mapped products lose close to a third of their mapped-first classifications.
-User accounts then own far more of the remaining actions than mapped products
-do. This ordering holds in every leave-one-repository-out and
-leave-one-product-pair-out check.
+The burst test changes the owner, not only the time. After five minutes, mapped
+products lose close to a third of their mapped-first classifications. User
+accounts then own far more of the remaining actions than mapped products do. This
+ordering holds in every leave-one-repository-out and leave-one-product-pair-out
+check.
+
+Five minutes is a convention, and we should not pretend otherwise, so we went
+looking for a boundary in the data. There is not one. The time from a trigger to
+the next event climbs smoothly to a single peak around four minutes with no
+separate machine spike before it, so a rule that looks for a valley between two
+modes finds nothing to select --- not globally, and not for any of the five
+products. A change-point rule always returns some number, and it returns roughly
+one minute; per-product versions of it range from under a minute to about nine,
+with intervals wider than the global one. Fitting the window per product makes it
+less stable, not more.
+
+What matters is that the conclusion does not depend on the choice. Across nine
+schemes --- the five fixed windows, the global data-driven cut, and two
+per-product variants --- user accounts are the most common post-burst owner and
+stay ahead of mapped products, with an interval clear of zero every time. The
+size of the lead moves a good deal, from 19 to 41 points, and the direction never
+does. So we report the window as a stated convention that the result survives,
+rather than as a discovered boundary.
 
 The next step is even more selective. Among PRs that are still mapped-product
 first after five minutes, only about one in twenty move next to a different
@@ -411,6 +514,18 @@ matched same-product partner. The gap is 13.4 percentage points
 (Figure~\ref{fig:bridge}A). No other outcome supports a claim that this
 quieter boundary leads to more branch movement or more merges.
 
+That average hides something a reader should know. The 546 pairs are not spread
+evenly: one repository supplies a fifth of them, and one ordered product pair
+supplies more than a quarter. The sign is stable, and stays negative when any
+single repository or any single product pair is removed. The size is not. Split
+the pairs by which product wrote the PR and the gap sits almost entirely in the
+two strata authored by one product, at around $-20$ to $-26$ points, while the
+four strata authored by the others fall within six points of zero. Only one
+stratum has an interval that clears zero on its own. We therefore report a
+quieter cross-product boundary as something this release shows for particular
+author products, not as a property of every boundary. Online Resource~1 gives
+the full composition and the per-stratum estimates.
+
 Figure~\ref{fig:bridge} joins the matched comparison with a wider history
 check. Seven in ten of the first user-account bridges had already reviewed
 another PR in that repository. That rate is close to the rate among all users
@@ -429,21 +544,26 @@ routing.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{Fig4.pdf}
-\caption{What the addressed edge looks like over time. Every cross-product
-inline-trigger PR is followed from its review comment, and a PR counts as
-unexposed until its own first exact reply arrives, so no time before the reply is
-credited to it. Bands are 95\% intervals from resampling repositories. The two
-curves cross: a PR that is still being replied to has not merged yet, and the
-gap opens only later. Most of these pull requests merge either way, which is why
-the large contrast in the hour-48 group is a statement about slower PRs rather
-than about the population. Online Resource~1 carries the stricter edge
-definitions, the discussion-only control, and the automation-to-user route.}
+\caption{What a reply looks like over time, and what the anchoring is worth.
+Every cross-product inline-trigger PR is followed from its review comment. A PR
+sits in the lowest arm it qualifies for and moves up when its own first reply of
+that kind arrives, so no time before a reply is credited to it. Bands are 95\%
+intervals from resampling repositories. Both reply arms run above the silent one,
+and their bands overlap at every one of the 73 grid points, so the paper reads
+them as one line rather than two: a reply on the trigger's own thread does not
+separate from a reply anchored anywhere else on the pull request. Most of these
+pull requests merge whatever happens, which is why the large contrast in the
+hour-48 group is a statement about slower PRs rather than about the population.
+Online Resource~1 carries the stricter edge definitions, the placebo exposures,
+and the automation-to-user route.}
 \label{fig:relay}
 \end{figure}
 
-Among the slower PRs that are still open at hour 48, one signal stands out as
-a marker of later merge: an exact reply to the trigger. Four times in five, a
-person writes it.
+Among the slower PRs that are still open at hour 48, one signal stands out as a
+marker of later merge: somebody replies. Four times in five that somebody is a
+person. What we did not expect, and report below, is that the precise part of our
+rule --- that the reply hangs on the trigger's own thread --- adds nothing to the
+prediction.
 
 The group holds 1,067 inline-trigger PRs. It is the slower-moving part of the
 population. Most cross-product inline-trigger PRs close, and most of those
@@ -464,10 +584,60 @@ Later merge is more common when there is an exact reply to the trigger than when
 there is none: 55\% against 37.9\%. After adjusting for what was already
 visible before the trigger, the difference is 17.3 percentage points.
 It stays positive for reply windows from one to 48 hours, in a model that only
-compares PRs inside the same repository, and after removing each ordered
-product pair in turn. We also tested it against a harder comparison. Instead of an edge versus
-silence, we compared an exact edge with PRs that already carry other public
-discussion. The result stays positive.
+compares PRs inside the same repository, and after removing each ordered product
+pair in turn. We also tested it against a harder comparison. Instead of an edge
+versus silence, we compared an exact edge with PRs that already carry other
+public discussion. The result stays positive.
+
+\paragraph{The anchoring is not what carries it.} We built the strictest
+connection the trace allows, so the first thing to ask is whether the strictness
+is doing any work. Two placebo exposures answer that, and they do not answer it
+the way we hoped.
+
+The first keeps the reply and moves the anchor. Take the PRs where a reply landed
+somewhere else on the pull request, not on the trigger's thread. That is still
+somebody active in review, so some association is expected. It is 17.9 points, and
+the exact edge is 18.9 points, against PRs with no inline reply at all. The gap
+between them is one point, with an interval running from $-13$ to $+15$. The
+second is harsher. Hold the reply events fixed and shuffle which comment each one
+is anchored to. If the anchoring carried the signal, that should knock the
+estimate down. It does not move: the shuffled distribution centres on 16.6 points,
+and our observed 17.3 sits in the middle of it rather than out in the tail.
+
+A third control, which we ran to check the design rather than the exposure, does
+behave. Give each PR a fake reply time drawn independently of its own history and
+apply the identical landmark rule, and the estimate collapses to zero. So the
+timing rule is not manufacturing a contrast out of nothing. The problem is not the
+estimator. It is what the exposure means.
+
+\paragraph{What the reply says does matter.} If the anchor is not the active
+ingredient, something else must be. We read all 105 user-written replies and
+sorted them with a rule set fixed in advance: platform text, a hand-off to another
+automation, a short acknowledgement, or a substantive response. About one in six
+is a routing click --- \texttt{@copilot fix this}, or GitHub's own ``apply changes
+based on this feedback'' button, whose words belong to the interface rather than
+to the person. Fifty-six are substantive.
+
+Those fifty-six carry the whole result. Restricting the exposure to them leaves
+the estimate where it was, at 16.8 points, on half as many exposed PRs. The
+routing replies give 8.7 points on an interval that spans zero, and the PRs behind
+them merge slightly less often than the exposed group as a whole. With fifteen
+such PRs we cannot separate the two subsets statistically, so we do not claim that
+a routing click is inert. We claim only what the numbers support: the substantive
+half alone reproduces the headline.
+
+Putting the two together changes what we think we measured. The addressed edge is
+not a record that a review point was resolved, and it is not a special kind of
+connection. It marks a person who came back to the pull request within 48 hours
+and put real attention into it. Where that attention landed on the page turns out
+not to matter. That is a smaller claim than the one we set out to make, and it is
+the one the data support.
+
+It also tells us what the strict rule was worth. It did not predict better than a
+loose one. It did let us name the account behind every edge and read what that
+account wrote, which is how we found the routing clicks at all. Precision bought
+us attribution, not power, and for a paper about measurement that is the more
+useful purchase.
 
 Because most exposed replies are written by people, we refit the model under
 two stricter rules for what counts as an edge. One drops replies written by the
@@ -543,10 +713,20 @@ statement about slower PRs.
 The second asks who wrote the edge. We split the exposed PRs by whether the
 replier had already reviewed in that repository before the trigger. Almost all of
 the association sits with the familiar repliers, and a reply from someone new to
-the repository shows no positive link at all. That looks like a mechanism, and we
-were tempted to report it as one. It does not survive the obvious check. When the comparison is held inside a single
-repository, the gap between the two kinds of replier shrinks to near zero with
-an interval that spans it. Familiar repliers and newcomers are mostly in
+the repository shows no positive link at all. That looks like a mechanism, and we were tempted to report it as one. It does not
+survive the obvious check. When the comparison is held inside a single
+repository, the gap between the two kinds of replier shrinks to near zero with an
+interval that spans it.
+
+We then tried to name what the repository is standing in for, because a fixed
+effect that explains everything and means nothing is not a satisfying place to
+stop. Repositories where familiar repliers dominate really are different: they
+run about six times as many reviews per pull request and merge roughly twice as
+often as repositories where newcomers dominate. But putting those measured
+differences into the model removes less than a fifth of the gap, while the
+repository indicator alone removes nearly four fifths. Whatever the repository is
+carrying, it is not review intensity, merge rate, volume, contributor count, or
+age. We can show the shape of the thing and we cannot yet name it, so we say so. Familiar repliers and newcomers are mostly in
 \emph{different repositories}, and those repositories differ in how often
 anything gets merged. We therefore report the split as a description of where
 the signal sits, not as evidence that knowing the repository is what makes the
@@ -557,13 +737,16 @@ comment, or another unmeasured condition. The data do not tell us which. The
 result supports the value of a connected trace as a field signal; it does not
 show that adding a reply would cause a merge.
 
-\noindent\textbf{Answer to RQ3.} A person writes the connection, and the
-connection marks a later state. The exact addressed edge survives every check we
-ran, including dropping the hour-48 rule and letting the edge switch on in time.
-Four times in five it is written by a user account rather than by an agent.
-Nearly all of its association sits with repliers who already review in that
-repository, but that split is between repositories rather than inside them, so
-we cannot show that familiarity is the reason. Nothing here is causal.
+\noindent\textbf{Answer to RQ3.} A person replies, and the reply marks a later
+state. Four times in five it is a user account rather than an agent. But the
+exact anchoring we built the study around is not what carries the association: a
+reply anchored elsewhere on the PR does just as well, and shuffling the anchor
+leaves the estimate unchanged. Reading the replies shows where the signal does
+sit --- with the ones a person wrote themselves rather than routed onward. So the
+measure marks retained human attention, not a resolved review point. Nearly all
+of the association sits with repliers who already review in that repository, but
+that split is between repositories rather than inside them, and our measured
+repository descriptors do not explain it. Nothing here is causal.
 
 \FloatBarrier
 \subsection{RQ4: task context matters only across the boundary}
@@ -632,13 +815,33 @@ review point three times. Everything in between --- the reviews, the comments,
 the branch movement --- is real activity that never becomes a connection.
 
 Once you insist on a connection, the multi-agent story turns into a human one.
-The reply that closes a review point is written by a person four times in five.
-That person is usually not new to the project. This is the part a product count
+The reply on an agent's review point is written by a person four times in five.
+That person is usually not new to the project. Some of the time, though, what the
+person writes is a hand-off to yet another machine, and those are the replies
+that do not go with a later merge. This is the part a product count
 cannot see, and it is the part that goes together with the change landing.
 
 \subsection{What we could not show, and why it matters}
 
-The most interesting thing we found is something we then had to give up.
+The most interesting thing we found is something we then had to give up. So, in
+the end, was part of our own headline.
+
+We built the study around an exact anchor: a reply that names the trigger comment
+as its parent. It is the strictest connection a public trace allows, and we
+expected the strictness to be the reason the result held. It is not. Move the
+anchor to any other comment on the same pull request and the association is the
+same. Shuffle which comment each reply hangs on and the estimate does not move.
+What predicts a later merge is that a person came back within 48 hours and paid
+attention, not where on the page the attention landed.
+
+We could have reported the anchored number alone and nobody would have known. It
+is worth saying why we did not. The claim we would have been making is that
+answering a specific review point is what moves a pull request forward, and that
+claim would have supported advice --- build tools that anchor agent feedback
+precisely --- which our own data do not support. The anchor still earns its place,
+but for a different reason than we assumed. It is what let us name the account
+behind every edge and read what that account wrote, and that is how we found the
+routing clicks. Precision bought attribution, not prediction.
 
 Splitting the answered review points by whether the replier already reviews in
 that repository produces an enormous gap. It looks like a mechanism: familiarity
@@ -654,14 +857,16 @@ inside one repository, and shuffle the label you think is doing the work. Our
 apparent product persistence died the same way, to a shuffle of event order
 inside the very same pull request.
 
-It was not the only casualty. Repeated automation looked like it escalated to a
-person, until the same shuffle reproduced it. Ownership looked like it moved one
+These were not the only casualties. Repeated automation looked like it escalated
+to a person, until the same shuffle reproduced it. Ownership looked like it moved one
 way from products to people, until we looked at both directions. Prior review
 history looked like it bought a merge advantage, until we compared inside one
 repository. Review requests looked like deliberate routing, until we found the
-exported event does not say who was asked. Two products commenting on the same
-line looked like duplicated work, and we still cannot say whether it is, because
-nobody has read the text. And when we applied our own rules to a large review
+exported event does not say who was asked. Two products commenting on the same line looked like duplicated work, and we
+still cannot say whether it is, because nobody has read the text. The quieter
+cross-product boundary looked like a general property of crossing a boundary,
+until we split the matched pairs by author product and found most of the size
+sitting in two of them. And when we applied our own rules to a large review
 corpus assembled by other people, every candidate pull request turned out to
 already be in ours, so the replication gate failed rather than passed. We keep
 all of it in Online Resource~1. A paper that reports only what survived is not
@@ -724,15 +929,31 @@ formality layered on an agent loop. In the public trace, they are the loop.
 
 \section{Threats to Validity}\label{sec:threats}
 
-\textbf{What we can see.} The event tables do not cover the same PRs. A missing
-row can mean there was no event, or that the event was not captured. Ordinary
+\textbf{What we can see.} Only inline review comments carry a reply target, so
+the addressed edge can never be built for a review summary or a comment on the
+pull request itself. Those two channels are 57.3\% of what reviewers write on our
+trigger PRs, and 38.4\% of cross-product review episodes arrive through them. No
+threshold recovers that share; the release records no parent for such comments. A
+coarse count of any later PR-level comment suggests the unseen episodes are not
+quiet --- about 43\% of them see some later comment inside 48 hours --- but that
+count cannot tell an answer from a passing remark, so we use it to size the blind
+spot and not to estimate anything inside it.
+
+The event tables also do not cover the same PRs. A missing row can mean there was
+no event, or that the event was not captured. Ordinary
 commit and review timeline rows carry no usable time in this release. So we
 make claims about timing only for event types that do carry a usable time. We
 also treat a force-push as branch movement, not as a checked fix.
 
-\textbf{Identity and meaning.} Our list of approved accounts is strict, so it
-may miss some agent accounts. A GitHub \texttt{User} account does not prove that
-a person worked alone. An exact parent link proves that someone addressed the
+\textbf{Identity and meaning.} Our list of approved accounts is strict, so it may miss some agent accounts. A
+GitHub \texttt{User} account does not prove that a person worked alone, and it
+does not prove a person at all: an account can be scripted. We tested that
+directly on the 80 accounts that write the edges, scoring each for repeated
+template text, regular timing, round-the-clock posting, and volume, with
+thresholds fixed in advance. One account trips two or more of them, and dropping
+it leaves the estimate where it was. Reading the flagged cases showed the
+heuristics were mostly catching people, not scripts: the repeated strings are
+hand-typed agent invocations and GitHub's own button text. An exact parent link proves that someone addressed the
 point. It does not prove understanding, agreement, or repair. We never see
 private messages, prompts, or shared memory.
 
@@ -745,10 +966,21 @@ further problem, because a reply inside such a window could itself change whethe
 the PR is still open at hour 48. We treat those windows as extra checks only, and
 the 48-hour window is the main one.
 
-\textbf{What the edge means.} An exact parent edge records that someone
-addressed the trigger. It does not record who. In this group that someone is
-almost always a user account, so RQ3 measures a person acknowledging an agent,
-not one product handing over to another.
+\textbf{What the edge means.} An exact parent edge records that someone replied
+on the trigger's thread. It does not record who. In this group that someone is
+almost always a user account, so RQ3 measures a person attending to an agent's
+review point, not one product handing over to another.
+
+It also records less than its name suggests. Placebo exposures show that a reply
+anchored anywhere else on the pull request carries the same association, and that
+shuffling which comment each reply hangs on does not move the estimate. So the
+anchoring is not the active ingredient, and a reader should take our RQ3 result as
+being about a human reply inside the window rather than about a specific
+connection. What the reply says does separate: restricting the exposure to the 56
+substantive replies reproduces the headline, while the 15 one-click hand-offs give
+a smaller estimate on an interval spanning zero. With 15 such PRs we cannot
+distinguish the two subsets statistically, and we do not claim a routing click is
+inert.
 
 The reply identifier is looser than the name suggests. It points at the first
 comment of a thread, so our edge means ``a reply in the thread the trigger
@@ -775,8 +1007,15 @@ present in our data, and only partly measured. Our controls also include no
 stand-in for task difficulty. The later-state findings stay associations.
 
 \textbf{How far the results reach.} AIDev-pop covers public repositories with
-more than 100 stars, and the product pairs are uneven. Leave-one-out checks
-ease the worry that a few repositories or a few pairs drive the result. They do
+more than 100 stars, and the product pairs are uneven. Leave-one-out checks ease
+the worry that a few repositories or a few pairs drive the result, and no single
+one flips a sign. They do not make the results uniform. The matched cross-product
+gap is concentrated by author product, with most of its size in two strata and the
+rest close to zero, so it should be read as something this release shows for
+particular products. The five-minute burst window is a convention rather than a
+boundary we found in the data, and although the RQ1 ordering survives every cut we
+tried, the size of the lead moves between 19 and 41 points depending on the
+window. They do
 not extend it to private projects or to future versions of these products. The
 outside dataset we screened checks our schema and identities, but after
 removing overlap it gives no independent group for RQ3.

@@ -1,0 +1,146 @@
+{
+  "cohort": {
+    "source_artifact": "outputs/cross_agent_review/feedback_48h_landmark_cohort.parquet",
+    "definition": "cross-product first agent review trigger, PR still open at the 48-hour landmark, fixed 30-day outcome horizon",
+    "trigger_prs": 1733,
+    "repositories": 641,
+    "inline_trigger_prs": 1067,
+    "observation_cutoff": "2026-04-15T00:00:00+00:00"
+  },
+  "reviewer_side_interaction_volume": {
+    "total_reviewer_side_events": 21295,
+    "total_events_including_author_side": 26298,
+    "inline_review_comment_events": 9086,
+    "inline_share_of_reviewer_side_events": 0.4266729279173515,
+    "non_anchorable_events": 12209,
+    "non_anchorable_share_of_reviewer_side_events": 0.5733270720826484,
+    "by_channel": [
+      {
+        "channel": "inline_review_comment",
+        "channel_label": "Inline review comment (pr_review_comments)",
+        "carries_reply_anchor": true,
+        "reviewer_side_events": 9086,
+        "share_of_reviewer_side_events": 0.4266729279173515,
+        "reviewer_side_events_with_body": 9086,
+        "share_of_reviewer_side_events_with_body": 0.4954738793761588,
+        "prs_touched": 1348,
+        "share_of_trigger_prs_touched": 0.7778418926716676,
+        "all_channel_events_including_author_side": 10952
+      },
+      {
+        "channel": "submitted_review",
+        "channel_label": "Review submission body (pr_reviews)",
+        "carries_reply_anchor": false,
+        "reviewer_side_events": 6490,
+        "share_of_reviewer_side_events": 0.3047663770838225,
+        "reviewer_side_events_with_body": 3533,
+        "share_of_reviewer_side_events_with_body": 0.1926600501690479,
+        "prs_touched": 1594,
+        "share_of_trigger_prs_touched": 0.9197922677437969,
+        "all_channel_events_including_author_side": 7797
+      },
+      {
+        "channel": "pr_comment",
+        "channel_label": "PR-level comment (pr_comments)",
+        "carries_reply_anchor": false,
+        "reviewer_side_events": 5719,
+        "share_of_reviewer_side_events": 0.268560694998826,
+        "reviewer_side_events_with_body": 5719,
+        "share_of_reviewer_side_events_with_body": 0.3118660704547933,
+        "prs_touched": 1394,
+        "share_of_trigger_prs_touched": 0.8043854587420658,
+        "all_channel_events_including_author_side": 7549
+      }
+    ]
+  },
+  "inline_anchoring_ceiling": {
+    "thread_root_events": 8897,
+    "thread_root_share_of_inline_events": 0.8123630387143901,
+    "inline_events_on_trigger_prs": 10952,
+    "reviewer_side_inline_events_on_trigger_prs": 9086,
+    "replies_whose_parent_is_absent_from_the_release": 1,
+    "replies_pointing_at_another_reply": 0,
+    "anchor_target_is_always_a_thread_root": true
+  },
+  "trigger_channel_composition": {
+    "inline_trigger_share": 0.6156953260242354,
+    "out_of_scope_trigger_prs": 666,
+    "out_of_scope_trigger_share": 0.3843046739757646,
+    "by_channel": [
+      {
+        "trigger_channel": "inline_review_comment",
+        "channel_label": "Inline review comment (pr_review_comments)",
+        "in_scope_for_the_addressed_edge": true,
+        "trigger_prs": 1067,
+        "share_of_trigger_prs": 0.6156953260242354,
+        "repositories": 469,
+        "ordered_product_pairs": 21
+      },
+      {
+        "trigger_channel": "submitted_review",
+        "channel_label": "Review submission body (pr_reviews)",
+        "in_scope_for_the_addressed_edge": false,
+        "trigger_prs": 353,
+        "share_of_trigger_prs": 0.20369301788805538,
+        "repositories": 204,
+        "ordered_product_pairs": 20
+      },
+      {
+        "trigger_channel": "pr_comment",
+        "channel_label": "PR-level comment (pr_comments)",
+        "in_scope_for_the_addressed_edge": false,
+        "trigger_prs": 313,
+        "share_of_trigger_prs": 0.18061165608770918,
+        "repositories": 119,
+        "ordered_product_pairs": 16
+      }
+    ]
+  },
+  "coarse_unanchored_proxy": {
+    "window_hours": 48,
+    "out_of_scope_trigger_prs": 666,
+    "out_of_scope_prs_with_coarse_proxy_activity": 287,
+    "out_of_scope_coarse_proxy_rate": 0.43093093093093093,
+    "in_scope_trigger_prs": 1067,
+    "in_scope_coarse_proxy_rate": 0.34208059981255856,
+    "caveat": "PR-level comments carry no reply anchor. This rate counts any later comment by a different account inside the window and cannot distinguish an answer to the review from unrelated concurrent activity. It is an upper bound on visible follow-up, not a measure of addressed feedback, and no estimate in the paper uses it.",
+    "by_channel": [
+      {
+        "trigger_channel": "inline_review_comment",
+        "channel_label": "Inline review comment (pr_review_comments)",
+        "in_scope_for_the_addressed_edge": true,
+        "trigger_prs": 1067,
+        "prs_with_coarse_proxy_activity": 365,
+        "coarse_proxy_rate": 0.34208059981255856,
+        "median_proxy_events_when_present": 2.0,
+        "measurement_status": "COARSE UNANCHORED PROXY - NOT USED FOR ESTIMATION"
+      },
+      {
+        "trigger_channel": "submitted_review",
+        "channel_label": "Review submission body (pr_reviews)",
+        "in_scope_for_the_addressed_edge": false,
+        "trigger_prs": 353,
+        "prs_with_coarse_proxy_activity": 126,
+        "coarse_proxy_rate": 0.35694050991501414,
+        "median_proxy_events_when_present": 2.0,
+        "measurement_status": "COARSE UNANCHORED PROXY - NOT USED FOR ESTIMATION"
+      },
+      {
+        "trigger_channel": "pr_comment",
+        "channel_label": "PR-level comment (pr_comments)",
+        "in_scope_for_the_addressed_edge": false,
+        "trigger_prs": 313,
+        "prs_with_coarse_proxy_activity": 161,
+        "coarse_proxy_rate": 0.5143769968051118,
+        "median_proxy_events_when_present": 2.0,
+        "measurement_status": "COARSE UNANCHORED PROXY - NOT USED FOR ESTIMATION"
+      }
+    ]
+  },
+  "not_computable_from_the_release": [
+    "Review submission bodies and PR-level comments carry no parent identifier, so no exact addressed edge can be constructed for them at any threshold. The out-of-scope share is a hard measurement boundary of the release, not a tuning choice.",
+    "GitHub review threads are one level deep in this release, so a reply anchor always names a thread root; the reply-to-a-reply case does not exist here and cannot be studied."
+  ],
+  "interpretation": "Across the 1733 cross-product trigger PRs, 9086 of 21295 reviewer-side review interactions (42.7%) are inline review comments, the only modality carrying a reply anchor; the remaining 12209 events are review submission bodies or PR-level comments and admit no exact parent edge. Within inline comments, 81.2% are thread roots, which is the ceiling on what an exact edge can attach to. At the cohort level, 1067 of 1733 (61.6%) cross-product review triggers are inline and therefore in scope; the rest are structurally invisible to the addressed edge. The coarse PR-level proxy is descriptive only and supports no estimate.",
+  "scope": "descriptive coverage audit; no causal claim and no estimate"
+}

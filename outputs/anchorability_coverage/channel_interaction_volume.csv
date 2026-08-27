@@ -1,0 +1,4 @@
+channel,channel_label,carries_reply_anchor,reviewer_side_events,share_of_reviewer_side_events,reviewer_side_events_with_body,share_of_reviewer_side_events_with_body,prs_touched,share_of_trigger_prs_touched,all_channel_events_including_author_side
+inline_review_comment,Inline review comment (pr_review_comments),True,9086,0.4266729279173515,9086,0.4954738793761588,1348,0.7778418926716676,10952
+submitted_review,Review submission body (pr_reviews),False,6490,0.3047663770838225,3533,0.1926600501690479,1594,0.9197922677437969,7797
+pr_comment,PR-level comment (pr_comments),False,5719,0.268560694998826,5719,0.3118660704547933,1394,0.8043854587420658,7549

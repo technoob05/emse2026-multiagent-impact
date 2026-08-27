@@ -9,5 +9,56 @@
   "seed": 20260826,
   "merged_by_day_30_no_edge": 0.8035347832996748,
   "merged_by_day_30_with_edge": 0.8462576723721191,
-  "interpretation": "cumulative merge under a time-varying edge split; a pull request contributes unexposed risk until its own first exact reply; observational, not a causal effect"
+  "interpretation": "cumulative merge under a time-varying edge split; a pull request contributes unexposed risk until its own first exact reply; observational, not a causal effect",
+  "three_arm_split": {
+    "response_window_days": 7,
+    "arm_order": [
+      "no_reply",
+      "off_target",
+      "on_target"
+    ],
+    "off_target_source": "inline_reply_events imported from run_pseudo_edge_negative_control.py, under the same seven-day response window and closed-pull-request guard as the pre-existing exact-edge column",
+    "on_target_construction_matches_preexisting_edge_column": true
+  },
+  "prs_with_off_target_reply": 647,
+  "arm_prs_no_reply": 3096,
+  "arm_prs_reply_off_target": 325,
+  "arm_prs_reply_on_target": 521,
+  "merged_by_day_30_no_reply": 0.7841004087687121,
+  "merged_by_day_30_reply_off_target": 0.8945721281805785,
+  "merged_by_day_30_reply_on_target": 0.8462576723721191,
+  "merged_by_day_30_no_reply_ci": [
+    0.7373606753771379,
+    0.8232297370759689
+  ],
+  "merged_by_day_30_reply_off_target_ci": [
+    0.8315674984182924,
+    0.9391144433884845
+  ],
+  "merged_by_day_30_reply_on_target_ci": [
+    0.7850701467990125,
+    0.8959016335329018
+  ],
+  "three_arm_overlap_diagnostics": {
+    "signed_gap_off_minus_on_min_pp": -3.168848051016515,
+    "signed_gap_off_minus_on_max_pp": 7.230715071914395,
+    "grid_points_off_target_above_on_target": 68,
+    "grid_points_on_target_above_off_target": 3,
+    "no_reply_arm_highest_until_day": 2.5,
+    "grid_points": 73,
+    "off_target_on_target_band_overlap_points": 73,
+    "off_target_on_target_band_overlap_share": 1.0,
+    "off_target_on_target_bands_overlap_whole_horizon": true,
+    "first_day_bands_separate": null,
+    "max_abs_gap_off_vs_on_pp": 7.230715071914395,
+    "max_abs_gap_day": 7.0,
+    "mean_abs_gap_off_vs_on_pp": 4.34293354523884,
+    "max_abs_gap_first_7_days_pp": 7.230715071914395,
+    "day_30_gap_off_vs_on_pp": -4.831445580845939,
+    "day_30_gap_no_reply_vs_off_pp": 11.04717194118664,
+    "day_30_gap_no_reply_vs_on_pp": 6.215726360340701,
+    "no_reply_band_below_off_target_at_day_30": true,
+    "no_reply_band_below_on_target_at_day_30": false
+  },
+  "three_arm_interpretation": "the off-target arm is a reply anchored to a different inline comment on the same pull request; if it tracks the on-target arm while the no-reply arm sits below, the day-30 difference is a liveness difference rather than an anchoring one"
 }

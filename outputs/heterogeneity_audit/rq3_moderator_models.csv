@@ -1,0 +1,5 @@
+specification,estimate,ci_low,ci_high,share_of_primary_remaining,share_of_primary_explained,interval_excludes_zero,n_prs,repositories,prs_dropped_for_missing_moderators,note
+Primary (pre-trigger adjusted),0.40726512772820267,0.2235583707942065,0.5909718846621989,1.0,0.0,True,1067,469,0,reproduces the published RQ3 split
+Primary + repository moderators,0.3336558723038717,0.15275110252151564,0.5145606420862279,0.8192596163709462,0.18074038362905376,True,1067,469,0,adds the six pre-trigger repository descriptors as controls
+Repository fixed effects,0.08740016429231144,-0.16756490519680112,0.342365233781424,0.21460262208022843,0.7853973779197716,False,1067,469,0,within-repository comparison only; the published collapse
+Repository moderators + fixed effects,0.08740016429232231,-0.16891991067953446,0.34372023926417905,0.21460262208025513,0.7853973779197448,False,1067,469,0,moderators are collinear with the fixed effects; reported for completeness

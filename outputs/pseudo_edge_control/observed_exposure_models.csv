@@ -1,0 +1,4 @@
+exposure,prs,exposed_prs,repositories,estimate_pp,ci_low,ci_high,p_value,design_columns,note
+addressed_edge_observed,1067,109,469,17.34652360493298,7.2554379722429365,27.43760923762303,0.000753954938839768,28,reference row: exact reply anchored to the cross-product trigger
+off_target_reply,958,75,439,17.537367191964808,4.994626924174367,30.08010745975525,0.00613572672341928,28,activity control: exact reply anchored to a different inline comment; PRs with the real addressed edge are removed so the contrast is off-target reply vs no reply
+any_inline_reply_diagnostic,1067,184,469,18.448054859532228,9.483488830511618,27.41262088855284,5.497969425459697e-05,28,"diagnostic, not one of the three contrasts: any inline reply of any anchoring inside the 48-hour window; this is the construct the pseudo-edge nulls suggest the estimate actually tracks"

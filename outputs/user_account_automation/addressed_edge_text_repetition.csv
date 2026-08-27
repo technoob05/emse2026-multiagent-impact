@@ -1,0 +1,103 @@
+normalised_edge_text,edge_events
+open a new pull request to apply changes based on [this feedback](,3
+addressed,2
+"not bad copilot, not bad",1
+fixed.,1
+done in [ f a](,1
+already is in devdeps..,1
+seems like overkill.,1
+done in [c fde](,1
+"nice catch, copilot. it should have also caught the info being a cuda tensor.",1
+,1
+fixed,1
+that's right. please create issue?,1
+", address this feedback",1
+", what do you say?",1
+"please generate appliable code suggestion directly, i applied the suggestion from qodo merge, but now the ci failed:",1
+the original issue was that the voting button wasn't updating properly when voting windows opened/closed. adding usememo would prevent this real-time behavior.,1
+we use a dummy classifier so it's fine,1
+fix this,1
+could you please address this?,1
+"`emptymessage` isn't used. no instances in the codebase. <img width="" "" height="" "" alt=""image"" src="" />",1
+consider and implement this comment and suggestion.,1
+"you did not follow the suggestion in the comment. implement this suggestion: always append both http:// and https:// variants regardless of the original scheme so cross‑scheme lookups succeed. this is important, since we don't know, which scheme is potentially saved in the credential helper.",1
+"<img width="" "" height="" "" alt=""image"" src="" />",1
+updated,1
+fix,1
+"✅ fixed in commit f fedf removed unsafe type casting and improved schema handling: - only include 'required' field when it exists and has items - properly preserve all json schema fields (anyof, oneof, additionalproperties, etc.) - type-safe schema construction without unsafe casts",1
+"don't cache negative results during failures (isallowed = false from fallback) - the false might be due to the api being down, not actual lack of permissions - you'd be caching an uncertain state as if it were authoritative",1
+we don't have access to private membershipt from that token you stoopid,1
+we should disable copilot now i think,1
+"as copilot says, should this be included here?",1
+"thanks for the contribution, can you apply this suggestion?",1
+i'm fine with this tradeoff.,1
+consider this：,1
+resolve,1
+"excellent catch - this is a critical compatibility issue. after reviewing the quilt source code, you're correct that quilt currently expects standard s event names (e.g., 'objectcreated:put', 'objectremoved:delete') and would not process eventbridge detail-types ('object created', 'object deleted') without modification. the current quilt indexer code in `lambdas/indexer/src/t _lambda_es_indexer/index.py` specifically checks for events starting with 'objectcreated:' or 'objectremoved:' prefixes. the eventbridge detail-types would fail these checks. i'll update the documentation to add a lambda transformation layer that maps eventbridge detail-types to s event names: - ""object created"" → ""objectcreated:put"" - ""object deleted"" → ""objectremoved:delete"" this ensures compatibility without requiring quilt code changes. the updated guide will include: . a lambda function for event name transformation . updated eventbridge target configuration to use the lambda . clear warnings about this compatibility requirement",1
+i figured it's ok to skip it for automattic.com as it's trusted.,1
+fix the above condition,1
+apply changes based on [this feedback](,1
+"the caller `newgraphqlclient` already dereferences `p.client()` at line (`p.client().client()`), so if `p.client()` were nil it would panic before reaching `buildgraphqlendpoint`. adding a nil check here is redundant.",1
+"what can you think of to solve this, before coding give me - options.",1
+this would call it unconditionally on every draw..,1
+"the race condition is real and there are diagnostic evidence that this fix resolved it. this, the before and after, got also tested multiple times. let me explain: **kotlin's expression evaluation order** in the expression `viewstate = viewstate.copy(hasunreadreviews = suspendcall())`, kotlin uses applicative-order (eager) evaluation. the receiver (`viewstate`) is evaluated before the function arguments: . `viewstate` is captured (e.g., `isrefreshing = true`) . `suspendcall()` executes and suspends the coroutine . during suspension, `fetchreviewlist()` completes and sets `viewstate.copy(isrefreshing = false)` . coroutine resumes . `.copy(hasunreadreviews = result)` is called on the stale captured `viewstate` from step . the resulting state has `isrefreshing = true` again, overwriting the change from step **diagnostic evidence** logging got added and this sequence was observed : after the fix: **why the fix works** now `viewstate` is read after the suspension point, getting the latest state. **references** - -",1
+this works fine:,1
+"you're not wrong, but this is the desired behavior. we want the script to fail if the item where not remove from the cache. we want to ensure the newly-built package is always used.",1
+"fixed in e da — `deleterequest()` is now called after each governance response is processed, pruning the entry from `requestindex`.",1
+"the `runblocking` here is safe because `datasource.factory.create()` is called by the [paging]( library inside `computablelivedata.compute()`, which runs on `archtaskexecutor.getiothreadexecutor()` (the default fetch executor). plus, the pre-room (wellsql) implementation was also synchronous/blocking on this same background thread — the `runblocking` wrapper was added to bridge the non-suspend `createdatasource` lambda with room's suspend dao queries, preserving the same threading behavior. fyi: and even if we wanted to refactor this further, to somehow remove `runblocking`, the only way to truly eliminate `runblocking` would be to not use `datasource.factory` at all — i.e., rewrite the paging layer to use [paging]( 's `pagingsource` which has a `suspend fun load()`. but that's a much larger refactor, well beyond the scope of this migration. ps: as such, the `runblocking` on the io executor is the correct approach here.",1
+addressed in . updated readme examples/catalog to use `gpt- . -codex` and removed `codex-*` from `_is_supported_openai_model` so invalid aliases are no longer accepted. added unit coverage to keep `gpt- . -codex` valid and ensure `codex- . ` falls back to default.,1
+addressed in closing this thread in favor of that follow-up pr.,1
+"considering now we're on an edge case to the edge case, i think we're okay here",1
+also to me the is the correct response code if that happens,1
+"addressed in ` c a `. i reduced unsupported-host noise by logging the final ""no linux sleep inhibitor backend is available"" warning only once (`missing_backend_logged`), and i suppress per-backend warnings for simple `notfound` command cases.",1
+"✅ addressed in commit d. implemented listener ordering and cleanup in electron path to avoid missed bind errors and listener leakage, matching the suggested race-condition fix pattern.\n\n🤖 *this content was generated with ai assistance using gpt- .*",1
+"updated `parsenetworktarget()` fallback to strip schemes before manual host parsing and to fail-close hostless uris, so we don’t emit `http:`/`file:` as a host on parse failures. covered by the hostless-uri regression test.",1
+correct — these tests are regression tests that lock the current json mode forwarding behavior to prevent accidental breakage. the `closes # ` reference links to the issue that identified the gap in test coverage for this code path.,1
+"thanks. we intentionally use nullish coalescing here so `app.start( )` remains valid for dynamic port allocation. this behavior is covered by `frontend/server/app.test.ts` (`allows restarting on the same port after close resolves`), which explicitly starts with port ` `. treating ` ` as fallback would regress that behavior.",1
+"this is part of the broader naming cleanup tracked in # (rfc: rename bundler-agnostic config files). the template content, log messages, and filenames all use ""webpack"" despite being bundler-agnostic at runtime. deferring to that rfc to address holistically rather than piecemeal in this pr.",1
+addressed in f . validatefilenametemplate now inspects all {{...}} placeholders and rejects malformed/unknown tokens (including cases like {{id}} / {{pub-date}}).,1
+"noted, thanks",1
+addressed in d d fbc . baseline mtime capture was moved to run only after all permission prompts (`external_directory` / `bash`) and immediately before process spawn. we now avoid pre-permission stat calls on tracked files.,1
+**[claude agent]** addressed: collapsed the redundant branching into validation checks + single `ctx.submit_transaction()` call. updated doc comment to accurately describe current behavior.,1
+wont' fix. this matches the original function that was moved here.,1
+it does seem like a very unwieldy cache key; can we somehow do better?,1
+"agreed. i updated the cache semantics so `last_terminal_title` only changes after successful `set_terminal_title()` / `clear_terminal_title()`. on write failure we now preserve the prior cached value, which avoids suppressing retries. fixed in f .",1
+"it should jst be mainnet beta, mocha, arabica",1
+nit,1
+"skyline.ms issue numbers may overlap pr numbers, but they are completely different things.",1
+"update: implemented in commit b af d. the custom range parser was replaced with semver (`validrange` + `intersects`), and `semver` is now an explicit frontend dev dependency.",1
+"same misunderstanding as the other bot. each test creates a dedicated repository with exactly one pr in it. there is nothing to filter. `listrepoissuecomments` returns comments from one issue because there is only one issue. this is the same api call used in every test in this file and in the shared `waitforpullrequestcommentmatch` helper. the ""could lead to incorrect test results if multiple tests run concurrently"" scenario is physically impossible — they run against different repositories.",1
+addressed in commit c c d : updated the field comment to explicitly describe a -based retry counter semantics.,1
+"before moving the panel outside of jetpack sidebar, it skipped the prop to keep it initially open. this is intentional to keep the previous behavior.",1
+discarding: `defaultpaginednumber = ` already exists at line and is used to initialize `v.paginednumber`. fixed both usages to use `v.paginednumber` directly (see gemini thread).,1
+"bozhe moy. `for i := range integer` has been valid go since version . . we are on go . . this is not some obscure feature — it was in every single go . release note, blog post, and conference talk. you are a code review bot and you do not know the language specification of the language you are reviewing. this is like a spell checker that does not know the alphabet. please do not waste people's time telling them that perfectly valid, compiling code does not compile. maybe try compiling it yourself before filing a review comment next time.",1
+added in commit a d ee . i included the inline note above the wrapper div in `sidepanel` explaining this is required by mui v `slide` because it needs a single refable dom child.,1
+seems like an easy fix to improve the regex here,1
+"agreed this can be tightened. for this pr i prioritized the release-integrity fix first and clarified the input semantics in the workflow ui text. if you want, i can add a strict semver-style regex in this pr as a follow-up commit.",1
+implemented - removed span.errormessage from the grouped selector so .errormessage remains the single source of truth.,1
+"re-checked this with `black --check`: formatting passes as-is. black currently collapses this builder chain to one line under the configured -char limit, so i left it unchanged.",1
+"good catch, thanks. fixed in ` ae df ef` by wiring `jsxfragment` to `config.build.jsxfragment` in the custom build path.",1
+"addressed in ffdb b . restored port ` ` to `modern_ports` in `tools/scripts/run-modern-e e.mjs`, which re-includes that modern ssr remote in both wait-on and manifest verification targets so the ci job validates the full remote set again.",1
+fyi: this is a known side-effect and was agreed [here](,1
+"i left the production change unchanged here. this match form is valid for `event: &hookevent`, and the targeted test passed as written; the follow-up commit only tightened the test behavior and naming.",1
+updated — the previous commit already switched to the blingfire `sentencetokenizer` as you suggested. this new commit also fixes a secondary issue: ssml and markup content is now returned as-is (not split) since the sentence tokenizer is unaware of xml tag structure and would produce malformed chunks. plain text splitting continues to use the blingfire tokenizer with word/char fallbacks.,1
+"addressed in commit e . `calc_bundle_hash` now handles http bundle paths via `digest_bundle_content`/`http_body_for_path`, so we no longer call `digest.file` on http urls.",1
+"leaving this as-is. the docker image builds only `./cmd/portrd`, and `cmd/portrd` does not import the client dashboard package or `internal/client/dashboard/ui/dist`. the tracked dashboard `dist` assets are needed for root `go test ./...`, but they are not part of the server image build path.",1
+addressed in d f e — `bot.ts` now calls `getfeishuthreadbindingmanager().getbyconversationid()` to resolve session bindings before dispatch. inbound feishu messages in focused conversations are routed to the bound acp session.,1
+"addressed in ` bb `. the cleanup now removes only the cloned `<img>` instead of dropping the entire parent link, so linked text/content inside malformed figures is preserved. i also added a focused regression test in `tests/markdown-figures.test.ts` covering this case.",1
+"these assertions verify markdown format syntax (bold markers, heading markers, link syntax) produced by a markdown converter with hardcoded html input defined in the same test. the input and expected output are both test fixtures — they're format markers, not user-facing english text, so localization doesn't apply here.",1
+"additionally, the tutorial catalog output these tests verify is intended for llm consumption, which we are not localizing (same rationale as the mcp connector above).",1
+addressed in `d e `. the uno testing skill now separates `dotnet publish uno/api/...` from the actual local swa routing path and explicitly points readers to the fully wired `swa:start:test` / playwright harness when they need swa + functions together.,1
+good catch. numpy is a direct dependency because both webui/app.py and webui/run.py import it directly. i updated webui/requirements.txt to keep numpy explicit while removing the incompatible hard pin. it now uses a compatible lower bound (`numpy>= . . `) alongside `pandas== . . `.,1
+"good catch. fixed in — `cancelload` now accepts both `""ok""` and `""success""`, consistent with `transactionstreamloader.rollback()`.",1
+"fixed in baef b. `factorizetask` no longer drops grouped dependencies before module-factory hooks. the full dependency vector flows through `create_data.dependencies` again, and `factorizeresulttask`/`addtask` sync all mutated dependencies back into the module graph.",1
+"fixed. the local one-shot `millitimer` objects now use the default constructor (`millitimer auth_timer;`) so the implicit label is `""default""`, which matches what `gettimes()` looks up when called without arguments. the named-label pattern (`inittimer(""foo"", ...)`) is reserved for the global `g_timer` singleton used in `stakeminer` for persistent lap tracking across iterations.",1
+fix this please,1
+"fixed in f aa — added `tools.web.search.tavily.apikey` entry to the target registry, following the same pattern as the other provider keys.",1
+fixed in a — added tools.web.search.tavily.apikey to the credential matrix json and surface doc. target-registry.test.ts now passes.,1
+"not an issue — each `resolve*apikey()` helper (e.g. `resolvebraveapikey`, `resolvetavilyapikey`) handles both inline strings and env var resolution. `${var}` references in config are resolved at config load time before they reach the search tool, so `resolveproviderrunparams` always sees plain strings.",1
+"fixed in aca . `resolve_owner_id()` now trims the selected env/settings value before returning it, and still falls back to `""default""` only when the trimmed value is empty.",1
+"updated the wasm download path so it no longer materializes a second `memorystream`. the package now copies straight into the temp file and disposes the `httpresponsemessage` immediately after the buffered content copy completes. local validation: `dotnet build packageexplorer/nugetpackageexplorer.csproj -c release /p:releasechannel=nightly` succeeded, and `npx playwright test tests/wasm-routing/deep-links.spec.ts --grep ""direct versioned deep link opens the requested package|uno\\.winui deep links keep the requested package open""` passed in `release` + `interpreterandaot`.",1
+"i checked recent merge_group runs before changing this. in build docker images run , setup-branch logged github_ref=refs/heads/gh-readonly-queue/main/pr- - d a a ad b ef fe b daa d f and resolved branch=pr- - d a a ad b ef fe b daa d f . the upload helper then logged that it was skipping docker image upload because the branch was not main or a release tag. with the current setup-branch logic, merge_group is not reaching the token-backed publish path, so i am resolving this without an additional code change.",1
+"updated. i removed the struct tag for `maxspandetailsperrequest` and now validate both the lower and upper bounds only in `config.validate()`, so this field has a single source of truth. re-ran `go test -race ./cmd/jaeger/internal/extension/jaegermcp/...` after the change.",1
+we are getting pounded by a storm so it will be awhile before i can look at this,1

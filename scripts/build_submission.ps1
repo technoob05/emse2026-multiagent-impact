@@ -119,6 +119,18 @@ try {
     Invoke-Checked $pythonExe scripts\analysis\run_task_context_interaction.py
     Assert-ProjectFile "scripts\analysis\run_merge_curves.py"
     Invoke-Checked $pythonExe scripts\analysis\run_merge_curves.py
+    Assert-ProjectFile "scripts\analysis\run_anchorability_coverage.py"
+    Invoke-Checked $pythonExe scripts\analysis\run_anchorability_coverage.py
+    Assert-ProjectFile "scripts\analysis\run_burst_threshold_selection.py"
+    Invoke-Checked $pythonExe scripts\analysis\run_burst_threshold_selection.py
+    Assert-ProjectFile "scripts\analysis\run_pseudo_edge_negative_control.py"
+    Invoke-Checked $pythonExe scripts\analysis\run_pseudo_edge_negative_control.py
+    Assert-ProjectFile "scripts\analysis\run_user_account_automation_audit.py"
+    Invoke-Checked $pythonExe scripts\analysis\run_user_account_automation_audit.py
+    Assert-ProjectFile "scripts\analysis\run_addressed_edge_reply_content_audit.py"
+    Invoke-Checked $pythonExe scripts\analysis\run_addressed_edge_reply_content_audit.py
+    Assert-ProjectFile "scripts\analysis\run_heterogeneity_audit.py"
+    Invoke-Checked $pythonExe scripts\analysis\run_heterogeneity_audit.py
     Invoke-Checked $pythonExe scripts\analysis\run_cross_corpus_attribution_sensitivity.py
     Invoke-Checked $pythonExe scripts\audit\prepare_feedback_response_audit.py
     Invoke-Checked $pythonExe scripts\audit\prepare_review_collision_audit.py

@@ -1,0 +1,89 @@
+{
+  "edge_writing_user_accounts": 80,
+  "edge_events_written_by_user_accounts": 105,
+  "edge_prs_with_a_user_written_edge": 97,
+  "exposure_events_total": 128,
+  "exposed_prs_total": 109,
+  "comment_history_rows_scored": 7141,
+  "accounts_by_heuristic": {
+    "flag_template": {
+      "accounts": 7,
+      "account_share": 0.0875,
+      "edge_events": 11,
+      "edge_event_share": 0.10476190476190476,
+      "edge_prs": 9
+    },
+    "flag_timing": {
+      "accounts": 1,
+      "account_share": 0.0125,
+      "edge_events": 1,
+      "edge_event_share": 0.009523809523809525,
+      "edge_prs": 1
+    },
+    "flag_clock": {
+      "accounts": 0,
+      "account_share": 0.0,
+      "edge_events": 0,
+      "edge_event_share": 0.0,
+      "edge_prs": 0
+    },
+    "flag_volume": {
+      "accounts": 0,
+      "account_share": 0.0,
+      "edge_events": 0,
+      "edge_event_share": 0.0,
+      "edge_prs": 0
+    },
+    "flag_any": {
+      "accounts": 7,
+      "account_share": 0.0875,
+      "edge_events": 11,
+      "edge_event_share": 0.10476190476190476,
+      "edge_prs": 9
+    },
+    "flag_combined": {
+      "accounts": 1,
+      "account_share": 0.0125,
+      "edge_events": 1,
+      "edge_event_share": 0.009523809523809525,
+      "edge_prs": 1
+    }
+  },
+  "flagged_accounts_combined": 1,
+  "flagged_edge_events_combined": 1,
+  "flagged_accounts_any_heuristic": 7,
+  "flagged_edge_events_any_heuristic": 11,
+  "machine_likeness_score_median": 0.19801503081538452,
+  "machine_likeness_score_max": 0.47075580519604543,
+  "original_contrast": {
+    "estimate": 0.1734652360493301,
+    "ci_low": 0.0725543797224295,
+    "ci_high": 0.2743760923762307,
+    "p_value": 0.0007539549388397,
+    "n_prs": 1067,
+    "exposed_prs": 109
+  },
+  "contrast_after_dropping_flagged": {
+    "estimate": 0.17916160922950533,
+    "ci_low": 0.07825269831667672,
+    "ci_high": 0.2800705201423339,
+    "p_value": 0.0005016495366271722,
+    "n_prs": 1066,
+    "exposed_prs": 108,
+    "dropped_prs": 1
+  },
+  "addressed_edge_text_repetition": {
+    "edge_texts": 105,
+    "distinct_normalised_edge_texts": 102,
+    "distinct_share": 0.9714285714285714,
+    "edge_texts_that_duplicate_another_edge_text": 5,
+    "most_frequent_normalised_edge_text": "open a new pull request to apply changes based on [this feedback](",
+    "most_frequent_count": 3,
+    "empty_after_normalisation": 1
+  },
+  "manual_review_accounts": 20,
+  "manual_review_pending": 0,
+  "combined_flag_rule": "an account is flagged when it trips at least 2 of the four pre-registered heuristics",
+  "interpretation": "1 of 80 user accounts that write an exact addressed edge trip at least 2 machine-likeness heuristics, covering 1 of 105 user-written edge events; dropping every PR whose edge such an account wrote moves the adjusted later-merge contrast from 0.1735 [0.0726, 0.2744] to 0.1792 [0.0783, 0.2801]; 102 of 105 addressed-edge texts are distinct after normalisation, and manual reading of the highest-scoring accounts finds that the repetition driving the template heuristic is hand-issued agent invocations and GitHub UI button text rather than generated output, so the audit supports the claim that a person writes the reply while showing that what the person writes is often a one-line trigger rather than a substantive engineering response",
+  "scope": "sensitivity audit of the actor classification behind the addressed edge; heuristics are behavioural proxies, not ground truth about account operation"
+}
