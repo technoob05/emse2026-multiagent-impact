@@ -69,10 +69,13 @@ COHORT_SOURCES = {
 }
 COHORT_DEFINITIONS = {
     FULL_COHORT_KEY: (
-        "complete cross-product trigger cohort: every PR whose first agent "
-        "review feedback is cross-product and whose trigger leaves a full "
+        "complete cross-product trigger cohort: every PR that received at "
+        "least one review from a product other than its author, anchored to "
+        "the earliest such cross-product review, whose trigger leaves a full "
         "7-day response window before the observation cutoff; no landmark "
-        "survival requirement"
+        "survival requirement. Note this is not the same as requiring the PR's "
+        "first agent review of any kind to be cross-product: 2,340 of these PRs "
+        "had an earlier same-product review"
     ),
     LANDMARK_COHORT_KEY: (
         "subset of the complete cross-product trigger cohort still open at the "

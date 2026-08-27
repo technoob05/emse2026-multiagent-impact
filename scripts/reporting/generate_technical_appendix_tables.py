@@ -2283,6 +2283,7 @@ REPRODUCTION_STEPS: dict[str, tuple[str, str]] = {
     "run_user_account_automation_audit.py": ("Machine-likeness heuristics; the re-estimated contrast", "outputs/user_account_automation/heuristic_incidence.csv"),
     "run_addressed_edge_reply_content_audit.py": ("Reply-content classification; the contrast by category", "outputs/user_account_automation/reply_content_category_counts.csv"),
     "run_heterogeneity_audit.py": ("Matched-pair composition, per-pair gaps, moderators", "outputs/heterogeneity_audit/matched_pair_by_product_pair.csv"),
+    "run_matched_thread_position_audit.py": ("Whether a matched pair can produce a reply at all", "outputs/matched_thread_position/restricted_visibility_contrasts.csv"),
     "run_worked_example.py": ("One traced pull request, event by event", "outputs/worked_example/timeline.csv"),
     "run_confounder_benchmarks.py": ("Measured controls on the scale of a hidden cause", "outputs/confounder_benchmarks/measured_factor_positions.csv"),
     "prepare_review_collision_audit.py": ("Blinded structural same-locus coder packets", "outputs/review_collision/product_pair_concentration.csv"),

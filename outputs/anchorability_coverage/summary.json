@@ -7,7 +7,7 @@
     "cohort_role": "PRIMARY - study population reported in the Method section",
     "cohort_definition": {
       "source_artifact": "outputs/cross_agent_review/cross_feedback_response_chains.parquet",
-      "definition": "complete cross-product trigger cohort: every PR whose first agent review feedback is cross-product and whose trigger leaves a full 7-day response window before the observation cutoff; no landmark survival requirement",
+      "definition": "complete cross-product trigger cohort: every PR that received at least one review from a product other than its author, anchored to the earliest such cross-product review, whose trigger leaves a full 7-day response window before the observation cutoff; no landmark survival requirement. Note this is not the same as requiring the PR's first agent review of any kind to be cross-product: 2,340 of these PRs had an earlier same-product review",
       "trigger_prs_in_this_cohort": 8608,
       "repositories_in_this_cohort": 1416,
       "inline_trigger_prs_in_this_cohort": 4824,

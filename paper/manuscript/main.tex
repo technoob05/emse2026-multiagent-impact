@@ -369,11 +369,53 @@ rather than per comment, 4,824 of the 8,608 (56.0\%) have an inline comment as
 the first cross-product review and are therefore in scope. The other 44.0\% are
 not measured here at all.
 
-We take that trade deliberately. A rule that never fires wrongly on 56\% of cases
-is worth more to a measurement paper than a looser rule that reaches all of them
-and cannot say which of its matches are real. Online Resource~1 reports the full
-channel breakdown, and Section~\ref{sec:threats} returns to what the unseen share
-might hold.
+We take that trade deliberately. A rule that never fires wrongly on 56\% of
+cases is worth more to a measurement paper than a looser rule that reaches all of
+them and cannot say which of its matches are real. Online Resource~1 reports the
+full channel breakdown, and Section~\ref{sec:threats} returns to what the unseen
+share might hold.
+
+Table~\ref{tab:flow} prints the whole narrowing in one place, because five
+different population sizes appear in this paper and a reader should not have to
+reconstruct how they relate. Two of them are not stages in one chain. The
+merge-curve cohort and the thread-position cohort are built from the same parent
+for different questions, and neither contains the other.
+
+\begin{table}[htbp]
+\caption{How the study population narrows. Every row reconciles exactly: the
+count before, minus what the filter removes, equals the count after. The last
+row is not a stage inside the branch above it. Branch A and Branch B are two
+cohorts drawn from the same 4,824 parent for different questions, and neither
+contains the other.}
+\label{tab:flow}
+\begin{tabular}{@{}p{0.42\textwidth}rrr@{}}
+\toprule
+Filter applied & Before & Removed & After \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Trunk}} \\
+Pull requests in the release layer we use & --- & --- & 361,296 \\
+A mapped product reviewed it, inside its open window & 361,296 & 283,882 & 77,414 \\
+One of those reviews came from a different product than the author & 77,414 & 68,792 & 8,622 \\
+The first such review leaves a full seven-day window & 8,622 & 14 & 8,608 \\
+That first review arrived as an inline comment & 8,608 & 3,784 & 4,824 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Branch A: the outcome lane}} \\
+Trigger leaves a full thirty-day outcome horizon & 4,824 & 882 & 3,942 \\
+Pull request still open at hour 48 & 3,942 & 2,875 & 1,067 \\
+A reply names the trigger within 48 hours & 1,067 & 958 & 109 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Branch B: the thread-position lane}} \\
+Earliest review of either kind is the cross-product one & 4,824 & 1,298 & 3,526 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two units run through that table and we keep them apart everywhere. The primary
+unit is the pull request. Reply events are counted separately because one pull
+request can receive more than one: the 109 exposed pull requests carry 128 reply
+events, of which 105 are written by ordinary user accounts across 97 pull
+requests, and 59 of those 105 are substantive, falling on 56 pull requests.
+
 
 \begin{figure}[htbp]
 \centering
@@ -1094,9 +1136,10 @@ inert.
 The reply identifier is looser than the name suggests. It points at the first
 comment of a thread, so our edge means ``a reply in the thread the trigger
 opened''. Two things follow, and we measured both. First, the exposure can only
-fire when the trigger is itself the first comment of its thread. Among
-cross-product inline triggers that is almost always true: 13 of 3,526 sit
-mid-thread, and in the hour-48 group only 3 of 1,067 do, none of them exposed.
+fire when the trigger is itself the first comment of its thread. Among cross-product inline triggers that is almost always true: 13 of the 3,526
+in the thread-position cohort sit mid-thread. The hour-48 cohort is a different
+population rather than a subset of that one, and 3 of its 1,067 sit mid-thread,
+none of them exposed.
 The restriction bites hard for same-product triggers across the whole release,
 where 46\% sit mid-thread. Inside the 546 matched pairs it is milder, 12 of the
 253 same-product triggers that are inline at all, but it runs one way: no
