@@ -34,7 +34,7 @@
 \affil[2]{\orgname{Vietnam National University Ho Chi Minh City (VNU-HCM)},
   \orgaddress{\city{Ho Chi Minh City}, \country{Vietnam}}}
 
-\abstract{\textbf{Context:} A pull request written by one coding-agent product and reviewed by another looks like a multi-agent workflow, but two products on one pull request do not show that either answered the other. \textbf{Objective:} We ask what connected public path follows one cross-product review comment. \textbf{Method:} From one fixed version of the AIDev dataset we analyse 8,608 pull requests where one product reviewed another's change, 546 matched pairs, and a 1,067-request outcome group. Measured activity is anchored to that comment by exact account, comment, and review-batch identifiers. We set aside the first minutes of automated posting, count outcomes only after hour 48 so the exposure precedes the outcome, and re-test the rule with deliberately wrong anchors. \textbf{Results:} Direct dialogue between products is rare; once the opening minutes are set aside, people take most remaining first actions. Cross-product review draws 13 percentage points less visible follow-up than matched same-product review. A reply that GitHub records as answering the comment goes with 17 points more later merging, and a person writes it four times in five. The wrong-anchor tests then qualify that: a reply attached anywhere else does as well, and shuffling which comment each reply answers leaves the estimate unmoved. Reading all 105 replies, the association sits with those a person wrote, not with one-click hand-offs to another machine. Linking an issue in the request roughly doubles the chance a review point is answered across a product boundary, and changes nothing within one product. \textbf{Conclusions:} Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention, not a resolved review point.}
+\abstract{\textbf{Context:} A pull request written by one coding-agent product and reviewed by another looks like a multi-agent workflow, but two products on one pull request do not show that either answered the other. \textbf{Objective:} We ask what connected public path follows one cross-product review comment. \textbf{Method:} From one fixed version of the AIDev dataset we analyse 8,608 pull requests where one product reviewed another's change, 546 matched pairs, and a 1,067-request outcome group. Measured activity is anchored to that comment by exact account, comment, and review-batch identifiers. We set aside the first minutes of automated posting, count outcomes only after hour 48 so the exposure precedes the outcome, and re-test the rule with deliberately wrong anchors. \textbf{Results:} Direct dialogue between products is rare; once the opening minutes are set aside, people take most remaining first actions. Cross-product review draws 13 percentage points less visible follow-up than matched same-product review. A reply that GitHub records as answering the comment goes with 17 points more later merging, and a user account writes it four times in five. The wrong-anchor tests then qualify that: a reply attached anywhere else does as well, and shuffling which comment each reply answers leaves the estimate unmoved. Reading all 105 replies, the association sits with those a person wrote, not with one-click hand-offs to another machine. Linking an issue in the request roughly doubles the chance a review point is answered across a product boundary, and changes nothing within one product. \textbf{Conclusions:} Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention, not a resolved review point.}
 
 \keywords{coding agents, multi-agent software engineering, code review, human-agent collaboration, pull requests, mining software repositories}
 \maketitle
@@ -118,8 +118,10 @@ an automated action followed by a person acting, covers pull requests where no
 reply exists to anchor, and we report it as a check on a wider group rather than
 as a second answer.
 \item[RQ4. What makes someone answer across the boundary?] A pull request
-body often points at an issue. That pointer is written before any review, and
-it gives a reader context the diff alone does not. Does it change whether a
+body often points at an issue, and that pointer gives a reader context the diff
+alone does not. It is normally written when the pull request is opened, but the
+release records no time for it, so we observe the link rather than its moment of
+arrival. Does it change whether a
 review point gets answered, and does that depend on who is reviewing?
 \end{description}
 
@@ -434,8 +436,12 @@ exercises every rule; accounts are named by role.}
 
 A \emph{relay} is the handover we are hunting for: the next visible step on the
 PR is taken by a \emph{different} product from the one that wrote the review
-comment. If two coding tools were really working as a team, this is the trace it would leave: one raises a point, the other acts on it. RQ1 asks how often that
-actually happens.
+comment. We use it as our operational definition of a public handoff: one product raises a
+point, and a different one acts on it where the record can show it. That is a
+narrow definition on purpose. Two tools could coordinate through a shared plan,
+an external orchestrator, a generated patch, or a person in between, and none of
+that would leave this trace. RQ1 asks how often the public handoff itself
+happens, not how often coordination of any kind does.
 
 For RQ1, we follow each first cross-product trigger for seven days, ending at
 PR closure when earlier. We join exact replies, new review rounds, later PR
@@ -988,7 +994,8 @@ influential repositories is removed in turn, which leaves a range of 11.4 to 16.
 points. It also holds when mid-thread triggers are put back in. That check keeps
 the outcome definition exactly as it is, so those triggers enter the denominator
 carrying an outcome that cannot occur for them; the estimate falls only slightly,
-to 12.1 points, which is what dilution by impossible cases should do. Shuffling the link label inside each repository, the way we shuffle
+to 12.1 points, consistent with dilution from adding structurally impossible
+cases. Shuffling the link label inside each repository, the way we shuffle
 event order in RQ1, gives a reference distribution centred on zero against which
 the observed value sits far out in the tail ($p=0.001$).
 
@@ -1139,7 +1146,7 @@ ladder in this paper is one way to be specific; any way is better than a count.
 This bears on a live argument. It has been proposed that agents can already meet
 every goal of code review, and that keeping a person as the mandatory reviewer is
 a dead end \citep{monperrus2026endofreview}. On this evidence the person is not a
-formality layered on an agent loop. In the public trace, they are the loop.
+formality layered on an agent loop. In the public trace, user activity is the dominant visible bridge.
 
 \section{Threats to Validity}\label{sec:threats}
 

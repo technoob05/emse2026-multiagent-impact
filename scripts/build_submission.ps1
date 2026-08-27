@@ -175,6 +175,11 @@ try {
         Pop-Location
     }
 
+    # The page counts quoted in the readiness and validation documents are
+    # read from the PDFs that were just built, so they cannot drift.
+    Assert-ProjectFile "scripts\release\sync_page_counts.py"
+    Invoke-Checked $pythonExe scripts\release\sync_page_counts.py
+
     New-Item -ItemType Directory -Path $pdfOutputDir -Force | Out-Null
     Copy-Item paper\manuscript\main.pdf build\pdf\emse_multiagent_submission_draft.pdf -Force
     Copy-Item paper\manuscript\technical_appendix.pdf build\pdf\emse_multiagent_technical_appendix.pdf -Force
