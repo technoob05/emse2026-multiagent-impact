@@ -63,6 +63,7 @@ INCLUDE_DIRS = (
 )
 INCLUDE_FILES = (
     "README.md",
+    "REPRODUCE.md",   # standalone run instructions for someone who has only this zip
     "CITATION.cff",
     "LICENSE",
     "NOTICE.md",
@@ -81,6 +82,7 @@ NOT_DEPOSITED = (
     "outputs/cache/",
     "outputs/_superseded/",
     "scripts/_superseded/",
+    "scripts/_exploration/",   # figure/analysis scratch; the mirror of outputs/_exploration/
     "scripts/__pycache__/",
 )
 
@@ -231,7 +233,8 @@ verified the exclusions below against the built zip.
 | `protocol/` | Reproduction contract: experiment disposition ledger, label schemas, acquisition manifests |
 | `docs/` | Guides, decisions, and audits |
 | `outputs/` | The derived analysis products the manuscript tables and figures are built from |
-| `README.md` | Run order for the headline analysis |
+| `REPRODUCE.md` | Standalone instructions: get the data, install, run, and read the outputs |
+| `README.md` | Study summary, headline findings, and run order |
 | `CITATION.cff`, `LICENSE`, `NOTICE.md`, `.zenodo.json` | Citation and licence metadata |
 | `pyproject.toml`, `uv.lock` | Pinned Python environment |
 | `MANIFEST.csv`, `SHA256SUMS` | Integrity record for every file above |
@@ -259,8 +262,9 @@ present in the working tree matched and were withheld.
 These paths hold the private coder keys and answer keys for the blinded
 human-coding audits, the author-metadata audit, ad-hoc exploration scratch, and
 the submission-portal staging folder. Regenerable caches
-(`outputs/cache/`) and the superseded prior study (`outputs/_superseded/`,
-`scripts/_superseded/`) are also left out; neither feeds this paper.
+(`outputs/cache/`), ad-hoc script scratch (`scripts/_exploration/`), and the
+superseded prior study (`outputs/_superseded/`, `scripts/_superseded/`) are also
+left out; none of it feeds this paper.
 
 ## Licence scope
 
@@ -292,6 +296,7 @@ def self_test(never_publish_matchers, third_party_matchers):
         "scripts/analysis/run_merge_curves.py",
         "outputs/tables/agent_counts.csv",
         "README.md",
+        "REPRODUCE.md",
     ]
     third_party = [
         "external_data/downloads/aidev.parquet",

@@ -1,26 +1,20 @@
 # Depositing the artifact on Zenodo
 
-Ordered checklist for the person doing the deposit. Everything here is manual on
-purpose: the archive is built by script, but no script may invent an identifier.
+Ordered checklist for the person doing the deposit.
 
-## 0. Fill in the placeholders first
+Author metadata is **done**. Names, order, joint first authorship, both
+affiliations, the corresponding email, the licence, the version tag `v1.0.0`,
+the description, and the pinned source-data revision are final in
+`CITATION.cff` and `.zenodo.json`, and they match the manuscript title page.
+The archive is built and verified by script.
 
-Nothing is deposited until these are real values. Do not guess any of them; an
-invented ORCID or affiliation in a citation record silently mis-attributes the
-work, which is worse than leaving the field out.
+Three things are left, and each of them genuinely needs a person, because no
+script may invent an identifier or speak for an author:
 
-| Placeholder | Files | What to put there |
-|---|---|---|
-| `ORCID-PENDING` | `CITATION.cff`, `.zenodo.json` | Each author's ORCID iD. In `CITATION.cff` use the full URL form `https://orcid.org/0000-...`; in `.zenodo.json` use the bare `0000-...` form. If an author has no ORCID, delete their `orcid` line rather than filling it. |
-| `AFFILIATION-PENDING` | `CITATION.cff`, `.zenodo.json` | The institution, worded exactly as on the manuscript title page. |
-| `EMAIL-PENDING` | `CITATION.cff` | The corresponding author's email. Only the corresponding author carries one. |
-| `VERSION-PENDING` | `CITATION.cff`, `.zenodo.json` | The release tag, e.g. `v1.0.0`. |
-| `DATE-RELEASED-PENDING` | `CITATION.cff` | The deposit date, `YYYY-MM-DD`. |
-| `DOI-PENDING` | `CITATION.cff` | The reserved DOI from step 2. |
-
-The same values are still outstanding on the manuscript title page
-(`Affiliation pending`, `Corresponding email pending`); see
-`paper/SUBMISSION_METADATA_FORM.md`. Fill both in one sitting so they agree.
+1. **Reserve the DOI on Zenodo** (step 2 below).
+2. **Supply the five ORCID iDs** (step 3 below).
+3. **Substitute the DOI into the manuscript** (step 4 below), which is owned by
+   someone else.
 
 ## 1. Build and check the archive
 
@@ -30,11 +24,17 @@ The same values are still outstanding on the manuscript title page
 ```
 
 The self-test proves the exclusion guard still refuses every path in the
-`NEVER PUBLISH` block of `.gitignore`. The build then writes
-`build/zenodo/` with the zip, `MANIFEST.csv`, `SHA256SUMS`, and
-`ARCHIVE_CONTENTS.md`, and refuses with a non-zero exit if any withheld path
-reached the zip. Read the "Withheld" list it prints before uploading; the
-private coder keys and answer keys must appear there every time.
+`NEVER PUBLISH` block of `.gitignore`. The build then writes `build/zenodo/`
+with the zip, `MANIFEST.csv`, `SHA256SUMS`, and `ARCHIVE_CONTENTS.md`, and
+refuses with a non-zero exit if any withheld path reached the zip. Read the
+"Withheld" list it prints before uploading; the private coder keys and answer
+keys must appear there every time.
+
+The zip carries code, `outputs/`, `docs/`, `protocol/`, the metadata files, and
+`REPRODUCE.md`. It does not carry `paper/`: the manuscript is under the
+publisher agreement, not the MIT licence. So step 4 does not change the zip, and
+this step can be run before or after it. Rerun it after step 3, though, since
+the ORCID edits change `CITATION.cff` and `.zenodo.json`, which are both inside.
 
 ## 2. Reserve the DOI *before* submitting the manuscript
 
@@ -46,50 +46,87 @@ publication.
    **Get a DOI now** / *Reserve DOI*. Zenodo shows the DOI immediately and holds
    it against this draft.
 3. Record it. This is the concept-version DOI you will cite.
+4. Back in `CITATION.cff`, uncomment the `doi:` line and set it, and uncomment
+   `date-released:` and set it to today's date in `YYYY-MM-DD` form. Both are
+   commented out on purpose: the CFF 1.2.0 schema pattern-constrains them, so a
+   literal placeholder would fail validation.
 
-## 3. Put the DOI in the manuscript
+## 3. Supply the ORCID iDs
+
+Ask each of the five authors for their ORCID iD. Then:
+
+- `CITATION.cff`: uncomment that author's `# orcid:` line and set it to the full
+  URL form, `https://orcid.org/0000-0000-0000-0000`.
+- `.zenodo.json`: add an `"orcid"` key to that author's entry in `creators`,
+  in the bare `0000-0000-0000-0000` form. The creators currently carry no
+  `orcid` key at all, and the `notes` field says why; trim that sentence out of
+  `notes` once every author has one.
+
+If an author has no ORCID, leave their entry without one. Do not invent a value:
+a fabricated iD in a citation record silently mis-attributes the work to a
+stranger, which is worse than a missing field.
+
+After editing, revalidate:
+
+```powershell
+uv run --with cffconvert cffconvert --validate
+.\.venv\Scripts\python.exe -c "import json; json.load(open('.zenodo.json', encoding='utf-8'))"
+```
+
+## 4. Put the DOI in the manuscript
 
 The manuscript is not edited by this guide's author. Hand the DOI to whoever
-owns the LaTeX. Substitute it at:
+owns the LaTeX. There are exactly two markers, both in
+`paper/manuscript/main.tex`:
 
-- `paper/manuscript/main.tex`, line ~1109: `[ARTIFACT DOI PENDING]`
-- `paper/manuscript/main.tex`, line ~1111: `[ARTIFACT DOI PENDING]`
-- `paper/COVER_LETTER.md`, data-availability paragraph: `[ARTIFACT DOI]`
+- line ~1225, data-availability sentence: `[ARTIFACT DOI PENDING]`
+- line ~1232, code-availability sentence: `[ARTIFACT DOI PENDING]`
+
+`paper/COVER_LETTER.md` carries the same DOI in its data-availability
+paragraph if that file is used.
 
 Then rebuild the PDFs (`.\scripts\build_submission.ps1`) and regenerate
-`SUBMIT/` so the checksums match what is uploaded.
+`SUBMIT/`. The Zenodo zip is unaffected; it does not contain `paper/`.
 
-## 4. Fill the Zenodo form from `.zenodo.json`
+## 5. Fill the Zenodo form from `.zenodo.json`
 
 If the deposit is made by hand rather than through the GitHub integration, copy
-title, description, creators, licence (`MIT`), keywords, and the
-`related_identifiers` entries out of `.zenodo.json`. The dataset entry must stay:
-`hao-li/AIDev-7.6M` at revision `37bbe1533e26cc1e1374917dba1186d1c8a4dc81`,
-relation *is derived from*. The AIDev release itself is not uploaded.
+title, description, creators with their affiliations, licence (`MIT`), version
+(`v1.0.0`), keywords, and the `related_identifiers` entries out of
+`.zenodo.json`. The dataset entry must stay: `hao-li/AIDev-7.6M` at revision
+`37bbe1533e26cc1e1374917dba1186d1c8a4dc81`, relation *is derived from*. The
+AIDev release itself is not uploaded.
 
-## 5. Link the GitHub release to the Zenodo record
+Two facts have no field on the Zenodo form and live in `notes`, so keep `notes`
+on the record: Duy Minh Dao Sy and Trung Kiet Huynh are joint first authors, and
+the authors received no funding and declare no competing interests.
+
+## 6. Link the GitHub release to the Zenodo record
 
 The GitHub integration is the tidier route, and it reads `.zenodo.json`
 automatically.
 
 1. Zenodo → *GitHub* → authorise, then flip the switch **on** for
    `technoob05/emse2026-multiagent-impact`.
-2. In GitHub, create a release with the tag from step 0
-   (e.g. `v1.0.0`). Zenodo archives the repository at that tag and mints the
-   record.
+2. In GitHub, create a release tagged `v1.0.0`. Zenodo archives the repository
+   at that tag and mints the record.
 3. Because the GitHub integration archives the repository tree rather than the
    zip from step 1, upload `build/zenodo/emse2026-multiagent-impact-artifact.zip`
    as an additional file on the record. It carries the derived `outputs/`
    artifacts that `.gitignore` keeps out of git.
 4. Copy the Zenodo DOI badge into `README.md` once the record is live.
 
-## 6. Last look before publishing
+## 7. Last look before publishing
 
+- [ ] Every author has an ORCID on the record, or is deliberately without one.
 - [ ] No `-PENDING` string survives in `CITATION.cff` or `.zenodo.json`.
+- [ ] `cffconvert --validate` still passes after the ORCID and DOI edits.
 - [ ] The build printed the withheld private keys and exited zero.
 - [ ] `SHA256SUMS` in `build/zenodo/` matches the zip you are uploading.
 - [ ] Licence on the record reads MIT, and `NOTICE.md` is inside the zip so the
       limits of that licence travel with it.
+- [ ] `REPRODUCE.md` is inside the zip; it is the entry point for anyone who
+      downloads the record and has nothing else.
 - [ ] The manuscript no longer says `[ARTIFACT DOI PENDING]`.
 
 Publishing is irreversible: the files on a published Zenodo record cannot be

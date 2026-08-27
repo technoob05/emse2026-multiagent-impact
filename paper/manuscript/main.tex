@@ -110,13 +110,13 @@ before it: can a public handoff be seen at all?
 the boundary between two products? And when a person steps in, have they worked
 on this repository before?
 \item[RQ3. Who writes the connection, and does the change get merged later?]
-Two things in the trace suggest that somebody actually picked the review point up.
-The first is a reply whose stored reply target is the review comment itself, so
-the platform records what it is answering. The second is looser: an automated
-action, and then a person acting. That second one proves far less, because a person acting afterwards is not the
-same as a person answering. It still means a human came back to the change, and
-it covers pull requests where no reply exists to anchor. Does either go together with the change being
-accepted later, and who writes the reply: another tool, or a person?
+When a reply carries the review comment's own identifier as its target, the
+platform itself records what that reply is answering. That is the strictest
+connection a public trace offers. Does it go together with the change being
+accepted later, and who writes it: another tool, or a person? A looser signal,
+an automated action followed by a person acting, covers pull requests where no
+reply exists to anchor, and we report it as a check on a wider group rather than
+as a second answer.
 \item[RQ4. What makes someone answer across the boundary?] A pull request
 body often points at an issue. That pointer is written before any review, and
 it gives a reader context the diff alone does not. Does it change whether a
@@ -824,9 +824,13 @@ very wide interval. Any visible sign that a PR is still being worked on points
 the same way. We report that model in Online Resource~1 and keep the harder
 discussion-only comparison as our main specificity check.
 
-The automation-to-user route gives a separate check on a wider group, with its
-own cohort and its own reference. It is linked to 12.9 points more later merge
-than automation alone, after the same kind of pre-trigger adjustment.
+The looser signal promised above gives a check on a wider group. Where no reply
+exists to anchor, we can still ask whether an automated action was followed by a
+person. Pull requests where it was are linked to 12.9 points more later merge
+than pull requests where automation acted with nobody following, after the same
+pre-trigger adjustment. That comparison has its own cohort and its own reference
+group, so the number is not interchangeable with the 17.3 above; it says only
+that the pattern survives where the strict rule cannot reach.
 
 \begin{figure}[!htbp]
 \centering
