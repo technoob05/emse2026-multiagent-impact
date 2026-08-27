@@ -1,4 +1,7 @@
-channel,channel_label,carries_reply_anchor,reviewer_side_events,share_of_reviewer_side_events,reviewer_side_events_with_body,share_of_reviewer_side_events_with_body,prs_touched,share_of_trigger_prs_touched,all_channel_events_including_author_side
-inline_review_comment,Inline review comment (pr_review_comments),True,9086,0.4266729279173515,9086,0.4954738793761588,1348,0.7778418926716676,10952
-submitted_review,Review submission body (pr_reviews),False,6490,0.3047663770838225,3533,0.1926600501690479,1594,0.9197922677437969,7797
-pr_comment,PR-level comment (pr_comments),False,5719,0.268560694998826,5719,0.3118660704547933,1394,0.8043854587420658,7549
+cohort,channel,channel_label,carries_reply_anchor,reviewer_side_events,share_of_reviewer_side_events,reviewer_side_events_with_body,share_of_reviewer_side_events_with_body,prs_touched,share_of_trigger_prs_touched,all_channel_events_including_author_side
+full_cross_product_trigger_cohort,inline_review_comment,Inline review comment (pr_review_comments),True,31507,0.4287191628906941,31507,0.4863317125877904,5967,0.6931923791821561,37902
+full_cross_product_trigger_cohort,submitted_review,Review submission body (pr_reviews),False,23505,0.31983508184675674,14799,0.22843250752489003,7798,0.9059014869888475,28094
+full_cross_product_trigger_cohort,pr_comment,PR-level comment (pr_comments),False,18479,0.25144575526254914,18479,0.2852357798873196,6102,0.7088754646840149,24005
+open_at_48h_landmark_cohort,inline_review_comment,Inline review comment (pr_review_comments),True,9086,0.4266729279173515,9086,0.4954738793761588,1348,0.7778418926716676,10952
+open_at_48h_landmark_cohort,submitted_review,Review submission body (pr_reviews),False,6490,0.3047663770838225,3533,0.1926600501690479,1594,0.9197922677437969,7797
+open_at_48h_landmark_cohort,pr_comment,PR-level comment (pr_comments),False,5719,0.268560694998826,5719,0.3118660704547933,1394,0.8043854587420658,7549

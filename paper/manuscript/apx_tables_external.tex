@@ -39,18 +39,18 @@ Evidence ladder & GH Archive plus GitHub REST enrichment & One public GitHub eve
 Evidence ladder & SWE-Review-Chat & One PR with ordered general discussion, reviews, inline comments and nested thread replies & exact edge: PARTIAL & Full-corpus topology audit; no independent exact-edge cohort survived overlap exclusion \\
 Evidence ladder & AI-to-AI Code Reviews closed-loop cohorts & One PR-reviewer-product pair & exact edge: NO & Product-pair attribution and trigger-time sensitivity on overlapping public PRs \\
 Evidence ladder & SWE-PRBench & One merged PR plus selected human-written initiating comments; synthetic comment IDs are scoped only within task & exact edge: NO & Semantic codebook and initiating-feedback audit only; reply topology is not preserved \\
-Evidence ladder & SWE-Review-Traj & One decision-correct agentic reviewer trajectory over a generated candidate PR & exact edge: NO & Controlled generate--review--revise contrast only; not a field replication \\
+Evidence ladder & SWE-Review-Traj & One decision-correct agentic reviewer trajectory over a generated candidate PR & exact edge: NO & Controlled contrast over generate, review, and revise only; not a field replication \\
 Evidence ladder & GitHub Agentic PR Dataset & One PR, commit, or changed file depending on table & exact edge: NO & Excluded: adds PRs and diffs but no review-response graph \\
 Evidence ladder & Trace Commons Agent Traces & One voluntarily donated coding-agent session & exact edge: NO & Excluded: opt-in private sessions with no stable public PR edge or outcome \\
-SWE-Review-Chat replication gate & Public PR rows scanned & 1,082,529 & -- & Available corpus \\
-SWE-Review-Chat replication gate & PRs whose author maps by the frozen exact alias list & 5,250 & -- & Product-aware author support \\
-SWE-Review-Chat replication gate & PRs with a cross-product inline parent & 38 & -- & Candidate trigger support \\
-SWE-Review-Chat replication gate & PRs where such a parent has a nested reply & 7 & -- & Seven candidate PRs before overlap removal \\
-SWE-Review-Chat replication gate & Nested children before overlap removal & 18 / 1 / 0 & -- & Unmapped user / same product / different product \\
-SWE-Review-Chat replication gate & Candidate PRs outside the AIDev full corpus & 0 & -- & No independent cohort remains \\
-SWE-Review-Chat replication gate & REST-validated 48-hour landmark PRs & 0 & -- & Replication gate fails \\
+SWE-Review-Chat replication gate & Public PR rows scanned & 1,082,529 & n/a & Available corpus \\
+SWE-Review-Chat replication gate & PRs whose author maps by the frozen exact alias list & 5,250 & n/a & Product-aware author support \\
+SWE-Review-Chat replication gate & PRs with a cross-product inline parent & 38 & n/a & Candidate trigger support \\
+SWE-Review-Chat replication gate & PRs where such a parent has a nested reply & 7 & n/a & Seven candidate PRs before overlap removal \\
+SWE-Review-Chat replication gate & Nested children before overlap removal & 18 / 1 / 0 & n/a & Unmapped user / same product / different product \\
+SWE-Review-Chat replication gate & Candidate PRs outside the AIDev full corpus & 0 & n/a & No independent cohort remains \\
+SWE-Review-Chat replication gate & REST-validated 48-hour landmark PRs & 0 & n/a & Replication gate fails \\
 CodAGE attribution concordance & PR overlap & 123 & 11.5\% of landmark cohort & Coverage only \\
-CodAGE attribution concordance & Exact author--reviewer pair agrees & 119 & 96.7\% of overlapping PRs & Supports product attribution \\
+CodAGE attribution concordance & Exact pair of author and reviewer agrees & 119 & 96.7\% of overlapping PRs & Supports product attribution \\
 CodAGE attribution concordance & Trigger time agrees within five minutes & 104 & 99.0\% & Supports event anchoring \\
 CodAGE attribution concordance & Exact-edge exposed PRs & 9 & 7.6\% of exact-pair overlap & Too few for replication \\
 CodAGE attribution concordance & Raw later-merge difference & 119 & +14.6 pp & 95\% interval [-18.6, +47.9] \\

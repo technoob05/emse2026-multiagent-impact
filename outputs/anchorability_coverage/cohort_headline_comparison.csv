@@ -1,0 +1,10 @@
+quantity,full_cross_product_trigger_cohort,open_at_48h_landmark_cohort,landmark_minus_full,unit
+Trigger PRs,8608.0,1733.0,-6875.0,count
+Reviewer-side review interactions,73491.0,21295.0,-52196.0,count
+  of which inline (anchorable),31507.0,9086.0,-22421.0,count
+Inline share of reviewer-side events,0.4287191628906941,0.4266729279173515,-0.002046234973342609,pct
+Non-anchorable share of reviewer-side events,0.5712808371093059,0.5733270720826484,0.0020462349733425533,pct
+Thread-root share of inline events,0.8132816210226373,0.8123630387143901,-0.0009185823082472622,pct
+Inline (in-scope) trigger PRs,4824.0,1067.0,-3757.0,count
+Inline share of triggers (in scope),0.5604089219330854,0.6156953260242354,0.05528640409114993,pct
+Out-of-scope trigger share,0.43959107806691455,0.3843046739757646,-0.05528640409114993,pct

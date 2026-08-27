@@ -85,7 +85,7 @@ Build the figures, paper PDF, and flat source bundle:
 ## Key outputs
 
 - `outputs/coordination_topology/`: exact-edge funnel, exact-author match, route controls, and robustness.
-- `outputs/burst_topology/`: 0--30 minute burst sensitivity and leave-one-out checks.
+- `outputs/burst_topology/`: 0 to 30 minute burst sensitivity and leave-one-out checks.
 - `outputs/deep_coordination/`: post-burst next-state transitions and product-composition placebo.
 - `outputs/ownership_persistence/`: exact-owner/layer persistence and bidirectional bounce falsification.
 - `outputs/human_memory_bridge/`: strict earlier-review history, decisive-review check, and leakage validation.

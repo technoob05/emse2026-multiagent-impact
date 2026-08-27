@@ -10,7 +10,7 @@ roles from web profiles. Every author should approve the final entry.
 - Journal: *Empirical Software Engineering*
 - Article type: `Research Papers`
 - Special issue: `Agentic Software Engineering`
-- Provisional corresponding author: Dao Sy Duy Minh — **confirm or replace**
+- Provisional corresponding author: Dao Sy Duy Minh (**confirm or replace**)
 
 ## Author records
 
@@ -25,7 +25,7 @@ roles from web profiles. Every author should approve the final entry.
 If authors have different affiliations, give each affiliation a stable number
 and list every author-to-affiliation mapping here: `[fill]`.
 
-### Candidate values found in prior author material — confirm before use
+### Candidate values found in prior author material (confirm before use)
 
 - Four authors (Dao Sy Duy Minh, Huynh Trung Kiet, Pham Phu Hoa, and Nguyen Lam
   Phu Quy) consistently appear with `Faculty of Information Technology,
@@ -62,6 +62,10 @@ Conceptualization; Data curation; Formal analysis; Funding acquisition;
 Investigation; Methodology; Project administration; Resources; Software;
 Supervision; Validation; Visualization; Writing—original draft;
 Writing—review and editing.
+
+The two `Writing` roles are spelled with a dash because that is the CRediT
+taxonomy's own wording, not this project's prose style. Copy both strings into
+Editorial Manager exactly as they appear above.
 
 | Author | Confirmed roles |
 |---|---|

@@ -11,7 +11,7 @@ The four-RQ analysis, its figures, the Supplementary Information, the validation
 - [x] Paper has exactly three RQs and one connected ownership-topology story.
 - [x] Five supplied authors are present in the requested order.
 - [x] Springer Nature `sn-jnl` template and author-year bibliography are used.
-- [x] Abstract is within the journal's 150--250 word range.
+- [x] Abstract is within the journal's 150 to 250 word range.
 - [x] AIDev revision, cohort boundary, and analysis windows are pinned.
 - [x] Exact parent edges and distinct review batches prevent self-response inflation.
 - [x] Burst sensitivity covers 0, 1, 5, 10, and 30 minutes.
@@ -32,7 +32,7 @@ The four-RQ analysis, its figures, the Supplementary Information, the validation
 - [x] The complete SWE-Review-Chat topology audit was fail-closed after AIDev overlap removal; incompatible sources were not pooled into the RQs.
 - [x] AI use, coverage limits, and non-causal scope are disclosed.
 - [x] Build and package scripts compile both PDFs, scan logs, make a complete archival source bundle, and stage a main-only flat source ZIP plus `ESM_1.pdf` for the portal.
-- [x] Page-complete visual QA covers all 28 manuscript pages and all 30 Supplementary Information pages, which carry 12 tables.
+- [x] Page-complete visual QA covers all 29 manuscript pages and all 30 Supplementary Information pages, which carry 12 tables.
 - [x] Official venue requirements were rechecked on 2026-08-26 and mapped to project files.
 
 ## Scientific and production gates before upload

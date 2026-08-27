@@ -7,8 +7,8 @@ Verified from official pages on 2026-08-26:
 - Special issue selection: Agentic Software Engineering.
 - Review: single-blind; include author identities.
 - Final deadline: 2026-09-28; rolling review.
-- Abstract: 150--250 words; structured abstract permitted.
-- Keywords: 4--6.
+- Abstract: 150 to 250 words; structured abstract permitted.
+- Keywords: 4 to 6.
 - References: author-year.
 - LaTeX: current Springer Nature sn-jnl; flat source bundle; no input files.
 - Required: data availability statement and editable sources at every round.

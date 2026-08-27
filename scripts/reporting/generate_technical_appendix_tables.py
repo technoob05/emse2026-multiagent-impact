@@ -30,6 +30,15 @@ if str(SRC) not in sys.path:
 from multiagent_impact.cross_agent_review import AGENT_ACCOUNT_ALIASES  # noqa: E402
 
 
+# Printed in any table cell where the quantity does not exist for that row.
+# Spelled out rather than punctuated so no dash reaches the page.
+NOT_APPLICABLE = "n/a"
+
+
+# The coverage analysis reports two cohorts. The article's Method quotes the
+# full cross-product population, so the appendix table must quote the same one.
+COVERAGE_COHORT = "full_cross_product_trigger_cohort"
+
 EXPECTED_LABELS = {
     "tab:s-dataset",
     "tab:s-definitions",
@@ -297,13 +306,18 @@ def release_table() -> str:
     anchor = read_json("outputs/anchorability_coverage/summary.json")
     proxy = read_csv(
         "outputs/anchorability_coverage/coarse_unanchored_proxy.csv",
-        ("trigger_channel", "trigger_prs", "coarse_proxy_rate"),
+        ("cohort", "trigger_channel", "trigger_prs", "coarse_proxy_rate"),
     )
-    out_of_scope_proxy = one(proxy, trigger_channel="pr_comment")
-    inline_proxy = one(proxy, trigger_channel="inline_review_comment")
+    out_of_scope_proxy = one(
+        proxy, cohort=COVERAGE_COHORT, trigger_channel="pr_comment"
+    )
+    inline_proxy = one(
+        proxy, cohort=COVERAGE_COHORT, trigger_channel="inline_review_comment"
+    )
     note = (
         "The rich layer contains repositories with more than 100 stars, and inventory row counts come from release metadata. In Panel B coverage means that a pull request has at least one linked row; inline comments resolve through their submitted-review identifier first. "
-        f"Panel C counts reviewer-side interaction events on the {integer(anchor['cohort']['trigger_prs'])} trigger PRs, split by the channel that "
+        f"Panel C counts reviewer-side interaction events on all "
+        f"{integer(anchor[COVERAGE_COHORT]['cohort_definition']['trigger_prs_in_this_cohort'])} cross-product trigger PRs, split by the channel that "
         "carries them; only inline review comments store a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares "
         "in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring "
         "ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, fires on "
@@ -435,7 +449,7 @@ def burst_table() -> str:
                     integer(item["prs"]),
                     percent(item["share_all_prs"]),
                     ci_percent(item["repository_cluster_ci_low"], item["repository_cluster_ci_high"]),
-                    "--" if median == "" else compact_number(median),
+                    NOT_APPLICABLE if median == "" else compact_number(median),
                 )
             )
 
@@ -559,7 +573,7 @@ def rq1_placebo_rows() -> list[tuple[str, ...]]:
     metric_labels = {
         "exact_owner_persistence": "Exact owner repeats",
         "layer_persistence": "Same ownership layer continues",
-        "cross_layer_handoff": "Cross-layer handoff (user--product bounce)",
+        "cross_layer_handoff": "Cross-layer handoff (bounce between user and product)",
     }
 
     selected = [item for item in transitions if int(number(item["washout_minutes"])) == 5]
@@ -574,7 +588,7 @@ def rq1_placebo_rows() -> list[tuple[str, ...]]:
                 tex(f"Next state: {STATE_LABELS[item['next_owner_state']]}"),
                 integer(item["prs"]),
                 percent(item["share"]),
-                "--",
+                NOT_APPLICABLE,
                 ci_percent(item["repository_cluster_ci_low"], item["repository_cluster_ci_high"]),
             )
         )
@@ -586,22 +600,22 @@ def rq1_placebo_rows() -> list[tuple[str, ...]]:
                 tex("Same-product continuation among later mapped events: observed"),
                 integer(p["eligible_prs"]),
                 percent(p["observed_same_product_share"]),
-                "--",
-                "--",
+                NOT_APPLICABLE,
+                NOT_APPLICABLE,
             ),
             (
                 tex("Deep transition"),
                 tex("Same-product continuation: random-order expectation"),
                 integer(p["eligible_prs"]),
                 percent(p["random_order_expected_share"]),
-                "--",
-                "--",
+                NOT_APPLICABLE,
+                NOT_APPLICABLE,
             ),
             (
                 tex("Deep transition"),
                 tex("Observed minus random-order expectation"),
                 integer(p["eligible_prs"]),
-                "--",
+                NOT_APPLICABLE,
                 pp(p["observed_minus_random_order"]),
                 ci_pp(p["repository_cluster_difference_ci_low"], p["repository_cluster_difference_ci_high"]),
             ),
@@ -732,7 +746,7 @@ def history_rows() -> list[tuple[str, ...]]:
             integer(item[count_field]),
             integer(item["repositories"]),
             percent(item["prior_reviewer_share"]),
-            "--" if item["median_prior_review_prs_among_experienced"] == "" else compact_number(item["median_prior_review_prs_among_experienced"]),
+            NOT_APPLICABLE if item["median_prior_review_prs_among_experienced"] == "" else compact_number(item["median_prior_review_prs_among_experienced"]),
         )
         for label, item, count_field in selected
     ]
@@ -781,7 +795,7 @@ def rq2_table() -> str:
                 "Panel C. Strict prior same-repository review history",
                 (
                     "Population",
-                    "Account--PR rows",
+                    "Rows",
                     "Repos",
                     "With prior history (\\%)",
                     "Median prior PRs",
@@ -806,7 +820,7 @@ def rq2_table() -> str:
         + BOUNDARY_NOTE
         + " "
         + heterogeneity_note("B")
-        + " Panel C reports prior review history across user-account populations, and its median prior-PR count is taken among accounts with prior history. "
+        + " Panel C reports prior review history across user-account populations, one row per account and pull request, and its median prior-PR count is taken among accounts with prior history. "
         + HISTORY_NOTE
         + " "
         + heterogeneity_note("D"),
@@ -900,7 +914,7 @@ def addressed_edge_table() -> str:
             "48 h",
             tex("Leave one ordered product pair out"),
             tex("at least 70"),
-            "--",
+            NOT_APPLICABLE,
             f"{pp(leave['estimate_min'])} to {pp(leave['estimate_max'])}",
             f"lower bounds {pp(leave['ci_low_min'])} to {pp(leave['ci_low_max'])}",
         )
@@ -940,7 +954,7 @@ def addressed_edge_table() -> str:
                 "48 h",
                 tex("Specificity: overlap weighting"),
                 "109 of 615",
-                "--",
+                NOT_APPLICABLE,
                 pp(discussion_overlap["estimate"]),
                 ci_pp(discussion_overlap["ci_low"], discussion_overlap["ci_high"]),
             ),
@@ -948,7 +962,7 @@ def addressed_edge_table() -> str:
                 "48 h",
                 tex("Specificity: repository fixed effects"),
                 "109 of 615",
-                "--",
+                NOT_APPLICABLE,
                 pp(discussion_fe["estimate"]),
                 f"{ci_pp(discussion_fe['ci_low'], discussion_fe['ci_high'])}; {integer(discussion_fe['repositories_with_within_exposure_variation'])} varying repos",
             ),
@@ -1162,8 +1176,8 @@ def rq3_robustness_table() -> str:
             (
                 tex("Cohort restriction"),
                 tex(item["stage"]),
-                "--",
-                "--",
+                NOT_APPLICABLE,
+                NOT_APPLICABLE,
                 f"{integer(item['prs'])} PRs, {percent(item['share_of_inline_triggers'])}\\% of cross-product inline triggers",
             )
         )
@@ -1174,8 +1188,8 @@ def rq3_robustness_table() -> str:
             (
                 tex("Who writes the edge"),
                 tex(label),
-                "--",
-                "--",
+                NOT_APPLICABLE,
+                NOT_APPLICABLE,
                 plural(item["events"], "event")
                 + f", {percent(item['share_of_exposure_events'])}\\% of exposure events, on "
                 + plural(item["prs"], "PR"),
@@ -1188,8 +1202,8 @@ def rq3_robustness_table() -> str:
             (
                 tex("Exposure definition"),
                 tex(item["definition"]),
-                pp(estimate) if estimate else "--",
-                ci_pp(item["ci_low"], item["ci_high"]) if estimate else "--",
+                pp(estimate) if estimate else NOT_APPLICABLE,
+                ci_pp(item["ci_low"], item["ci_high"]) if estimate else NOT_APPLICABLE,
                 tex(
                     f"{integer(item['exposed_prs'])} exposed PRs, raw later merge "
                     f"{percent(item['exposed_raw_merge_rate'])}%"
@@ -1235,8 +1249,8 @@ def rq3_robustness_table() -> str:
             (
                 tex("Propensity overlap"),
                 tex(f"{label}: 0, 5, 25, 50, 75, 95, 100 percentiles (48 h)"),
-                "--",
-                "--",
+                NOT_APPLICABLE,
+                NOT_APPLICABLE,
                 tex("; ".join(series)),
             )
         )
@@ -1264,8 +1278,8 @@ def rq3_robustness_table() -> str:
             (
                 tex("Tipping point"),
                 tex(f"One binary factor {percent(prevalence, 0)} pp more common among edge PRs, 48 h"),
-                "--",
-                "--",
+                NOT_APPLICABLE,
+                NOT_APPLICABLE,
                 tex(
                     f"must itself carry {percent(item['outcome_difference_to_remove_point_estimate'])} pp "
                     f"of later merge to remove the point estimate, and "
@@ -1349,8 +1363,8 @@ def rq3_robustness_table() -> str:
         (
             tex("Randomisation, unconditional"),
             tex("The other three reply windows"),
-            "--",
-            "--",
+            NOT_APPLICABLE,
+            NOT_APPLICABLE,
             tex(
                 f"two-sided p = {min(other_p):.3f} to {max(other_p):.3f} across "
                 f"{min(other_repos)} to {max(other_repos)} re-randomisable repositories"
@@ -1364,7 +1378,7 @@ def rq3_robustness_table() -> str:
             tex("Randomisation, conditional"),
             tex("Re-randomisable repos, repository fixed effects"),
             pp(test["observed_estimate"]),
-            "--",
+            NOT_APPLICABLE,
             tex(
                 f"{integer(test['n_prs'])} PRs in {integer(test['repositories'])} repos; "
                 f"reference mean {pp(test['permutation_mean'])} pp over "
@@ -1460,7 +1474,7 @@ def landmark_route_rows() -> list[tuple[str, ...]]:
         median = raw["median_first_action_hours"]
         if route == "automation_no_human":
             estimate = "Reference"
-            interval = "--"
+            interval = NOT_APPLICABLE
         else:
             adjusted = one(
                 contrasts,
@@ -1475,7 +1489,7 @@ def landmark_route_rows() -> list[tuple[str, ...]]:
                 tex(labels[route]),
                 integer(raw["prs"]),
                 percent(raw["later_merge_rate"]),
-                "--" if median == "" else f"{number(median):.2f}",
+                NOT_APPLICABLE if median == "" else f"{number(median):.2f}",
                 estimate,
                 interval,
             )
@@ -1707,7 +1721,7 @@ def external_screen_rows() -> tuple[list[tuple[str, ...]], str]:
         (
             "swe_review_traj",
             "NO",
-            "Controlled generate--review--revise contrast only; not a field replication",
+            "Controlled contrast over generate, review, and revise only; not a field replication",
         ),
         (
             "github_agentic_pr",
@@ -1758,7 +1772,7 @@ def external_screen_rows() -> tuple[list[tuple[str, ...]], str]:
                 tex("SWE-Review-Chat replication gate"),
                 tex(stage_label),
                 value,
-                "--",
+                NOT_APPLICABLE,
                 tex(meaning),
             )
         )
@@ -1772,7 +1786,7 @@ def external_screen_rows() -> tuple[list[tuple[str, ...]], str]:
     adjusted = one(models, specification="pretrigger_adjusted")
     for check, size, observed, use in (
         ("PR overlap", integer(overlap["prs"]), f"{percent(overlap['share_of_landmark'])}\\% of landmark cohort", "Coverage only"),
-        ("Exact author--reviewer pair agrees", integer(agreement["prs"]), f"{percent(agreement['share_of_landmark'])}\\% of overlapping PRs", "Supports product attribution"),
+        ("Exact pair of author and reviewer agrees", integer(agreement["prs"]), f"{percent(agreement['share_of_landmark'])}\\% of overlapping PRs", "Supports product attribution"),
         ("Trigger time agrees within five minutes", integer(timestamp_rows["value"]), f"{percent(timestamp_match['value'])}\\%", "Supports event anchoring"),
         ("Exact-edge exposed PRs", integer(exposed["prs"]), f"{percent(exposed['share_of_landmark'])}\\% of exact-pair overlap", "Too few for replication"),
         ("Raw later-merge difference", integer(raw["n_prs"]), f"{pp(raw['estimate'])} pp", f"95\\% interval {ci_pp(raw['ci_low'], raw['ci_high'])}"),
@@ -2195,7 +2209,7 @@ def specifications_table() -> str:
         ("Same-locus timing share", "Whole repositories", "10,000", "20260826", "Percentile band"),
         ("Randomisation inference, unconditional", "Exposure labels inside each repository", "2,000 permutations", "20260826", "Two-sided permutation p and percentile band"),
         ("Randomisation inference, conditional", "Exposure labels inside each varying repository", "2,000 permutations", "20260826", "Two-sided permutation p against a centred reference"),
-        ("All outcome regressions", "None", "--", "--", "Cluster-robust normal approximation, not resampling"),
+        ("All outcome regressions", "None", NOT_APPLICABLE, NOT_APPLICABLE, "Cluster-robust normal approximation, not resampling"),
     )
     resampling: list[tuple[str, ...]] = []
     for analysis, unit, draws, seed, method in records:
@@ -2203,8 +2217,8 @@ def specifications_table() -> str:
             (
                 tex(analysis),
                 tex(unit),
-                tex("no resampling" if draws == "--" else draws),
-                tex("--" if seed == "--" else seed),
+                tex("no resampling" if draws == NOT_APPLICABLE else draws),
+                tex(NOT_APPLICABLE if seed == NOT_APPLICABLE else seed),
                 tex(method),
             )
         )
@@ -2309,12 +2323,12 @@ def runorder_rows() -> list[tuple[str, ...]]:
         if key not in REPRODUCTION_STEPS:
             raise ValueError(f"Reproduction step is undocumented: {command}")
         produces, artifact = REPRODUCTION_STEPS[key]
-        expected = plural(len(read_csv(artifact)), "row") if artifact else "--"
+        expected = plural(len(read_csv(artifact)), "row") if artifact else NOT_APPLICABLE
         rows.append((str(index), breakable_code(key), tex(produces), tex(expected)))
     return rows
 
 
-RUNORDER_NOTE = "The order is read from the project's documented sequence, so this table cannot drift from it. The expected-row column names one frozen product per step where a stable count exists; a dash means the step writes figures, validation logs, or binary tables instead."
+RUNORDER_NOTE = "The order is read from the project's documented sequence, so this table cannot drift from it. The expected-row column names one frozen product per step where a stable count exists; n/a means the step writes figures, validation logs, or binary tables instead."
 
 
 def record_table() -> str:
@@ -2421,7 +2435,7 @@ def ordering_rows() -> list[tuple[str, ...]]:
             tex("Tie diagnostic"),
             tex("Tied first timestamps, PRs with a post-burst action"),
             tex("all 5"),
-            "--",
+            NOT_APPLICABLE,
             tex(f"{min(tie_counts):,} to {max(tie_counts):,} PRs"),
             tex(
                 f"{mixed_total} mixed-state tie in total"
@@ -2451,7 +2465,7 @@ def ordering_rows() -> list[tuple[str, ...]]:
                 tex("Leave-one-out ordering gate"),
                 tex(f"User minus mapped, dropping {unit_labels[unit]}"),
                 "5",
-                "--",
+                NOT_APPLICABLE,
                 tex(
                     f"{number(items[5]['minimum_user_minus_mapped_percentage_points']):.1f} to "
                     f"{number(items[5]['maximum_user_minus_mapped_percentage_points']):.1f} pp"
@@ -2466,7 +2480,7 @@ def ordering_rows() -> list[tuple[str, ...]]:
                 tex("Leave-one-out ordering gate"),
                 tex(f"Same gate, other four thresholds, dropping {unit_labels[unit]}"),
                 tex("0, 1, 10, 30"),
-                "--",
+                NOT_APPLICABLE,
                 tex(f"{low:.1f} to {high:.1f} pp"),
                 tex("both gates hold in every exclusion at every threshold"),
             )
@@ -2650,19 +2664,22 @@ def anchorability_rows() -> list[tuple[str, ...]]:
     summary = read_json("outputs/anchorability_coverage/summary.json")
     volume = read_csv(
         "outputs/anchorability_coverage/channel_interaction_volume.csv",
-        ("channel", "channel_label", "carries_reply_anchor", "reviewer_side_events", "share_of_reviewer_side_events"),
+        ("cohort", "channel", "channel_label", "carries_reply_anchor", "reviewer_side_events", "share_of_reviewer_side_events"),
     )
+    volume = [row for row in volume if row["cohort"] == COVERAGE_COHORT]
     triggers = read_csv(
         "outputs/anchorability_coverage/trigger_channel_composition.csv",
-        ("trigger_channel", "in_scope_for_the_addressed_edge", "trigger_prs", "share_of_trigger_prs"),
+        ("cohort", "trigger_channel", "in_scope_for_the_addressed_edge", "trigger_prs", "share_of_trigger_prs"),
     )
     split = read_csv(
         "outputs/anchorability_coverage/inline_root_reply_split.csv",
-        ("position", "can_receive_an_exact_parent_edge", "inline_events", "share_of_inline_events"),
+        ("cohort", "position", "can_receive_an_exact_parent_edge", "inline_events", "share_of_inline_events"),
     )
     rows: list[tuple[str, ...]] = []
     for item in volume:
-        trigger = one(triggers, trigger_channel=item["channel"])
+        trigger = one(
+            triggers, cohort=COVERAGE_COHORT, trigger_channel=item["channel"]
+        )
         if item["carries_reply_anchor"] != trigger["in_scope_for_the_addressed_edge"]:
             raise ValueError(f"Anchor flag disagrees with trigger scope for {item['channel']}")
         # The release table name is already given in the inventory panel, so the
@@ -2678,27 +2695,28 @@ def anchorability_rows() -> list[tuple[str, ...]]:
                 percent(trigger["share_of_trigger_prs"]),
             )
         )
-    reviewer = summary["reviewer_side_interaction_volume"]
-    composition = summary["trigger_channel_composition"]
+    cohort = summary[COVERAGE_COHORT]
+    reviewer = cohort["reviewer_side_interaction_volume"]
+    composition = cohort["trigger_channel_composition"]
     rows.append(
         (
             tex("All channels that carry no reply anchor"),
             "No",
-            integer(reviewer["non_anchorable_events"]),
-            percent(reviewer["non_anchorable_share_of_reviewer_side_events"]),
-            integer(composition["out_of_scope_trigger_prs"]),
-            percent(composition["out_of_scope_trigger_share"]),
+            integer(reviewer["non_anchorable_events_in_this_cohort"]),
+            percent(reviewer["non_anchorable_share_of_reviewer_side_events_in_this_cohort"]),
+            integer(composition["out_of_scope_trigger_prs_in_this_cohort"]),
+            percent(composition["out_of_scope_trigger_share_in_this_cohort"]),
         )
     )
-    root = one(split, position="thread_root")
+    root = one(split, cohort=COVERAGE_COHORT, position="thread_root")
     rows.append(
         (
             tex("Inline thread roots, the only events an exact reply can name"),
             "Yes",
             integer(root["inline_events"]),
             percent(root["share_of_inline_events"]),
-            "--",
-            "--",
+            NOT_APPLICABLE,
+            NOT_APPLICABLE,
         )
     )
     return rows
@@ -2764,7 +2782,7 @@ def burst_threshold_rows() -> list[tuple[str, ...]]:
             if not isinstance(cuts, dict) or not cuts:
                 raise ValueError(f"No applied per-product cuts recorded for {rule}")
             values = sorted(number(value) for value in cuts.values())
-            cut = f"{compact_number(values[0])}--{compact_number(values[-1])}"
+            cut = f"{compact_number(values[0])} to {compact_number(values[-1])}"
         else:
             cut = compact_number(item["threshold_minutes"])
         if item["user_exceeds_mapped_interval_excludes_zero"] != "True":
@@ -2788,8 +2806,8 @@ def burst_threshold_rows() -> list[tuple[str, ...]]:
         (
             tex("The other four fixed conventions (Panel A carries their shares)"),
             tex("0, 1, 10, 30"),
-            "--",
-            "--",
+            NOT_APPLICABLE,
+            NOT_APPLICABLE,
             tex(f"{min(fixed_gaps):+.1f} to {max(fixed_gaps):+.1f}"),
             tex(f"[{min(fixed_lows):+.1f}, {max(fixed_highs):+.1f}]"),
         )
@@ -2855,7 +2873,7 @@ def pseudo_edge_rows() -> list[tuple[str, ...]]:
         (
             tex("Joint model: addressed edge minus off-target reply"),
             integer(joint["prs"]),
-            "--",
+            NOT_APPLICABLE,
             pp_value(joint["difference_pp"]),
             ci_pp_value(joint["difference_ci_low"], joint["difference_ci_high"]),
             tex(p_text(joint["difference_p_value"])),
@@ -2911,8 +2929,8 @@ def reply_content_rows() -> list[tuple[str, ...]]:
             estimate = pp(model["estimate"])
             interval = ci_pp(model["ci_low"], model["ci_high"])
         else:
-            estimate = "--"
-            interval = "--"
+            estimate = NOT_APPLICABLE
+            interval = NOT_APPLICABLE
         rows.append(
             (
                 tex(label),
@@ -2932,7 +2950,7 @@ def reply_content_rows() -> list[tuple[str, ...]]:
             tex("Routing edge: the first two categories combined"),
             integer(summary["routing_edges_user_written"]),
             percent(summary["routing_share_user_written"]),
-            "--",
+            NOT_APPLICABLE,
             pp(routing["estimate"]),
             ci_pp(routing["ci_low"], routing["ci_high"]),
         )
@@ -2980,7 +2998,7 @@ def specificity_table() -> str:
                     "PRs",
                     "Exposed",
                     "Estimate or null mean (pp)",
-                    "95\\% interval or null 2.5--97.5\\%",
+                    "95\\% interval or null 2.5 to 97.5\\%",
                     "$p$ or position in the null",
                 ),
                 pseudo_edge_rows(),
@@ -3068,7 +3086,7 @@ def automation_flag_rows() -> list[tuple[str, ...]]:
                 raise ValueError(f"No readable statistic name for {flag}")
             rule = comparison_math(f"{statistic} ({matches[0]['threshold']})")
         else:
-            rule = "--"
+            rule = NOT_APPLICABLE
         rows.append(
             (
                 tex(AUTOMATION_FLAG_LABELS[flag]),
@@ -3169,9 +3187,9 @@ def matched_pair_rows() -> list[tuple[str, ...]]:
         (
             tex(f"{len(below)} further pairs below the 30-pair floor"),
             integer(sum(number(item["pairs"]) for item in below)),
-            "--",
-            "--",
-            "--",
+            NOT_APPLICABLE,
+            NOT_APPLICABLE,
+            NOT_APPLICABLE,
             tex("not estimated"),
         )
     )
@@ -3200,8 +3218,8 @@ def repository_moderator_rows() -> list[tuple[str, ...]]:
         rows.append(
             (
                 tex(item["specification"]),
-                "--",
-                "--",
+                NOT_APPLICABLE,
+                NOT_APPLICABLE,
                 pp(item["estimate"]) + " pp",
                 ci_pp(item["ci_low"], item["ci_high"]),
                 percent(item["share_of_primary_explained"]) + tex("% explained"),

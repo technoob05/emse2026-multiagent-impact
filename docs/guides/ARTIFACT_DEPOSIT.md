@@ -49,7 +49,7 @@ publication.
 
 ## 3. Put the DOI in the manuscript
 
-The manuscript is not edited by this guide's author — hand the DOI to whoever
+The manuscript is not edited by this guide's author. Hand the DOI to whoever
 owns the LaTeX. Substitute it at:
 
 - `paper/manuscript/main.tex`, line ~1109: `[ARTIFACT DOI PENDING]`
@@ -79,7 +79,7 @@ automatically.
    record.
 3. Because the GitHub integration archives the repository tree rather than the
    zip from step 1, upload `build/zenodo/emse2026-multiagent-impact-artifact.zip`
-   as an additional file on the record — it carries the derived `outputs/`
+   as an additional file on the record. It carries the derived `outputs/`
    artifacts that `.gitignore` keeps out of git.
 4. Copy the Zenodo DOI badge into `README.md` once the record is live.
 

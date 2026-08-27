@@ -48,12 +48,12 @@ Linked issues & Rich & Linked rows & 38,006 & 28,987 & 8.02\% of the backbone; 0
 \midrule
 Interaction channel & Anchor & Reviewer events & Share (\%) & Trigger PRs & Share of triggers (\%) \\
 \midrule
-Inline review comment & Yes & 9,086 & 42.7 & 1,067 & 61.6 \\
-Review submission body & No & 6,490 & 30.5 & 353 & 20.4 \\
-PR-level comment & No & 5,719 & 26.9 & 313 & 18.1 \\
-All channels that carry no reply anchor & No & 12,209 & 57.3 & 666 & 38.4 \\
-Inline thread roots, the only events an exact reply can name & Yes & 8,897 & 81.2 & -- & -- \\
+Inline review comment & Yes & 31,507 & 42.9 & 4,824 & 56.0 \\
+Review submission body & No & 23,505 & 32.0 & 2,173 & 25.2 \\
+PR-level comment & No & 18,479 & 25.1 & 1,611 & 18.7 \\
+All channels that carry no reply anchor & No & 41,984 & 57.1 & 3,784 & 44.0 \\
+Inline thread roots, the only events an exact reply can name & Yes & 30,825 & 81.3 & n/a & n/a \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} The rich layer contains repositories with more than 100 stars, and inventory row counts come from release metadata. In Panel B coverage means that a pull request has at least one linked row; inline comments resolve through their submitted-review identifier first. Panel C counts reviewer-side interaction events on the 1,733 trigger PRs, split by the channel that carries them; only inline review comments store a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, fires on 51.4\% of PR-level-comment triggers against 34.2\% of inline triggers; it is reported to size the blind spot and is never used for estimation.
+\noindent\footnotesize \textit{Note:} The rich layer contains repositories with more than 100 stars, and inventory row counts come from release metadata. In Panel B coverage means that a pull request has at least one linked row; inline comments resolve through their submitted-review identifier first. Panel C counts reviewer-side interaction events on all 8,608 cross-product trigger PRs, split by the channel that carries them; only inline review comments store a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, fires on 39.7\% of PR-level-comment triggers against 34.5\% of inline triggers; it is reported to size the blind spot and is never used for estimation.
 \endgroup

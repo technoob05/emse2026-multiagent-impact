@@ -3,8 +3,8 @@
 %
 % House rule for this file: it is a reference document, not a second telling of
 % the article. Where the article already explains a design choice, this file
-% gives only what the article leaves out -- the exact rule, the parameter, the
-% row counts -- and points at the article section that carries the reasoning.
+% gives only what the article leaves out: the exact rule, the parameter, the
+% row counts. It then points at the article section that carries the reasoning.
 \documentclass[pdflatex,sn-basic]{sn-jnl}
 
 \usepackage{graphicx}
@@ -76,18 +76,18 @@ The exact account allowlist, and the rules behind labels the article does not de
 Participation funnel, the load-bearing validation gates, and the column-level leakage contract & \ref{tab:s-cohort} & \pageref{tab:s-cohort} \\
 Every named estimation specification, its adjustment set, and every resampling setting & \ref{tab:s-specifications} & \pageref{tab:s-specifications} \\
 \addlinespace
-\multicolumn{3}{@{}l}{\textit{RQ1 -- is there a handoff?}} \\
+\multicolumn{3}{@{}l}{\textit{RQ1: is there a handoff?}} \\
 First public owner after each burst window, the owner split under nine burst schemes, the tie rule and every leave-one-out exclusion, and the order placebos & \ref{tab:s-burst} & \pageref{tab:s-burst} \\
 \addlinespace
-\multicolumn{3}{@{}l}{\textit{RQ2 -- who bridges the boundary?}} \\
+\multicolumn{3}{@{}l}{\textit{RQ2: who bridges the boundary?}} \\
 The 13.4-point matched gap, where it lives, prior history of the first user bridges, and the descriptors behind the familiar-replier split & \ref{tab:s-rq2} & \pageref{tab:s-rq2} \\
 \addlinespace
-\multicolumn{3}{@{}l}{\textit{RQ3 -- who writes the connection, and does it mark a later state?}} \\
+\multicolumn{3}{@{}l}{\textit{RQ3: who writes the connection, and does it mark a later state?}} \\
 The 17.3-point addressed-edge contrast, reply windows, repository fixed effects, specificity controls, the four-state gradient, and the ownership routes & \ref{tab:s-addressed-edge} & \pageref{tab:s-addressed-edge} \\
 Landmark selection, who writes the edge, stricter edge rules, balance, the E-value of 2.27, tipping grid, negative controls, the conditional shuffle test at $p=0.007$, and the whole-population hazard & \ref{tab:s-sensitivity} & \pageref{tab:s-sensitivity} \\
 Placebo exposures, what the reply text says, and whether a person or a script wrote it & \ref{tab:s-specificity} & \pageref{tab:s-specificity} \\
 \addlinespace
-\multicolumn{3}{@{}l}{\textit{RQ4 -- what makes someone answer across the boundary?}} \\
+\multicolumn{3}{@{}l}{\textit{RQ4: what makes someone answer across the boundary?}} \\
 Issue link and answered review points, by reviewer relation, with the shuffled-label check & \ref{tab:s-task-context} & \pageref{tab:s-task-context} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{Construct checks, negative results, and reproduction}} \\
@@ -289,7 +289,8 @@ state, which is the state the RQ1 claim rests on: the diagnostic shows the rule
 is almost never the deciding factor, not that it would be harmless if it were.
 
 The leave-one-out rows drop one repository at a time, across 1,416 repositories,
-and then one ordered author--reviewer product pair at a time, across 25 pairs. At
+and then one ordered pair of author product and reviewer product at a time,
+across 25 pairs. At
 the primary five-minute threshold the user-minus-mapped gap stays between 16.5
 and 19.9 points, and the largest single share shift is 3.42 points. These checks
 bound concentration in one repository or one product pair. They do not address
@@ -415,10 +416,10 @@ user activity, keeps a row per window: at one hour it is $+16.7$ points (95\%
 interval: $4.9$ to $28.4$), a genuine finding rather than noise, because a reply
 inside one hour is selected by PRs that already had a person acting on them.
 That is why the primary window is 48 hours, where the same placebo is $+7.0$
-points ($-1.7$ to $15.7$) --- covering the null, but not a demonstrated zero: an
-underpowered residual of about seven points in the direction a sceptical reader
-would expect, and the main reason the measured controls should not be treated as
-sufficient.
+points ($-1.7$ to $15.7$). That interval covers the null, but it does not show a
+demonstrated zero. It leaves an underpowered residual of about seven points in
+the direction a sceptical reader would expect, and that is the main reason the
+measured controls should not be treated as sufficient.
 
 Randomisation inference permutes the exposure label within each repository,
 holding that repository's exposed count fixed, and refits 2,000 times from a
@@ -502,7 +503,7 @@ cross-product triggers only and using it would give the same-product arm an
 outcome that is empty by construction rather than by observation. Second, the
 reply target names the first comment of a thread
 (Section~\ref{app:reply-target}), so a trigger sitting mid-thread cannot receive
-such a reply at all --- a restriction that is mild for cross-product triggers, at
+such a reply at all. That restriction is mild for cross-product triggers, at
 0.4 per cent, and severe for same-product triggers, at 46 per cent. Comparing
 the arms without restricting to thread-root triggers would set a possible
 outcome against an impossible one, so the primary population is thread-root

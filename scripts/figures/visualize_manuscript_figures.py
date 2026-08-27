@@ -450,98 +450,142 @@ def write_colour_proofs(stems: Sequence[str]) -> list[str]:
 
 
 def figure_measurement_contract() -> None:
-    """One real pull request, with every rule applied to it in order.
+    """One real pull request as a timeline, with each rule shown where it bites.
 
-    Panel A is a worked example rather than a drawing: the times and the roles
-    come from outputs/worked_example/, so a reader can check each rule against
-    an actual trace instead of taking the rule on trust.
+    Panel A reads outputs/worked_example/, so the times and the roles are those
+    of an actual pull request rather than an illustration.
     """
     steps = read_csv(
         EXAMPLE / "timeline.csv",
         ("order", "minutes_after_trigger", "actor_role", "event", "verdict", "rule"),
     ).sort_values("order")
     example = json.loads((EXAMPLE / "summary.json").read_text(encoding="utf-8"))
+    at = {row.rule: float(row.minutes_after_trigger) for row in steps.itertuples()}
 
-    fig = new_figure(4.55)
-    layout = Layout(left=0.030, right=0.985, top=0.925, bottom=0.040, gap=0.075)
-    top_rect, bottom_rect = layout.rects((1.0, 0.40))
+    fig = new_figure(3.15)
+    layout = Layout(left=0.035, right=0.975, top=0.885, bottom=0.050, gap=0.075)
+    top_rect, bottom_rect = layout.rects((1.0, 0.80))
 
     ax = fig.add_axes(top_rect)
     ax.set_xlim(0, 100)
-    ax.set_ylim(0, 100)
+    ax.set_ylim(0, 10)
     ax.axis("off")
-    panel_title(ax, "A", "Every rule applied to one real pull request")
+    panel_title(ax, "A", "One real pull request, and what each rule does to it")
+
+    # A true time axis would bury the first three events on top of each other,
+    # so the axis is ordinal and the elapsed time is printed under each mark.
+    spots = {"trigger": 8.0, "burst": 27.0, "edge": 52.0, "landmark": 76.0, "merge": 90.0}
+    baseline = 5.4
+    ax.annotate(
+        "",
+        xy=(99.0, baseline),
+        xytext=(4.0, baseline),
+        arrowprops={"arrowstyle": "-|>", "color": SLATE, "linewidth": 1.0},
+    )
 
     def clock(minutes: float) -> str:
         if minutes < 1.0:
-            return "same minute"
-        if minutes < 90.0:
-            return f"+{minutes:.0f} min"
+            return "0 min"
+        if minutes < 120.0:
+            return f"{minutes:.0f} min"
         if minutes < 2880.0:
-            return f"+{minutes / 60.0:.1f} h"
-        return f"+{minutes / 1440.0:.1f} days"
+            return f"{minutes / 60.0:.0f} h"
+        return f"{minutes / 1440.0:.1f} days"
 
-    kept = {"trigger", "addressed edge", "landmark", "outcome"}
-    row_height = 100.0 / (len(steps) + 0.9)
-    for index, step in enumerate(steps.itertuples(index=False)):
-        y = 100.0 - row_height * (index + 0.85)
-        accepted = step.rule in kept
-        colour = TEAL if accepted else ORANGE
-        # A filled marker is a rule that keeps the event; a hollow one drops it.
+    def mark(x, kept, colour, above, headline, small):
         ax.plot(
-            [3.2],
-            [y],
+            [x],
+            [baseline],
             marker="o",
-            markersize=4.6,
-            markerfacecolor=colour if accepted else "white",
+            markersize=6.4,
+            markerfacecolor=colour if kept else "white",
             markeredgecolor=colour,
-            markeredgewidth=1.1,
+            markeredgewidth=1.4,
             clip_on=False,
+            zorder=4,
         )
-        if index < len(steps) - 1:
-            ax.plot(
-                [3.2, 3.2],
-                [y - 1.6, y - row_height + 1.6],
-                color=MID,
-                linewidth=0.8,
-                zorder=0,
-            )
+        top = baseline + 0.75 if above else baseline - 0.75
+        ax.plot(
+            [x, x],
+            [top, top + (1.15 if above else -1.15)],
+            color=MID,
+            linewidth=0.7,
+            zorder=1,
+        )
         ax.text(
-            8.0,
-            y,
-            clock(float(step.minutes_after_trigger)),
-            ha="left",
-            va="center",
+            x,
+            top + (1.35 if above else -1.35),
+            headline,
+            ha="center",
+            va="bottom" if above else "top",
+            fontsize=7.4,
+            color=colour,
+            fontweight="bold",
+        )
+        ax.text(
+            x,
+            top + (2.55 if above else -2.55),
+            small,
+            ha="center",
+            va="bottom" if above else "top",
             fontsize=7.0,
             color=SLATE,
         )
-        actor = "" if step.actor_role == "--" else f"{step.actor_role}: "
+
+    mark(spots["trigger"], True, TEAL, True, "the trigger", "a product reviews" + chr(10) + "one line")
+    mark(spots["burst"], False, ORANGE, False, "dropped", "same batch, and in the burst")
+    mark(spots["edge"], True, TEAL, True, "the answer", "a person replies" + chr(10) + "to that comment")
+    mark(spots["merge"], True, SLATE, True, "merged", "after the line," + chr(10) + "so it counts")
+
+    ax.plot(
+        [spots["landmark"], spots["landmark"]],
+        [baseline - 1.9, baseline + 1.9],
+        color=INK,
+        linewidth=1.0,
+        zorder=2,
+    )
+    ax.text(
+        spots["landmark"],
+        baseline - 2.15,
+        "hour 48",
+        ha="center",
+        va="top",
+        fontsize=7.2,
+        color=INK,
+        fontweight="bold",
+    )
+    ax.text(
+        spots["landmark"],
+        baseline - 3.05,
+        "outcomes counted from here",
+        ha="center",
+        va="top",
+        fontsize=7.0,
+        color=SLATE,
+    )
+
+    for rule, spot in (
+        ("trigger", "trigger"),
+        ("burst exclusion", "burst"),
+        ("addressed edge", "edge"),
+        ("outcome", "merge"),
+    ):
         ax.text(
-            22.5,
-            y,
-            f"{actor}{step.event}",
-            ha="left",
-            va="center",
+            spots[spot],
+            baseline - 0.95,
+            clock(at[rule]),
+            ha="center",
+            va="top",
             fontsize=7.0,
-            color=INK,
-        )
-        ax.text(
-            99.0,
-            y - row_height * 0.42,
-            step.verdict,
-            ha="right",
-            va="center",
-            fontsize=7.0,
-            color=colour,
-            style="italic",
+            color=SLATE,
         )
 
     ax.text(
-        3.2,
-        1.4,
-        f"{example['reviewing_product'].replace('_', ' ')} reviews a "
+        4.0,
+        0.05,
+        f"{example['reviewing_product'].replace('_', ' ')} reviewing a "
         f"{example['author_product'].replace('_', ' ')} pull request. "
-        f"Filled marks are kept; hollow marks are dropped by a rule.",
+        "Filled marks count; hollow ones a rule throws out.",
         ha="left",
         va="bottom",
         fontsize=7.0,
@@ -668,8 +712,8 @@ def figure_participation() -> None:
     stage_labels = [
         "Cross-product\nfeedback",
         "Any later\npublic action",
-        "Exact parent\nreply",
-        "Different-product\nexact reply",
+        "Exact reply\nto the trigger",
+        "Reply from a\ndifferent product",
     ]
     if not set(stage_order).issubset(funnel.index):
         raise ValueError(
@@ -886,29 +930,41 @@ def figure_boundary() -> None:
     )
 
     fig = new_figure(4.55)
-    layout = Layout(left=0.315, right=0.870, top=0.930, bottom=0.105, gap=0.150)
+    layout = Layout(left=0.315, right=0.870, top=0.930, bottom=0.105, gap=0.185)
     top_rect, bottom_rect = layout.rects((1.0, 0.52))
 
-    # --- Panel A: every matched outcome, not just the one that moved --------
+    # --- Panel A: one outcome moves, five do not, and the layout says so ----
     ax = fig.add_axes(top_rect)
     rows = list(OUTCOMES)
-    positions = np.arange(len(rows))[::-1]
+
+    # Rows are placed with a gap between the group that moved and the group
+    # that did not, so the split is visible before any number is read.
+    GROUP_GAP = 0.9
+    positions, moved = [], []
+    cursor = float(len(rows)) + GROUP_GAP
+    for key, _ in rows:
+        row = exactly_one(primary, outcome=key)
+        low = float(row["repository_cluster_bootstrap_ci_low"])
+        high = float(row["repository_cluster_bootstrap_ci_high"])
+        separated = low > 0 or high < 0
+        if moved and separated != moved[-1]:
+            cursor -= GROUP_GAP
+        positions.append(cursor)
+        moved.append(separated)
+        cursor -= 1.0
+
     pairs = repositories = 0
-    for position, (key, label) in zip(positions, rows, strict=True):
+    for position, (key, label), separated in zip(positions, rows, moved, strict=True):
         row = exactly_one(primary, outcome=key)
         cross = float(row["cross_rate"]) * 100
         same = float(row["same_rate"]) * 100
         pairs = int(row["pairs"])
         repositories = int(row["repositories"])
-        low = float(row["repository_cluster_bootstrap_ci_low"]) * 100
-        high = float(row["repository_cluster_bootstrap_ci_high"]) * 100
-        separated = low > 0 or high < 0
-        line_colour = SLATE if separated else MID
         ax.plot(
             [cross, same],
             [position, position],
-            color=line_colour,
-            linewidth=1.6 if separated else 1.1,
+            color=SLATE if separated else MID,
+            linewidth=1.7 if separated else 1.1,
             solid_capstyle="round",
             zorder=1,
         )
@@ -916,7 +972,7 @@ def figure_boundary() -> None:
             [cross],
             [position],
             marker="o",
-            markersize=5.0,
+            markersize=5.2 if separated else 4.4,
             markerfacecolor=ORANGE,
             markeredgecolor=ORANGE,
             zorder=3,
@@ -925,17 +981,16 @@ def figure_boundary() -> None:
             [same],
             [position],
             marker="o",
-            markersize=5.0,
+            markersize=5.2 if separated else 4.4,
             markerfacecolor="white",
             markeredgecolor=BLUE,
             markeredgewidth=1.3,
             zorder=3,
         )
-        gap = cross - same
         ax.text(
             101.5,
             position,
-            f"{minus(f'{gap:+.1f}')} pp" if separated else f"{minus(f'{gap:+.1f}')} pp",
+            minus(f"{cross - same:+.1f}") + " pp",
             ha="left",
             va="center",
             fontsize=7.1,
@@ -945,36 +1000,29 @@ def figure_boundary() -> None:
 
     ax.set_yticks(positions)
     ax.set_yticklabels([label for _, label in rows], fontsize=7.2)
+    for tick, separated in zip(ax.get_yticklabels(), moved, strict=True):
+        tick.set_color(INK if separated else SLATE)
     ax.set_xlim(0, 100)
     ax.set_xticks([0, 25, 50, 75, 100])
-    ax.set_ylim(-1.75, len(rows) - 0.45)
+    ax.set_ylim(min(positions) - 0.6, max(positions) + 0.6)
     ax.set_xlabel("Matched pairs where it happened (%)")
-    panel_title(ax, "A", "Only one thing changes at the product boundary")
+    panel_title(ax, "A", "One outcome changes. Five do not.")
     clean_axis(ax, "x")
 
-    handles = (
-        Line2D([], [], linestyle="none", marker="o", markersize=5.0,
-               markerfacecolor=ORANGE, markeredgecolor=ORANGE,
-               label="reviewed by a different product"),
-        Line2D([], [], linestyle="none", marker="o", markersize=5.0,
-               markerfacecolor="white", markeredgecolor=BLUE, markeredgewidth=1.3,
-               label="reviewed by the same product"),
+    first_null = moved.index(False) if False in moved else None
+    if first_null is not None:
+        divider = (positions[first_null - 1] + positions[first_null]) / 2.0
+        ax.axhline(divider, color=MID, linewidth=0.7, linestyle=(0, (3, 3)), zorder=0)
+    ax.text(
+        0.5,
+        min(positions),
+        f"{pairs:,} matched pairs" + chr(10) + f"in {repositories} repositories",
+        ha="left",
+        va="center",
+        fontsize=7.0,
+        color=SLATE,
     )
-    legend = ax.legend(
-        handles=list(handles),
-        loc="lower left",
-        bbox_to_anchor=(-0.005, 0.015),
-        frameon=False,
-        fontsize=7.1,
-        handletextpad=0.4,
-        labelspacing=0.3,
-        borderpad=0.0,
-        title=f"{pairs:,} matched pairs in {repositories} repositories; "
-        "a bold gap clears zero",
-    )
-    legend.get_title().set_fontsize(7.0)
-    legend.get_title().set_color(SLATE)
-    legend.get_title().set_ha("left")
+
     # --- Panel B: bars, because these are shares of a whole ----------------
     ax = fig.add_axes(bottom_rect)
     bars = (
@@ -1320,12 +1368,25 @@ def figure_task_context() -> None:
             fontsize=7.2,
             color=colour,
         )
+        # Naming each line's own change makes the difference between the two
+        # differences something the reader can see rather than take on trust.
+        change = values[1] - values[0]
+        ax.text(
+            0.5,
+            (values[0] + values[1]) / 2.0 + (1.9 if above else -1.9),
+            minus(f"{change:+.1f} pp"),
+            ha="center",
+            va="bottom" if above else "top",
+            fontsize=7.2,
+            fontweight="bold",
+            color=colour,
+        )
 
     ax.set_xlim(-0.12, 1.12)
     ax.set_ylim(0, 38)
     ax.set_xticks([0, 1], ["No issue link", "PR body links an issue"])
     ax.set_ylabel("Review points answered\nwithin 48 hours (%)")
-    panel_title(ax, "A", "Task context only helps across the boundary")
+    panel_title(ax, "A", "The same context helps only across the boundary")
     clean_axis(ax, "y")
 
     # --- the quantity the paper actually claims, with its uncertainty -------
@@ -1376,11 +1437,38 @@ def figure_task_context() -> None:
         fontsize=7.0,
         color=SLATE,
     )
+    # Subtracting the two panel-A labels gives the raw contrast, which is larger
+    # than the estimate we report. Say so, or the reader does the arithmetic and
+    # finds it does not come out.
+    raw = sum(
+        (rates["cross_product"][1] - rates["cross_product"][0]) * sign
+        + (rates["same_product"][1] - rates["same_product"][0]) * -sign
+        for sign in (1.0,)
+    )
+    ax.plot(
+        [raw],
+        [0],
+        marker="o",
+        markersize=5.4,
+        markerfacecolor="white",
+        markeredgecolor=TEAL,
+        markeredgewidth=1.2,
+        zorder=4,
+    )
+    ax.text(
+        raw,
+        -0.42,
+        minus(f"{raw:+.1f}") + " raw",
+        ha="center",
+        va="top",
+        fontsize=7.0,
+        color=SLATE,
+    )
     ax.set_xlim(-4.0, 26.0)
     ax.set_ylim(-1.0, 1.0)
     ax.set_yticks([])
     ax.set_xlabel("How much more the link helps across the boundary (pp)")
-    panel_title(ax, "B", "The gap between the two slopes")
+    panel_title(ax, "B", "One change minus the other")
     clean_axis(ax, "x")
     ax.spines["left"].set_visible(False)
     save(fig, "Fig6_v2")

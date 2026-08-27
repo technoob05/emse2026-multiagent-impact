@@ -1,4 +1,7 @@
-trigger_channel,channel_label,in_scope_for_the_addressed_edge,trigger_prs,share_of_trigger_prs,repositories,ordered_product_pairs
-inline_review_comment,Inline review comment (pr_review_comments),True,1067,0.6156953260242354,469,21
-submitted_review,Review submission body (pr_reviews),False,353,0.20369301788805538,204,20
-pr_comment,PR-level comment (pr_comments),False,313,0.18061165608770918,119,16
+cohort,trigger_channel,channel_label,in_scope_for_the_addressed_edge,trigger_prs,share_of_trigger_prs,repositories,ordered_product_pairs
+full_cross_product_trigger_cohort,inline_review_comment,Inline review comment (pr_review_comments),True,4824,0.5604089219330854,1061,23
+full_cross_product_trigger_cohort,submitted_review,Review submission body (pr_reviews),False,2173,0.2524395910780669,580,23
+full_cross_product_trigger_cohort,pr_comment,PR-level comment (pr_comments),False,1611,0.1871514869888476,315,20
+open_at_48h_landmark_cohort,inline_review_comment,Inline review comment (pr_review_comments),True,1067,0.6156953260242354,469,21
+open_at_48h_landmark_cohort,submitted_review,Review submission body (pr_reviews),False,353,0.20369301788805538,204,20
+open_at_48h_landmark_cohort,pr_comment,PR-level comment (pr_comments),False,313,0.18061165608770918,119,16
