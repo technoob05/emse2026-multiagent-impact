@@ -8,24 +8,24 @@
   "exposure_rule": "the PR body references an issue (related_issue source=body)",
   "primary": {
     "specification": "Thread-root triggers, repository and month FE",
-    "estimate": 0.1333845788062403,
-    "ci_low": 0.04446271606988128,
-    "ci_high": 0.22230644154259932,
+    "estimate": 0.13338457880624036,
+    "ci_low": 0.044462716069881336,
+    "ci_high": 0.22230644154259938,
     "n_prs": 12508,
     "repositories": 2264
   },
   "label_shuffle": {
-    "observed_estimate": 0.14569151227595742,
+    "observed_estimate": 0.14569151227595725,
     "draws": 1000,
     "seed": 20260826,
-    "null_mean": 0.011236509397524207,
-    "null_sd": 0.026671939732953995,
+    "null_mean": 0.011097047056944018,
+    "null_sd": 0.026877156636075386,
     "absorbed": "repository fixed effects only",
     "p_value_two_sided": 0.000999000999000999
   },
   "leave_one_repository_out_range": [
-    0.11405459427715378,
-    0.16075483112567412
+    0.11405459427715384,
+    0.1607548311256741
   ],
   "scope": "observational interaction; no causal claim"
 }

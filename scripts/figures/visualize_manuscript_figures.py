@@ -978,14 +978,27 @@ def figure_boundary() -> None:
     layout = Layout(left=0.360, right=0.855, top=0.930, bottom=0.115, gap=0.190)
     top_rect, bottom_rect = layout.rects((1.0, 0.52))
 
-    # --- Panel A: one outcome moves, five do not, and the layout says so ----
-    ax = fig.add_axes(top_rect)
+    # --- Panel A: how often it happened, and the gap, against zero ----------
+    # A dumbbell alone draws the point estimate as a length, so the longest bar
+    # was "Someone comments", whose interval still crosses zero, while the one
+    # outcome that did move drew a shorter bar. The second column therefore
+    # draws the interval itself against zero, which is the quantity the claim
+    # rests on. The two columns share the row-label column and together occupy
+    # exactly the axes rectangle Panel B spans, so all three line up.
+    LEFT_COLUMN = 0.245
+    COLUMN_GAP = 0.035
+    right_column = top_rect[2] - LEFT_COLUMN - COLUMN_GAP
+    levels_ax = fig.add_axes((top_rect[0], top_rect[1], LEFT_COLUMN, top_rect[3]))
+    gap_ax = fig.add_axes(
+        (
+            top_rect[0] + LEFT_COLUMN + COLUMN_GAP,
+            top_rect[1],
+            right_column,
+            top_rect[3],
+        )
+    )
     rows = list(OUTCOMES)
 
-    # Rows are placed with a gap between the group that moved and the group
-    # that did not, so the split is visible before any number is read.
-    GROUP_GAP = 0.9
-    positions, moved = [], []
     def restricted_row(key: str):
         return exactly_one(
             restricted,
@@ -994,11 +1007,18 @@ def figure_boundary() -> None:
             outcome=key,
         )
 
+    def contrast_row(key: str):
+        if key == RESTRICTED_OUTCOME:
+            return restricted_row(key)
+        return exactly_one(primary, outcome=key)
+
+    # Rows are placed with a gap between the group that moved and the group
+    # that did not, so the split is visible before any number is read.
+    GROUP_GAP = 0.9
+    positions, moved = [], []
     cursor = float(len(rows)) + GROUP_GAP
     for key, _ in rows:
-        row = restricted_row(key) if key == "exact_trigger_reply" else exactly_one(
-            primary, outcome=key
-        )
+        row = contrast_row(key)
         low = float(row["repository_cluster_bootstrap_ci_low"])
         high = float(row["repository_cluster_bootstrap_ci_high"])
         separated = low > 0 or high < 0
@@ -1009,15 +1029,17 @@ def figure_boundary() -> None:
         cursor -= 1.0
 
     pairs = repositories = 0
-    for position, (key, label), separated in zip(positions, rows, moved, strict=True):
-        row = restricted_row(key) if key == RESTRICTED_OUTCOME else exactly_one(
-            primary, outcome=key
-        )
+    for position, (key, _label), separated in zip(positions, rows, moved, strict=True):
+        row = contrast_row(key)
         cross = float(row["cross_rate"]) * 100
         same = float(row["same_rate"]) * 100
+        difference = float(row["paired_difference"]) * 100
+        low = float(row["repository_cluster_bootstrap_ci_low"]) * 100
+        high = float(row["repository_cluster_bootstrap_ci_high"]) * 100
         pairs = int(row["pairs"])
         repositories = int(row["repositories"])
-        ax.plot(
+
+        levels_ax.plot(
             [cross, same],
             [position, position],
             color=SLATE if separated else MID,
@@ -1025,7 +1047,7 @@ def figure_boundary() -> None:
             solid_capstyle="round",
             zorder=1,
         )
-        ax.plot(
+        levels_ax.plot(
             [cross],
             [position],
             marker="o",
@@ -1034,7 +1056,7 @@ def figure_boundary() -> None:
             markeredgecolor=ORANGE,
             zorder=3,
         )
-        ax.plot(
+        levels_ax.plot(
             [same],
             [position],
             marker="o",
@@ -1044,10 +1066,37 @@ def figure_boundary() -> None:
             markeredgewidth=1.3,
             zorder=3,
         )
-        ax.text(
-            101.5,
+
+        colour = ORANGE if separated else SLATE
+        gap_ax.plot(
+            [low, high],
+            [position, position],
+            color=colour,
+            linewidth=1.8 if separated else 1.1,
+            zorder=3,
+        )
+        for edge in (low, high):
+            gap_ax.plot(
+                [edge, edge],
+                [position - 0.16, position + 0.16],
+                color=colour,
+                linewidth=1.1,
+                zorder=3,
+            )
+        gap_ax.plot(
+            [difference],
+            [position],
+            marker="o",
+            markersize=5.8 if separated else 4.2,
+            markerfacecolor=colour,
+            markeredgecolor=WHITE,
+            markeredgewidth=0.7,
+            zorder=4,
+        )
+        gap_ax.text(
+            20.5,
             position,
-            minus(f"{cross - same:+.1f}") + " pp",
+            minus(f"{difference:+.1f}"),
             ha="left",
             va="center",
             fontsize=8.1,
@@ -1055,25 +1104,47 @@ def figure_boundary() -> None:
             fontweight="bold" if separated else "normal",
         )
 
-    ax.set_yticks(positions)
-    ax.set_yticklabels([label for _, label in rows], fontsize=8.2)
-    for tick, separated in zip(ax.get_yticklabels(), moved, strict=True):
+    bounds = (min(positions) - 0.7, max(positions) + 0.6)
+
+    levels_ax.set_yticks(positions)
+    levels_ax.set_yticklabels([label for _, label in rows], fontsize=8.2)
+    for tick, separated in zip(levels_ax.get_yticklabels(), moved, strict=True):
         tick.set_color(INK if separated else SLATE)
-    ax.set_xlim(0, 100)
-    ax.set_xticks([0, 25, 50, 75, 100])
-    ax.set_ylim(min(positions) - 1.75, max(positions) + 0.6)
-    ax.set_xlabel("Matched pairs where it happened (%)")
-    panel_title(ax, "A", "One outcome changes. Five do not.")
-    clean_axis(ax, "x")
+    levels_ax.set_xlim(0, 100)
+    levels_ax.set_xticks([0, 50, 100])
+    levels_ax.set_ylim(*bounds)
+    levels_ax.set_xlabel("Happened (%)")
+    # The title is anchored to the left column but is a title for the pair, so
+    # it runs across both. The right column therefore carries no title of its
+    # own and names itself in its axis label instead.
+    panel_title(levels_ax, "A", "One outcome changes. Five do not.")
+    clean_axis(levels_ax, "x")
+
+    gap_ax.axvline(0.0, color=INK, linewidth=1.0, zorder=1)
+    gap_ax.set_yticks(positions, ["" for _ in positions])
+    gap_ax.set_xlim(-36, 18)
+    gap_ax.set_xticks([-30, -15, 0, 15])
+    gap_ax.set_ylim(*bounds)
+    # Two lines, or this label and "Happened (%)" run together into one phrase.
+    gap_ax.set_xlabel("Cross " + MINUS + " same" + chr(10) + "(pp, 95% CI)")
+    clean_axis(gap_ax, "x")
+    gap_ax.spines["left"].set_visible(False)
+    gap_ax.tick_params(axis="y", length=0)
 
     first_null = moved.index(False) if False in moved else None
     if first_null is not None:
         divider = (positions[first_null - 1] + positions[first_null]) / 2.0
-        ax.axhline(divider, color=MID, linewidth=0.7, linestyle=(0, (3, 3)), zorder=0)
+        for axis in (levels_ax, gap_ax):
+            axis.axhline(
+                divider, color=MID, linewidth=0.7, linestyle=(0, (3, 3)), zorder=0
+            )
+
+    # The note belongs to Panel A but is wider than either of its columns, so it
+    # sits in the band between the panels rather than inside one of them.
     narrow = restricted_row(RESTRICTED_OUTCOME)
-    ax.text(
-        0.5,
-        min(positions) - 1.05,
+    fig.text(
+        top_rect[0],
+        top_rect[1] - 0.119,
         f"{pairs:,} matched pairs in {repositories} repositories"
         + chr(10)
         + f"*{int(narrow['pairs']):,} pairs where a reply is possible on both sides",
@@ -1366,83 +1437,160 @@ def figure_task_context() -> None:
     top_rect, bottom_rect = layout.rects((1.0, 0.30))
     ax = fig.add_axes(top_rect)
 
-    series = (
-        ("cross_product", "A different product\nis reviewing", TEAL, "o", "-"),
-        ("same_product", "The same product\nis reviewing", SLATE, "s", (0, (4, 2))),
-    )
-    rates = {}
-    for relation, *_ in series:
-        rates[relation] = [
-            float(exactly_one(cells, reviewer_relation=relation, body_issue_link=link)["answered_rate"]) * 100
-            for link in (False, True)
-        ]
-    for relation, label, colour, marker, style in series:
-        other = next(key for key in rates if key != relation)
-        values, counts = [], []
+    rates, counts = {}, {}
+    for relation in ("cross_product", "same_product"):
+        values, sizes = [], []
         for link in (False, True):
             row = exactly_one(cells, reviewer_relation=relation, body_issue_link=link)
             values.append(float(row["answered_rate"]) * 100)
-            counts.append(int(row["prs"]))
-        ax.plot(
-            [0, 1],
-            values,
-            color=colour,
-            linewidth=2.0,
-            linestyle=style,
-            marker=marker,
-            markersize=6.0,
-            markerfacecolor=colour,
-            markeredgecolor=WHITE,
-            markeredgewidth=0.6,
-            clip_on=False,
-            zorder=3,
-        )
-        for position, value, count in zip((0, 1), values, counts, strict=True):
-            # Label away from the other line, or the two collide where they cross.
-            above = value >= rates[other][position]
-            ax.text(
-                position,
-                value + (2.6 if above else -2.6),
-                f"{value:.1f}%",
-                ha="center",
-                va="bottom" if above else "top",
-                fontsize=8.3,
-                fontweight="bold",
-                color=colour,
-            )
-            # Centred denominators at the ends ran into the y axis and the
-            # right margin, so each one leans back towards the middle.
-            ax.text(
-                position + (0.045 if position == 0 else -0.045),
-                value + (6.6 if above else -6.6),
-                f"of {count:,} PRs",
-                ha="left" if position == 0 else "right",
-                va="bottom" if above else "top",
-                fontsize=8.0,
-                color=SLATE,
-            )
+            sizes.append(int(row["prs"]))
+        rates[relation] = values
+        counts[relation] = sizes
+
+    cross = rates["cross_product"]
+    same = rates["same_product"]
+    # Where the cross-product line would have landed had the link moved it by
+    # exactly as much as it moved the same-product line. This point is derived,
+    # not measured, and the figure says so. The distance from it up to the
+    # observed cross-product rate is the raw difference in differences, so the
+    # reader measures that quantity instead of subtracting two labels.
+    ghost = cross[0] + (same[1] - same[0])
+    raw = cross[1] - ghost
+
+    ax.plot(
+        [0, 1],
+        [cross[0], ghost],
+        color=MID,
+        linewidth=1.6,
+        linestyle=(0, (1, 2)),
+        zorder=2,
+        clip_on=False,
+    )
+    ax.plot(
+        [1],
+        [ghost],
+        marker="o",
+        markersize=5.0,
+        markerfacecolor=WHITE,
+        markeredgecolor=MID,
+        markeredgewidth=1.3,
+        zorder=3,
+        clip_on=False,
+    )
+    ax.plot(
+        [0, 1],
+        cross,
+        color=TEAL,
+        linewidth=2.2,
+        marker="o",
+        markersize=6.0,
+        markerfacecolor=TEAL,
+        markeredgecolor=WHITE,
+        markeredgewidth=0.6,
+        clip_on=False,
+        zorder=4,
+    )
+    ax.plot(
+        [0, 1],
+        same,
+        color=SLATE,
+        linewidth=2.0,
+        linestyle=(0, (4, 2)),
+        marker="s",
+        markersize=6.0,
+        markerfacecolor=SLATE,
+        markeredgecolor=WHITE,
+        markeredgewidth=0.6,
+        clip_on=False,
+        zorder=4,
+    )
+
+    # Left-hand cells label downwards and upwards respectively, so neither runs
+    # into the other line or into the y axis.
+    for relation, value, colour, offset in (
+        ("cross_product", cross[0], TEAL, -1.0),
+        ("same_product", same[0], SLATE, 1.0),
+    ):
+        vertical = "top" if offset < 0 else "bottom"
         ax.text(
-            1.07,
-            values[1],
-            label,
+            0.03,
+            value + offset,
+            f"{value:.1f}%",
             ha="left",
-            va="center",
-            fontsize=8.2,
-            color=colour,
-        )
-        # Naming each line's own change makes the difference between the two
-        # differences something the reader can see rather than take on trust.
-        change = values[1] - values[0]
-        ax.text(
-            0.5,
-            (values[0] + values[1]) / 2.0 + (1.9 if above else -1.9),
-            minus(f"{change:+.1f} pp"),
-            ha="center",
-            va="bottom" if above else "top",
-            fontsize=8.2,
+            va=vertical,
+            fontsize=8.3,
             fontweight="bold",
             color=colour,
         )
+        ax.text(
+            0.03,
+            value + offset * 4.4,
+            f"of {counts[relation][0]:,} PRs",
+            ha="left",
+            va=vertical,
+            fontsize=8.0,
+            color=SLATE,
+        )
+
+    ax.text(
+        1.035,
+        cross[1],
+        f"{cross[1]:.1f}%  of {counts['cross_product'][1]:,} PRs"
+        + chr(10)
+        + "a different product",
+        ha="left",
+        va="center",
+        fontsize=8.2,
+        fontweight="bold",
+        color=TEAL,
+    )
+    ax.text(
+        1.035,
+        same[1],
+        f"{same[1]:.1f}%  of {counts['same_product'][1]:,} PRs"
+        + chr(10)
+        + "the same product",
+        ha="left",
+        va="center",
+        fontsize=8.2,
+        fontweight="bold",
+        color=SLATE,
+    )
+    ax.text(
+        1.035,
+        ghost,
+        f"{ghost:.1f}%  if it moved"
+        + chr(10)
+        + "like the same product"
+        + chr(10)
+        + "(not observed)",
+        ha="left",
+        va="center",
+        fontsize=8.0,
+        color=SLATE,
+    )
+
+    ax.annotate(
+        "",
+        xy=(0.90, cross[1]),
+        xytext=(0.90, ghost),
+        arrowprops={
+            "arrowstyle": "<|-|>",
+            "color": ORANGE,
+            "linewidth": 1.4,
+            "mutation_scale": 8,
+        },
+    )
+    ax.text(
+        0.865,
+        ghost + (cross[1] - ghost) * 0.25,
+        minus(f"{raw:+.1f}") + " pp raw gap",
+        ha="right",
+        va="center",
+        fontsize=8.4,
+        fontweight="bold",
+        color=ORANGE,
+    )
 
     ax.set_xlim(-0.12, 1.12)
     ax.set_ylim(0, 38)
@@ -1499,14 +1647,9 @@ def figure_task_context() -> None:
         fontsize=8.0,
         color=SLATE,
     )
-    # Subtracting the two panel-A labels gives the raw contrast, which is larger
-    # than the estimate we report. Say so, or the reader does the arithmetic and
-    # finds it does not come out.
-    raw = sum(
-        (rates["cross_product"][1] - rates["cross_product"][0]) * sign
-        + (rates["same_product"][1] - rates["same_product"][0]) * -sign
-        for sign in (1.0,)
-    )
+    # The arrow in Panel A measures the raw contrast, which is larger than the
+    # estimate we report. Mark it here too, or the reader carries 17.1 down from
+    # Panel A and finds the arithmetic does not come out.
     ax.plot(
         [raw],
         [0],

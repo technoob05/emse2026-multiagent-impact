@@ -1,16 +1,16 @@
 {
   "run_id": "review-collision-audit-20260826",
-  "created_utc": "2026-08-26T08:59:31.334068+00:00",
+  "created_utc": "2026-08-27T05:24:11.649467+00:00",
   "dataset_revision": "37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
   "schema_version": "review-collision-audit-v1",
-  "code_revision": "unavailable",
+  "code_revision": "33a788864b0b37465db4a7f2e443936e0396dec5",
   "source_sha256": {
     "pull_request.parquet": "f31e6dc4a907db48ee8647626883ce188be5cb0da2acd0ce665b5f0a7d5d6f8f",
     "pr_reviews.parquet": "89104dd24c370464d0ff1c69d363253efd15ec0ee97d985e0da415018b4102c5",
     "pr_review_comments.parquet": "aeef219f1362cbb8b53278a9b75d6890faf16929cf9686ecf74287f4da4d7e76"
   },
   "schema_sha256": "bb900619e5134ccbf0711cb33485f482f4ace85878854cf11038935711197cf4",
-  "script_sha256": "de2a5af74997cf0f8ecdeb94831a81e13c340f95e17a2119e858e21b346c0db1",
+  "script_sha256": "7c0220fd802f026fb3548739d1983e68b82b26ca818b0968d5fe7f12ca78f21d",
   "artifact_sha256": {
     "audit_packets/coder_A_blinded.csv": "763bb5593a86f74a71039d23ff09df3bd33ffbbf751a2c67342cae5efc906014",
     "audit_packets/coder_B_blinded.csv": "951ab6d7cb7c296a32a7ddd1690fe50b4ad15bfb58a306fe6bdb02e73d6cc637",

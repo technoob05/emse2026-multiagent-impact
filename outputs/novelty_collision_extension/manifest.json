@@ -1,7 +1,7 @@
 {
   "input_population_sha256": "29a4ad0194bbf9261b9e30425da6dc99e94946c70a194d1a4354b5f1c6f0e59c",
   "input_quality_summary_sha256": "f9aebad89aa82079910c6d300ea0bae4730a6eaa667526149aabed980f21d93f",
-  "script_sha256": "36b6734ba270c4c41f9f0dace3bd9365e7cdbf59e1453ace6e960840e2188da0",
+  "script_sha256": "b344d1a8c4a75eafeb38b3a080b0865ccf3cb92c5c79052d26499c09562d5c31",
   "semantic_labels_used": false,
   "manuscript_edited": false,
   "artifacts": [

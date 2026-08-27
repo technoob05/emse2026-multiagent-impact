@@ -96,10 +96,13 @@ study. `run_sample_flow.py` is an accounting check that walks the five populatio
 sizes quoted in the paper and asserts each filter step; it reads only frozen
 artifacts, so it is a good last step.
 
-**Roughly how long.** About RUNTIME_TOTAL for the whole list on a laptop with the
-parquet files on a local SSD, once the data is downloaded. The first script is
-the slowest single step because it scans the raw release; most later steps finish
-in seconds because they read the derived parquet files. Downloading the data
+**Roughly how long.** About **11 minutes** for the whole list, measured end to
+end on a Windows laptop with the parquet files on a local SSD, once the data is
+downloaded. Two steps dominate: `run_task_context_interaction.py` at roughly two
+minutes and `run_addressed_edge_landmark_analysis.py` at about the same. Most
+other steps finish in under half a minute, because they read derived parquet
+rather than rescanning the release. Figures take about 25 seconds and the tests
+about 15. Allow 15 to 20 minutes on a slower disk. Downloading the 13 GB of data
 takes far longer than running the analysis.
 
 ## 4. What each output directory holds

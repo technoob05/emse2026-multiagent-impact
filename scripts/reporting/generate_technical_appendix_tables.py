@@ -2288,6 +2288,7 @@ REPRODUCTION_STEPS: dict[str, tuple[str, str]] = {
     "run_confounder_benchmarks.py": ("Measured controls on the scale of a hidden cause", "outputs/confounder_benchmarks/measured_factor_positions.csv"),
     "prepare_review_collision_audit.py": ("Blinded structural same-locus coder packets", "outputs/review_collision/product_pair_concentration.csv"),
     "run_collision_descriptive_extension.py": ("Timing and concentration for the same-locus population", "outputs/novelty_collision_extension/timing_distribution.csv"),
+    "run_sample_flow.py": ("Closed accounting from 8,608 to 1,067, filter by filter", "outputs/sample_flow/sample_flow.csv"),
     "generate_technical_appendix_tables.py": ("Every table in this appendix", ""),
     "validate_response_ownership_outputs.py": ("Re-checks the ownership products", ""),
     "validate_coordination_extension_outputs.py": ("Re-checks the topology and landmark products", ""),

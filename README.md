@@ -70,6 +70,7 @@ uv sync
 .\.venv\Scripts\python.exe scripts\analysis\run_matched_thread_position_audit.py
 .\.venv\Scripts\python.exe scripts\audit\prepare_review_collision_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_collision_descriptive_extension.py
+.\.venv\Scripts\python.exe scripts\analysis\run_sample_flow.py
 .\.venv\Scripts\python.exe scripts\reporting\generate_technical_appendix_tables.py
 .\.venv\Scripts\python.exe scripts\validation\validate_response_ownership_outputs.py
 .\.venv\Scripts\python.exe scripts\validation\validate_coordination_extension_outputs.py

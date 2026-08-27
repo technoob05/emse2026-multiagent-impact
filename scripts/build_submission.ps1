@@ -139,6 +139,8 @@ try {
     Invoke-Checked $pythonExe scripts\audit\prepare_feedback_response_audit.py
     Invoke-Checked $pythonExe scripts\audit\prepare_review_collision_audit.py
     Invoke-Checked $pythonExe scripts\analysis\run_collision_descriptive_extension.py
+    Assert-ProjectFile "scripts\analysis\run_sample_flow.py"
+    Invoke-Checked $pythonExe scripts\analysis\run_sample_flow.py
     Assert-ProjectFile "scripts\reporting\generate_technical_appendix_tables.py"
     Invoke-Checked $pythonExe scripts\reporting\generate_technical_appendix_tables.py
     Invoke-Checked $pythonExe scripts\validation\validate_response_ownership_outputs.py
