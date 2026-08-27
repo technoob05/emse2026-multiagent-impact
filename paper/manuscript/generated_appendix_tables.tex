@@ -5,202 +5,247 @@
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.12\textwidth}L{0.20\textwidth}L{0.07\textwidth}L{0.13\textwidth}L{0.09\textwidth}L{0.31\textwidth}@{}}
-\caption{Release inventory, units, analytical roles, and event-table coverage.}\label{tab:s-dataset}\\
-\toprule
-Block & Table or feature group & Scope & Unit & Rows & Fields, coverage, and role \\
-\midrule
+\begin{longtable}{@{}L{0.20\textwidth}L{0.05\textwidth}L{0.13\textwidth}L{0.08\textwidth}L{0.09\textwidth}L{0.43\textwidth}@{}}
+\caption{Release inventory, backbone coverage, and which review channels can carry a reply anchor.}\label{tab:s-dataset}\\
 \endfirsthead
-\caption*{Release inventory, units, analytical roles, and event-table coverage. (continued)}\\
-\toprule
-Block & Table or feature group & Scope & Unit & Rows & Fields, coverage, and role \\
-\midrule
-\endhead
-Release inventory & \nolinkurl{all_pull_request} & Full corpus & One pull request & 7,685,281 & 14 fields; PR identity, agent, author, state, timestamps, and repository \\
-Release inventory & \nolinkurl{all_repository} & Full corpus & One repository & 957,209 & 8 fields; Repository name, language, license, fork status, stars, and forks \\
-Release inventory & \nolinkurl{all_user} & Full corpus & One GitHub user & 399,962 & 5 fields; Contributor account age and follower/following counts \\
-Release inventory & \nolinkurl{pull_request} & Rich layer & One pull request & 361,296 & 14 fields; PR backbone for the richer event and content tables \\
-Release inventory & \nolinkurl{repository} & Rich layer & One repository & 25,402 & 8 fields; Repository context for the richer subset \\
-Release inventory & \nolinkurl{pr_timeline} & Rich layer & One PR timeline event & 3,018,358 & 8 fields; Review, assignment, label, closure, and other lifecycle events \\
-Release inventory & \nolinkurl{pr_comments} & Rich layer & One issue-style PR comment & 373,549 & 7 fields; Conversation text, actor, actor type, and time \\
-Release inventory & \nolinkurl{pr_reviews} & Rich layer & One submitted PR review & 281,170 & 8 fields; Review decision, reviewer type, text, and submission time \\
-Release inventory & \nolinkurl{pr_review_comments} & Rich layer & One inline review comment & 289,780 & 15 fields; Inline discussion tied to a file and diff position \\
-Release inventory & \nolinkurl{pr_commits} & Rich layer & One commit attached to a PR & 718,779 & 5 fields; Commit author, committer, SHA, and message \\
-Release inventory & \nolinkurl{pr_commit_details} & Rich layer & One changed file within a PR commit & 6,112,623 & 14 fields; Change size, filename, file status, and patch text \\
-Release inventory & \nolinkurl{pr_task_type} & Rich layer & One classified pull request & 32,702 & 17 fields; Task type, model reason, and classification confidence \\
-Release inventory & \nolinkurl{issue} & Rich layer & One linked issue & 29,111 & 9 fields; Issue title, body, author, state, and timestamps \\
-Release inventory & \nolinkurl{related_issue} & Rich layer & One PR-issue link & 38,006 & 3 fields; Bridge between PRs and issues, with link source \\
-PR coverage & Timeline events & Rich layer & Linked event or feature rows & 3,018,358 & 197,471 matched PRs; 54.66\% PR coverage; 0 orphan PR IDs \\
-PR coverage & File-level changes & Rich layer & Linked event or feature rows & 6,112,623 & 197,330 matched PRs; 54.62\% PR coverage; 0 orphan PR IDs \\
-PR coverage & Commits & Rich layer & Linked event or feature rows & 718,779 & 197,335 matched PRs; 54.62\% PR coverage; 0 orphan PR IDs \\
-PR coverage & Conversation comments & Rich layer & Linked event or feature rows & 373,549 & 110,011 matched PRs; 30.45\% PR coverage; 0 orphan PR IDs \\
-PR coverage & Submitted reviews & Rich layer & Linked event or feature rows & 281,170 & 83,081 matched PRs; 23.00\% PR coverage; 0 orphan PR IDs \\
-PR coverage & Inline review comments & Rich layer & Linked event or feature rows & 289,780 & 47,251 matched PRs; 13.08\% PR coverage; 0 orphan PR IDs \\
-PR coverage & Task classification & Rich layer & Linked event or feature rows & 32,702 & 32,702 matched PRs; 9.05\% PR coverage; 0 orphan PR IDs \\
-PR coverage & Linked issues & Rich layer & Linked event or feature rows & 38,006 & 28,987 matched PRs; 8.02\% PR coverage; 0 orphan PR IDs \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} The rich layer contains repositories with more than 100 stars. Inventory row counts come from Parquet metadata, so large content tables are not expanded in memory. The coverage block describes the 361,296 AIDev-pop pull requests: coverage means that a pull request has at least one linked row, and inline comments resolve through their submitted-review identifier before joining to the pull request.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.22\textwidth}L{0.57\textwidth}L{0.17\textwidth}@{}}
-\caption{Attribution allowlist and the glossary of load-bearing terms.}\label{tab:s-definitions}\\
-\endfirsthead
-\caption*{Attribution allowlist and the glossary of load-bearing terms. (continued)}\\
+\caption*{Release inventory, backbone coverage, and which review channels can carry a reply anchor. (continued)}\\
 \endhead
 \toprule
-\multicolumn{3}{@{}l}{\textbf{Panel A. Attribution allowlist}} \\
+\multicolumn{6}{@{}l}{\textbf{Panel A. Release inventory}} \\
 \midrule
-Mapped product & Exact GitHub login(s), matched case-insensitively &  \\
+Release table & Layer & Unit & Rows & Fields & Role \\
 \midrule
-\texttt{Claude\_Code} & \texttt{claude[bot]} &  \\
-\texttt{Copilot} & \texttt{copilot}, \texttt{copilot-pull-request-reviewer[bot]}, \texttt{copilot-swe-agent[bot]} &  \\
-\texttt{Cursor} & \texttt{cursor[bot]} &  \\
-\texttt{Devin} & \texttt{devin-ai-integration[bot]} &  \\
-\texttt{Google\_Jules} & \texttt{google-labs-jules[bot]} &  \\
-\texttt{OpenAI\_Codex} & \texttt{chatgpt-codex-connector[bot]} &  \\
+\nolinkurl{all_pull_request} & Full corpus & One pull request & 7,685,281 & 14 & PR identity, agent, author, state, timestamps, and repository \\
+\nolinkurl{all_repository} & Full corpus & One repository & 957,209 & 8 & Repository name, language, license, fork status, stars, and forks \\
+\nolinkurl{all_user} & Full corpus & One GitHub user & 399,962 & 5 & Contributor account age and follower/following counts \\
+\nolinkurl{pull_request} & Rich & One pull request & 361,296 & 14 & PR backbone for the richer event and content tables \\
+\nolinkurl{repository} & Rich & One repository & 25,402 & 8 & Repository context for the richer subset \\
+\nolinkurl{pr_timeline} & Rich & One PR timeline event & 3,018,358 & 8 & Review, assignment, label, closure, and other lifecycle events \\
+\nolinkurl{pr_comments} & Rich & One issue-style PR comment & 373,549 & 7 & Conversation text, actor, actor type, and time \\
+\nolinkurl{pr_reviews} & Rich & One submitted PR review & 281,170 & 8 & Review decision, reviewer type, text, and submission time \\
+\nolinkurl{pr_review_comments} & Rich & One inline review comment & 289,780 & 15 & Inline discussion tied to a file and diff position \\
+\nolinkurl{pr_commits} & Rich & One commit attached to a PR & 718,779 & 5 & Commit author, committer, SHA, and message \\
+\nolinkurl{pr_commit_details} & Rich & One changed file within a PR commit & 6,112,623 & 14 & Change size, filename, file status, and patch text \\
+\nolinkurl{pr_task_type} & Rich & One classified pull request & 32,702 & 17 & Task type, model reason, and classification confidence \\
+\nolinkurl{issue} & Rich & One linked issue & 29,111 & 9 & Issue title, body, author, state, and timestamps \\
+\nolinkurl{related_issue} & Rich & One PR-issue link & 38,006 & 3 & Bridge between PRs and issues, with link source \\
 \midrule
-\multicolumn{3}{@{}l}{\textbf{Panel B. Glossary of load-bearing terms}} \\
+\multicolumn{6}{@{}l}{\textbf{Panel B. Coverage of the 361,296-PR rich-layer backbone}} \\
 \midrule
-Term & Definition in the code & Where it is defined \\
+Feature group & Layer & Unit & Rows & Matched PRs & Coverage and join integrity \\
 \midrule
-Decisive review & A submitted review whose state is APPROVED or CHANGES\_REQUESTED. Commented and pending reviews are not decisive. & Landmark cohort builder \\
-Branch movement & A \texttt{head\_ref\_force\_pushed} timeline event on the PR. It is visible movement of the branch, not a verified repair. & Timeline event filter \\
-Untyped activity & A post-trigger event row that is not a user account, a mapped product, or another bot. It is the residual class and is always reported together with branch movement. & First-state classifier \\
-State: user account & The event's GitHub user type is User. User evidence takes precedence over product mapping. & First-state classifier \\
-State: mapped product & The event is not a User event and its account is on the six-product allowlist. & First-state classifier \\
-State: other bot & The event's user type is Bot and the account is not on the allowlist. & First-state classifier \\
-State: branch movement or untyped activity & Every remaining event row, which in this release is branch movement and untyped rows. & First-state classifier \\
-State: no later action within seven days & No post-burst event occurs inside the seven-day response window. & First-state classifier \\
-Role: the PR author's own user account & A User account whose login equals the PR author's login. & Response actor roles \\
-Role: the PR author's product & A mapped product equal to the product attributed to the PR author. & Response actor roles \\
-Role: the triggering product & A mapped product equal to the product that wrote the trigger. & Response actor roles \\
-Role: a different mapped product & Any other account on the six-product allowlist. & Response actor roles \\
-Role: an unmapped bot & A Bot account that is not on the allowlist. & Response actor roles \\
-Role: another user account & Any other User account. & Response actor roles \\
-Role: unknown actor & An event with no usable user type. The class is kept so that the seven roles stay exhaustive. & Response actor roles \\
-Automation episode & A run of post-burst events on one PR in which each event follows the previous one by no more than the gap parameter; a larger gap starts a new episode. The primary gap is five minutes, and the first five minutes after the trigger are excluded before episodes are built. & Episode sessionization \\
-Episode state & The highest-priority state inside the episode, using the same priority order as the tie rule. At the five-minute gap, 2,529 of 14,842 episodes mix states. & Episode sessionization \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} Panel A is the exact public-account allowlist used for reviewer-product attribution; logins are matched case-insensitively. Only exact aliases are mapped. Similar names and unknown bots stay outside the six-product registry. Panel B is read from the analysis code: each definition is the rule the code applies, not an interpretation of it. The five states are mutually exclusive and cover every PR at every burst threshold. The seven roles are evaluated in the listed order, so the first matching branch wins. None of these labels reports intent, private activity, or whether a review point was resolved.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.21\textwidth}L{0.07\textwidth}L{0.18\textwidth}L{0.09\textwidth}L{0.14\textwidth}L{0.23\textwidth}@{}}
-\caption{Cohort funnel and the 48-hour ownership routes.}\label{tab:s-cohort}\\
-\endfirsthead
-\caption*{Cohort funnel and the 48-hour ownership routes. (continued)}\\
-\endhead
-\toprule
-\multicolumn{6}{@{}l}{\textbf{Panel A. Participation-to-addressed-edge denominator funnel}} \\
+Timeline events & Rich & Linked rows & 3,018,358 & 197,471 & 54.66\% of the backbone; 0 orphan PR identifiers \\
+File-level changes & Rich & Linked rows & 6,112,623 & 197,330 & 54.62\% of the backbone; 0 orphan PR identifiers \\
+Commits & Rich & Linked rows & 718,779 & 197,335 & 54.62\% of the backbone; 0 orphan PR identifiers \\
+Conversation comments & Rich & Linked rows & 373,549 & 110,011 & 30.45\% of the backbone; 0 orphan PR identifiers \\
+Submitted reviews & Rich & Linked rows & 281,170 & 83,081 & 23.00\% of the backbone; 0 orphan PR identifiers \\
+Inline review comments & Rich & Linked rows & 289,780 & 47,251 & 13.08\% of the backbone; 0 orphan PR identifiers \\
+Task classification & Rich & Linked rows & 32,702 & 32,702 & 9.05\% of the backbone; 0 orphan PR identifiers \\
+Linked issues & Rich & Linked rows & 38,006 & 28,987 & 8.02\% of the backbone; 0 orphan PR identifiers \\
 \midrule
-Stage & PRs & Denominator & Share (\%) &  &  \\
+\multicolumn{6}{@{}l}{\textbf{Panel C. Which review channels can carry a reply anchor at all}} \\
 \midrule
-Complete seven-day trigger cohort & 8,608 & Full cohort & 100.0 &  &  \\
-Any later visible action & 5,553 & Full cohort & 64.5 &  &  \\
-Inline trigger; exact reply is observable & 4,824 & Full cohort & 56.0 &  &  \\
-Exact parent reply & 730 & Full cohort & 8.5 &  &  \\
-Exact parent reply & 730 & Inline-eligible & 15.1 &  &  \\
-Mapped different-product exact reply & 74 & Full cohort & 0.9 &  &  \\
-Mapped different-product exact reply & 74 & Inline-eligible & 1.5 &  &  \\
+Interaction channel & Anchor & Reviewer events & Share (\%) & Trigger PRs & Share of triggers (\%) \\
 \midrule
-\multicolumn{6}{@{}l}{\textbf{Panel B. Forty-eight-hour ownership routes and later integration}} \\
-\midrule
-Route & PRs & Later merge (\%) & Median first action (h) & Adjusted difference (pp) & Repository-cluster 95\% interval \\
-\midrule
-Automation, no later user event & 314 & 40.1 & 0.09 & Reference & -- \\
-Automation then user & 162 & 54.9 & 0.06 & +12.9 & [+3.0, +22.7] \\
-User first & 467 & 50.1 & 0.51 & +6.1 & [-1.7, +13.9] \\
-Movement only & 55 & 58.2 & 2.00 & +11.6 & [-6.7, +30.0] \\
-Other activity & 76 & 39.5 & 0.06 & -1.5 & [-14.5, +11.6] \\
-No observed action & 659 & 32.2 & -- & -9.2 & [-15.9, -2.5] \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} Panel A is the denominator funnel. An exact parent reply is defined only for an inline trigger. The repeated rows make the full-cohort and eligible denominators explicit. Panel B reports the 48-hour ownership routes. The reference is automation with no later user event. Adjustment uses only pre-trigger activity and trigger context. Routes are observed markers, not assigned treatments.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.16\textwidth}L{0.16\textwidth}L{0.15\textwidth}L{0.08\textwidth}L{0.38\textwidth}@{}}
-\caption{Named estimation specifications and the resampling settings behind every reported interval.}\label{tab:s-specifications}\\
-\toprule
-Analysis & Design & Uncertainty & PRs / repos & Formula or interval method \\
-\midrule
-\endfirsthead
-\caption*{Named estimation specifications and the resampling settings behind every reported interval. (continued)}\\
-\toprule
-Analysis & Design & Uncertainty & PRs / repos & Formula or interval method \\
-\midrule
-\endhead
-Exact edge, pre-trigger adjusted (primary) & outcome \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{}}; exposure \texttt{e\allowbreak{}x\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}\_\allowbreak{}p\allowbreak{}a\allowbreak{}r\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}p\allowbreak{}l\allowbreak{}y\allowbreak{}\_\allowbreak{}b\allowbreak{}y\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}} & Linear probability model by OLS; cluster-robust by repository & 1,067 / 469 & \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{} \textasciitilde{}\allowbreak{} e\allowbreak{}x\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}\_\allowbreak{}p\allowbreak{}a\allowbreak{}r\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}p\allowbreak{}l\allowbreak{}y\allowbreak{}\_\allowbreak{}b\allowbreak{}y\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}m\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}h\allowbreak{})\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}h\allowbreak{}o\allowbreak{}u\allowbreak{}r\allowbreak{}s\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}o\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}c\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}f\allowbreak{}o\allowbreak{}r\allowbreak{}c\allowbreak{}e\allowbreak{}\_\allowbreak{}p\allowbreak{}u\allowbreak{}s\allowbreak{}h\allowbreak{}e\allowbreak{}s\allowbreak{}} \\
-Exact edge, route decomposition (secondary) & outcome \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{}}; exposure \texttt{e\allowbreak{}x\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}\_\allowbreak{}p\allowbreak{}a\allowbreak{}r\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}p\allowbreak{}l\allowbreak{}y\allowbreak{}\_\allowbreak{}b\allowbreak{}y\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}} & Linear probability model by OLS; cluster-robust by repository & 1,067 / 469 & \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{} \textasciitilde{}\allowbreak{} e\allowbreak{}x\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}\_\allowbreak{}p\allowbreak{}a\allowbreak{}r\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}p\allowbreak{}l\allowbreak{}y\allowbreak{}\_\allowbreak{}b\allowbreak{}y\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}m\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}h\allowbreak{})\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}h\allowbreak{}o\allowbreak{}u\allowbreak{}r\allowbreak{}s\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}o\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}c\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}f\allowbreak{}o\allowbreak{}r\allowbreak{}c\allowbreak{}e\allowbreak{}\_\allowbreak{}p\allowbreak{}u\allowbreak{}s\allowbreak{}h\allowbreak{}e\allowbreak{}s\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}o\allowbreak{}w\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}s\allowbreak{}h\allowbreak{}i\allowbreak{}p\allowbreak{}\_\allowbreak{}r\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{},\allowbreak{} T\allowbreak{}r\allowbreak{}e\allowbreak{}a\allowbreak{}t\allowbreak{}m\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}(\allowbreak{}'\allowbreak{}n\allowbreak{}o\allowbreak{}\_\allowbreak{}o\allowbreak{}b\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}v\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}'\allowbreak{})\allowbreak{})\allowbreak{}} \\
-Specificity: edge vs non-exact discussion & outcome \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{}}; exposure \texttt{e\allowbreak{}x\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}d\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}y\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}} & Linear probability model by OLS; cluster-robust by repository & 615 / 300 & \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{} \textasciitilde{}\allowbreak{} e\allowbreak{}x\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}d\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}y\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}m\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}h\allowbreak{})\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}h\allowbreak{}o\allowbreak{}u\allowbreak{}r\allowbreak{}s\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}o\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}c\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}f\allowbreak{}o\allowbreak{}r\allowbreak{}c\allowbreak{}e\allowbreak{}\_\allowbreak{}p\allowbreak{}u\allowbreak{}s\allowbreak{}h\allowbreak{}e\allowbreak{}s\allowbreak{}} \\
-Specificity: edge vs any other visible activity & outcome \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{}}; exposure \texttt{e\allowbreak{}x\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}d\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}y\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}} & Linear probability model by OLS; cluster-robust by repository & 641 / 309 & \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{} \textasciitilde{}\allowbreak{} e\allowbreak{}x\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}d\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}y\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}m\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}h\allowbreak{})\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}h\allowbreak{}o\allowbreak{}u\allowbreak{}r\allowbreak{}s\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}o\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}c\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}f\allowbreak{}o\allowbreak{}r\allowbreak{}c\allowbreak{}e\allowbreak{}\_\allowbreak{}p\allowbreak{}u\allowbreak{}s\allowbreak{}h\allowbreak{}e\allowbreak{}s\allowbreak{}} \\
-Specificity: user edge vs non-exact user discussion & outcome \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{}}; exposure \texttt{e\allowbreak{}x\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}e\allowbreak{}d\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}y\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}} & Linear probability model by OLS; cluster-robust by repository & 369 / 215 & \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{} \textasciitilde{}\allowbreak{} e\allowbreak{}x\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}e\allowbreak{}d\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}y\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}m\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}h\allowbreak{})\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}h\allowbreak{}o\allowbreak{}u\allowbreak{}r\allowbreak{}s\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}o\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}c\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}f\allowbreak{}o\allowbreak{}r\allowbreak{}c\allowbreak{}e\allowbreak{}\_\allowbreak{}p\allowbreak{}u\allowbreak{}s\allowbreak{}h\allowbreak{}e\allowbreak{}s\allowbreak{}} \\
-Four-state response gradient & outcome \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{}}; exposure \texttt{s\allowbreak{}p\allowbreak{}e\allowbreak{}c\allowbreak{}i\allowbreak{}f\allowbreak{}i\allowbreak{}c\allowbreak{}i\allowbreak{}t\allowbreak{}y\allowbreak{}\_\allowbreak{}g\allowbreak{}r\allowbreak{}o\allowbreak{}u\allowbreak{}p\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}} & Linear probability model by OLS; cluster-robust by repository & 1,067 / 469 & \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{} \textasciitilde{}\allowbreak{} C\allowbreak{}(\allowbreak{}s\allowbreak{}p\allowbreak{}e\allowbreak{}c\allowbreak{}i\allowbreak{}f\allowbreak{}i\allowbreak{}c\allowbreak{}i\allowbreak{}t\allowbreak{}y\allowbreak{}\_\allowbreak{}g\allowbreak{}r\allowbreak{}o\allowbreak{}u\allowbreak{}p\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{},\allowbreak{} T\allowbreak{}r\allowbreak{}e\allowbreak{}a\allowbreak{}t\allowbreak{}m\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}(\allowbreak{}'\allowbreak{}n\allowbreak{}o\allowbreak{}\_\allowbreak{}v\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}b\allowbreak{}l\allowbreak{}e\allowbreak{}\_\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}i\allowbreak{}v\allowbreak{}i\allowbreak{}t\allowbreak{}y\allowbreak{}'\allowbreak{})\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}m\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}h\allowbreak{})\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}h\allowbreak{}o\allowbreak{}u\allowbreak{}r\allowbreak{}s\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}o\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}c\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}f\allowbreak{}o\allowbreak{}r\allowbreak{}c\allowbreak{}e\allowbreak{}\_\allowbreak{}p\allowbreak{}u\allowbreak{}s\allowbreak{}h\allowbreak{}e\allowbreak{}s\allowbreak{}} \\
-Ownership route, base controls & outcome \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{}}; exposure \texttt{o\allowbreak{}w\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}s\allowbreak{}h\allowbreak{}i\allowbreak{}p\allowbreak{}\_\allowbreak{}r\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}} & Linear probability model by OLS; cluster-robust by repository & 1,733 / 641 & \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{} \textasciitilde{}\allowbreak{} C\allowbreak{}(\allowbreak{}o\allowbreak{}w\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}s\allowbreak{}h\allowbreak{}i\allowbreak{}p\allowbreak{}\_\allowbreak{}r\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{},\allowbreak{} T\allowbreak{}r\allowbreak{}e\allowbreak{}a\allowbreak{}t\allowbreak{}m\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}(\allowbreak{}'\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}o\allowbreak{}m\allowbreak{}a\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}n\allowbreak{}o\allowbreak{}\_\allowbreak{}h\allowbreak{}u\allowbreak{}m\allowbreak{}a\allowbreak{}n\allowbreak{}'\allowbreak{})\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}s\allowbreak{}o\allowbreak{}u\allowbreak{}r\allowbreak{}c\allowbreak{}e\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}m\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}h\allowbreak{})\allowbreak{}} \\
-Ownership route, pre-trigger adjusted & outcome \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{}}; exposure \texttt{o\allowbreak{}w\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}s\allowbreak{}h\allowbreak{}i\allowbreak{}p\allowbreak{}\_\allowbreak{}r\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}} & Linear probability model by OLS; cluster-robust by repository & 1,733 / 641 & \texttt{m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}f\allowbreak{}r\allowbreak{}o\allowbreak{}m\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{}\_\allowbreak{}t\allowbreak{}o\allowbreak{}\_\allowbreak{}3\allowbreak{}0\allowbreak{}d\allowbreak{} \textasciitilde{}\allowbreak{} C\allowbreak{}(\allowbreak{}o\allowbreak{}w\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}s\allowbreak{}h\allowbreak{}i\allowbreak{}p\allowbreak{}\_\allowbreak{}r\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}4\allowbreak{}8\allowbreak{}h\allowbreak{},\allowbreak{} T\allowbreak{}r\allowbreak{}e\allowbreak{}a\allowbreak{}t\allowbreak{}m\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}(\allowbreak{}'\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}o\allowbreak{}m\allowbreak{}a\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}n\allowbreak{}o\allowbreak{}\_\allowbreak{}h\allowbreak{}u\allowbreak{}m\allowbreak{}a\allowbreak{}n\allowbreak{}'\allowbreak{})\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}s\allowbreak{}o\allowbreak{}u\allowbreak{}r\allowbreak{}c\allowbreak{}e\allowbreak{})\allowbreak{} +\allowbreak{} C\allowbreak{}(\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}m\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}h\allowbreak{})\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}t\allowbreak{}r\allowbreak{}i\allowbreak{}g\allowbreak{}g\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}h\allowbreak{}o\allowbreak{}u\allowbreak{}r\allowbreak{}s\allowbreak{} +\allowbreak{} l\allowbreak{}o\allowbreak{}g\allowbreak{}1\allowbreak{}p\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}b\allowbreak{}o\allowbreak{}t\allowbreak{}\_\allowbreak{}e\allowbreak{}v\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}c\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}s\allowbreak{} +\allowbreak{} p\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}f\allowbreak{}o\allowbreak{}r\allowbreak{}c\allowbreak{}e\allowbreak{}\_\allowbreak{}p\allowbreak{}u\allowbreak{}s\allowbreak{}h\allowbreak{}e\allowbreak{}s\allowbreak{}} \\
-Prior history: first user bridge & outcome \texttt{p\allowbreak{}r\allowbreak{}i\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}d\allowbreak{}i\allowbreak{}f\allowbreak{}f\allowbreak{}e\allowbreak{}r\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{}}; exposure \texttt{o\allowbreak{}t\allowbreak{}h\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}} & Linear probability model by OLS; cluster-robust by repository, finite-sample corrected & 3,603 / 834 & \texttt{p\allowbreak{}r\allowbreak{}i\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}d\allowbreak{}i\allowbreak{}f\allowbreak{}f\allowbreak{}e\allowbreak{}r\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{} \textasciitilde{}\allowbreak{} o\allowbreak{}t\allowbreak{}h\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}} \\
-Prior history: all 48-hour responders & outcome \texttt{p\allowbreak{}r\allowbreak{}i\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}d\allowbreak{}i\allowbreak{}f\allowbreak{}f\allowbreak{}e\allowbreak{}r\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{}}; exposure \texttt{i\allowbreak{}s\allowbreak{}\_\allowbreak{}f\allowbreak{}i\allowbreak{}r\allowbreak{}s\allowbreak{}t\allowbreak{}} & Linear probability model by OLS; cluster-robust by repository, finite-sample corrected & 4,814 / 834 & \texttt{p\allowbreak{}r\allowbreak{}i\allowbreak{}o\allowbreak{}r\allowbreak{}\_\allowbreak{}d\allowbreak{}i\allowbreak{}f\allowbreak{}f\allowbreak{}e\allowbreak{}r\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}p\allowbreak{}r\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}e\allowbreak{}r\allowbreak{} \textasciitilde{}\allowbreak{} i\allowbreak{}s\allowbreak{}\_\allowbreak{}f\allowbreak{}i\allowbreak{}r\allowbreak{}s\allowbreak{}t\allowbreak{} +\allowbreak{} i\allowbreak{}s\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}r\allowbreak{}} \\
-Matched cross/same visibility contrast & resampling unit: Whole repositories & 10,000; seed 20260826 & -- & Percentile band on the pair-weighted difference \\
-Matched contrast, pair-level check & resampling unit: Matched pairs & 10,000; seed 20260826 & -- & Percentile band \\
-Burst first-state shares & resampling unit: Whole repositories & 5,000; seed 20260826 plus the threshold in minutes & -- & Percentile band on each state share \\
-Burst mapped-product retention & resampling unit: Whole repositories & 5,000; seed 20260826 plus 1,000 plus the threshold & -- & Percentile band on the difference \\
-Deep next-owner shares & resampling unit: Whole repositories & 5,000; seed 20260826 plus 100 plus the washout & -- & Percentile band \\
-Same-product continuation placebo & resampling unit: Whole repositories & 5,000; seed 20260826 plus 200 plus the washout & -- & Percentile band on the difference \\
-Within-PR product-order placebo & resampling unit: Event order inside one PR & 500 permutations; seed 20260826 plus 400 & -- & Permutation mean and percentile band \\
-Automation-episode order placebo & resampling unit: Event order inside one PR & 500 permutations; seed 20260826 plus 300 plus the gap and state index & -- & Permutation mean and percentile band \\
-Ownership persistence contrasts & resampling unit: Whole repositories & 5,000; seed 20260826 plus a fixed metric offset & -- & Percentile band \\
-Same-locus timing share & resampling unit: Whole repositories & 10,000; seed 20260826 & -- & Percentile band \\
-Randomisation inference, unconditional & resampling unit: Exposure labels inside each repository & 2,000 permutations; seed 20260826 & -- & Two-sided permutation p and percentile band \\
-Randomisation inference, conditional & resampling unit: Exposure labels inside each varying repository & 2,000 permutations; seed 20260826 & -- & Two-sided permutation p against a centred reference \\
-All outcome regressions & resampling unit: None & no resampling & -- & Cluster-robust normal approximation, not resampling \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} Every model row is a linear probability model fitted by ordinary least squares, with standard errors clustered on the repository. Formulas are stored with the analysis products themselves, except the two route rows and the two prior-history rows, whose formulas are read back from the analysis code. The reply-window variants at 1, 6, and 24 hours refit the same formula with the exposure term for that window. Resampling draw counts are not uniform across the analyses, so they are listed rather than summarized; every seed is fixed, and offsets are added so that separate quantities inside one script do not reuse one draw sequence. A percentile band is the 2.5th and 97.5th percentile of the draw distribution. The final row records that the regression intervals come from a clustered normal approximation, which is why the exact-edge estimate is also checked by permutation. A specification describes the fit; it does not claim that the fit identifies an effect.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.28\textwidth}L{0.08\textwidth}L{0.11\textwidth}L{0.12\textwidth}L{0.12\textwidth}L{0.21\textwidth}@{}}
-\caption{Measurement reach and the burst-window convention.}\label{tab:s-coverage}\\
-\endfirsthead
-\caption*{Measurement reach and the burst-window convention. (continued)}\\
-\endhead
-\toprule
-\multicolumn{6}{@{}l}{\textbf{Panel A. Which review interactions can carry a reply anchor at all}} \\
-\midrule
-Interaction channel & Reply anchor & Reviewer-side events & Share of events (\%) & Trigger PRs & Share of triggers (\%) \\
-\midrule
-Inline review comment (pr\_review\_comments) & Yes & 9,086 & 42.7 & 1,067 & 61.6 \\
-Review submission body (pr\_reviews) & No & 6,490 & 30.5 & 353 & 20.4 \\
-PR-level comment (pr\_comments) & No & 5,719 & 26.9 & 313 & 18.1 \\
+Inline review comment & Yes & 9,086 & 42.7 & 1,067 & 61.6 \\
+Review submission body & No & 6,490 & 30.5 & 353 & 20.4 \\
+PR-level comment & No & 5,719 & 26.9 & 313 & 18.1 \\
 All channels that carry no reply anchor & No & 12,209 & 57.3 & 666 & 38.4 \\
 Inline thread roots, the only events an exact reply can name & Yes & 8,897 & 81.2 & -- & -- \\
+\bottomrule
+\end{longtable}
+\noindent\footnotesize \textit{Note:} The rich layer contains repositories with more than 100 stars. Inventory row counts come from release metadata, so large content tables are not expanded in memory. Panel B describes the 361,296 rich-layer pull requests that form the backbone: coverage means that a pull request has at least one linked row, and inline comments resolve through their submitted-review identifier before joining to the pull request. Missing linked rows are not read as negative events, which is why each analysis declares its own denominator. Panel C counts reviewer-side interaction events on the 1,733 trigger PRs, split by the channel that carries them; only inline review comments store a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, fires on 51.4\% of PR-level-comment triggers against 34.2\% of inline triggers; it is reported to size the blind spot and is never used for estimation.
+\endgroup
+
+
+\FloatBarrier
+\needspace{8\baselineskip}
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.27\textwidth}L{0.71\textwidth}@{}}
+\caption{Attribution allowlist and the rules behind the load-bearing labels.}\label{tab:s-definitions}\\
+\endfirsthead
+\caption*{Attribution allowlist and the rules behind the load-bearing labels. (continued)}\\
+\endhead
+\toprule
+\multicolumn{2}{@{}l}{\textbf{Panel A. Attribution allowlist}} \\
 \midrule
-\multicolumn{6}{@{}l}{\textbf{Panel B. RQ1 first-owner split under nine burst-window schemes}} \\
+Mapped product & Exact GitHub login(s), matched case-insensitively \\
 \midrule
-Burst-window scheme & Cut (min) & User (\%) & Mapped product (\%) & User $-$ mapped (pp) & Repository-cluster 95\% interval \\
+\texttt{Claude\_Code} & \texttt{claude[bot]} \\
+\texttt{Copilot} & \texttt{copilot}, \texttt{copilot-pull-request-reviewer[bot]}, \texttt{copilot-swe-agent[bot]} \\
+\texttt{Cursor} & \texttt{cursor[bot]} \\
+\texttt{Devin} & \texttt{devin-ai-integration[bot]} \\
+\texttt{Google\_Jules} & \texttt{google-labs-jules[bot]} \\
+\texttt{OpenAI\_Codex} & \texttt{chatgpt-codex-connector[bot]} \\
+\midrule
+\multicolumn{2}{@{}l}{\textbf{Panel B. Terms whose exact rule the article does not state}} \\
+\midrule
+Term & The rule the analysis code applies \\
+\midrule
+Decisive review & A submitted review whose state is APPROVED or CHANGES\_REQUESTED. Commented and pending reviews are not decisive. \\
+Branch movement & A force-push event on the PR branch. It is visible movement of the branch, not a verified repair. \\
+Untyped activity & A post-trigger event row that is not a user account, a mapped product, or another bot. It is the residual class and is always reported together with branch movement. \\
+The five first-state classes, in priority order & (1) user account, the event's GitHub user type is User, which takes precedence over product mapping; (2) mapped product, a non-User account on the six-product allowlist; (3) other bot, a Bot account not on the allowlist; (4) branch movement or untyped activity, every remaining event row; (5) no later action within seven days. The classes are mutually exclusive and cover every PR at every burst threshold. \\
+The seven response actor roles, in evaluation order & (1) the PR author's own user account, a User whose login equals the author's; (2) the PR author's product; (3) the triggering product; (4) a different mapped product; (5) an unmapped bot; (6) another user account; (7) unknown actor, an event with no usable user type, kept so the roles stay exhaustive. The first matching branch wins. \\
+Automation episode & A run of post-burst events on one PR in which each event follows the previous one by no more than the gap parameter; a larger gap starts a new episode. The primary gap is five minutes, and the first five minutes after the trigger are excluded before episodes are built. \\
+Episode state & The highest-priority state inside the episode, using the same priority order as the tie rule. At the five-minute gap, 2,529 of 14,842 episodes mix states. \\
+\bottomrule
+\end{longtable}
+\noindent\footnotesize \textit{Note:} Panel A is the exact public-account allowlist used for reviewer-product attribution. Only exact aliases are mapped; similar names and unknown bots stay outside the six-product registry. Panel B is read back from the analysis code, so each entry is the rule the code applies rather than an interpretation of it. Terms the article already defines are not repeated here. None of these labels reports intent, private activity, or whether a review point was resolved.
+\endgroup
+
+
+\FloatBarrier
+\needspace{8\baselineskip}
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.36\textwidth}L{0.12\textwidth}L{0.13\textwidth}L{0.37\textwidth}@{}}
+\caption{Cohort funnel, validation gates, and the column-level leakage contract.}\label{tab:s-cohort}\\
+\endfirsthead
+\caption*{Cohort funnel, validation gates, and the column-level leakage contract. (continued)}\\
+\endhead
+\toprule
+\multicolumn{4}{@{}l}{\textbf{Panel A. Participation-to-addressed-edge denominator funnel}} \\
+\midrule
+Stage & PRs & Denominator & Share (\%) \\
+\midrule
+Complete seven-day trigger cohort & 8,608 & Full cohort & 100.0 \\
+Any later visible action & 5,553 & Full cohort & 64.5 \\
+Inline trigger; exact reply is observable & 4,824 & Full cohort & 56.0 \\
+Exact parent reply & 730 & Full cohort & 8.5 \\
+Exact parent reply & 730 & Inline-eligible & 15.1 \\
+Mapped different-product exact reply & 74 & Full cohort & 0.9 \\
+Mapped different-product exact reply & 74 & Inline-eligible & 1.5 \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Panel B. Load-bearing validation gates}} \\
+\midrule
+\multicolumn{2}{@{}L{0.50\textwidth}}{Gate} & Status & Observed \\
+\midrule
+\multicolumn{2}{@{}L{0.50\textwidth}}{Full-corpus PR identifiers are unique} & PASS & 7,685,281 \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Follow-up event PR identifiers resolve} & PASS & 0 orphan IDs \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Events are strictly after the trigger} & PASS & 0 violations \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Events stay inside the seven-day window} & PASS & 0 violations \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Later review batches are de-duplicated} & PASS & 0 repeated batches \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Exact duplicate event surplus removed} & PASS & 9 rows \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{First state is invariant to exact de-duplication} & PASS & 0 changed states \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Mapped-first anchor reconciles} & PASS & 924 PRs \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Landmark cohort has one row per PR} & PASS & 1,067 PRs \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Direct-reply parent identifiers equal the trigger} & PASS & 128 reply events \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{All positive outcomes occur after hour 48} & PASS & 423 outcomes \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{All outcomes stay within the 30-day horizon} & PASS & True \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Pre-trigger controls are strictly pre-trigger} & PASS & 3,323 rows \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Prior-history matches exclude focal and future rows} & PASS & 221,058 valid rows \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Review-request target account coverage} & LIMIT & 0.0\% \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{Panel C. Leakage contract on the landmark cohort columns}} \\
+\midrule
+\multicolumn{2}{@{}L{0.50\textwidth}}{Leakage tag stored with the cohort} & Columns & Where the column may be used \\
+\midrule
+\multicolumn{2}{@{}L{0.50\textwidth}}{At or before the trigger} & 21 of 31 & The primary specification draws only on these. \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{After the trigger, by hour 48} & 8 of 31 & Used only by the secondary route decomposition and by the exposure itself. \\
+\multicolumn{2}{@{}L{0.50\textwidth}}{Outcome window, after hour 48} & 2 of 31 & Read only after hour 48; never an input. \\
+\bottomrule
+\end{longtable}
+\noindent\footnotesize \textit{Note:} Panel A is the denominator funnel. An exact parent reply is defined only for an inline trigger. The repeated rows make the full-cohort and eligible denominators explicit. In Panel B, PASS means that the frozen automated check met its declared contract; LIMIT identifies missing measurement coverage rather than a failed computation. Panel C is the column-by-column form of the pre-trigger-only claim: every column of the derived landmark cohort carries a leakage tag, and the tag decides where the column may enter a model. It records where a value can be observed, not whether it is a good measure of the thing it is named after. The public artifact carries the full column dictionary with one row per column.
+\endgroup
+
+
+\FloatBarrier
+\needspace{8\baselineskip}
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.17\textwidth}L{0.15\textwidth}L{0.13\textwidth}L{0.23\textwidth}L{0.30\textwidth}@{}}
+\caption{Named estimation specifications and the resampling settings behind every reported interval.}\label{tab:s-specifications}\\
+\endfirsthead
+\caption*{Named estimation specifications and the resampling settings behind every reported interval. (continued)}\\
+\endhead
+\toprule
+\multicolumn{5}{@{}l}{\textbf{Panel A. Named estimation specifications}} \\
+\midrule
+Analysis & Outcome & Exposure term & PRs / repos & Adjustment \\
+\midrule
+Exact edge, pre-trigger adjusted (primary) & later merge, hour 48 to day 30 & exact reply within 48 h & 1,067 / 469 & exposure plus the pre-trigger control set \\
+Exact edge, route decomposition (secondary) & later merge, hour 48 to day 30 & exact reply within 48 h & 1,067 / 469 & exposure plus the pre-trigger control set, 48-hour ownership route (reference: no observed action) \\
+Specificity: edge vs non-exact discussion & later merge, hour 48 to day 30 & exact edge within 48 h, against other visible discussion & 615 / 300 & exposure plus the pre-trigger control set \\
+Specificity: edge vs any other visible activity & later merge, hour 48 to day 30 & exact edge within 48 h, against other visible discussion & 641 / 309 & exposure plus the pre-trigger control set \\
+Specificity: user edge vs non-exact user discussion & later merge, hour 48 to day 30 & exact user-written edge within 48 h, against other user discussion & 369 / 215 & exposure plus the pre-trigger control set \\
+Four-state response gradient & later merge, hour 48 to day 30 & 48-hour response state & 1,067 / 469 & exposure plus the pre-trigger control set \\
+Ownership route, base controls & later merge, hour 48 to day 30 & 48-hour ownership route (reference: automation, no user event) & 1,733 / 641 & exposure plus author product, reviewer product, trigger channel, calendar month \\
+Ownership route, pre-trigger adjusted & later merge, hour 48 to day 30 & 48-hour ownership route (reference: automation, no user event) & 1,733 / 641 & exposure plus the pre-trigger control set, trigger channel \\
+Prior history: first user bridge & prior review in this repository on another PR & the bridge is not the PR author & 3,603 / 834 & exposure only; no adjustment \\
+Prior history: all 48-hour responders & prior review in this repository on another PR & first responder in the window & 4,814 / 834 & exposure plus the responder is the PR author \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{Panel B. Resampling settings behind every reported interval}} \\
+\midrule
+Analysis & Resampling unit & Draws & Seed & Interval method \\
+\midrule
+Matched cross/same visibility contrast & Whole repositories & 10,000 & 20260826 & Percentile band on the pair-weighted difference \\
+Matched contrast, pair-level check & Matched pairs & 10,000 & 20260826 & Percentile band \\
+Burst first-state shares & Whole repositories & 5,000 & 20260826 plus the threshold in minutes & Percentile band on each state share \\
+Burst mapped-product retention & Whole repositories & 5,000 & 20260826 plus 1,000 plus the threshold & Percentile band on the difference \\
+Deep next-owner shares & Whole repositories & 5,000 & 20260826 plus 100 plus the washout & Percentile band \\
+Same-product continuation placebo & Whole repositories & 5,000 & 20260826 plus 200 plus the washout & Percentile band on the difference \\
+Within-PR product-order placebo & Event order inside one PR & 500 permutations & 20260826 plus 400 & Permutation mean and percentile band \\
+Automation-episode order placebo & Event order inside one PR & 500 permutations & 20260826 plus 300 plus the gap and state index & Permutation mean and percentile band \\
+Ownership persistence contrasts & Whole repositories & 5,000 & 20260826 plus a fixed metric offset & Percentile band \\
+Same-locus timing share & Whole repositories & 10,000 & 20260826 & Percentile band \\
+Randomisation inference, unconditional & Exposure labels inside each repository & 2,000 permutations & 20260826 & Two-sided permutation p and percentile band \\
+Randomisation inference, conditional & Exposure labels inside each varying repository & 2,000 permutations & 20260826 & Two-sided permutation p against a centred reference \\
+All outcome regressions & None & no resampling & -- & Cluster-robust normal approximation, not resampling \\
+\bottomrule
+\end{longtable}
+\noindent\footnotesize \textit{Note:} Every model in Panel A is a linear probability model fitted by ordinary least squares, with standard errors clustered on the repository; the two prior-history rows add a small-cluster correction. Adjustment terms are read back from the formula stored with each analysis product, except the two route rows and the two prior-history rows, whose formulas are read from the analysis code. The pre-trigger control set is author product, reviewer product, calendar month, log trigger age, log pre-trigger events, and pre-trigger user, bot, decisive-review, and branch-movement counts. Reply-window variants at 1, 6, and 24 hours refit the same specification with that window's exposure term. In Panel B the draw counts are not uniform, so they are listed rather than summarised; every seed derives from one fixed value, with fixed offsets so that separate quantities inside one analysis do not reuse a single draw sequence. A percentile band is the 2.5th and 97.5th percentile of the draw distribution. The last row records that regression intervals come from a clustered normal approximation, which is why the exact-edge estimate is also checked by permutation. A specification describes the fit; it does not claim that the fit identifies an effect.
+\endgroup
+
+
+\FloatBarrier
+\needspace{8\baselineskip}
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.17\textwidth}L{0.25\textwidth}L{0.09\textwidth}L{0.11\textwidth}L{0.15\textwidth}L{0.21\textwidth}@{}}
+\caption{RQ1: first public state after each burst threshold, the burst-window convention, ordering diagnostics, and order placebos.}\label{tab:s-burst}\\
+\endfirsthead
+\caption*{RQ1: first public state after each burst threshold, the burst-window convention, ordering diagnostics, and order placebos. (continued)}\\
+\endhead
+\toprule
+\multicolumn{6}{@{}l}{\textbf{Panel A. First public state after each rapid-burst threshold}} \\
+\midrule
+Burst (min) & First state & PRs & Share (\%) & Cluster 95\% interval & Median min \\
+\midrule
+0 & User account & 2,381 & 27.7 & [23.6, 32.5] & 26.8 \\
+0 & Mapped product & 1,305 & 15.2 & [12.7, 17.8] & 4.5 \\
+0 & Other bot & 1,359 & 15.8 & [12.4, 19.6] & 2.5 \\
+0 & Branch movement or untyped & 508 & 5.9 & [4.4, 7.5] & 30.9 \\
+0 & No later action in 7 days & 3,055 & 35.5 & [30.7, 40.5] & -- \\
+1 & User account & 2,428 & 28.2 & [24.2, 32.7] & 31.1 \\
+1 & Mapped product & 1,198 & 13.9 & [11.9, 16.1] & 5.7 \\
+1 & Other bot & 1,161 & 13.5 & [10.6, 16.7] & 3.4 \\
+1 & Branch movement or untyped & 552 & 6.4 & [4.9, 8.1] & 33.6 \\
+1 & No later action in 7 days & 3,269 & 38.0 & [33.3, 42.8] & -- \\
+5 & User account & 2,526 & 29.3 & [25.3, 33.8] & 41.5 \\
+5 & Mapped product & 924 & 10.7 & [9.1, 12.4] & 14.6 \\
+5 & Other bot & 761 & 8.8 & [6.8, 11.3] & 6.9 \\
+5 & Branch movement or untyped & 560 & 6.5 & [4.9, 8.3] & 45.1 \\
+5 & No later action in 7 days & 3,837 & 44.6 & [40.1, 49.1] & -- \\
+10 & User account & 2,413 & 28.0 & [24.1, 32.2] & 61.9 \\
+10 & Mapped product & 827 & 9.6 & [8.1, 11.2] & 17.9 \\
+10 & Other bot & 609 & 7.1 & [5.4, 9.3] & 11.0 \\
+10 & Branch movement or untyped & 554 & 6.4 & [4.8, 8.1] & 56.8 \\
+10 & No later action in 7 days & 4,205 & 48.8 & [44.6, 53.2] & -- \\
+30 & User account & 2,165 & 25.2 & [21.9, 28.8] & 134.9 \\
+30 & Mapped product & 653 & 7.6 & [6.4, 8.9] & 41.4 \\
+30 & Other bot & 377 & 4.4 & [3.5, 5.4] & 45.7 \\
+30 & Branch movement or untyped & 483 & 5.6 & [4.3, 7.1] & 117.8 \\
+30 & No later action in 7 days & 4,930 & 57.3 & [53.2, 61.1] & -- \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel B. First-owner split under nine burst-window schemes}} \\
+\midrule
+Burst-window scheme & Cut (min) & User (\%) & Mapped (\%) & User $-$ mapped (pp) & Repository-cluster 95\% interval \\
 \midrule
 Fixed convention, no burst excluded & 0 & 27.7 & 15.2 & +12.5 & [+7.6, +18.3] \\
 Fixed convention & 1 & 28.2 & 13.9 & +14.3 & [+9.6, +19.9] \\
@@ -211,101 +256,23 @@ Data-driven global log-hazard change point & 0.9 & 28.2 & 14.0 & +14.2 & [+9.3, 
 Same rule, search capped at 60 minutes & 0.9 & 28.2 & 14.0 & +14.2 & [+9.4, +19.9] \\
 Per-product log-hazard change point & 0.9--458.3 & 25.1 & 10.5 & +14.6 & [+11.0, +18.5] \\
 Per-product rule, search capped at 60 minutes & 0.6--8.6 & 27.8 & 13.4 & +14.5 & [+9.8, +19.7] \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} Panel A counts interaction events on the 1,733 trigger PRs of the landmark cohort, split by the channel that carries them; only inline review comments carry a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, fires on 51.4\% of PR-level-comment triggers against 34.2\% of inline triggers; it is reported as a reach diagnostic and is never used for estimation. Panel B re-runs the RQ1 first-owner split under nine burst conventions. No data-driven burst cut exists: the log gap density has a single dominant mode at 4.25 minutes with no interior antimode below 60 minutes, and that rule finds a burst-region antimode in only 16.8\% of repository bootstrap replicates. The change-point rule always returns a value, 0.90 minutes globally, but it marks where responses start arriving rather than where a machine burst ends. The five-minute window is therefore a stated convention, not a discovered boundary. It matters for magnitude and not for direction: state agreement with the five-minute convention ranges from 79.8\% to 91.2\%, while the user-minus-mapped-product difference stays positive with a repository-clustered interval excluding zero under every scheme. Per-product cuts, gap histograms, and the hazard grid are in the burst threshold selection products selected\_cuts.csv, gap\_histogram.csv, and next\_event\_hazard.csv.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}r L{0.21\textwidth}r r L{0.14\textwidth}r@{}}
-\caption{First public state after each rapid-burst threshold.}\label{tab:s-burst}\\
-\toprule
-Burst (min) & First state & PRs & Share (\%) & Cluster 95\% interval & Median min \\
 \midrule
-\endfirsthead
-\caption*{First public state after each rapid-burst threshold. (continued)}\\
-\toprule
-Burst (min) & First state & PRs & Share (\%) & Cluster 95\% interval & Median min \\
-\midrule
-\endhead
-0 & User account & 2,381 & 27.7 & [23.6, 32.5] & 26.8 \\
-0 & Mapped product & 1,305 & 15.2 & [12.7, 17.8] & 4.5 \\
-0 & Other bot & 1,359 & 15.8 & [12.4, 19.6] & 2.5 \\
-0 & Branch movement or untyped activity & 508 & 5.9 & [4.4, 7.5] & 30.9 \\
-0 & No later action within seven days & 3,055 & 35.5 & [30.7, 40.5] & -- \\
-1 & User account & 2,428 & 28.2 & [24.2, 32.7] & 31.1 \\
-1 & Mapped product & 1,198 & 13.9 & [11.9, 16.1] & 5.7 \\
-1 & Other bot & 1,161 & 13.5 & [10.6, 16.7] & 3.4 \\
-1 & Branch movement or untyped activity & 552 & 6.4 & [4.9, 8.1] & 33.6 \\
-1 & No later action within seven days & 3,269 & 38.0 & [33.3, 42.8] & -- \\
-5 & User account & 2,526 & 29.3 & [25.3, 33.8] & 41.5 \\
-5 & Mapped product & 924 & 10.7 & [9.1, 12.4] & 14.6 \\
-5 & Other bot & 761 & 8.8 & [6.8, 11.3] & 6.9 \\
-5 & Branch movement or untyped activity & 560 & 6.5 & [4.9, 8.3] & 45.1 \\
-5 & No later action within seven days & 3,837 & 44.6 & [40.1, 49.1] & -- \\
-10 & User account & 2,413 & 28.0 & [24.1, 32.2] & 61.9 \\
-10 & Mapped product & 827 & 9.6 & [8.1, 11.2] & 17.9 \\
-10 & Other bot & 609 & 7.1 & [5.4, 9.3] & 11.0 \\
-10 & Branch movement or untyped activity & 554 & 6.4 & [4.8, 8.1] & 56.8 \\
-10 & No later action within seven days & 4,205 & 48.8 & [44.6, 53.2] & -- \\
-30 & User account & 2,165 & 25.2 & [21.9, 28.8] & 134.9 \\
-30 & Mapped product & 653 & 7.6 & [6.4, 8.9] & 41.4 \\
-30 & Other bot & 377 & 4.4 & [3.5, 5.4] & 45.7 \\
-30 & Branch movement or untyped activity & 483 & 5.6 & [4.3, 7.1] & 117.8 \\
-30 & No later action within seven days & 4,930 & 57.3 & [53.2, 61.1] & -- \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} The denominator is 8,608 PRs at every threshold. The window is a sensitivity parameter, not an inferred private session boundary.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.16\textwidth}L{0.28\textwidth}L{0.07\textwidth}L{0.12\textwidth}L{0.13\textwidth}L{0.16\textwidth}@{}}
-\caption{RQ1 robustness: ordering diagnostics and order placebos.}\label{tab:s-rq1-robustness}\\
-\endfirsthead
-\caption*{RQ1 robustness: ordering diagnostics and order placebos. (continued)}\\
-\endhead
-\toprule
-\multicolumn{6}{@{}l}{\textbf{Panel A. Ordering diagnostics and leave-one-out checks}} \\
+\multicolumn{6}{@{}l}{\textbf{Panel C. Ordering diagnostics and leave-one-out checks}} \\
 \midrule
 Check & Quantity & Burst (min) & Full (\%) & Range or count & Gate, shift, or diagnostic \\
 \midrule
-Tie diagnostic & Tied first timestamps among 5,553 PRs with a post-burst action & 0 & -- & 366 & 1 mixed-state ties; largest tie group 10 \\
-Tie diagnostic & Tied first timestamps among 5,339 PRs with a post-burst action & 1 & -- & 372 & 0 mixed-state ties; largest tie group 10 \\
-Tie diagnostic & Tied first timestamps among 4,771 PRs with a post-burst action & 5 & -- & 306 & 0 mixed-state ties; largest tie group 10 \\
-Tie diagnostic & Tied first timestamps among 4,403 PRs with a post-burst action & 10 & -- & 241 & 0 mixed-state ties; largest tie group 10 \\
-Tie diagnostic & Tied first timestamps among 3,678 PRs with a post-burst action & 30 & -- & 169 & 0 mixed-state ties; largest tie group 10 \\
-Leave-one-out ordering gate & User minus mapped product, dropping one repository & 0 & -- & 10.5 to 13.2 pp & both gates hold in all 1,416 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one repository & 1 & -- & 12.3 to 15.1 pp & both gates hold in all 1,416 exclusions \\
+Tie diagnostic & Tied first timestamps among PRs with a post-burst action & all 5 & -- & 169 to 372 PRs & 1 mixed-state tie in total, at 0 min; largest tie group 10 \\
 Leave-one-out ordering gate & User minus mapped product, dropping one repository & 5 & -- & 16.9 to 19.1 pp & both gates hold in all 1,416 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one repository & 10 & -- & 16.8 to 18.8 pp & both gates hold in all 1,416 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one repository & 30 & -- & 16.3 to 17.9 pp & both gates hold in all 1,416 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one ordered product pair & 0 & -- & 10.2 to 14.2 pp & both gates hold in all 25 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one ordered product pair & 1 & -- & 11.6 to 16.0 pp & both gates hold in all 25 exclusions \\
+Leave-one-out ordering gate & The same gate at the other four thresholds, dropping one repository & 0, 1, 10, 30 & -- & 10.5 to 18.8 pp & both gates hold in every exclusion at every threshold \\
 Leave-one-out ordering gate & User minus mapped product, dropping one ordered product pair & 5 & -- & 16.5 to 19.9 pp & both gates hold in all 25 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one ordered product pair & 10 & -- & 17.0 to 19.2 pp & both gates hold in all 25 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one ordered product pair & 30 & -- & 16.5 to 18.4 pp & both gates hold in all 25 exclusions \\
-Leave-one-out share range & User account, dropping one repository & 5 & 29.3 & 27.9 to 29.9 & largest shift 1.43 pp \\
-Leave-one-out share range & Mapped product, dropping one repository & 5 & 10.7 & 10.6 to 11.0 & largest shift 0.31 pp \\
-Leave-one-out share range & Other bot, dropping one repository & 5 & 8.8 & 8.0 to 9.0 & largest shift 0.87 pp \\
-Leave-one-out share range & Branch movement or untyped activity, dropping one repository & 5 & 6.5 & 6.0 to 6.7 & largest shift 0.47 pp \\
-Leave-one-out share range & No later action within seven days, dropping one repository & 5 & 44.6 & 43.5 to 45.4 & largest shift 1.10 pp \\
-Leave-one-out share range & User account, dropping one ordered product pair & 5 & 29.3 & 28.0 to 30.4 & largest shift 1.34 pp \\
-Leave-one-out share range & Mapped product, dropping one ordered product pair & 5 & 10.7 & 10.1 to 13.9 & largest shift 3.16 pp \\
-Leave-one-out share range & Other bot, dropping one ordered product pair & 5 & 8.8 & 7.7 to 9.2 & largest shift 1.18 pp \\
-Leave-one-out share range & Branch movement or untyped activity, dropping one ordered product pair & 5 & 6.5 & 5.4 to 6.9 & largest shift 1.07 pp \\
-Leave-one-out share range & No later action within seven days, dropping one ordered product pair & 5 & 44.6 & 41.2 to 45.2 & largest shift 3.42 pp \\
+Leave-one-out ordering gate & The same gate at the other four thresholds, dropping one ordered product pair & 0, 1, 10, 30 & -- & 10.2 to 19.2 pp & both gates hold in every exclusion at every threshold \\
+Leave-one-out share range & User account: dropping one repository, then one product pair & 5 & 29.3 & 27.9 to 29.9; 28.0 to 30.4 & largest shift 1.43 pp; 1.34 pp \\
+Leave-one-out share range & Mapped product: dropping one repository, then one product pair & 5 & 10.7 & 10.6 to 11.0; 10.1 to 13.9 & largest shift 0.31 pp; 3.16 pp \\
+Leave-one-out share range & Other bot: dropping one repository, then one product pair & 5 & 8.8 & 8.0 to 9.0; 7.7 to 9.2 & largest shift 0.87 pp; 1.18 pp \\
+Leave-one-out share range & Branch movement or untyped: dropping one repository, then one product pair & 5 & 6.5 & 6.0 to 6.7; 5.4 to 6.9 & largest shift 0.47 pp; 1.07 pp \\
+Leave-one-out share range & No later action in 7 days: dropping one repository, then one product pair & 5 & 44.6 & 43.5 to 45.4; 41.2 to 45.2 & largest shift 1.10 pp; 3.42 pp \\
 \midrule
-\multicolumn{6}{@{}l}{\textbf{Panel B. Order placebos}} \\
+\multicolumn{6}{@{}l}{\textbf{Panel D. Order placebos}} \\
 \midrule
 Block & Test or quantity & At risk & Observed (\%) & Null or difference (pp) & 95\% interval \\
 \midrule
@@ -313,7 +280,7 @@ Deep transition & Next state: User account & 217 & 23.5 & -- & [19.7, 27.4] \\
 Deep transition & Next state: Same mapped product & 284 & 30.7 & -- & [26.6, 35.0] \\
 Deep transition & Next state: Different mapped product & 43 & 4.7 & -- & [3.2, 6.2] \\
 Deep transition & Next state: Other bot & 39 & 4.2 & -- & [2.6, 6.1] \\
-Deep transition & Next state: Branch movement or untyped activity & 36 & 3.9 & -- & [2.4, 5.4] \\
+Deep transition & Next state: Branch movement or untyped & 36 & 3.9 & -- & [2.4, 5.4] \\
 Deep transition & Next state: No later state & 305 & 33.0 & -- & [29.0, 37.2] \\
 Deep transition & Same-product continuation among later mapped events: observed & 495 & 84.4 & -- & -- \\
 Deep transition & Same-product continuation: random-order expectation & 495 & 83.6 & -- & -- \\
@@ -327,7 +294,7 @@ Ownership persistence & Visible next action: Same ownership layer continues & 3,
 Ownership persistence & Visible next action: Cross-layer handoff (user--product bounce) & 3,237 start PRs & user 31.9; product 33.0 & -1.1 & [-7.6, +5.7] \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} Panel A covers tie diagnostics and leave-one-out ordering checks for the first post-burst state. The priority order is user account, then mapped product, then other bot, then branch movement or untyped activity. Ties are common because many events share a whole-second timestamp, but a tie changes the assigned state only when the tied events fall in different states. Exactly one mixed-state tie occurs, at the zero-minute threshold, and none occurs at any positive threshold. The order favours the user-account state, which is the state the RQ1 ordering claim rests on, so the diagnostic is reported rather than assumed harmless. The gate block drops one repository, or one ordered author--reviewer product pair, at a time and refits the ordering; two gates are checked in every exclusion, namely that the user-account share stays above the mapped-product share and that no later action within seven days stays the largest state. The share-range block reports the range for each state at the primary five-minute threshold. These checks show that the ordering is not carried by one repository or one product pair. They do not remove selection into the cohort. Panel B covers the deep transition, escalation, and persistent-ownership order placebos. Deep-transition next-state shares use 924 mapped-first PRs; the same-product placebo uses 495 PRs with a later mapped-product event and preserves each PR's future product composition. Escalation rows compare the observed user-next share with a within-PR order permutation. Ownership rows condition on a visible next action; their difference column is user-first minus mapped-first. Same-layer continuation and cross-layer bounce show no clear group difference, while exact owner repetition is higher after a mapped-product first state.
+\noindent\footnotesize \textit{Note:} Panel A repeats the first-owner classification after ignoring events in the first 0, 1, 5, 10, or 30 minutes; the denominator is 8,608 PRs at every threshold and the window is a sensitivity parameter, not an inferred private session boundary. Panel B asks whether the five-minute window is discoverable from the data, and it is not: the log gap density has a single dominant mode at 4.25 minutes with no interior antimode below 60 minutes, and that rule finds a burst-region antimode in only 16.8\% of repository bootstrap replicates. The change-point rule always returns a value, 0.90 minutes globally, but it marks where responses start arriving rather than where a machine burst ends. The window is therefore a stated convention that the direction survives: state agreement with the five-minute convention ranges from 79.8\% to 91.2\%, and the user-minus-mapped difference stays positive with an interval excluding zero under every scheme. In Panel C the priority order applied to tied first timestamps is user account, then mapped product, then other bot, then branch movement or untyped activity. Ties are common because many events share a whole-second timestamp, but a tie changes the assigned state only when the tied events fall in different states, and that happens once in the whole study. The order favours the user-account state, which is the state the RQ1 ordering claim rests on, so the diagnostic is reported rather than assumed harmless. The gate rows drop one repository, or one ordered author--reviewer product pair, at a time and refit the ordering; two gates are checked in every exclusion, namely that the user-account share stays above the mapped-product share and that no later action within seven days stays the largest state. Because both gates hold everywhere, the four non-published thresholds are collapsed to their range. The share-range rows report each state at the primary five-minute threshold, first for repository exclusions and then for product-pair exclusions. These checks show that the ordering is not carried by one repository or one product pair. They do not remove selection into the cohort. Panel D covers the deep-transition, escalation, and persistent-ownership order placebos. Deep-transition next-state shares use 924 mapped-first PRs; the same-product placebo uses 495 PRs with a later mapped-product event and preserves each PR's future product composition. Escalation rows compare the observed user-next share with a within-PR order permutation. Ownership rows condition on a visible next action; their difference column is user-first minus mapped-first. Same-layer continuation and cross-layer bounce show no clear group difference, while exact owner repetition is higher after a mapped-product first state.
 \endgroup
 
 
@@ -336,10 +303,10 @@ Ownership persistence & Visible next action: Cross-layer handoff (user--product 
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.27\textwidth}L{0.14\textwidth}L{0.07\textwidth}L{0.09\textwidth}L{0.13\textwidth}L{0.22\textwidth}@{}}
-\caption{RQ2: matched cross- versus same-product comparison and prior review history.}\label{tab:s-rq2}\\
+\begin{longtable}{@{}L{0.26\textwidth}L{0.09\textwidth}L{0.09\textwidth}L{0.11\textwidth}L{0.16\textwidth}L{0.25\textwidth}@{}}
+\caption{RQ2: the matched cross- versus same-product comparison, where its gap lives, and prior review history.}\label{tab:s-rq2}\\
 \endfirsthead
-\caption*{RQ2: matched cross- versus same-product comparison and prior review history. (continued)}\\
+\caption*{RQ2: the matched cross- versus same-product comparison, where its gap lives, and prior review history. (continued)}\\
 \endhead
 \toprule
 \multicolumn{6}{@{}l}{\textbf{Panel A. Exact-author matched cross- versus same-product comparison}} \\
@@ -354,34 +321,7 @@ Visible force-push & 546 & 11.0 & 9.2 & +1.8 & [-1.6, +4.8] \\
 Merge within seven days & 546 & 73.4 & 70.7 & +2.7 & [-2.9, +10.2] \\
 Any visible follow-up; seven-day pairing caliper & 423 & 67.6 & 82.5 & -14.9 & [-21.6, -4.2] \\
 \midrule
-\multicolumn{6}{@{}l}{\textbf{Panel B. Strict prior same-repository review history}} \\
-\midrule
-Population & Account--PR rows & Repos & With prior history (\%) & Median prior PRs &  \\
-\midrule
-First user bridge: PR author & 1,372 & 438 & 67.1 & 7 &  \\
-First user bridge: another account & 2,231 & 571 & 73.8 & 11 &  \\
-All first user bridges & 3,603 & 834 & 71.2 & 9 &  \\
-First later decisive reviewer & 2,020 & 488 & 78.2 & 11 &  \\
-All distinct 48-hour user responders & 4,814 & 834 & 70.2 & 9 &  \\
-Cross-feedback PR author accounts & 8,608 & 1,416 & 40.4 & 4 &  \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} Panel A is the exact-author matched trigger comparison. Pairs also match repository, author product, trigger source, and month, then use nearest trigger time without replacement. Difference is cross-product minus same-product. Panel B reports prior review history across user-account populations, and its median prior-PR count is taken among accounts with prior history. Prior history requires the same account, the same repository, a different PR, and a submitted review strictly before the cross-product trigger. It is observable public history, not verified memory retrieval.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.26\textwidth}L{0.07\textwidth}L{0.09\textwidth}L{0.11\textwidth}L{0.16\textwidth}L{0.23\textwidth}@{}}
-\caption{Where the matched gap lives, and what repository descriptors explain.}\label{tab:s-heterogeneity}\\
-\endfirsthead
-\caption*{Where the matched gap lives, and what repository descriptors explain. (continued)}\\
-\endhead
-\toprule
-\multicolumn{6}{@{}l}{\textbf{Panel A. Composition of the matched pairs and the gap inside each product pair}} \\
+\multicolumn{6}{@{}l}{\textbf{Panel B. Composition of the matched pairs and the gap inside each product pair}} \\
 \midrule
 Ordered product pair & Pairs & Repos & Cross (\%) & Same (\%) & Difference (pp) and repository-cluster 95\% interval \\
 \midrule
@@ -394,7 +334,18 @@ Copilot to Claude\_Code & 44 & 10 & 77.3 & 75.0 & +2.3 [-7.1, +25.0] \\
 Copilot to Cursor & 33 & 16 & 75.8 & 81.8 & -6.1 [-21.9, +5.7] \\
 5 further pairs below the 30-pair floor & 46 & -- & -- & -- & not estimated \\
 \midrule
-\multicolumn{6}{@{}l}{\textbf{Panel B. Repository descriptors behind the familiar-replier split}} \\
+\multicolumn{6}{@{}l}{\textbf{Panel C. Strict prior same-repository review history}} \\
+\midrule
+Population & Account--PR rows & Repos & With prior history (\%) & Median prior PRs &  \\
+\midrule
+First user bridge: PR author & 1,372 & 438 & 67.1 & 7 &  \\
+First user bridge: another account & 2,231 & 571 & 73.8 & 11 &  \\
+All first user bridges & 3,603 & 834 & 71.2 & 9 &  \\
+First later decisive reviewer & 2,020 & 488 & 78.2 & 11 &  \\
+All distinct 48-hour user responders & 4,814 & 834 & 70.2 & 9 &  \\
+Cross-feedback PR author accounts & 8,608 & 1,416 & 40.4 & 4 &  \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel D. Repository descriptors behind the RQ3 familiar-replier split}} \\
 \midrule
 Specification or pre-trigger descriptor & Familiar & Newcomer & Estimate or median gap & 95\% interval & Share explained or verdict \\
 \midrule
@@ -402,15 +353,15 @@ Primary (pre-trigger adjusted) & -- & -- & +40.7 pp & [+22.4, +59.1] & 0.0\% exp
 Primary + repository moderators & -- & -- & +33.4 pp & [+15.3, +51.5] & 18.1\% explained \\
 Repository fixed effects & -- & -- & +8.7 pp & [-16.8, +34.2] & 78.5\% explained \\
 Repository moderators + fixed effects & -- & -- & +8.7 pp & [-16.9, +34.4] & 78.5\% explained \\
-pre\_total\_prs & 18.50 & 5.00 & 13.50 & [-3.00, 21.50] & does not separate \\
-pre\_distinct\_contributors & 2.00 & 3.00 & -1.00 & [-2.00, 1.50] & does not separate \\
-pre\_merge\_rate & 0.56 & 0.27 & 0.30 & [0.05, 0.44] & separates \\
-pre\_reviews\_per\_pr & 1.44 & 0.24 & 1.20 & [0.50, 1.62] & separates \\
-pre\_share\_prs\_any\_review & 0.49 & 0.14 & 0.35 & [-0.02, 0.58] & does not separate \\
-pre\_repo\_age\_days & 70.47 & 71.09 & -0.62 & [-127.63, 81.32] & does not separate \\
+Pull requests before the first trigger & 18.50 & 5.00 & 13.50 & [-3.00, 21.50] & does not separate \\
+Distinct contributors before the first trigger & 2.00 & 3.00 & -1.00 & [-2.00, 1.50] & does not separate \\
+Merge rate before the first trigger & 0.56 & 0.27 & 0.30 & [0.05, 0.44] & separates \\
+Reviews per pull request before the first trigger & 1.44 & 0.24 & 1.20 & [0.50, 1.62] & separates \\
+Share of pull requests with any review & 0.49 & 0.14 & 0.35 & [-0.02, 0.58] & does not separate \\
+Repository age in days at the first trigger & 70.47 & 71.09 & -0.62 & [-127.63, 81.32] & does not separate \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} The rows of Panel A are the published matched-pair gap and then the same gap inside each ordered product pair with at least 30 pairs. The gap is general by the pre-registered rule, verdict general: every leave-one-repository-out refit and every leave-one-product-pair-out refit stays negative (repository range -13.9 to -9.3 pp), and 4 of 6 qualifying pairs reproduce its sign. It is not uniform in size: only 1 qualifying pair has an interval excluding zero on its own, the two Codex-authored pairs carry the average, and the remaining pairs are near zero, so the average should be read as concentrated in the Codex-authored strata. The pairs are also unevenly spread, with the largest repository holding 20.9\% of pairs, the largest ordered pair 27.8\%, a repository Gini of 0.583, and a median of 2 pairs per repository. The rows of Panel B are first the four RQ3 familiar-versus-newcomer models, in percentage points, and then the six pre-trigger repository descriptors, each in its own units: counts of PRs and contributors, rates between zero and one, reviews per PR, and days. The descriptors are measured only on pull requests and reviews strictly before each repository's first trigger. They explain 18.1\% of the split, while repository fixed effects leave an interval covering zero, so the split is a between-repository difference that these governance and volume descriptors do not account for. Group sizes are 40 familiar-dominant, 26 newcomer-dominant, 3 tied, and 400 repositories with no user-written edge. Per-repository descriptors and every leave-one-out refit are in the heterogeneity audit products repository\_moderators.csv, matched\_pair\_composition.csv, and matched\_pair\_leave\_one\_out.csv.
+\noindent\footnotesize \textit{Note:} Panel A is the exact-author matched trigger comparison. Pairs also match repository, author product, trigger source, and month, then use nearest trigger time without replacement. Difference is cross-product minus same-product. The rows of Panel B are the published matched-pair gap and then the same gap inside each ordered product pair with at least 30 pairs. The gap is general by the pre-registered rule, verdict general: every leave-one-repository-out refit and every leave-one-product-pair-out refit stays negative (repository range -13.9 to -9.3 pp), and 4 of 6 qualifying pairs reproduce its sign. It is not uniform in size: only 1 qualifying pair has an interval excluding zero on its own, the two Codex-authored pairs carry the average, and the remaining pairs are near zero, so the average should be read as concentrated in the Codex-authored strata. The pairs are also unevenly spread, with the largest repository holding 20.9\% of pairs, the largest ordered pair 27.8\%, a repository Gini of 0.583, and a median of 2 pairs per repository. The rows of Panel D are first the four RQ3 familiar-versus-newcomer models, in percentage points, and then the six pre-trigger repository descriptors, each in its own units: counts of PRs and contributors, rates between zero and one, reviews per PR, and days. The descriptors are measured only on pull requests and reviews strictly before each repository's first trigger. They explain 18.1\% of the split, while repository fixed effects leave an interval covering zero, so the split is a between-repository difference that these governance and volume descriptors do not account for. Group sizes are 40 familiar-dominant, 26 newcomer-dominant, 3 tied, and 400 repositories with no user-written edge. Per-repository descriptors and every leave-one-out refit are in the public artifact. Panel C reports prior review history across user-account populations, and its median prior-PR count is taken among accounts with prior history. Prior history requires the same account, the same repository, a different PR, and a submitted review strictly before the cross-product trigger. It is observable public history, not verified memory retrieval.
 \endgroup
 
 
@@ -419,17 +370,16 @@ pre\_repo\_age\_days & 70.47 & 71.09 & -0.62 & [-127.63, 81.32] & does not separ
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.08\textwidth}L{0.26\textwidth}L{0.10\textwidth}L{0.15\textwidth}L{0.13\textwidth}L{0.20\textwidth}@{}}
-\caption{Exact-parent addressed edge, specificity controls, and the four-state gradient at the 48-hour landmark.}\label{tab:s-addressed-edge}\\
-\toprule
-Reply window & Specification or contrast & Compared PRs & Raw merge: compared / reference (\%) & Adjusted difference (pp) & 95\% interval \\
-\midrule
+\begin{longtable}{@{}L{0.09\textwidth}L{0.25\textwidth}L{0.11\textwidth}L{0.15\textwidth}L{0.14\textwidth}L{0.20\textwidth}@{}}
+\caption{RQ3: the exact-parent addressed edge, specificity controls, the four-state gradient, and the 48-hour ownership routes.}\label{tab:s-addressed-edge}\\
 \endfirsthead
-\caption*{Exact-parent addressed edge, specificity controls, and the four-state gradient at the 48-hour landmark. (continued)}\\
+\caption*{RQ3: the exact-parent addressed edge, specificity controls, the four-state gradient, and the 48-hour ownership routes. (continued)}\\
+\endhead
 \toprule
+\multicolumn{6}{@{}l}{\textbf{Panel A. Addressed edge, specificity controls, and the four-state gradient}} \\
+\midrule
 Reply window & Specification or contrast & Compared PRs & Raw merge: compared / reference (\%) & Adjusted difference (pp) & 95\% interval \\
 \midrule
-\endhead
 1 h & Pre-trigger adjusted & 62 & 58.1 / 38.5 & +18.0 & [+5.7, +30.4] \\
 1 h & Route decomposition & 62 & 58.1 / 38.5 & +13.0 & [+0.6, +25.5] \\
 6 h & Pre-trigger adjusted & 86 & 57.0 / 38.1 & +18.5 & [+7.4, +29.5] \\
@@ -447,9 +397,20 @@ Reply window & Specification or contrast & Compared PRs & Raw merge: compared / 
 48 h & Gradient: non-exact discussion vs no visible activity & 506 vs 426 & 41.7 / 31.0 & +10.0 & [+2.8, +17.3] \\
 48 h & Gradient: movement only vs no visible activity & 26 vs 426 & 76.9 / 31.0 & +38.8 & [+19.8, +57.7] \\
 48 h & Gradient: exact edge vs non-exact discussion & 109 vs 506 & 55.0 / 41.7 & +14.2 & [+3.7, +24.6] \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel B. Forty-eight-hour ownership routes and later integration}} \\
+\midrule
+Landmark & Route & PRs & Later merge (\%) / median first action (h) & Adjusted difference (pp) & Repository-cluster 95\% interval \\
+\midrule
+48 h & Automation, no later user event & 314 & 40.1 / 0.09 & Reference & -- \\
+48 h & Automation then user & 162 & 54.9 / 0.06 & +12.9 & [+3.0, +22.7] \\
+48 h & User first & 467 & 50.1 / 0.51 & +6.1 & [-1.7, +13.9] \\
+48 h & Movement only & 55 & 58.2 / 2.00 & +11.6 & [-6.7, +30.0] \\
+48 h & Other activity & 76 & 39.5 / 0.06 & -1.5 & [-14.5, +11.6] \\
+48 h & No observed action & 659 & 32.2 / -- & -9.2 & [-15.9, -2.5] \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} The main models use 1,067 inline-trigger PRs in 469 repositories that were open at hour 48 and had a complete 30-day horizon. Specificity rows compare 109 exact-edge PRs with 506 PRs that had public discussion but no exact edge. The gradient block is one model over the full 1,067-PR cohort in 469 repositories that places all four mutually exclusive post-trigger states against the no-visible-activity reference, with the same pre-trigger controls; its movement-only group holds 26 PRs, so that interval is wide and its point estimate is not a ranking. The active-discussion subset remains the primary specificity contrast because it does not compare an active PR with a silent one. This post-trigger discussion control is a structural falsification check, not a causal or semantic-resolution estimate.
+\noindent\footnotesize \textit{Note:} The Panel A models use 1,067 inline-trigger PRs in 469 repositories that were open at hour 48 and had a complete 30-day horizon. Specificity rows compare 109 exact-edge PRs with 506 PRs that had public discussion but no exact edge. The gradient rows are one model over the full 1,067-PR cohort that places all four mutually exclusive post-trigger states against the no-visible-activity reference, with the same pre-trigger controls; its movement-only group holds 26 PRs, so that interval is wide and its point estimate is not a ranking. The active-discussion subset remains the primary specificity contrast because it does not compare an active PR with a silent one. This post-trigger discussion control is a structural falsification check, not a causal or semantic-resolution estimate. Panel B is the second pre-landmark signal, the mutually exclusive ownership route, on its own wider cohort. The reference is automation with no later user event. Adjustment uses only pre-trigger activity and trigger context. Routes are observed markers, not assigned treatments.
 \endgroup
 
 
@@ -458,7 +419,7 @@ Reply window & Specification or contrast & Compared PRs & Raw merge: compared / 
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.14\textwidth}L{0.27\textwidth}L{0.08\textwidth}L{0.14\textwidth}L{0.30\textwidth}@{}}
+\begin{longtable}{@{}L{0.12\textwidth}L{0.29\textwidth}L{0.09\textwidth}L{0.14\textwidth}L{0.34\textwidth}@{}}
 \caption{RQ3 robustness: cohort scope, exposure composition, measured balance, sensitivity bounds, and design extensions.}\label{tab:s-sensitivity}\\
 \toprule
 Check & Item & Estimate & 95\% interval or band & Size and detail \\
@@ -483,63 +444,30 @@ Exposure definition & Any exact parent reply (primary) & +17.3 & [+7.3, +27.4] &
 Exposure definition & Exact reply, excluding the triggering product's own reply & +15.9 & [+5.4, +26.3] & 99 exposed PRs, raw later merge 55.6\% \\
 Exposure definition & Exact reply written by a user account & +17.0 & [+6.4, +27.6] & 97 exposed PRs, raw later merge 56.7\% \\
 Exposure definition & Exact reply written by a different mapped product & -- & -- & 3 exposed PRs; not modelled: too few \\
-Pre-trigger balance & Log trigger age in hours since PR creation (1 h) & -0.059 & -- & edge mean 1.117; no-edge mean 1.228 \\
-Pre-trigger balance & Log pre-trigger interaction events (1 h) & +0.158 & -- & edge mean 1.043; no-edge mean 0.910 \\
-Pre-trigger balance & Pre-trigger user-account events (1 h) & +0.096 & -- & edge mean 1.065; no-edge mean 0.830 \\
-Pre-trigger balance & Pre-trigger bot events (1 h) & -0.018 & -- & edge mean 2.177; no-edge mean 2.277 \\
-Pre-trigger balance & Pre-trigger decisive reviews (1 h) & -0.051 & -- & edge mean 0.048; no-edge mean 0.066 \\
-Pre-trigger balance & Pre-trigger branch movements (1 h) & -0.006 & -- & edge mean 0.210; no-edge mean 0.216 \\
-Pre-trigger balance & Log trigger age in hours since PR creation (6 h) & -0.085 & -- & edge mean 1.075; no-edge mean 1.234 \\
-Pre-trigger balance & Log pre-trigger interaction events (6 h) & +0.032 & -- & edge mean 0.943; no-edge mean 0.916 \\
-Pre-trigger balance & Pre-trigger user-account events (6 h) & -0.035 & -- & edge mean 0.767; no-edge mean 0.850 \\
-Pre-trigger balance & Pre-trigger bot events (6 h) & -0.065 & -- & edge mean 1.953; no-edge mean 2.299 \\
-Pre-trigger balance & Pre-trigger decisive reviews (6 h) & -0.097 & -- & edge mean 0.035; no-edge mean 0.067 \\
-Pre-trigger balance & Pre-trigger branch movements (6 h) & -0.045 & -- & edge mean 0.174; no-edge mean 0.219 \\
-Pre-trigger balance & Log trigger age in hours since PR creation (24 h) & -0.118 & -- & edge mean 1.024; no-edge mean 1.243 \\
-Pre-trigger balance & Log pre-trigger interaction events (24 h) & +0.057 & -- & edge mean 0.960; no-edge mean 0.914 \\
-Pre-trigger balance & Pre-trigger user-account events (24 h) & -0.025 & -- & edge mean 0.788; no-edge mean 0.849 \\
-Pre-trigger balance & Pre-trigger bot events (24 h) & -0.078 & -- & edge mean 1.904; no-edge mean 2.310 \\
-Pre-trigger balance & Pre-trigger decisive reviews (24 h) & -0.119 & -- & edge mean 0.029; no-edge mean 0.069 \\
-Pre-trigger balance & Pre-trigger branch movements (24 h) & -0.025 & -- & edge mean 0.192; no-edge mean 0.218 \\
-Pre-trigger balance & Log trigger age in hours since PR creation (48 h) & -0.066 & -- & edge mean 1.110; no-edge mean 1.234 \\
-Pre-trigger balance & Log pre-trigger interaction events (48 h) & +0.070 & -- & edge mean 0.970; no-edge mean 0.912 \\
-Pre-trigger balance & Pre-trigger user-account events (48 h) & -0.030 & -- & edge mean 0.780; no-edge mean 0.851 \\
-Pre-trigger balance & Pre-trigger bot events (48 h) & -0.066 & -- & edge mean 1.963; no-edge mean 2.306 \\
-Pre-trigger balance & Pre-trigger decisive reviews (48 h) & -0.059 & -- & edge mean 0.046; no-edge mean 0.067 \\
-Pre-trigger balance & Pre-trigger branch movements (48 h) & +0.015 & -- & edge mean 0.229; no-edge mean 0.214 \\
-Propensity overlap & Propensity score at the 0 percentile (48 h) & -- & -- & edge 0.040; no-edge 0.000 \\
-Propensity overlap & Propensity score at the 5 percentile (48 h) & -- & -- & edge 0.083; no-edge 0.040 \\
-Propensity overlap & Propensity score at the 25 percentile (48 h) & -- & -- & edge 0.155; no-edge 0.089 \\
-Propensity overlap & Propensity score at the 50 percentile (48 h) & -- & -- & edge 0.218; no-edge 0.142 \\
-Propensity overlap & Propensity score at the 75 percentile (48 h) & -- & -- & edge 0.299; no-edge 0.215 \\
-Propensity overlap & Propensity score at the 95 percentile (48 h) & -- & -- & edge 0.690; no-edge 0.307 \\
-Propensity overlap & Propensity score at the 100 percentile (48 h) & -- & -- & edge 0.737; no-edge 0.759 \\
+Pre-trigger balance & Log trigger age in hours since PR creation & -0.066 & -0.118 to -0.059 over 4 windows & at 48 h: edge mean 1.110; no-edge mean 1.234 \\
+Pre-trigger balance & Log pre-trigger interaction events & +0.070 & +0.032 to +0.158 over 4 windows & at 48 h: edge mean 0.970; no-edge mean 0.912 \\
+Pre-trigger balance & Pre-trigger user-account events & -0.030 & -0.035 to +0.096 over 4 windows & at 48 h: edge mean 0.780; no-edge mean 0.851 \\
+Pre-trigger balance & Pre-trigger bot events & -0.066 & -0.078 to -0.018 over 4 windows & at 48 h: edge mean 1.963; no-edge mean 2.306 \\
+Pre-trigger balance & Pre-trigger decisive reviews & -0.059 & -0.119 to -0.051 over 4 windows & at 48 h: edge mean 0.046; no-edge mean 0.067 \\
+Pre-trigger balance & Pre-trigger branch movements & +0.015 & -0.045 to +0.015 over 4 windows & at 48 h: edge mean 0.229; no-edge mean 0.214 \\
+Propensity overlap & Exact-edge PRs: score at the 0, 5, 25, 50, 75, 95, and 100 percentiles (48 h) & -- & -- & 0.040; 0.083; 0.155; 0.218; 0.299; 0.690; 0.737 \\
+Propensity overlap & Non-exact-discussion PRs: score at the 0, 5, 25, 50, 75, 95, and 100 percentiles (48 h) & -- & -- & 0.000; 0.040; 0.089; 0.142; 0.215; 0.307; 0.759 \\
 E-value & 1 h reply window & +18.0 & [+5.7, +30.4] & 62 exposed PRs; risk ratio 1.47; E-value 2.30, limit 1.56 \\
 E-value & 6 h reply window & +18.5 & [+7.4, +29.5] & 86 exposed PRs; risk ratio 1.48; E-value 2.33, limit 1.68 \\
 E-value & 24 h reply window & +18.6 & [+8.4, +28.7] & 104 exposed PRs; risk ratio 1.49; E-value 2.34, limit 1.74 \\
 E-value & 48 h reply window & +17.3 & [+7.3, +27.4] & 109 exposed PRs; risk ratio 1.46; E-value 2.27, limit 1.67 \\
 Tipping point & One binary factor 20 pp more common among edge PRs, 48 h & -- & -- & must itself carry 86.7 pp of later merge to remove the point estimate, and 36.3 pp to remove the interval \\
 Tipping point & One binary factor 40 pp more common among edge PRs, 48 h & -- & -- & must itself carry 43.4 pp of later merge to remove the point estimate, and 18.1 pp to remove the interval \\
-Negative control & Pre-trigger decisive review (1 h) & -0.1 & [-5.7, +5.5] & 1,067 PRs; interval covers the null \\
-Negative control & Pre-trigger branch movement (1 h) & +0.3 & [-7.6, +8.2] & 1,067 PRs; interval covers the null \\
+Negative control & Pre-trigger decisive review, all four reply windows & -0.0 to -0.0 & [-0.1, +0.1] & 1,067 PRs; every interval covers the null \\
+Negative control & Pre-trigger branch movement, all four reply windows & +0.0 to +0.0 & [-0.1, +0.1] & 1,067 PRs; every interval covers the null \\
 Negative control & Pre-trigger user event (1 h) & +16.7 & [+4.9, +28.4] & 1,067 PRs; interval excludes the null: residual pre-trigger confounding \\
-Negative control & Pre-trigger decisive review (6 h) & -0.5 & [-4.8, +3.8] & 1,067 PRs; interval covers the null \\
-Negative control & Pre-trigger branch movement (6 h) & +0.5 & [-6.5, +7.4] & 1,067 PRs; interval covers the null \\
 Negative control & Pre-trigger user event (6 h) & +5.8 & [-3.9, +15.4] & 1,067 PRs; interval covers the null \\
-Negative control & Pre-trigger decisive review (24 h) & -1.1 & [-4.7, +2.5] & 1,067 PRs; interval covers the null \\
-Negative control & Pre-trigger branch movement (24 h) & +0.3 & [-5.6, +6.2] & 1,067 PRs; interval covers the null \\
 Negative control & Pre-trigger user event (24 h) & +8.3 & [-0.7, +17.3] & 1,067 PRs; interval covers the null \\
-Negative control & Pre-trigger decisive review (48 h) & -0.3 & [-4.0, +3.3] & 1,067 PRs; interval covers the null \\
-Negative control & Pre-trigger branch movement (48 h) & +1.3 & [-4.3, +6.9] & 1,067 PRs; interval covers the null \\
 Negative control & Pre-trigger user event (48 h) & +7.0 & [-1.7, +15.7] & 1,067 PRs; interval covers the null \\
-Randomisation, unconditional & 1 h reply window & +18.0 & [+2.0, +16.8] & two-sided p = 0.010 over 2,000 within-repository permutations across 32 repositories \\
-Randomisation, unconditional & 6 h reply window & +18.5 & [+1.3, +14.5] & two-sided p = 0.001 over 2,000 within-repository permutations across 37 repositories \\
-Randomisation, unconditional & 24 h reply window & +18.6 & [+2.7, +14.4] & two-sided p = 0.001 over 2,000 within-repository permutations across 46 repositories \\
-Randomisation, unconditional & 48 h reply window & +17.3 & [+2.8, +14.4] & two-sided p = 0.001 over 2,000 within-repository permutations across 46 repositories \\
+Randomisation, unconditional & 48 h reply window (published) & +17.3 & [+2.8, +14.4] & two-sided p = 0.001 over 2,000 within-repository permutations across 46 repositories \\
+Randomisation, unconditional & The other three reply windows & -- & -- & two-sided p = 0.001 to 0.010 across 32 to 46 re-randomisable repositories \\
 Randomisation, conditional & Re-randomisable repositories, with repository fixed effects & +16.4 & -- & 321 PRs in 46 repos; reference mean -0.1 pp over 2,000 permutations; two-sided p = 0.007 \\
-Whole-population hazard & Time only & 1.73 & [1.39, 2.15] & odds ratio for merging in the next interval; 3,940 PRs, 13,719 periods; p = 1.1e-06 \\
-Whole-population hazard & Products and month & 1.74 & [1.38, 2.18] & odds ratio for merging in the next interval; 3,940 PRs, 13,719 periods; p = 2.5e-06 \\
-Whole-population hazard & Full pre-trigger controls & 1.74 & [1.38, 2.18] & odds ratio for merging in the next interval; 3,940 PRs, 13,719 periods; p = 2.3e-06 \\
+Whole-population hazard & Time only; products and month; full pre-trigger controls & 1.73 to 1.74 & [1.38, 2.18] & odds ratio for merging in the next interval, over 3 control sets; 3,940 PRs, 13,719 periods; p at most 2.5e-06 \\
 Who wrote the edge & Edge written by a prior reviewer of this repository & +31.3 & [+20.0, +42.5] & 64 PRs, raw later merge 71.9\%, against the no-edge reference \\
 Who wrote the edge & Edge written by an account new to this repository & -9.5 & [-26.1, +7.1] & 32 PRs, raw later merge 28.1\%, against the no-edge reference \\
 Who wrote the edge & Edge written by automation & +16.0 & [-12.4, +44.3] & 13 PRs, raw later merge 38.5\%, against the no-edge reference \\
@@ -558,10 +486,10 @@ Who wrote the edge & Prior reviewer minus newcomer: leave one exposed repository
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.27\textwidth}L{0.06\textwidth}L{0.07\textwidth}L{0.10\textwidth}L{0.16\textwidth}L{0.26\textwidth}@{}}
-\caption{Placebo exposures and what the reply actually says.}\label{tab:s-specificity}\\
+\begin{longtable}{@{}L{0.26\textwidth}L{0.07\textwidth}L{0.09\textwidth}L{0.11\textwidth}L{0.15\textwidth}L{0.28\textwidth}@{}}
+\caption{Placebo exposures, what the reply says, and whether a person wrote it.}\label{tab:s-specificity}\\
 \endfirsthead
-\caption*{Placebo exposures and what the reply actually says. (continued)}\\
+\caption*{Placebo exposures, what the reply says, and whether a person wrote it. (continued)}\\
 \endhead
 \toprule
 \multicolumn{6}{@{}l}{\textbf{Panel A. Placebo exposures against the observed addressed edge}} \\
@@ -586,35 +514,19 @@ Acknowledgement only, below the twelve-word floor & 28 & 26.7 & 21 & -- & -- \\
 Substantive engineering prose & 59 & 56.2 & 67 & +16.8 & [+3.7, +29.9] \\
 Routing edge: the first two categories combined & 18 & 17.1 & -- & +8.7 & [-20.6, +38.1] \\
 Any addressed edge, the published exposure & 105 & 100.0 & 105 & +17.3 & [+7.3, +27.4] \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} Panel A is one row per exposure or per placebo null, all on the same inline-trigger landmark cohort and the same pre-trigger control set. Rows one to three are clustered linear-probability estimates; rows four to six are null distributions over 2,000 draws, so their interval is the 2.5 to 97.5 percentile of the null rather than a confidence interval. Read plainly: an off-target reply, which points at a different inline comment and therefore carries no addressed edge, gives the same estimate as the real edge, and the permuted-anchor null is centred near the observed estimate (+16.8 pp against an observed +17.3 pp). Permuting which replying PR is anchored to its own trigger reproduces the estimate, so the anchoring adds nothing beyond the presence of a reply; the frozen verdict recorded with the analysis is NOT\_SPECIFIC\_ANCHORING\_NULL\_REPRODUCES\_ESTIMATE. Only the time-shifted null is centred near zero, which rules out the weaker worry that the hour-48 landmark rule alone manufactures the contrast. The last row names what the two liveness-preserving controls suggest the estimate actually tracks. Panel B classifies every addressed-edge reply by what it says, using a four-rule priority ladder, and re-estimates the contrast by category. Shares are of the 105 user-written edges among the 128 exposure events; the rule and a full hand reading of all 105 texts disagree on 10 rows (9.5\%), always in the conservative direction. The subgroup contrasts are underpowered by construction and are description, not a causal decomposition. Full rows are in the pseudo-edge control products contrasts.csv and permutation\_null.csv and in the reply-content products reply\_content\_rule\_set.csv and addressed\_edge\_reply\_classification.csv.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.22\textwidth}L{0.08\textwidth}L{0.10\textwidth}L{0.09\textwidth}L{0.10\textwidth}L{0.33\textwidth}@{}}
-\caption{Automation heuristics on the accounts that write the edges.}\label{tab:s-actors}\\
-\endfirsthead
-\caption*{Automation heuristics on the accounts that write the edges. (continued)}\\
-\endhead
-\toprule
-\multicolumn{6}{@{}l}{\textbf{Panel A. Machine-likeness heuristics on the edge-writing accounts}} \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel C. Machine-likeness heuristics on the edge-writing accounts}} \\
 \midrule
 Heuristic & Accounts & Account share (\%) & Edge events & Event share (\%) & Pre-registered statistic and threshold \\
 \midrule
-Template repetition & 7 & 8.8 & 11 & 10.5 & duplicate\_normalised\_text\_share ($\ge$ 0.5 with $\ge$ 10 comments) \\
-Regular inter-comment timing & 1 & 1.2 & 1 & 1.0 & inter\_comment\_gap\_cv or narrow\_band\_gap\_share (cv $\le$ 0.5 or $\ge$ 0.25 of gaps within $\pm$10\% of the median gap, with $\ge$ 20 gaps) \\
-No diurnal dip in the clock & 0 & 0.0 & 0 & 0.0 & active\_utc\_hours and min\_hour\_share\_of\_uniform (all 24 UTC hours occupied and the quietest hour holds $\ge$ 0.5 of the uniform expectation, with $\ge$ 48 comments) \\
-Sustained comments per active day & 0 & 0.0 & 0 & 0.0 & comments\_per\_active\_day ($\ge$ 20.0 comments per active day with $\ge$ 50 comments) \\
+Template repetition & 7 & 8.8 & 11 & 10.5 & share of the account's comments that repeat an already-seen normalised text ($\ge$ 0.5 with $\ge$ 10 comments) \\
+Regular inter-comment timing & 1 & 1.2 & 1 & 1.0 & coefficient of variation of inter-comment gaps, or the share of gaps in a narrow band around the median (cv $\le$ 0.5 or $\ge$ 0.25 of gaps within $\pm$10\% of the median gap, with $\ge$ 20 gaps) \\
+No diurnal dip in the clock & 0 & 0.0 & 0 & 0.0 & number of occupied UTC hours, and the quietest hour's share of the uniform expectation (all 24 UTC hours occupied and the quietest hour holds $\ge$ 0.5 of the uniform expectation, with $\ge$ 48 comments) \\
+Sustained comments per active day & 0 & 0.0 & 0 & 0.0 & comments per active day ($\ge$ 20.0 comments per active day with $\ge$ 50 comments) \\
 Any single heuristic & 7 & 8.8 & 11 & 10.5 & -- \\
 At least two heuristics (pre-registered rule) & 1 & 1.2 & 1 & 1.0 & -- \\
 \midrule
-\multicolumn{6}{@{}l}{\textbf{Panel B. The later-merge contrast after dropping flagged accounts}} \\
+\multicolumn{6}{@{}l}{\textbf{Panel D. The later-merge contrast after dropping flagged accounts}} \\
 \midrule
 Cohort & PRs & Exposed & Exposed merge (\%) & Estimate (pp) & Repository-cluster 95\% interval \\
 \midrule
@@ -623,7 +535,39 @@ dropping PRs whose edge was written by an account tripping $\ge$ 2 heuristics & 
 dropping PRs whose edge was written by an account tripping any heuristic & 1,058 & 100 & 53.0 & +15.2 & [+4.6, +25.8] \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} The rows of Panel A are the four pre-registered machine-likeness heuristics and the two combination rules, scored on the 80 user accounts that write the 105 user-written addressed edges among the 128 exposure events, using 7,141 of their earlier comments. An account is flagged when it trips at least two heuristics. The median machine-likeness score is 0.198 and the maximum is 0.471, so no account is near the automated end of the scale. The rows of Panel B re-estimate the published later-merge contrast after dropping every PR whose edge a flagged account wrote; the estimate moves in the opposite direction to the worry, and dropping any account that trips even one heuristic leaves the interval excluding zero. Of the 105 edge texts, 102 are distinct after normalisation and the most repeated text appears 3 times; hand reading of the 20 highest-scoring accounts finds the repetition to be hand-issued agent invocations and platform button text rather than generated output. These heuristics are behavioural proxies over public traces, not ground truth about who or what operates an account, and they cannot detect a person pasting model output. Per-account scores and the hand-review sheet are in the account automation products account\_machine\_likeness\_scores.csv and manual\_review\_top\_accounts.csv.
+\noindent\footnotesize \textit{Note:} Panel A is one row per exposure or per placebo null, all on the same inline-trigger landmark cohort and the same pre-trigger control set. Rows one to three are clustered linear-probability estimates; rows four to six are null distributions over 2,000 draws, so their interval is the 2.5 to 97.5 percentile of the null rather than a confidence interval. Read plainly: an off-target reply, which points at a different inline comment and therefore carries no addressed edge, gives the same estimate as the real edge, and the permuted-anchor null is centred near the observed estimate (+16.8 pp against an observed +17.3 pp). Permuting which replying PR is anchored to its own trigger reproduces the estimate, so the anchoring adds nothing beyond the presence of a reply; the frozen verdict recorded with the analysis is NOT\_SPECIFIC\_ANCHORING\_NULL\_REPRODUCES\_ESTIMATE. Only the time-shifted null is centred near zero, which rules out the weaker worry that the hour-48 landmark rule alone manufactures the contrast. The last row names what the two liveness-preserving controls suggest the estimate actually tracks. Panel B classifies every addressed-edge reply by what it says, using a four-rule priority ladder, and re-estimates the contrast by category. Shares are of the 105 user-written edges among the 128 exposure events; the rule and a full hand reading of all 105 texts disagree on 10 rows (9.5\%), always in the conservative direction. The subgroup contrasts are underpowered by construction and are description, not a causal decomposition. Every classified reply and every placebo draw is in the public artifact. The rows of Panel C are the four pre-registered machine-likeness heuristics and the two combination rules, scored on the 80 user accounts that write the 105 user-written addressed edges among the 128 exposure events, using 7,141 of their earlier comments. An account is flagged when it trips at least two heuristics. The median machine-likeness score is 0.198 and the maximum is 0.471, so no account is near the automated end of the scale. The rows of Panel D re-estimate the published later-merge contrast after dropping every PR whose edge a flagged account wrote; the estimate moves in the opposite direction to the worry, and dropping any account that trips even one heuristic leaves the interval excluding zero. Of the 105 edge texts, 102 are distinct after normalisation and the most repeated text appears 3 times; hand reading of the 20 highest-scoring accounts finds the repetition to be hand-issued agent invocations and platform button text rather than generated output. These heuristics are behavioural proxies over public traces, not ground truth about who or what operates an account, and they cannot detect a person pasting model output. Per-account scores and the hand-review sheet are in the public artifact.
+\endgroup
+
+
+\FloatBarrier
+\needspace{8\baselineskip}
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.24\textwidth}L{0.28\textwidth}L{0.13\textwidth}L{0.30\textwidth}@{}}
+\caption{Issue links and whether a review point is answered, by reviewer relation.}\label{tab:s-task-context}\\
+\toprule
+Group & Condition & Answered & Detail \\
+\midrule
+\endfirsthead
+\caption*{Issue links and whether a review point is answered, by reviewer relation. (continued)}\\
+\toprule
+Group & Condition & Answered & Detail \\
+\midrule
+\endhead
+Reviewer is the same product & No issue link & 1,690 of 7,935 & 21.3\% over 1,533 repositories \\
+Reviewer is the same product & PR body links an issue & 210 of 1,060 & 19.8\% over 310 repositories \\
+Reviewer is a different product & No issue link & 400 of 3,149 & 12.7\% over 837 repositories \\
+Reviewer is a different product & PR body links an issue & 103 of 364 & 28.3\% over 167 repositories \\
+Difference in differences & Thread-root triggers, repository FE & +14.6 pp & [+5.2, +23.9] on 12,508 PRs \\
+Difference in differences & Thread-root triggers, repository and month FE & +13.3 pp & [+4.4, +22.2] on 12,508 PRs \\
+Difference in differences & All inline triggers, repository FE & +15.9 pp & [+6.8, +24.9] on 20,241 PRs \\
+Difference in differences & All inline triggers, repository and month FE & +12.1 pp & [+3.9, +20.4] on 20,241 PRs \\
+Difference in differences & Leave one repository out, 15 refits & +11.4 to +16.1 pp & each drop removes one of the most influential repositories \\
+Difference in differences & Issue-link label shuffled inside each repository & +1.1 pp & null spread 2.7 pp over 1,000 draws; observed +14.6 pp, two-sided p = 0.001 \\
+\bottomrule
+\end{longtable}
+\noindent\footnotesize \textit{Note:} The exposure is a pre-trigger property of the change: the pull request body references an issue. The outcome is a later inline comment whose reply target is the trigger comment, strictly after it and within 48 hours, rebuilt from the raw comment table so that both reviewer relations are measured the same way. The population is restricted to triggers that open their own thread, because a mid-thread trigger cannot receive such a reply at all; that restriction removes 0.4 per cent of cross-product triggers but 46 per cent of same-product ones, so leaving it in would compare a possible outcome against an impossible one. The unrestricted rows are reported beside the restricted ones. The release carries no timestamp for the issue link and pull request bodies can be edited, so the link is assumed rather than proven to precede the trigger. Nothing here identifies a causal effect.
 \endgroup
 
 
@@ -692,107 +636,7 @@ CodAGE attribution concordance & Pre-trigger-adjusted difference & 119 & +11.1 p
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.24\textwidth}L{0.28\textwidth}L{0.13\textwidth}L{0.30\textwidth}@{}}
-\caption{Issue links and whether a review point is answered, by reviewer relation.}\label{tab:s-task-context}\\
-\toprule
-Group & Condition & Answered & Detail \\
-\midrule
-\endfirsthead
-\caption*{Issue links and whether a review point is answered, by reviewer relation. (continued)}\\
-\toprule
-Group & Condition & Answered & Detail \\
-\midrule
-\endhead
-Reviewer is the same product & No issue link & 1,690 of 7,935 & 21.3\% over 1,533 repositories \\
-Reviewer is the same product & PR body links an issue & 210 of 1,060 & 19.8\% over 310 repositories \\
-Reviewer is a different product & No issue link & 400 of 3,149 & 12.7\% over 837 repositories \\
-Reviewer is a different product & PR body links an issue & 103 of 364 & 28.3\% over 167 repositories \\
-Difference in differences & Thread-root triggers, repository FE & +14.6 pp & [+5.2, +23.9] on 12,508 PRs \\
-Difference in differences & Thread-root triggers, repository and month FE & +13.3 pp & [+4.4, +22.2] on 12,508 PRs \\
-Difference in differences & All inline triggers, repository FE & +15.9 pp & [+6.8, +24.9] on 20,241 PRs \\
-Difference in differences & All inline triggers, repository and month FE & +12.1 pp & [+3.9, +20.4] on 20,241 PRs \\
-Difference in differences & Leave one repository out, 15 refits & +11.4 to +16.1 pp & each drop removes one of the most influential repositories \\
-Difference in differences & Issue-link label shuffled inside each repository & +1.1 pp & null spread 2.7 pp over 1,000 draws; observed +14.6 pp, two-sided p = 0.001 \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} The exposure is a pre-trigger property of the change: the pull request body references an issue. The outcome is a later inline comment whose reply target is the trigger comment, strictly after it and within 48 hours, rebuilt from the raw comment table so that both reviewer relations are measured the same way. The population is restricted to triggers that open their own thread, because a mid-thread trigger cannot receive such a reply at all; that restriction removes 0.4 per cent of cross-product triggers but 46 per cent of same-product ones, so leaving it in would compare a possible outcome against an impossible one. The unrestricted rows are reported beside the restricted ones. The release carries no timestamp for the issue link and pull request bodies can be edited, so the link is assumed rather than proven to precede the trigger. Nothing here identifies a causal effect.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.10\textwidth}L{0.31\textwidth}L{0.15\textwidth}L{0.38\textwidth}@{}}
-\caption{Validation gates and the 31-column variable dictionary for the landmark cohort.}\label{tab:s-quality}\\
-\toprule
-Block & Gate or column & Status or availability & Observed or definition \\
-\midrule
-\endfirsthead
-\caption*{Validation gates and the 31-column variable dictionary for the landmark cohort. (continued)}\\
-\toprule
-Block & Gate or column & Status or availability & Observed or definition \\
-\midrule
-\endhead
-Validation gate & Full-corpus PR identifiers are unique & PASS & 7,685,281 \\
-Validation gate & Follow-up event PR identifiers resolve & PASS & 0 orphan IDs \\
-Validation gate & Events are strictly after the trigger & PASS & 0 violations \\
-Validation gate & Events stay inside the seven-day window & PASS & 0 violations \\
-Validation gate & Later review batches are de-duplicated & PASS & 0 repeated batches \\
-Validation gate & Exact duplicate event surplus removed & PASS & 9 rows \\
-Validation gate & First state is invariant to exact de-duplication & PASS & 0 changed states \\
-Validation gate & Mapped-first anchor reconciles & PASS & 924 PRs \\
-Validation gate & Landmark cohort has one row per PR & PASS & 1,067 PRs \\
-Validation gate & Direct-reply parent identifiers equal the trigger & PASS & 128 reply events \\
-Validation gate & All positive outcomes occur after hour 48 & PASS & 423 outcomes \\
-Validation gate & All outcomes stay within the 30-day horizon & PASS & True \\
-Validation gate & Pre-trigger controls are strictly pre-trigger & PASS & 3,323 rows \\
-Validation gate & Prior-history matches exclude focal and future rows & PASS & 221,058 valid rows \\
-Validation gate & Review-request target account coverage & LIMIT & 0.0\% \\
-Cohort column & \nolinkurl{pr_id} (Int64) & At or before the trigger & PR identifier; analysis grain is one PR's first cross-product inline trigger. \\
-Cohort column & \nolinkurl{repo_id} (Int64) & At or before the trigger & Repository cluster and fixed-effect identifier. \\
-Cohort column & \nolinkurl{trigger_dt} (Datetime (UTC)) & At or before the trigger & Timestamp of the first recognized cross-product feedback event on the PR. \\
-Cohort column & \nolinkurl{trigger_event_id} (Int64) & At or before the trigger & Raw inline-comment id of the exact trigger. \\
-Cohort column & \nolinkurl{trigger_review_id} (Int64) & At or before the trigger & Review-batch id containing the trigger. \\
-Cohort column & \nolinkurl{author_agent} (String) & At or before the trigger & Mapped product attributed as PR author. \\
-Cohort column & \nolinkurl{trigger_reviewer_agent} (String) & At or before the trigger & Exactly mapped product that authored the trigger. \\
-Cohort column & \nolinkurl{ordered_product_pair} (String) & At or before the trigger & Directed author product $\rightarrow$ reviewer product. \\
-Cohort column & \nolinkurl{trigger_month} (String) & At or before the trigger & Internal timing or audit field. \\
-Cohort column & \nolinkurl{outcome_landmark_dt} (Datetime (UTC)) & At or before the trigger & Trigger timestamp plus 48 hours; every PR is still open here. \\
-Cohort column & \nolinkurl{merged_from_48h_to_30d} (Boolean) & Outcome window, after hour 48 & Observed merge strictly after the landmark and no later than trigger + 30 days. \\
-Cohort column & \nolinkurl{first_exact_reply_hours} (Float64) & After the trigger, by hour 48 & Hours to the earliest inline reply whose in\_reply\_to\_id equals trigger\_event\_id. \\
-Cohort column & \nolinkurl{first_exact_reply_dt} (Datetime (UTC)) & After the trigger, by hour 48 & Timestamp of that earliest exact-parent reply. \\
-Cohort column & \nolinkurl{exact_reply_events_48h} (UInt32) & After the trigger, by hour 48 & Number of exact-parent inline replies by the 48-hour landmark. \\
-Cohort column & \nolinkurl{exact_parent_reply_by_1h} (Boolean) & After the trigger, by hour 48 & True if any inline reply with in\_reply\_to\_id exactly equal to trigger\_event\_id occurs within 1 hour; structural edge only. \\
-Cohort column & \nolinkurl{exact_parent_reply_by_6h} (Boolean) & After the trigger, by hour 48 & True if any inline reply with in\_reply\_to\_id exactly equal to trigger\_event\_id occurs within 6 hours; structural edge only. \\
-Cohort column & \nolinkurl{exact_parent_reply_by_24h} (Boolean) & After the trigger, by hour 48 & True if any inline reply with in\_reply\_to\_id exactly equal to trigger\_event\_id occurs within 24 hours; structural edge only. \\
-Cohort column & \nolinkurl{exact_parent_reply_by_48h} (Boolean) & After the trigger, by hour 48 & True if any inline reply with in\_reply\_to\_id exactly equal to trigger\_event\_id occurs within 48 hours; structural edge only. \\
-Cohort column & \nolinkurl{ownership_route_48h} (String) & After the trigger, by hour 48 & Post-trigger public route observed by 48 hours; used only in secondary Model B. \\
-Cohort column & \nolinkurl{pre_events} (UInt32) & At or before the trigger & Count of valid submitted-review, PR-comment, and inline-comment rows strictly before trigger. \\
-Cohort column & \nolinkurl{pre_user_events} (UInt32) & At or before the trigger & Pretrigger interaction rows whose GitHub user\_type is User. \\
-Cohort column & \nolinkurl{pre_bot_events} (UInt32) & At or before the trigger & Pretrigger interaction rows whose GitHub user\_type is Bot. \\
-Cohort column & \nolinkurl{pre_decisive_reviews} (UInt32) & At or before the trigger & Pretrigger submitted reviews with APPROVED or CHANGES\_REQUESTED state. \\
-Cohort column & \nolinkurl{pre_force_pushes} (UInt32) & At or before the trigger & Timestamped force-push timeline rows strictly before trigger. \\
-Cohort column & \nolinkurl{log1p_trigger_age_hours} (Float64) & At or before the trigger & log(1 + hours from PR creation to trigger). \\
-Cohort column & \nolinkurl{log1p_pre_events} (Float64) & At or before the trigger & log(1 + pre\_events). \\
-Cohort column & \nolinkurl{pr_created_dt} (Datetime (UTC)) & At or before the trigger & Internal timing or audit field. \\
-Cohort column & \nolinkurl{last_pre_event_dt} (Datetime (UTC)) & At or before the trigger & Internal timing or audit field. \\
-Cohort column & \nolinkurl{last_pre_force_push_dt} (Datetime (UTC)) & At or before the trigger & Internal timing or audit field. \\
-Cohort column & \nolinkurl{merged_dt} (Datetime (UTC)) & Outcome window, after hour 48 & Internal timing or audit field. \\
-Cohort column & \nolinkurl{closed_dt} (Datetime (UTC)) & At or before the trigger & Internal timing or audit field. \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} PASS means that the frozen automated check met its declared contract. LIMIT identifies missing measurement coverage rather than a failed computation. In the column block, the availability value is the leakage tag stored with the cohort itself: only columns available at or before the trigger enter the primary model, columns available after the trigger enter the secondary route decomposition and the exposure definition, and columns tagged as outcome are read only after hour 48. Datetime columns are microsecond UTC timestamps. The dictionary records where each value can be observed, not whether it is a good measure of the thing it is named after.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.06\textwidth}L{0.27\textwidth}L{0.12\textwidth}L{0.50\textwidth}@{}}
+\begin{longtable}{@{}L{0.05\textwidth}L{0.40\textwidth}L{0.09\textwidth}L{0.44\textwidth}@{}}
 \caption{Ordered reproduction contract and the disposition of every experiment.}\label{tab:s-record}\\
 \endfirsthead
 \caption*{Ordered reproduction contract and the disposition of every experiment. (continued)}\\
@@ -824,48 +668,50 @@ Step & Command & Expected rows & Produces \\
 20 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}c\allowbreak{}c\allowbreak{}o\allowbreak{}u\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}o\allowbreak{}m\allowbreak{}a\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}d\allowbreak{}i\allowbreak{}t\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 6 rows & Machine-likeness heuristics on edge-writing accounts and the re-estimated contrast \\
 21 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}a\allowbreak{}d\allowbreak{}d\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}s\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}e\allowbreak{}d\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}p\allowbreak{}l\allowbreak{}y\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}d\allowbreak{}i\allowbreak{}t\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 12 rows & Reply-content classification of every addressed edge and the contrast by category \\
 22 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}h\allowbreak{}e\allowbreak{}t\allowbreak{}e\allowbreak{}r\allowbreak{}o\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}e\allowbreak{}i\allowbreak{}t\allowbreak{}y\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}d\allowbreak{}i\allowbreak{}t\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 11 rows & Matched-pair composition, per-product-pair gaps, repository moderators \\
-23 & \texttt{p\allowbreak{}r\allowbreak{}e\allowbreak{}p\allowbreak{}a\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}l\allowbreak{}l\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}d\allowbreak{}i\allowbreak{}t\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 8 rows & Blinded structural same-locus coder packets \\
-24 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}l\allowbreak{}l\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}s\allowbreak{}c\allowbreak{}r\allowbreak{}i\allowbreak{}p\allowbreak{}t\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}x\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 5 rows & Descriptive timing and concentration for the same-locus population \\
-25 & \texttt{g\allowbreak{}e\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}t\allowbreak{}e\allowbreak{}c\allowbreak{}h\allowbreak{}n\allowbreak{}i\allowbreak{}c\allowbreak{}a\allowbreak{}l\allowbreak{}\_\allowbreak{}a\allowbreak{}p\allowbreak{}p\allowbreak{}e\allowbreak{}n\allowbreak{}d\allowbreak{}i\allowbreak{}x\allowbreak{}\_\allowbreak{}t\allowbreak{}a\allowbreak{}b\allowbreak{}l\allowbreak{}e\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Every table in this appendix \\
-26 & \texttt{v\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}d\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}p\allowbreak{}o\allowbreak{}n\allowbreak{}s\allowbreak{}e\allowbreak{}\_\allowbreak{}o\allowbreak{}w\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}s\allowbreak{}h\allowbreak{}i\allowbreak{}p\allowbreak{}\_\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}p\allowbreak{}u\allowbreak{}t\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Re-checks the ownership products against their frozen contracts \\
-27 & \texttt{v\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}d\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}o\allowbreak{}r\allowbreak{}d\allowbreak{}i\allowbreak{}n\allowbreak{}a\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}e\allowbreak{}x\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}p\allowbreak{}u\allowbreak{}t\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Re-checks the topology and landmark products \\
-28 & \texttt{v\allowbreak{}i\allowbreak{}s\allowbreak{}u\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}z\allowbreak{}e\allowbreak{}\_\allowbreak{}m\allowbreak{}a\allowbreak{}n\allowbreak{}u\allowbreak{}s\allowbreak{}c\allowbreak{}r\allowbreak{}i\allowbreak{}p\allowbreak{}t\allowbreak{}\_\allowbreak{}f\allowbreak{}i\allowbreak{}g\allowbreak{}u\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & The five article figures and the two appendix figures \\
-29 & \texttt{u\allowbreak{}v\allowbreak{} r\allowbreak{}u\allowbreak{}n\allowbreak{} -\allowbreak{}-\allowbreak{}w\allowbreak{}i\allowbreak{}t\allowbreak{}h\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}e\allowbreak{}s\allowbreak{}t\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}n\allowbreak{} -\allowbreak{}m\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}e\allowbreak{}s\allowbreak{}t\allowbreak{} -\allowbreak{}q\allowbreak{}} & -- & Automated test suite \\
+23 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}w\allowbreak{}o\allowbreak{}r\allowbreak{}k\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}e\allowbreak{}x\allowbreak{}a\allowbreak{}m\allowbreak{}p\allowbreak{}l\allowbreak{}e\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 6 rows & One traced pull request, event by event, behind the measurement figure \\
+24 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}n\allowbreak{}f\allowbreak{}o\allowbreak{}u\allowbreak{}n\allowbreak{}d\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}b\allowbreak{}e\allowbreak{}n\allowbreak{}c\allowbreak{}h\allowbreak{}m\allowbreak{}a\allowbreak{}r\allowbreak{}k\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 4 rows & The measured controls placed on the same scale as a hypothetical hidden cause \\
+25 & \texttt{p\allowbreak{}r\allowbreak{}e\allowbreak{}p\allowbreak{}a\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}l\allowbreak{}l\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}d\allowbreak{}i\allowbreak{}t\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 8 rows & Blinded structural same-locus coder packets \\
+26 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}l\allowbreak{}l\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}s\allowbreak{}c\allowbreak{}r\allowbreak{}i\allowbreak{}p\allowbreak{}t\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}x\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 5 rows & Descriptive timing and concentration for the same-locus population \\
+27 & \texttt{g\allowbreak{}e\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}t\allowbreak{}e\allowbreak{}c\allowbreak{}h\allowbreak{}n\allowbreak{}i\allowbreak{}c\allowbreak{}a\allowbreak{}l\allowbreak{}\_\allowbreak{}a\allowbreak{}p\allowbreak{}p\allowbreak{}e\allowbreak{}n\allowbreak{}d\allowbreak{}i\allowbreak{}x\allowbreak{}\_\allowbreak{}t\allowbreak{}a\allowbreak{}b\allowbreak{}l\allowbreak{}e\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Every table in this appendix \\
+28 & \texttt{v\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}d\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}p\allowbreak{}o\allowbreak{}n\allowbreak{}s\allowbreak{}e\allowbreak{}\_\allowbreak{}o\allowbreak{}w\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}s\allowbreak{}h\allowbreak{}i\allowbreak{}p\allowbreak{}\_\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}p\allowbreak{}u\allowbreak{}t\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Re-checks the ownership products against their frozen contracts \\
+29 & \texttt{v\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}d\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}o\allowbreak{}r\allowbreak{}d\allowbreak{}i\allowbreak{}n\allowbreak{}a\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}e\allowbreak{}x\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}p\allowbreak{}u\allowbreak{}t\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Re-checks the topology and landmark products \\
+30 & \texttt{v\allowbreak{}i\allowbreak{}s\allowbreak{}u\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}z\allowbreak{}e\allowbreak{}\_\allowbreak{}m\allowbreak{}a\allowbreak{}n\allowbreak{}u\allowbreak{}s\allowbreak{}c\allowbreak{}r\allowbreak{}i\allowbreak{}p\allowbreak{}t\allowbreak{}\_\allowbreak{}f\allowbreak{}i\allowbreak{}g\allowbreak{}u\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & The six article figures and the two appendix figures \\
+31 & \texttt{u\allowbreak{}v\allowbreak{} r\allowbreak{}u\allowbreak{}n\allowbreak{} -\allowbreak{}-\allowbreak{}w\allowbreak{}i\allowbreak{}t\allowbreak{}h\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}e\allowbreak{}s\allowbreak{}t\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}n\allowbreak{} -\allowbreak{}m\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}e\allowbreak{}s\allowbreak{}t\allowbreak{} -\allowbreak{}q\allowbreak{}} & -- & Automated test suite \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{Panel B. Disposition of every experiment and claim}} \\
 \midrule
-\multicolumn{2}{@{}L{0.346\textwidth}}{Experiment or claim} & Status & Reason \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Experiment or claim} & Status & Reason \\
 \midrule
-\multicolumn{2}{@{}L{0.346\textwidth}}{Product co-presence as collaboration} & REJECT & Two products on one PR do not establish an addressed or sequential edge \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Burst-collapsed next public owner} & MAIN & Ordering remains stable across thresholds and leave-one-group checks \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Cross-product versus same-product visibility} & MAIN & Exact-author matched contrast remains negative with repository resampling \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Prior same-repository review history of user-account bridge} & MAIN & Strict pre-trigger different-PR history is common and concentration checks pass \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Experienced accounts are preferentially selected first} & REJECT & The all-responder comparison differs little and channel or account dependence remains \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Hybrid automation-then-user route and later merge} & SECONDARY & Positive pretrigger-adjusted association triangulates the exact-edge result in a broader fixed-landmark cohort \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Exact addressed reply and later merge} & MAIN & Pre-landmark association is stable across reply windows and product-pair exclusions \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Exact edge versus non-exact public discussion} & MAIN & The association remains positive inside PRs with visible discussion and under overlap weighting; repository fixed effects are imprecise \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Special same-product temporal persistence} & APPENDIX & Observed ordering is reproduced by the within-PR product-composition placebo \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Repeated automation naturally escalates to a user} & REJECT & The apparent dose curve is reproduced by within-PR order permutation \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{One-way user takeover after a rapid burst} & REJECT & The next visible owner bounces in both directions and same-layer persistence is similar for user-first and product-first states \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Prior-review history causes later merge} & REJECT & The positive pooled association does not survive strong within-repository comparisons \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Semantic duplication or complementarity at the same locus} & PENDING & Structural cohort is ready but dual coding and product-pair generality gates remain open \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Intentional routing to the triggering reviewer product} & REJECT & Review-request assignee coverage is zero \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Second-brand adoption expands repository task breadth} & REJECT & The pattern fails longer-history and rarefaction sensitivity checks \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Exact-file succession is a true task handoff} & REJECT & File reuse alone fails the task-identity audit \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Independent CodAGE product-attribution agreement} & APPENDIX & Exact product pairs and trigger times agree in the overlap but only nine exposed PRs remain for an outcome check \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{SWE-Review-Chat exact-edge outcome replication} & REJECT & All seven PRs whose exact-alias cross-product inline parent has a nested reply are already in the complete AIDev backbone leaving zero disjoint REST or landmark rows \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Transferred actionability text classifier} & REJECT & Leave-one-source-out discrimination is weak for human review and one AI-review tool so the proxy is not stable enough for AIDev claims \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Unmeasured-confounding bounds for the addressed edge} & MAIN & E-value 2.27 and an explicit tipping grid state the minimum strength a confounder would need instead of only warning that one could exist \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Pre-trigger placebo outcomes for the addressed edge} & MAIN & Eleven of twelve models cover the null at the same specification and the exposure cannot cause an outcome completed before the trigger \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{One-hour reply window as the primary exposure} & REJECT & The pre-trigger user-activity placebo excludes the null at one hour so a very fast exact reply is selected by PRs that already had a person acting \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Repository-stratified randomisation inference} & SECONDARY & A design-based reference distribution confirms the clustered interval is not an artefact of 109 exposed PRs \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Addressed edge as an agent-to-agent relay} & REJECT & Only three of 128 exposure events are written by a different mapped product so the edge is a human acknowledgement in this cohort \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Addressed edge under stricter exposure definitions} & MAIN & Dropping the triggering product's own replies and requiring a user-account reply both keep the estimate positive with overlapping intervals \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Landmark cohort as a general population estimate} & REJECT & The cohort is the 27 percent of cross-product inline triggers still open at hour 48 so the estimate describes slower-resolving PRs only \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Conditional within-repository randomisation test} & MAIN & Restricting to repositories that can be re-randomised and adding repository fixed effects centres the reference distribution and gives a two-sided p of 0.007 \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Whole-population time-varying edge model} & MAIN & Dropping the hour-48 restriction and letting the edge switch on in time leaves the odds of merging about 1.7 times higher across every control set \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Repository familiarity as the mechanism behind the edge} & REJECT & The prior-reviewer minus newcomer gap is large overall but shrinks to near zero with an interval spanning it once the comparison is held inside one repository \\
-\multicolumn{2}{@{}L{0.346\textwidth}}{Edge-class description by who wrote the reply} & APPENDIX & Informative about where the association sits but confounded with the repository so it cannot support a mechanism claim \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Product co-presence as collaboration} & REJECT & Two products on one PR do not establish an addressed or sequential edge \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Burst-collapsed next public owner} & MAIN & Ordering remains stable across thresholds and leave-one-group checks \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Cross-product versus same-product visibility} & MAIN & Exact-author matched contrast remains negative with repository resampling \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Prior same-repository review history of user-account bridge} & MAIN & Strict pre-trigger different-PR history is common and concentration checks pass \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Experienced accounts are preferentially selected first} & REJECT & The all-responder comparison differs little and channel or account dependence remains \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Hybrid automation-then-user route and later merge} & SECONDARY & Positive pretrigger-adjusted association triangulates the exact-edge result in a broader fixed-landmark cohort \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Exact addressed reply and later merge} & MAIN & Pre-landmark association is stable across reply windows and product-pair exclusions \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Exact edge versus non-exact public discussion} & MAIN & The association remains positive inside PRs with visible discussion and under overlap weighting; repository fixed effects are imprecise \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Special same-product temporal persistence} & APPENDIX & Observed ordering is reproduced by the within-PR product-composition placebo \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Repeated automation naturally escalates to a user} & REJECT & The apparent dose curve is reproduced by within-PR order permutation \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{One-way user takeover after a rapid burst} & REJECT & The next visible owner bounces in both directions and same-layer persistence is similar for user-first and product-first states \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Prior-review history causes later merge} & REJECT & The positive pooled association does not survive strong within-repository comparisons \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Semantic duplication or complementarity at the same locus} & PENDING & Structural cohort is ready but dual coding and product-pair generality gates remain open \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Intentional routing to the triggering reviewer product} & REJECT & Review-request assignee coverage is zero \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Second-brand adoption expands repository task breadth} & REJECT & The pattern fails longer-history and rarefaction sensitivity checks \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Exact-file succession is a true task handoff} & REJECT & File reuse alone fails the task-identity audit \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Independent CodAGE product-attribution agreement} & APPENDIX & Exact product pairs and trigger times agree in the overlap but only nine exposed PRs remain for an outcome check \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{SWE-Review-Chat exact-edge outcome replication} & REJECT & All seven PRs whose exact-alias cross-product inline parent has a nested reply are already in the complete AIDev backbone leaving zero disjoint REST or landmark rows \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Transferred actionability text classifier} & REJECT & Leave-one-source-out discrimination is weak for human review and one AI-review tool so the proxy is not stable enough for AIDev claims \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Unmeasured-confounding bounds for the addressed edge} & MAIN & E-value 2.27 and an explicit tipping grid state the minimum strength a confounder would need instead of only warning that one could exist \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Pre-trigger placebo outcomes for the addressed edge} & MAIN & Eleven of twelve models cover the null at the same specification and the exposure cannot cause an outcome completed before the trigger \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{One-hour reply window as the primary exposure} & REJECT & The pre-trigger user-activity placebo excludes the null at one hour so a very fast exact reply is selected by PRs that already had a person acting \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Repository-stratified randomisation inference} & SECONDARY & A design-based reference distribution confirms the clustered interval is not an artefact of 109 exposed PRs \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Addressed edge as an agent-to-agent relay} & REJECT & Only three of 128 exposure events are written by a different mapped product so the edge is a human acknowledgement in this cohort \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Addressed edge under stricter exposure definitions} & MAIN & Dropping the triggering product's own replies and requiring a user-account reply both keep the estimate positive with overlapping intervals \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Landmark cohort as a general population estimate} & REJECT & The cohort is the 27 percent of cross-product inline triggers still open at hour 48 so the estimate describes slower-resolving PRs only \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Conditional within-repository randomisation test} & MAIN & Restricting to repositories that can be re-randomised and adding repository fixed effects centres the reference distribution and gives a two-sided p of 0.007 \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Whole-population time-varying edge model} & MAIN & Dropping the hour-48 restriction and letting the edge switch on in time leaves the odds of merging about 1.7 times higher across every control set \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Repository familiarity as the mechanism behind the edge} & REJECT & The prior-reviewer minus newcomer gap is large overall but shrinks to near zero with an interval spanning it once the comparison is held inside one repository \\
+\multicolumn{2}{@{}L{0.456\textwidth}}{Edge-class description by who wrote the reply} & APPENDIX & Informative about where the association sits but confounded with the repository so it cannot support a mechanism claim \\
 \bottomrule
 \end{longtable}
 \noindent\footnotesize \textit{Note:} Panel A is the ordered reproduction contract. The order is read from the repository README, so this table cannot drift from the documented sequence. The expected-row column names one frozen product per step where a stable count exists; a dash means the step writes figures, validation logs, or binary tables instead. A rerun that changes a listed count is a signal to compare inputs, not to accept the new number. Panel B is the disposition of every experiment and claim after robustness and construct checks. MAIN enters the article's core story; SECONDARY supports that story; APPENDIX is informative but not a headline; REJECT is retained as a falsification result; PENDING requires evidence not yet available.

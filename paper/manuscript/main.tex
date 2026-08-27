@@ -221,9 +221,10 @@ rate \citep{hirao2019linkage}. The code-review-automation datasets take the same
 route by assumption, pairing a comment with the next revision of the file it
 touched to build training triples at a scale no anchored rule could reach
 \citep{tufano2022pretrained,li2022codereviewer}. Industry does it explicitly.
-Google estimates that about 40\% of its review comments are resolved by checking
-whether the commented lines changed before submission, then confirming a sample
-by hand \citep{vijayvergiya2024autocommenter}, and reports that 7.5\% of all its
+Google judges
+whether its own review comments were resolved by checking whether the commented
+lines changed before submission, then confirming a sample by hand
+\citep{vijayvergiya2024autocommenter}, and reports that 7.5\% of all its
 reviewer comments are addressed by applying a machine-suggested edit
 \citep{frommgen2024resolving}. Closest to our own setting, Sun et al.\ adjudicate
 more than 22,000 AI review comments across 178 repositories with a two-stage
@@ -298,8 +299,8 @@ what the rest of the method is for.
 \subsection{Data and event anchor}
 
 We pin AIDev-7.6M at revision
-\nolinkurl{37bbe1533e26cc1e1374917dba1186d1c8a4dc81}. The release contains
-7.69 million agent-authored PRs. We use the richer AIDev-pop layer: 361,296 PRs from repositories with more than
+\nolinkurl{37bbe1533e26cc1e1374917dba1186d1c8a4dc81}. The release gathers roughly
+7.6 million agent-authored PRs \citep{li2026aidev}. We use the richer AIDev-pop layer: 361,296 PRs from repositories with more than
 100 stars. Star thresholds of this kind are the usual way to separate engineered
 projects from scratch repositories \citep{munaiah2017curating}. Its event tables contain submitted
 reviews, inline review comments, PR comments, and selected lifecycle events.
@@ -585,16 +586,22 @@ matched same-product partner. The gap is 13.4 percentage points
 quieter boundary leads to more branch movement or more merges.
 
 That average hides something a reader should know. The 546 pairs are not spread
-evenly: one repository supplies a fifth of them, and one ordered product pair
-supplies more than a quarter. The sign is stable, and stays negative when any
-single repository or any single product pair is removed. The size is not. Split
-the pairs by which product wrote the PR and the gap sits almost entirely in the
-two strata authored by one product, at around $-20$ to $-26$ points, while the
-four strata authored by the others fall within six points of zero. Only one
-stratum has an interval that clears zero on its own. We therefore report a
-quieter cross-product boundary as something this release shows for particular
-author products, not as a property of every boundary. Online Resource~1 gives
-the full composition and the per-stratum estimates.
+evenly: one repository supplies a fifth of them, and one ordered pair of products
+supplies more than a quarter.
+
+We fixed a rule in advance for what would count as a general finding: the gap must
+stay negative when any single repository is dropped, stay negative when any single
+ordered product pair is dropped, and be negative in at least two thirds of the
+pairs large enough to estimate on their own. It passes all three. The direction,
+then, is general by our own standard.
+
+The size is not, and that matters more than the verdict. Six ordered pairs are
+large enough to estimate separately. The two largest gaps, near $-20$ and $-26$
+points, are both on pull requests written by the same product, and the remaining
+four sit within about six points of zero. Only one pair has an interval that
+clears zero on its own. So the boundary is quieter in general, but how much
+quieter depends heavily on whose pull request it is. Online Resource~1 gives the
+full composition and every per-pair estimate.
 
 Figure~\ref{fig:bridge} joins the matched comparison with a wider history
 check. Seven in ten of the first user-account bridges had already reviewed
@@ -618,10 +625,12 @@ routing.
 Every cross-product inline-trigger PR is followed from its review comment. A PR
 sits in the lowest arm it qualifies for and moves up when its own first reply of
 that kind arrives, so no time before a reply is credited to it. Bands are 95\%
-intervals from resampling repositories. Both reply arms run above the silent one,
-and their bands overlap at every one of the 73 grid points, so the paper reads
-them as one line rather than two: a reply on the trigger's own thread does not
-separate from a reply anchored anywhere else on the pull request. Most of these
+intervals from resampling repositories. For the first two and a half days the silent arm is highest, because a pull
+request still being replied to has not been merged yet; after that both reply arms
+run above it. The two reply arms are the point: their bands overlap at every one
+of the 73 grid points, so the paper reads them as one line rather than two. A
+reply on the trigger's own thread does not separate from a reply anchored anywhere
+else on the pull request. Most of these
 pull requests merge whatever happens, which is why the large contrast in the
 hour-48 group is a statement about slower PRs rather than about the population.
 Online Resource~1 carries the stricter edge definitions, the placebo exposures,
@@ -643,10 +652,10 @@ the most common kind of cross-product PR.
 
 The exposure also needs naming precisely. The rule is a reply whose parent
 identifier is the trigger's own identifier. It does not require another
-product to write that reply. Across the exposed reply events, user accounts write the large majority. The
-triggering product replies to its own comment in a small number of cases, a few
-more come from bots we do not map to a product, and only three come from a
-mapped product other than the one that wrote the trigger. So the connected
+product to write that reply. Across the 128 exposed reply events, 105 come from ordinary user accounts. The
+triggering product replies to its own comment 13 times, seven come from bots we
+cannot attribute to any product, and only three come from a mapped product other
+than the one that wrote the trigger. So the connected
 signal here is a person acknowledging an agent's review point. It is not a
 conversation between agents.
 
@@ -668,11 +677,13 @@ The first keeps the reply and moves the anchor. Take the PRs where a reply lande
 somewhere else on the pull request, not on the trigger's thread. That is still
 somebody active in review, so some association is expected. It is 17.9 points, and
 the exact edge is 18.9 points, against PRs with no inline reply at all. The gap
-between them is one point, with an interval running from $-13$ to $+15$. The
-second is harsher. Hold the reply events fixed and shuffle which comment each one
-is anchored to. If the anchoring carried the signal, that should knock the
-estimate down. It does not move: the shuffled distribution centres on 16.6 points,
-and our observed 17.3 sits in the middle of it rather than out in the tail.
+between them is one point, with an interval running from $-13$ to $+15$. The second is harsher. Hold the reply events fixed and shuffle which comment each
+one is anchored to. If the anchoring carried the signal, that should knock the
+estimate down. It does not move. We had pre-specified shuffling inside repository
+and month, but too few PRs can move under that rule for the result to be readable,
+so we report the calendar-month version, where every PR can move. Its null centres
+on 16.8 points and our observed 17.3 sits in the middle of it rather than out in
+the tail. Every other stratification we tried agrees.
 
 A third control, which we ran to check the design rather than the exposure, does
 behave. Give each PR a fake reply time drawn independently of its own history and
@@ -683,13 +694,13 @@ estimator. It is what the exposure means.
 \paragraph{What the reply says does matter.} If the anchor is not the active
 ingredient, something else must be. We read all 105 user-written replies and
 sorted them with a rule set fixed in advance: platform text, a hand-off to another
-automation, a short acknowledgement, or a substantive response. About one in six
-is a routing click --- \texttt{@copilot fix this}, or GitHub's own ``apply changes
-based on this feedback'' button, whose words belong to the interface rather than
-to the person. Fifty-six are substantive.
+automation, a short acknowledgement, or a substantive response. About one in six is a routing click --- \texttt{@copilot fix this}, or GitHub's
+own ``apply changes based on this feedback'' button, whose words belong to the
+interface rather than to the person. Fifty-nine of the 105 replies are
+substantive, and they fall on 56 pull requests.
 
-Those fifty-six carry the whole result. Restricting the exposure to them leaves
-the estimate where it was, at 16.8 points, on half as many exposed PRs. The
+Those 56 pull requests carry the whole result. Restricting the exposure to them
+leaves the estimate where it was, at 16.8 points, on half as many exposed PRs. The
 routing replies give 8.7 points on an interval that spans zero, and the PRs behind
 them merge slightly less often than the exposed group as a whole. With fifteen
 such PRs we cannot separate the two subsets statistically, so we do not claim that
@@ -738,10 +749,10 @@ would need two things at once: to be much more common among answered PRs than
 among silent ones, which is the horizontal axis, and to shift later merge a long
 way on its own, which is the vertical axis. Only inside the shaded corner does it
 remove the result; the dashed line marks the weaker feat of merely blurring the
-interval. The four dots are the factors we \emph{did} measure, placed on the same
-two axes. They sit in the bottom-left, nowhere near the corner, so a hidden cause
-strong enough to erase the finding would have to be unlike anything visible in
-this data. That is an argument about arithmetic and about what we observed; it is
+interval. The four dots are the factors we \emph{did} measure, placed on the same two axes;
+for two of them the effect runs the other way, so we plot its size. All four
+cluster near the origin, nowhere near the corner, so a hidden cause strong enough
+to erase the finding would have to be unlike anything visible in this data. That is an argument about arithmetic and about what we observed; it is
 not proof that no such factor exists.}
 \label{fig:sensitivity}
 \end{figure}
@@ -898,9 +909,8 @@ handed a count of products. That count is not a small overestimate. It is the
 wrong object.
 
 A count answers ``who appeared''. The thing anybody actually cares about is
-``what connected''. Those two come apart almost completely here. Two products
-share a pull request tens of thousands of times. One of them answers the other's
-review point three times. Everything in between --- the reviews, the comments,
+``what connected''. Those two come apart almost completely here. Two products share a pull request 8,608 times. One of them answers the other's
+review point in 74 of those, fewer than one in a hundred. Everything in between --- the reviews, the comments,
 the branch movement --- is real activity that never becomes a connection.
 
 Once you insist on a connection, the multi-agent story turns into a human one.

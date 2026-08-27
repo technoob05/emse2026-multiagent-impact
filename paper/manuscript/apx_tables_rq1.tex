@@ -5,90 +5,72 @@
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}r L{0.21\textwidth}r r L{0.14\textwidth}r@{}}
-\caption{First public state after each rapid-burst threshold.}\label{tab:s-burst}\\
-\toprule
-Burst (min) & First state & PRs & Share (\%) & Cluster 95\% interval & Median min \\
-\midrule
+\begin{longtable}{@{}L{0.17\textwidth}L{0.25\textwidth}L{0.09\textwidth}L{0.11\textwidth}L{0.15\textwidth}L{0.21\textwidth}@{}}
+\caption{RQ1: first public state after each burst threshold, the burst-window convention, ordering diagnostics, and order placebos.}\label{tab:s-burst}\\
 \endfirsthead
-\caption*{First public state after each rapid-burst threshold. (continued)}\\
+\caption*{RQ1: first public state after each burst threshold, the burst-window convention, ordering diagnostics, and order placebos. (continued)}\\
+\endhead
 \toprule
+\multicolumn{6}{@{}l}{\textbf{Panel A. First public state after each rapid-burst threshold}} \\
+\midrule
 Burst (min) & First state & PRs & Share (\%) & Cluster 95\% interval & Median min \\
 \midrule
-\endhead
 0 & User account & 2,381 & 27.7 & [23.6, 32.5] & 26.8 \\
 0 & Mapped product & 1,305 & 15.2 & [12.7, 17.8] & 4.5 \\
 0 & Other bot & 1,359 & 15.8 & [12.4, 19.6] & 2.5 \\
-0 & Branch movement or untyped activity & 508 & 5.9 & [4.4, 7.5] & 30.9 \\
-0 & No later action within seven days & 3,055 & 35.5 & [30.7, 40.5] & -- \\
+0 & Branch movement or untyped & 508 & 5.9 & [4.4, 7.5] & 30.9 \\
+0 & No later action in 7 days & 3,055 & 35.5 & [30.7, 40.5] & -- \\
 1 & User account & 2,428 & 28.2 & [24.2, 32.7] & 31.1 \\
 1 & Mapped product & 1,198 & 13.9 & [11.9, 16.1] & 5.7 \\
 1 & Other bot & 1,161 & 13.5 & [10.6, 16.7] & 3.4 \\
-1 & Branch movement or untyped activity & 552 & 6.4 & [4.9, 8.1] & 33.6 \\
-1 & No later action within seven days & 3,269 & 38.0 & [33.3, 42.8] & -- \\
+1 & Branch movement or untyped & 552 & 6.4 & [4.9, 8.1] & 33.6 \\
+1 & No later action in 7 days & 3,269 & 38.0 & [33.3, 42.8] & -- \\
 5 & User account & 2,526 & 29.3 & [25.3, 33.8] & 41.5 \\
 5 & Mapped product & 924 & 10.7 & [9.1, 12.4] & 14.6 \\
 5 & Other bot & 761 & 8.8 & [6.8, 11.3] & 6.9 \\
-5 & Branch movement or untyped activity & 560 & 6.5 & [4.9, 8.3] & 45.1 \\
-5 & No later action within seven days & 3,837 & 44.6 & [40.1, 49.1] & -- \\
+5 & Branch movement or untyped & 560 & 6.5 & [4.9, 8.3] & 45.1 \\
+5 & No later action in 7 days & 3,837 & 44.6 & [40.1, 49.1] & -- \\
 10 & User account & 2,413 & 28.0 & [24.1, 32.2] & 61.9 \\
 10 & Mapped product & 827 & 9.6 & [8.1, 11.2] & 17.9 \\
 10 & Other bot & 609 & 7.1 & [5.4, 9.3] & 11.0 \\
-10 & Branch movement or untyped activity & 554 & 6.4 & [4.8, 8.1] & 56.8 \\
-10 & No later action within seven days & 4,205 & 48.8 & [44.6, 53.2] & -- \\
+10 & Branch movement or untyped & 554 & 6.4 & [4.8, 8.1] & 56.8 \\
+10 & No later action in 7 days & 4,205 & 48.8 & [44.6, 53.2] & -- \\
 30 & User account & 2,165 & 25.2 & [21.9, 28.8] & 134.9 \\
 30 & Mapped product & 653 & 7.6 & [6.4, 8.9] & 41.4 \\
 30 & Other bot & 377 & 4.4 & [3.5, 5.4] & 45.7 \\
-30 & Branch movement or untyped activity & 483 & 5.6 & [4.3, 7.1] & 117.8 \\
-30 & No later action within seven days & 4,930 & 57.3 & [53.2, 61.1] & -- \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} The denominator is 8,608 PRs at every threshold. The window is a sensitivity parameter, not an inferred private session boundary.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.16\textwidth}L{0.28\textwidth}L{0.07\textwidth}L{0.12\textwidth}L{0.13\textwidth}L{0.16\textwidth}@{}}
-\caption{RQ1 robustness: ordering diagnostics and order placebos.}\label{tab:s-rq1-robustness}\\
-\endfirsthead
-\caption*{RQ1 robustness: ordering diagnostics and order placebos. (continued)}\\
-\endhead
-\toprule
-\multicolumn{6}{@{}l}{\textbf{Panel A. Ordering diagnostics and leave-one-out checks}} \\
+30 & Branch movement or untyped & 483 & 5.6 & [4.3, 7.1] & 117.8 \\
+30 & No later action in 7 days & 4,930 & 57.3 & [53.2, 61.1] & -- \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel B. First-owner split under nine burst-window schemes}} \\
+\midrule
+Burst-window scheme & Cut (min) & User (\%) & Mapped (\%) & User $-$ mapped (pp) & Repository-cluster 95\% interval \\
+\midrule
+Fixed convention, no burst excluded & 0 & 27.7 & 15.2 & +12.5 & [+7.6, +18.3] \\
+Fixed convention & 1 & 28.2 & 13.9 & +14.3 & [+9.6, +19.9] \\
+Fixed convention (published) & 5 & 29.3 & 10.7 & +18.6 & [+14.3, +23.8] \\
+Fixed convention & 10 & 28.0 & 9.6 & +18.4 & [+14.2, +23.1] \\
+Fixed convention & 30 & 25.2 & 7.6 & +17.6 & [+14.1, +21.6] \\
+Data-driven global log-hazard change point & 0.9 & 28.2 & 14.0 & +14.2 & [+9.3, +19.7] \\
+Same rule, search capped at 60 minutes & 0.9 & 28.2 & 14.0 & +14.2 & [+9.4, +19.9] \\
+Per-product log-hazard change point & 0.9--458.3 & 25.1 & 10.5 & +14.6 & [+11.0, +18.5] \\
+Per-product rule, search capped at 60 minutes & 0.6--8.6 & 27.8 & 13.4 & +14.5 & [+9.8, +19.7] \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel C. Ordering diagnostics and leave-one-out checks}} \\
 \midrule
 Check & Quantity & Burst (min) & Full (\%) & Range or count & Gate, shift, or diagnostic \\
 \midrule
-Tie diagnostic & Tied first timestamps among 5,553 PRs with a post-burst action & 0 & -- & 366 & 1 mixed-state ties; largest tie group 10 \\
-Tie diagnostic & Tied first timestamps among 5,339 PRs with a post-burst action & 1 & -- & 372 & 0 mixed-state ties; largest tie group 10 \\
-Tie diagnostic & Tied first timestamps among 4,771 PRs with a post-burst action & 5 & -- & 306 & 0 mixed-state ties; largest tie group 10 \\
-Tie diagnostic & Tied first timestamps among 4,403 PRs with a post-burst action & 10 & -- & 241 & 0 mixed-state ties; largest tie group 10 \\
-Tie diagnostic & Tied first timestamps among 3,678 PRs with a post-burst action & 30 & -- & 169 & 0 mixed-state ties; largest tie group 10 \\
-Leave-one-out ordering gate & User minus mapped product, dropping one repository & 0 & -- & 10.5 to 13.2 pp & both gates hold in all 1,416 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one repository & 1 & -- & 12.3 to 15.1 pp & both gates hold in all 1,416 exclusions \\
+Tie diagnostic & Tied first timestamps among PRs with a post-burst action & all 5 & -- & 169 to 372 PRs & 1 mixed-state tie in total, at 0 min; largest tie group 10 \\
 Leave-one-out ordering gate & User minus mapped product, dropping one repository & 5 & -- & 16.9 to 19.1 pp & both gates hold in all 1,416 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one repository & 10 & -- & 16.8 to 18.8 pp & both gates hold in all 1,416 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one repository & 30 & -- & 16.3 to 17.9 pp & both gates hold in all 1,416 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one ordered product pair & 0 & -- & 10.2 to 14.2 pp & both gates hold in all 25 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one ordered product pair & 1 & -- & 11.6 to 16.0 pp & both gates hold in all 25 exclusions \\
+Leave-one-out ordering gate & The same gate at the other four thresholds, dropping one repository & 0, 1, 10, 30 & -- & 10.5 to 18.8 pp & both gates hold in every exclusion at every threshold \\
 Leave-one-out ordering gate & User minus mapped product, dropping one ordered product pair & 5 & -- & 16.5 to 19.9 pp & both gates hold in all 25 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one ordered product pair & 10 & -- & 17.0 to 19.2 pp & both gates hold in all 25 exclusions \\
-Leave-one-out ordering gate & User minus mapped product, dropping one ordered product pair & 30 & -- & 16.5 to 18.4 pp & both gates hold in all 25 exclusions \\
-Leave-one-out share range & User account, dropping one repository & 5 & 29.3 & 27.9 to 29.9 & largest shift 1.43 pp \\
-Leave-one-out share range & Mapped product, dropping one repository & 5 & 10.7 & 10.6 to 11.0 & largest shift 0.31 pp \\
-Leave-one-out share range & Other bot, dropping one repository & 5 & 8.8 & 8.0 to 9.0 & largest shift 0.87 pp \\
-Leave-one-out share range & Branch movement or untyped activity, dropping one repository & 5 & 6.5 & 6.0 to 6.7 & largest shift 0.47 pp \\
-Leave-one-out share range & No later action within seven days, dropping one repository & 5 & 44.6 & 43.5 to 45.4 & largest shift 1.10 pp \\
-Leave-one-out share range & User account, dropping one ordered product pair & 5 & 29.3 & 28.0 to 30.4 & largest shift 1.34 pp \\
-Leave-one-out share range & Mapped product, dropping one ordered product pair & 5 & 10.7 & 10.1 to 13.9 & largest shift 3.16 pp \\
-Leave-one-out share range & Other bot, dropping one ordered product pair & 5 & 8.8 & 7.7 to 9.2 & largest shift 1.18 pp \\
-Leave-one-out share range & Branch movement or untyped activity, dropping one ordered product pair & 5 & 6.5 & 5.4 to 6.9 & largest shift 1.07 pp \\
-Leave-one-out share range & No later action within seven days, dropping one ordered product pair & 5 & 44.6 & 41.2 to 45.2 & largest shift 3.42 pp \\
+Leave-one-out ordering gate & The same gate at the other four thresholds, dropping one ordered product pair & 0, 1, 10, 30 & -- & 10.2 to 19.2 pp & both gates hold in every exclusion at every threshold \\
+Leave-one-out share range & User account: dropping one repository, then one product pair & 5 & 29.3 & 27.9 to 29.9; 28.0 to 30.4 & largest shift 1.43 pp; 1.34 pp \\
+Leave-one-out share range & Mapped product: dropping one repository, then one product pair & 5 & 10.7 & 10.6 to 11.0; 10.1 to 13.9 & largest shift 0.31 pp; 3.16 pp \\
+Leave-one-out share range & Other bot: dropping one repository, then one product pair & 5 & 8.8 & 8.0 to 9.0; 7.7 to 9.2 & largest shift 0.87 pp; 1.18 pp \\
+Leave-one-out share range & Branch movement or untyped: dropping one repository, then one product pair & 5 & 6.5 & 6.0 to 6.7; 5.4 to 6.9 & largest shift 0.47 pp; 1.07 pp \\
+Leave-one-out share range & No later action in 7 days: dropping one repository, then one product pair & 5 & 44.6 & 43.5 to 45.4; 41.2 to 45.2 & largest shift 1.10 pp; 3.42 pp \\
 \midrule
-\multicolumn{6}{@{}l}{\textbf{Panel B. Order placebos}} \\
+\multicolumn{6}{@{}l}{\textbf{Panel D. Order placebos}} \\
 \midrule
 Block & Test or quantity & At risk & Observed (\%) & Null or difference (pp) & 95\% interval \\
 \midrule
@@ -96,7 +78,7 @@ Deep transition & Next state: User account & 217 & 23.5 & -- & [19.7, 27.4] \\
 Deep transition & Next state: Same mapped product & 284 & 30.7 & -- & [26.6, 35.0] \\
 Deep transition & Next state: Different mapped product & 43 & 4.7 & -- & [3.2, 6.2] \\
 Deep transition & Next state: Other bot & 39 & 4.2 & -- & [2.6, 6.1] \\
-Deep transition & Next state: Branch movement or untyped activity & 36 & 3.9 & -- & [2.4, 5.4] \\
+Deep transition & Next state: Branch movement or untyped & 36 & 3.9 & -- & [2.4, 5.4] \\
 Deep transition & Next state: No later state & 305 & 33.0 & -- & [29.0, 37.2] \\
 Deep transition & Same-product continuation among later mapped events: observed & 495 & 84.4 & -- & -- \\
 Deep transition & Same-product continuation: random-order expectation & 495 & 83.6 & -- & -- \\
@@ -110,5 +92,5 @@ Ownership persistence & Visible next action: Same ownership layer continues & 3,
 Ownership persistence & Visible next action: Cross-layer handoff (user--product bounce) & 3,237 start PRs & user 31.9; product 33.0 & -1.1 & [-7.6, +5.7] \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} Panel A covers tie diagnostics and leave-one-out ordering checks for the first post-burst state. The priority order is user account, then mapped product, then other bot, then branch movement or untyped activity. Ties are common because many events share a whole-second timestamp, but a tie changes the assigned state only when the tied events fall in different states. Exactly one mixed-state tie occurs, at the zero-minute threshold, and none occurs at any positive threshold. The order favours the user-account state, which is the state the RQ1 ordering claim rests on, so the diagnostic is reported rather than assumed harmless. The gate block drops one repository, or one ordered author--reviewer product pair, at a time and refits the ordering; two gates are checked in every exclusion, namely that the user-account share stays above the mapped-product share and that no later action within seven days stays the largest state. The share-range block reports the range for each state at the primary five-minute threshold. These checks show that the ordering is not carried by one repository or one product pair. They do not remove selection into the cohort. Panel B covers the deep transition, escalation, and persistent-ownership order placebos. Deep-transition next-state shares use 924 mapped-first PRs; the same-product placebo uses 495 PRs with a later mapped-product event and preserves each PR's future product composition. Escalation rows compare the observed user-next share with a within-PR order permutation. Ownership rows condition on a visible next action; their difference column is user-first minus mapped-first. Same-layer continuation and cross-layer bounce show no clear group difference, while exact owner repetition is higher after a mapped-product first state.
+\noindent\footnotesize \textit{Note:} Panel A repeats the first-owner classification after ignoring events in the first 0, 1, 5, 10, or 30 minutes; the denominator is 8,608 PRs at every threshold and the window is a sensitivity parameter, not an inferred private session boundary. Panel B asks whether the five-minute window is discoverable from the data, and it is not: the log gap density has a single dominant mode at 4.25 minutes with no interior antimode below 60 minutes, and that rule finds a burst-region antimode in only 16.8\% of repository bootstrap replicates. The change-point rule always returns a value, 0.90 minutes globally, but it marks where responses start arriving rather than where a machine burst ends. The window is therefore a stated convention that the direction survives: state agreement with the five-minute convention ranges from 79.8\% to 91.2\%, and the user-minus-mapped difference stays positive with an interval excluding zero under every scheme. In Panel C the priority order applied to tied first timestamps is user account, then mapped product, then other bot, then branch movement or untyped activity. Ties are common because many events share a whole-second timestamp, but a tie changes the assigned state only when the tied events fall in different states, and that happens once in the whole study. The order favours the user-account state, which is the state the RQ1 ordering claim rests on, so the diagnostic is reported rather than assumed harmless. The gate rows drop one repository, or one ordered author--reviewer product pair, at a time and refit the ordering; two gates are checked in every exclusion, namely that the user-account share stays above the mapped-product share and that no later action within seven days stays the largest state. Because both gates hold everywhere, the four non-published thresholds are collapsed to their range. The share-range rows report each state at the primary five-minute threshold, first for repository exclusions and then for product-pair exclusions. These checks show that the ordering is not carried by one repository or one product pair. They do not remove selection into the cohort. Panel D covers the deep-transition, escalation, and persistent-ownership order placebos. Deep-transition next-state shares use 924 mapped-first PRs; the same-product placebo uses 495 PRs with a later mapped-product event and preserves each PR's future product composition. Escalation rows compare the observed user-next share with a within-PR order permutation. Ownership rows condition on a visible next action; their difference column is user-first minus mapped-first. Same-layer continuation and cross-layer bounce show no clear group difference, while exact owner repetition is higher after a mapped-product first state.
 \endgroup

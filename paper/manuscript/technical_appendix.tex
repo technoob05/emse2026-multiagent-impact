@@ -1,5 +1,10 @@
 % Supplementary Information for the EMSE 2026 Agentic SE submission.
 % Tables are generated from validated analysis outputs.
+%
+% House rule for this file: it is a reference document, not a second telling of
+% the article. Where the article already explains a design choice, this file
+% gives only what the article leaves out -- the exact rule, the parameter, the
+% row counts -- and points at the article section that carries the reasoning.
 \documentclass[pdflatex,sn-basic]{sn-jnl}
 
 \usepackage{graphicx}
@@ -10,18 +15,14 @@
 \usepackage{xurl}
 \usepackage{placeins}
 \usepackage{needspace}
-% Table cells carry identifiers such as pr_review_comments, which must not
-% be hyphenated across lines.
+% Table cells carry release table names such as pr_review_comments, which must
+% not be hyphenated across lines.
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash\hyphenpenalty=10000%
 \exhyphenpenalty=10000}p{#1}}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-% sn-jnl does not define \tableofcontents or \listoftables, but it keeps the
-% kernel entry writers and the \l@section, \l@subsection, and \l@table entry
-% formats. These two commands only reopen the standard listing files.
-\makeatletter
-\newcommand{\snlcontents}{\section*{Contents}\@starttoc{toc}}
-\newcommand{\snllistoftables}{\section*{List of tables}\@starttoc{lot}}
-\makeatother
+% There is no table of contents: the "Where to find what" index below runs in
+% section order and already maps every claim to its table and page, so a second
+% listing would be the same map twice.
 \raggedbottom
 \setlength{\bibsep}{0.25em}
 
@@ -37,12 +38,14 @@
 \affil*[1]{\orgdiv{Affiliation pending}, \orgname{Institution pending},
   \orgaddress{\city{City pending}, \country{Country pending}}}
 
-\abstract{This appendix gives the complete data contracts, joins, cohort rules,
-estimands, robustness checks, falsification tests, and experiment decisions for
-the accompanying article. It separates observed GitHub events from derived
-labels and keeps semantic and causal claims outside the evidence available in
-the public trace. All reported tables are generated from the validated analysis
-outputs rather than typed independently.}
+\abstract{This appendix is the reference record behind the accompanying article:
+the data contracts and joins, the cohort rules, the named estimation
+specifications, every robustness and falsification check, and the disposition of
+every experiment we ran. It does not restate the article's reasoning. Where the
+article explains why a choice was made, this appendix gives the exact rule, the
+parameter, and the row counts, and points back at the article section that
+carries the argument. Every table is generated from the validated analysis
+products rather than typed by hand.}
 
 \keywords{coding agents, multi-agent software engineering, code review, supplementary information, reproducibility}
 \maketitle
@@ -50,15 +53,10 @@ outputs rather than typed independently.}
 \noindent\textbf{Journal:} Empirical Software Engineering\qquad
 \textbf{File:} Online Resource 1
 
-\snlcontents
-
-\clearpage
-
 \section*{Where to find what}
 
-Each row names a claim in the main article and the appendix table that carries
-the numbers behind it. Sections~\ref{app:rq1} to \ref{app:rq4} explain how each
-table was built.
+Each row names a claim in the article and the table that carries the numbers
+behind it. The rows follow the order of the sections below.
 
 \begingroup
 \small
@@ -67,89 +65,75 @@ table was built.
 \toprule
 Claim or question & Table & Page \\
 \midrule
+\multicolumn{3}{@{}l}{\textit{What the data is}} \\
+Release inventory, coverage of the 361,296-PR backbone, and which review channels can carry a reply anchor at all & \ref{tab:s-dataset} & \pageref{tab:s-dataset} \\
+The exact account allowlist, and the rules behind labels the article does not define & \ref{tab:s-definitions} & \pageref{tab:s-definitions} \\
+\addlinespace
+\multicolumn{3}{@{}l}{\textit{How the cohorts were built}} \\
+Participation funnel, the load-bearing validation gates, and the column-level leakage contract & \ref{tab:s-cohort} & \pageref{tab:s-cohort} \\
+Every named estimation specification, its adjustment set, and every resampling setting & \ref{tab:s-specifications} & \pageref{tab:s-specifications} \\
+\addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ1 -- is there a handoff?}} \\
-Participation funnel; fewer than 1\% of trigger PRs carry a different-product exact reply & \ref{tab:s-cohort} & \pageref{tab:s-cohort} \\
-First public owner after each burst window, including the 53\% user against 19\% mapped-product split at five minutes & \ref{tab:s-burst} & \pageref{tab:s-burst} \\
-Tied first timestamps, the fixed priority order, every leave-one-out exclusion, and the order placebos that reject the escalation and persistence stories & \ref{tab:s-rq1-robustness} & \pageref{tab:s-rq1-robustness} \\
+First public owner after each burst window, the owner split under nine burst schemes, the tie rule and every leave-one-out exclusion, and the order placebos that reject the escalation and persistence stories & \ref{tab:s-burst} & \pageref{tab:s-burst} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ2 -- who bridges the boundary?}} \\
-13.4-point matched gap in later visible action across the product boundary, and the seven in ten first user bridges who had already reviewed in the repository & \ref{tab:s-rq2} & \pageref{tab:s-rq2} \\
-Where the matched gap actually lives across repositories and product pairs, and which pre-trigger repository descriptors explain the familiar-replier split & \ref{tab:s-heterogeneity} & \pageref{tab:s-heterogeneity} \\
+The 13.4-point matched gap, where in the data that gap actually lives, the seven in ten first user bridges who had already reviewed, and the repository descriptors behind the familiar-replier split & \ref{tab:s-rq2} & \pageref{tab:s-rq2} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ3 -- who writes the connection, and does it mark a later state?}} \\
-17.3-point addressed-edge contrast, reply windows, repository fixed effects, product-pair drops, specificity control, and the four-state 48-hour gradient & \ref{tab:s-addressed-edge} & \pageref{tab:s-addressed-edge} \\
+The 17.3-point addressed-edge contrast, reply windows, repository fixed effects, specificity controls, the four-state gradient, and every ownership-route contrast & \ref{tab:s-addressed-edge} & \pageref{tab:s-addressed-edge} \\
 Landmark selection, who writes the edge, stricter edge rules, pre-trigger balance, the E-value of 2.27, tipping grid, negative controls, the conditional shuffle test at $p=0.007$, and the whole-population hazard near 1.7 & \ref{tab:s-sensitivity} & \pageref{tab:s-sensitivity} \\
-Placebo exposures against the real addressed edge, and what the reply text actually says & \ref{tab:s-specificity} & \pageref{tab:s-specificity} \\
-Machine-likeness heuristics on the accounts that write the edges, and the contrast after dropping flagged accounts & \ref{tab:s-actors} & \pageref{tab:s-actors} \\
+Placebo exposures against the real addressed edge, what the reply text says, and whether a person or a script wrote it & \ref{tab:s-specificity} & \pageref{tab:s-specificity} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ4 -- what makes someone answer across the boundary?}} \\
 Issue link and answered review points, by reviewer relation, with the shuffled-label check & \ref{tab:s-task-context} & \pageref{tab:s-task-context} \\
 \addlinespace
-\multicolumn{3}{@{}l}{\textit{Measurement contract used by all four questions}} \\
-Release layers, units, and event-table coverage & \ref{tab:s-dataset} & \pageref{tab:s-dataset} \\
-Which review interactions can carry a reply anchor at all, and the RQ1 owner split under nine burst-window schemes & \ref{tab:s-coverage} & \pageref{tab:s-coverage} \\
-Exact account allowlist and the code-level glossary & \ref{tab:s-definitions} & \pageref{tab:s-definitions} \\
-Named estimation specifications, their formulas, and every resampling setting & \ref{tab:s-specifications} & \pageref{tab:s-specifications} \\
-Data-quality and temporal gates, with column-by-column leakage tags & \ref{tab:s-quality} & \pageref{tab:s-quality} \\
-\addlinespace
-\multicolumn{3}{@{}l}{\textit{Negative results, external checks, and reproduction}} \\
+\multicolumn{3}{@{}l}{\textit{Construct checks, negative results, and reproduction}} \\
 Structural same-locus overlap, still semantically uncoded, and the external evidence ladder with its failed replication gate & \ref{tab:s-external} & \pageref{tab:s-external} \\
 Ordered run contract with frozen row counts, and every kept, relocated, or rejected result & \ref{tab:s-record} & \pageref{tab:s-record} \\
 \bottomrule
 \end{tabularx}
 \endgroup
 
-\snllistoftables
-
 \clearpage
 
-\section{Purpose, evidence levels, and the interpretation boundary}\label{app:purpose}
+\section{Scope and the interpretation boundary}\label{app:purpose}
 
-The main article keeps only the numbers needed to follow the story. This
-appendix carries the complete measurement and sensitivity record, and every
-table in it is generated from the validated analysis products rather than typed
-by hand.
-
-\subsection{Four evidence levels}\label{app:levels}
-
-\emph{Product presence} means that two mapped products appear on one pull
-request (PR). An \emph{addressed edge} requires a reply whose parent identifier
-is the exact cross-product trigger. A \emph{next owner} is the first public
-actor class after a declared rapid-burst window. A \emph{later state} is
-measured only after a fixed landmark. These levels must not be collapsed into a
-single ``multi-agent'' indicator.
+The article states the four evidence levels and why they must not be collapsed
+into a single ``multi-agent'' indicator. The rules the code applies are:
+\emph{product presence} is two mapped products on one pull request (PR); an
+\emph{addressed edge} is a reply whose stored parent identifier is the exact
+cross-product trigger; a \emph{next owner} is the first public actor class after
+a declared rapid-burst window; and a \emph{later state} is read only after a
+fixed landmark.
 
 \subsection{The interpretation boundary}\label{app:boundary}
 
 This subsection states every caveat that holds for every number in this
-appendix. Later sections do not restate it; they cross-reference it and add
-only what is specific to their own analysis.
+appendix. Later sections cross-reference it rather than restating it.
 
-The study observes public GitHub accounts and events, and nothing else. A
-mapped product label does not reveal its foundation model, its private
-messages, or its internal run boundary. A GitHub \texttt{User} account does not
-prove unaided manual work. A later event does not prove that a review point was
-understood or fixed. An answered review point is not a resolved one. Public
-product presence is not private communication. Temporal succession is not
-semantic response. Account history is not verified memory retrieval. A
+The study observes public GitHub accounts and events, and nothing else. A mapped
+product label does not reveal its foundation model, its private messages, or its
+internal run boundary. A GitHub \texttt{User} account does not prove unaided
+manual work. A later event does not prove that a review point was understood or
+fixed. An answered review point is not a resolved one. Temporal succession is
+not semantic response. Account history is not verified memory retrieval. A
 force-push is visible branch movement, not a verified repair. Merge is an
 integration state, not code quality.
 
-Every outcome model in this paper is therefore an observational association.
-None of them identifies an intervention. Every outcome model is also a linear
-probability model, which can predict outside the unit interval. Task difficulty,
-maintainer intent, review meaning, and private activity are not measured, and
-any of them can select both the public topology and the later state.
-Section~\ref{app:bounds} bounds how much unmeasured structure would be needed to
-remove the main association; it does not convert that association into an
-effect. These boundaries are part of the result, not only limitations.
+Every outcome model here is therefore an observational association, and every
+one is a linear probability model, which can predict outside the unit interval.
+Task difficulty, maintainer intent, review meaning, and private activity are not
+measured, and any of them can select both the public topology and the later
+state. Section~\ref{app:bounds} bounds how much unmeasured structure would be
+needed to remove the main association; it does not convert that association into
+an effect. These boundaries are part of the result, not only limitations.
 
 This boundary also separates the study from prior work on cross-product review
 prevalence, broad reviewer-type sequences, and developer response
-\citep{selvanayagam2026a2a,zhong2026agenticreview,cynthia2026responses}.
-Those studies motivate the narrower event-level checks reported here.
+\citep{selvanayagam2026a2a,zhong2026agenticreview,cynthia2026responses}. Those
+studies motivate the narrower event-level checks reported here.
 
-\section{Dataset release, grain, and joins}\label{app:data}
+\section{The data: release, joins, and measurement reach}\label{app:data}
 
 \begin{figure}[htbp]
 \centering
@@ -164,464 +148,398 @@ their submitted-review identifier; row order is never a join key.}
 The analysis pins AIDev-7.6M at revision
 \nolinkurl{37bbe1533e26cc1e1374917dba1186d1c8a4dc81}. The full release is used
 for corpus checks. Interaction analyses use AIDev-pop, the rich layer for
-repositories with more than 100 stars. Table~\ref{tab:s-dataset} reports the
-release profile in its first block and event-table coverage in its second.
+repositories with more than 100 stars.
 
 The PR table is the hub. Submitted reviews join directly by PR identifier.
-Inline review comments do not contain a PR identifier, so they first join to a
-submitted review by \texttt{pull\_request\_review\_id}; the review then joins to
-the PR. All inline-review identifiers used in this join resolve. PR comments
-and timeline events join directly to the PR. Commit-detail rows have one row per
-file and commit; any PR-level commit count must deduplicate commit SHA values
-before aggregation.
+Inline review comments carry no PR identifier, so they first join to a submitted
+review by \texttt{pull\_request\_review\_id}; the review then joins to the PR.
+All inline-review identifiers used in this join resolve. PR comments and
+timeline events join directly to the PR. Commit-detail rows have one row per
+file and commit, so any PR-level commit count must deduplicate commit SHA values
+before aggregation. Ordinary \texttt{committed} and \texttt{reviewed} timeline
+events carry no usable timestamp in this release and are excluded from every
+temporal claim.
 
-Figure~\ref{fig:s-coverage} shows why each analysis declares its own
-denominator: rich tables cover different subsets of the same PR backbone.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\linewidth]{FigS2.pdf}
-\caption{Availability of rich feature groups across the 361,296-PR backbone.
-Coverage is not uniform and missing linked rows are not assumed to be negative
-events. Each model therefore uses a declared feature-specific denominator.}
-\label{fig:s-coverage}
-\end{figure}
-\FloatBarrier
+Table~\ref{tab:s-dataset} carries three things the article compresses into a
+sentence each: the release inventory, the coverage of each rich feature group
+across the PR backbone, and the channel-by-channel measurement reach behind the
+article's statement that only inline comments can carry an exact edge. Coverage
+is not uniform, which is why every analysis declares its own denominator and
+why a missing linked row is never read as a negative event.
 
 \input{apx_tables_data.tex}
 \FloatBarrier
 
-\section{Identity registry, trigger construction, and glossary}\label{app:identity}
+\section{Identity registry, trigger construction, and labels}\label{app:identity}
 
 \subsection{Allowlist and trigger rule}\label{app:allowlist}
 
 Product attribution uses an allowlist of exact vendor-controlled GitHub
 identities, given in full in Table~\ref{tab:s-definitions}, Panel A. Similar
-names and
-unknown bots are not guessed. The unit for the main cohort is one PR with its
-first mapped feedback event written by a product different from the agent label
-attributed to the PR author.
+names and unknown bots are not guessed.
 
-Eligible feedback sources are a submitted review, an inline review comment, or
-a PR comment. The event must be after PR creation and no later than PR closure.
-The common observation boundary is 15 April 2026 at 00:00 UTC. PR creation is
-cut off on 31 March 2026, which leaves time to observe follow-up events.
-
-If the inline trigger belongs to a submitted review, the enclosing review is the
-same batch and is not counted as a later review. A later review needs a
-different review-batch identifier. These rules prevent one API batch from
-answering itself.
+The unit for the main cohort is one PR whose first mapped feedback event was
+written by a product different from the agent label attributed to the PR author.
+Eligible feedback sources are a submitted review, an inline review comment, or a
+PR comment. The event must fall after PR creation and no later than PR closure.
+The common observation boundary is 15 April 2026 at 00:00 UTC, and PR creation
+is cut off on 31 March 2026, which leaves time to observe follow-up. If the
+inline trigger belongs to a submitted review, the enclosing review is the same
+batch and is not counted as a later review; a later review needs a different
+review-batch identifier.
 
 \subsection{What the reply identifier points at}\label{app:reply-target}
 
-For an inline trigger, a direct reply must carry the trigger's own comment
-identifier as its reply target. A reply elsewhere on the PR does not count.
+The article explains that GitHub sets a reply target to the first comment of an
+inline thread rather than to the immediately preceding comment, so an addressed
+edge is precisely ``a reply in the thread the trigger opened''. The pinned
+release behaves the same way: of 88,907 inline replies, none names a comment
+that is itself a reply.
 
-GitHub sets that target to the first comment of an inline thread rather than to
-the immediately preceding comment, and the pinned release behaves the same way:
-of 88,907 inline replies, none names a comment that is itself a reply. Reply
-threads are therefore one level deep, and the construct is precisely ``a reply
-in the thread the trigger opened''. Two consequences are measured rather than
-assumed. The exposure is structurally impossible when the trigger sits
-mid-thread, which happens for 13 of 3,526 cross-product inline triggers and for
-3 of the 1,067 landmark PRs, none of the latter exposed; for same-product
-triggers it happens in 46\% of cases, which is a further reason the two rates
-are not directly comparable. And within a multi-reply thread a later reply may
-answer an earlier reply instead of the trigger: 92 of the 109 exposed PRs carry
-exactly one reply in the thread, 15 carry two, and two carry more.
+Two consequences are measured rather than assumed. The exposure is structurally
+impossible when the trigger sits mid-thread, which happens for 13 of 3,526
+cross-product inline triggers and for 3 of the 1,067 landmark PRs, none of the
+latter exposed; for same-product triggers it happens in 46\% of cases. And
+within a multi-reply thread a later reply may answer an earlier reply instead of
+the trigger: 92 of the 109 exposed PRs carry exactly one reply in the thread, 15
+carry two, and two carry more.
 
-\subsection{Glossary of load-bearing terms}\label{app:glossary}
+\subsection{Labels the article does not define}\label{app:glossary}
 
-Several short terms carry weight across all four research questions, so
-Table~\ref{tab:s-definitions}, Panel B, states each one as the rule the code
-applies. It
-covers a decisive review, branch movement, the residual untyped class, the five
-mutually exclusive actor states, the seven response actor roles, and the
-automation episode with its five-minute gap parameter. Each definition was read
-back from the analysis code rather than restated from the article. The table
-does not say how often each label occurs, and it says nothing about what a
-labelled event meant to the people or products involved.
+Table~\ref{tab:s-definitions}, Panel B, states the remaining load-bearing terms
+as the rule the code applies: a decisive review, branch movement, the residual
+untyped class, the five mutually exclusive actor states in priority order, the
+seven response actor roles in evaluation order, and the automation episode with
+its five-minute gap parameter. Each entry is read back from the analysis code.
+Terms the article already defines are not repeated. The panel does not say how
+often each label occurs, and it says nothing about what a labelled event meant
+to the people or products involved.
 
 \input{apx_tables_identity.tex}
 \FloatBarrier
 
-\section{Cohorts, denominators, specifications, and uncertainty}\label{app:cohorts}
+\section{Cohorts, gates, specifications, and uncertainty}\label{app:cohorts}
 
-\subsection{Cohort flow}\label{app:funnel}
+\subsection{Cohort flow and the leakage contract}\label{app:funnel}
 
-Table~\ref{tab:s-cohort}, Panel A, gives the full cohort flow. The seven-day topology
-cohort requires a complete observation window and ends earlier if the PR
-closes. Exact-parent replies are possible only for inline triggers; therefore
-the article reports both the full-cohort and inline-eligible denominators.
+Table~\ref{tab:s-cohort}, Panel A, gives the full cohort flow. The seven-day
+topology cohort requires a complete observation window and ends earlier if the
+PR closes. Exact-parent replies are possible only for inline triggers, so the
+article reports both the full-cohort and inline-eligible denominators.
 
-The outcome cohort uses a different rule. It first observes public activity for
-48 hours after the trigger, retains PRs still open at hour 48, and then observes
-merge from hour 48 through day 30. It also requires a complete 30-day outcome
-window. This landmark keeps the route definition before the outcome window.
+The outcome cohort uses a different rule: it observes public activity for 48
+hours after the trigger, retains PRs still open at hour 48, and then observes
+merge from hour 48 through day 30, requiring a complete 30-day window. This
+landmark keeps the route definition before the outcome window.
+
+Panel B lists the load-bearing validation gates. Event order must be strictly
+after the trigger and inside its declared window; each PR must have one state per
+threshold; review batches must be distinct; prior-history rows must exclude the
+focal PR and all future or equal timestamps; landmark features must occur before
+hour 48 and outcomes only after it. Nine exact duplicate force-push rows occur
+on two PRs; the analytical event view deduplicates them and the first-state
+assignment is identical either way.
+
+Panel C is the column-level form of the pre-trigger-only claim. Every column of
+the derived landmark cohort carries a stored leakage tag with three values, and
+the tag decides where the column may enter a model. The primary specification
+draws only on columns tagged at or before the trigger; columns tagged after the
+trigger appear only in the secondary route decomposition and in the exposure
+itself; columns tagged as outcome are never inputs. The public artifact carries
+the same contract column by column.
 
 \subsection{Named specifications and resampling settings}\label{app:specifications}
 
-Every outcome model in this paper is a linear probability model fitted by
-ordinary least squares, with standard errors clustered on the repository.
-Table~\ref{tab:s-specifications} lists each named specification in its first
-block: outcome, exposure term, estimator, standard-error type, denominators, and
-full model formula. Most formulas are stored with the analysis products
-themselves, so the table cannot drift from the fits it describes; the two
-ownership-route rows and the two prior-history rows are read back from the
-analysis code, which writes no formula column. Reply-window variants at 1, 6,
-and 24 hours refit the same formula with that window's exposure term. The table
-shows what was fitted and on how many PRs, not that any fit identifies a causal
-effect (Section~\ref{app:boundary}).
+Table~\ref{tab:s-specifications}, Panel A, names every fitted model with its
+outcome, exposure term, denominators, and adjustment set. Every model is a
+linear probability model fitted by ordinary least squares with standard errors
+clustered on the repository. Most adjustment sets are read back from the formula
+stored with the analysis product itself, so the table cannot drift from the fits
+it describes; the two ownership-route rows and the two prior-history rows are
+read from the analysis code, which writes no formula. Reply-window variants at
+1, 6, and 24 hours refit the same specification with that window's exposure
+term.
 
-Uncertainty statements come from two different machines, and the settings are
-not uniform, so the second block of the same table lists them per analysis: the
-resampling unit, the number of draws, the seed, and the interval method. Cluster
-bootstraps resample whole repositories, because PRs in one repository share
-policy, integrations, and contributors. The draw count is 10,000 for the matched
-contrasts and the same-locus timing share and 5,000 for the burst,
-deep-transition, and persistence shares. Order placebos permute event order
-inside a PR 500 times. Both randomisation-inference tests permute exposure
-labels inside repositories 2,000 times. Every seed derives from one fixed value,
-with fixed offsets so that separate quantities do not reuse one draw sequence.
-The outcome regressions use no resampling at all. Their intervals come from a
-clustered normal approximation, which is why the exact-edge estimate is checked
-by permutation as well. Main ordering statements are also recomputed after
-removing each repository and each author--reviewer product pair, as reported in
-Section~\ref{app:ordering}.
+Panel B lists the resampling settings per analysis, because they are not
+uniform: the resampling unit, the number of draws, the seed, and the interval
+method. Cluster bootstraps resample whole repositories, because PRs in one
+repository share policy, integrations, and contributors. Every seed derives from
+one fixed value, with fixed offsets so that separate quantities do not reuse one
+draw sequence. The outcome regressions use no resampling at all; their intervals
+come from a clustered normal approximation, which is why the exact-edge estimate
+is also checked by permutation.
 
 \input{apx_tables_cohorts.tex}
 \FloatBarrier
 
-\subsection{Measurement reach and the burst-window convention}\label{app:coverage}
+\section{RQ1: burst collapse and relay topology}\label{app:rq1}
 
-Two stated conventions bound everything that follows, and
-Table~\ref{tab:s-coverage} reports both. Panel A asks how much of the review
-record can carry an exact reply anchor at all. Only inline review comments do:
-they are 43\% of reviewer-side interaction events and 62\% of triggers, so the
-addressed edge is silent about the other 57\% of events and 38\% of triggers by
-construction, not by finding. Panel B asks whether the five-minute rapid-burst
-window is discoverable from the data. It is not. The trigger-to-next-event gap
-has one dominant mode near four minutes and no valley inside any defensible
-burst region, so we treat the window as a declared convention and re-run the
-RQ1 owner split under nine schemes, including the cuts a change-point rule
-selects on its own and per-product cuts. The magnitude of the user-minus-mapped
+Table~\ref{tab:s-burst} carries the whole RQ1 record in four panels.
+
+\subsection{Thresholds and the burst-window convention}\label{app:ordering}
+
+Panel A repeats the first-owner classification after excluding events in the
+first 0, 1, 5, 10, or 30 minutes, with repository-cluster intervals. Actor
+states are mutually exclusive: user account, mapped product, other bot, branch
+movement or untyped activity, and no later action.
+
+Panel B answers a question the article raises and does not have room to settle:
+whether the five-minute window is discoverable from the data. It is not. The
+trigger-to-next-event gap has one dominant mode near four minutes and no valley
+inside any defensible burst region, so the window is treated as a declared
+convention and the owner split is re-run under nine schemes, including the cuts
+a change-point rule selects on its own and per-product cuts. The user-minus-mapped
 gap moves between 12.5 and 18.6 points; its sign and its repository-clustered
 interval never change.
 
-\input{apx_tables_coverage.tex}
-\FloatBarrier
+Panel C reports the tie rule and the leave-one-out evidence. The priority order
+is user account, then mapped product, then other bot, then branch movement or
+untyped activity, and it applies whenever two or more events share the earliest
+post-burst timestamp, so the assigned state does not depend on input row order.
+Tied first timestamps are common, because many GitHub events are stamped to the
+whole second, but a tie changes the assigned state only when the tied events
+fall in different states: exactly one such mixed-state tie occurs in the whole
+study, at the zero-minute threshold. This matters because the order favours the
+user-account state, and the RQ1 ordering claim rests on that state. The
+diagnostic shows the rule is almost never the deciding factor, not that it would
+be harmless if it were.
 
-\section{RQ1 details: burst collapse and relay topology}\label{app:rq1}
-
-\subsection{Burst thresholds, the tie rule, and leave-one-out ordering}\label{app:ordering}
-
-The rapid-burst analysis repeats the first-owner classification after excluding
-events in the first 0, 1, 5, 10, or 30 minutes. The threshold is a sensitivity
-parameter, not a recovered private session boundary. Actor states are mutually
-exclusive: user account, mapped product, other bot, branch movement or untyped
-activity, and no later action. Table~\ref{tab:s-burst} gives all thresholds and
-repository-cluster intervals.
-
-The priority order is user account, then mapped product, then other bot, then
-branch movement or untyped activity. It is applied whenever two or more events
-share the earliest post-burst timestamp, so the assigned state does not depend
-on input row order. Table~\ref{tab:s-rq1-robustness}, Panel A, reports how often that rule is
-actually used. Tied first timestamps are common, because many
-GitHub events are stamped to the whole second. A tie changes the assigned state
-only when the tied events fall in different states. Exactly one such mixed-state
-tie occurs, at the zero-minute threshold, and none occurs at any positive
-threshold. This matters because the order favours the user-account state, and
-the RQ1 ordering claim rests on that state. The diagnostic shows the rule is
-almost never the deciding factor, not that it would be harmless if it were.
-
-The remaining blocks of the same table carry the leave-one-out evidence behind
-the sentence that the ordering survives every exclusion. One block drops one
-repository at a time, across 1,416 repositories, and then one ordered
-author--reviewer product pair at a time, across 25 pairs. Two gates are checked
-in every exclusion: the user-account share stays above the mapped-product share,
-and no later action within seven days stays the largest state. Both gates hold
-in all exclusions at all five thresholds. At the primary five-minute threshold
-the user-minus-mapped gap stays between 16.5 and 19.9 points. The last block
-reports the leave-one-out share range for each state at that threshold, where
-the largest single shift is 3.42 points. These checks bound concentration in one
-repository or one product pair. They do not address selection into the cohort
-itself, and no other robustness check in this appendix does either.
+The leave-one-out rows drop one repository at a time, across 1,416 repositories,
+and then one ordered author--reviewer product pair at a time, across 25 pairs.
+Two gates are checked in every exclusion: the user-account share stays above the
+mapped-product share, and no later action within seven days stays the largest
+state. Both gates hold in all exclusions at all five thresholds, which is why
+the four non-published thresholds are collapsed to a range. At the primary
+five-minute threshold the user-minus-mapped gap stays between 16.5 and 19.9
+points, and the largest single share shift is 3.42 points. These checks bound
+concentration in one repository or one product pair. They do not address
+selection into the cohort itself, and no other robustness check in this appendix
+does either.
 
 \subsection{Deep transition and order placebos}\label{app:deep}
 
-The deep transition test starts with PRs whose first state after the five-minute
-burst is a mapped product. It then applies another five-minute washout and asks
-who owns the next distinct state. A within-PR random-order benchmark preserves
-each PR's later product composition while breaking temporal order. This test
-guards against calling a dominant product mix a special persistence mechanism.
-
-A second exploratory test sessionizes public automation episodes and asks
-whether repeated automation naturally escalates to a user account. The apparent
-drop in user-next probability is reproduced by within-PR order permutation, so
-the paper rejects an escalation-dose claim. A third block conditions on a
-visible next action and asks whether ownership persists; same-layer continuation
-and cross-layer bounce show no clear group difference.
-Table~\ref{tab:s-rq1-robustness}, Panel B, reports all three, with the
-observed value beside its order-permutation null.
+Panel D reports three placebos against a within-PR order permutation. The deep
+transition test starts with PRs whose first state after the five-minute burst is
+a mapped product, applies another five-minute washout, and asks who owns the
+next distinct state; its benchmark preserves each PR's later product
+composition while breaking temporal order, which is what stops a dominant
+product mix from reading as a persistence mechanism. The second block
+sessionizes public automation episodes and asks whether repeated automation
+escalates to a user account; the apparent drop in user-next probability is
+reproduced by the permutation, so the escalation-dose claim is rejected. The
+third conditions on a visible next action and asks whether ownership persists;
+same-layer continuation and cross-layer bounce show no clear group difference.
 
 \input{apx_tables_rq1.tex}
 \FloatBarrier
 
-\section{RQ2 details: boundary matching and prior public history}\label{app:rq2}
+\section{RQ2: boundary matching, where the gap lives, and prior history}\label{app:rq2}
 
 The cross/same comparison pairs triggers with the same repository, exact PR
-author account, author product, trigger source, and calendar month. Pairing uses
+author account, author product, trigger source, and calendar month, using
 nearest trigger time without replacement. The main interval resamples whole
 repositories; a seven-day time caliper is a sensitivity analysis.
 Table~\ref{tab:s-rq2}, Panel A, reports all measured outcomes rather than only
 the main visibility contrast.
 
+Panel B opens the average up, because an average over 546 matched pairs can hide
+a gap that exists in one corner of the data. The pairs are unevenly spread --
+one repository holds 21\% of them and one ordered product pair holds 28\% -- and
+the gap is re-estimated inside each product pair large enough to stand alone.
+The direction is general by the pre-registered rule: every
+leave-one-repository-out and leave-one-product-pair-out refit stays negative,
+and four of six qualifying pairs reproduce the sign. The size is not general.
+The two Codex-authored pairs carry the average, only one pair has an interval
+excluding zero on its own, and the rest sit near zero.
+
 For the first user-account mediator, prior history requires the same account,
 same repository, a different PR, and a submitted-review timestamp strictly
-before the trigger. The same rule is applied to the first later decisive
-reviewer. Table~\ref{tab:s-rq2}, Panel B, gives role, channel, depth, and
-comparison populations. The all-responder comparison is important: prior history is common
+before the trigger; the same rule is applied to the first later decisive
+reviewer. Panel C gives role, channel, depth, and comparison populations. The
+all-responder comparison is the important one: prior history is common
 throughout the response layer, so the analysis does not claim that experienced
 accounts are preferentially selected to respond first.
 
+Panel D asks what six pre-trigger repository descriptors explain about the RQ3
+familiar-versus-newcomer split. They account for 18\% of it; repository fixed
+effects absorb most of the rest and leave an interval covering zero. Familiar
+repliers and newcomers are largely in different repositories, and the
+descriptors we can measure do not say what separates those repositories.
+
 A review-request event is visible before many triggers, but the exported event
-does not identify the requested account. Assignee, message, and label coverage
+does not identify the requested account: assignee, message, and label coverage
 is zero in the valid request rows. The paper therefore rejects the claim that
 the triggering product was deliberately routed or requested.
 
 \input{apx_tables_rq2.tex}
 \FloatBarrier
 
-\subsection{Where the matched gap lives}\label{app:heterogeneity}
-
-An average over 546 matched pairs can hide a gap that exists in only one
-corner of the data, so Table~\ref{tab:s-heterogeneity} opens the average up.
-Panel A shows that the pairs are unevenly spread -- one repository holds 21\% of
-them and one ordered product pair holds 28\% -- and then re-estimates the gap
-inside each product pair large enough to stand alone. The direction is general
-by the pre-registered rule: every leave-one-repository-out and
-leave-one-product-pair-out refit stays negative, and four of six qualifying
-pairs reproduce the sign. The size is not general. The two Codex-authored pairs
-carry the average, only one pair has an interval excluding zero on its own, and
-the rest sit near zero, which is how the gap should be read. Panel B turns to
-the RQ3 familiar-versus-newcomer split and asks what six pre-trigger repository
-descriptors explain. They account for 18\% of it; repository fixed effects
-absorb most of the rest and leave an interval covering zero. Familiar repliers
-and newcomers are largely in different repositories, and the descriptors we can
-measure do not say what separates those repositories.
-
-\input{apx_tables_heterogeneity.tex}
-\FloatBarrier
-
-\section{RQ3 details: connected signals and later integration}\label{app:rq3}
+\section{RQ3: connected signals and later integration}\label{app:rq3}
 
 \subsection{The two pre-landmark signals}\label{app:signals}
 
-Two pre-landmark topology signals are related to the later-state question. The
-first is an exact addressed reply within the initial 48 hours among PRs with an
-inline trigger. The second is the mutually exclusive ownership route in the
-full landmark cohort. The route categories are user account first, automation
-then user, automation with no user event, movement only, other activity, or no
-observed action.
+Two pre-landmark topology signals are related to the later-state question: an
+exact addressed reply within the initial 48 hours among PRs with an inline
+trigger, and the mutually exclusive ownership route in the full landmark cohort,
+whose categories are user account first, automation then user, automation with
+no user event, movement only, other activity, or no observed action.
+Table~\ref{tab:s-addressed-edge} gives the exact-edge sensitivities in Panel A
+and every route contrast in Panel B. Both are integration markers, not effects
+of adding an agent or a user (Section~\ref{app:boundary}).
 
-For the exact-edge model, the primary specification adjusts only for variables
-known before the trigger: author product, reviewer product, month, trigger age,
-and prior user, bot, decisive-review, force-push, and total public activity. A
-secondary decomposition also includes the 48-hour ownership route. The reply
-window is varied over 1, 6, 24, and 48 hours. Repository fixed effects and
-leave-one-product-pair-out fits are sensitivity analyses.
-
-A specificity control removes PRs with no public discussion by hour 48. It
-compares an exact parent edge with later reviews or PR comments that do not
-point to the trigger. An overlap-weighted fit is a second measured-balance
-check. This control asks whether the edge differs from generic visible
-discussion; it still cannot tell whether either discussion understood or
-resolved the review point.
-
-A fourth, wider view fits all four post-trigger states in one model on the full
-1,067-PR cohort, against a no-visible-activity reference. It is the final block
-of Table~\ref{tab:s-addressed-edge}. Relative to the 426 PRs with no visible
-activity by hour 48, later merge is $+24.2$ points higher for the 109 exact-edge
-PRs and $+10.0$ points higher for the 506 non-exact-discussion PRs. The 26
-movement-only PRs sit highest at $+38.8$ points, on a very wide interval, which
-is one reason the active-discussion subset rather than this four-state model
-remains the primary specificity contrast. The gradient is also consistent with
-any visible activity by hour 48 marking a PR that is still being worked on, so
-it should not be read as an ordering of response types.
-
-For the route model, automation with no user event is the reference. Controls
-include author product, reviewer product, source, month, trigger age, and the
-same pre-trigger activity measures. Standard errors cluster by repository.
-Table~\ref{tab:s-addressed-edge} gives the exact-edge sensitivities and
-Table~\ref{tab:s-cohort}, Panel B, gives every route contrast. Both estimates are
-integration markers, not effects of adding an agent or a user
-(Section~\ref{app:boundary}).
+The exact-edge specification, its reply-window variants, and the two sensitivity
+fits are named in Table~\ref{tab:s-specifications}. Two further rows of Panel A
+need a word here. The specificity control removes PRs with no public discussion
+by hour 48 and compares an exact parent edge with later reviews or PR comments
+that do not point to the trigger; an overlap-weighted fit is a second
+measured-balance check. The four-state gradient is a wider view that fits all
+four post-trigger states in one model on the full 1,067-PR cohort against a
+no-visible-activity reference: relative to the 426 PRs with no visible activity
+by hour 48, later merge is $+24.2$ points higher for the 109 exact-edge PRs and
+$+10.0$ points higher for the 506 non-exact-discussion PRs, while the 26
+movement-only PRs sit highest at $+38.8$ points on a very wide interval. That is
+one reason the active-discussion subset rather than the four-state model remains
+the primary specificity contrast, and the gradient should not be read as an
+ordering of response types.
 
 \subsection{Scope, balance, bounds, and design extensions}\label{app:bounds}
 
 Table~\ref{tab:s-sensitivity} collects every RQ3 robustness check in one place,
-with a leading column naming which check each row is. This subsection explains
-the six blocks in the order they appear.
+with a leading column naming which check each row is.
 
-\paragraph{What the cohort contains.} The landmark keeps PRs still open at hour
-48. Of 3,942 cross-product inline-trigger PRs with a complete 30-day horizon,
-2,875 close and 2,528 merge at or before hour 48. The 1,067-PR cohort is the
-27\% that remain. The estimates describe that slower-resolving group. For reply
+\paragraph{Cohort and exposure composition.} Of 3,942 cross-product
+inline-trigger PRs with a complete 30-day horizon, 2,875 close and 2,528 merge
+at or before hour 48; the 1,067-PR cohort is the 27\% that remain. For reply
 windows shorter than the landmark the exposure could in principle also influence
 whether a PR is still open at hour 48, which is a second reason to treat the
-48-hour window as primary and the shorter windows as sensitivity analyses.
+48-hour window as primary.
 
-\paragraph{What the exposure contains.} The exposure rule
-(Section~\ref{app:reply-target}) does not require another product to write the
-reply. Of the 128 exposure events on the 109 exposed PRs, 105 are written by
-user accounts, 76 of them by the PR author's own account. Thirteen are written
-by the triggering product replying to its own comment, and three by a different
-mapped product. The exposure is therefore a public acknowledgement of an agent's
-review point, and in this cohort it is almost always a person who writes it.
-Because of that composition, the primary model is refitted under two stricter
-definitions on the same cohort. Removing replies written by the triggering
-product gives $+15.9$ percentage points (95\% interval: $5.4$ to $26.3$) on 99
-exposed PRs. Requiring a user-account reply gives $+17.0$ points ($6.4$ to
-$27.6$) on 97. The estimate is not produced by a product answering itself. Only
-three PRs carry an exact reply from a different mapped product, which is too
-few to model; that count is the RQ1 scarcity result restated at the outcome
-stage.
+The exposure rule (Section~\ref{app:reply-target}) does not require another
+product to write the reply, and the composition rows say who did: of the 128
+exposure events on the 109 exposed PRs, 105 are written by user accounts, 76 of
+them by the PR author's own account, 13 by the triggering product replying to
+its own comment, and three by a different mapped product. Because of that, the
+primary model is refitted under two stricter definitions on the same cohort.
+Removing replies written by the triggering product gives $+15.9$ percentage
+points (95\% interval: $5.4$ to $26.3$) on 99 exposed PRs; requiring a
+user-account reply gives $+17.0$ points ($6.4$ to $27.6$) on 97. The estimate is
+not produced by a product answering itself. Only three PRs carry an exact reply
+from a different mapped product, too few to model, which is the RQ1 scarcity
+result restated at the outcome stage.
 
-\paragraph{Measured balance and overlap.} The balance block gives the exposed
-mean, the unexposed mean, and the standardized mean difference for all six
-pre-trigger controls at all four reply windows. No absolute standardized
-difference exceeds 0.16. The largest values sit on log pre-trigger events,
-trigger age, and pre-trigger decisive reviews. The overlap block adds the
-propensity-score distribution of the 109 exact-edge PRs and the 506
-non-exact-discussion PRs. The two groups share most of their range, but the edge
-group extends further into high scores. Good balance on measured variables is a
-description of this sample. It is not evidence about task difficulty, maintainer
-intent, or anything else the public trace does not record.
+\paragraph{Measured balance and overlap.} Because the four reply windows agree,
+each pre-trigger control shows the 48-hour standardized mean difference and the
+range the four windows cover. No absolute value exceeds 0.16; the largest sit on
+log pre-trigger events, trigger age, and pre-trigger decisive reviews. The
+overlap rows give the propensity-score distribution of the 109 exact-edge PRs
+and the 506 non-exact-discussion PRs: they share most of their range, but the
+edge group extends further into high scores. Balance on measured variables
+describes this sample; it is not evidence about task difficulty or maintainer
+intent.
 
-\paragraph{Bounding the unmeasured structure.} Because the exact-edge contrast
-carries a headline number, we measure how much unmeasured structure would be
-needed to remove it instead of only warning that some could exist. First, the
-adjusted risk difference is rescaled to an approximate risk ratio using the
-unexposed later-merge rate, and the E-value is
-$\mathrm{RR}+\sqrt{\mathrm{RR}(\mathrm{RR}-1)}$. An unmeasured factor would have
-to be associated with both the exact edge and later merge at least this strongly,
-conditional on every measured control, before it could explain the result. The
-E-value exceeds 2.2 at all four reply windows. Second, the tipping grid states
-the same requirement on the risk-difference scale without a ratio approximation:
-for one omitted binary pre-trigger factor, the induced bias is exactly the
-product of its prevalence difference between exposed and unexposed PRs and its
-own later-merge difference, and the table reports the outcome difference
-required at two prevalence gaps.
+\paragraph{Bounding the unmeasured structure.} Four bounds follow, in table
+order. The E-value rescales the adjusted risk difference to an approximate risk
+ratio using the unexposed later-merge rate and reports
+$\mathrm{RR}+\sqrt{\mathrm{RR}(\mathrm{RR}-1)}$, which exceeds 2.2 at all four
+windows. The tipping grid states the same requirement on the risk-difference
+scale without a ratio approximation: for one omitted binary pre-trigger factor
+the induced bias is exactly the product of its prevalence difference between
+exposed and unexposed PRs and its own later-merge difference, and the table
+gives the outcome difference required at two prevalence gaps.
 
-Third, three negative-control outcomes are re-estimated with the same model.
-Each was already complete before the trigger, so the exposure cannot produce it
-and the expected estimate is null. Eleven of twelve models cover the null. The
-exception is the one-hour reply window against pre-trigger user activity
-($+16.7$ points, 95\% interval: $4.9$ to $28.4$), which is a genuine finding
-rather than noise: a reply inside one hour is selected by PRs that already had a
-person acting on them. That is why the primary window is 48 hours. At 48 hours
-the same placebo is $+7.0$ points ($-1.7$ to $15.7$). We describe that as
-covering the null, not as a demonstrated zero: it is an underpowered residual of
-about seven points in the direction a sceptical reader would expect, and it is
-the main reason the measured controls should not be treated as sufficient.
+The negative controls were each complete before the trigger, so the exposure
+cannot produce them and the expected estimate is null. Two of the three cover
+the null at every window and are reported as a range. The exception, pre-trigger
+user activity, keeps a row per window: at one hour it is $+16.7$ points (95\%
+interval: $4.9$ to $28.4$), which is a genuine finding rather than noise, because
+a reply inside one hour is selected by PRs that already had a person acting on
+them. That is why the primary window is 48 hours, where the same placebo is
+$+7.0$ points ($-1.7$ to $15.7$). We call that covering the null, not a
+demonstrated zero: it is an underpowered residual of about seven points in the
+direction a sceptical reader would expect, and it is the main reason the
+measured controls should not be treated as sufficient.
 
-Fourth, randomisation inference permutes the exposure label within each
-repository, holding that repository's exposed count fixed, and refits the model
-2,000 times from a fixed seed. This gives a design-based reference distribution
-that does not rely on a clustered normal approximation with only 109 exposed
-PRs. Two versions are reported. The unconditional version permutes across the
-whole cohort, but its reference distribution is not centred at zero: 423 of 469
-repositories contain no exposure variation, and without repository fixed effects
-the between-repository part of the coefficient is invariant to a
-within-repository permutation. The conditional version therefore restricts the
-fit to the 46 repositories that can actually be re-randomised and adds
-repository fixed effects. Its reference distribution is centred on zero, the
-observed within-repository estimate is $+16.4$ points, and the two-sided $p$ is
-$0.007$. The conditional version is the one quoted in the article; the
-unconditional version is retained so that the difference is on the record.
+Randomisation inference permutes the exposure label within each repository,
+holding that repository's exposed count fixed, and refits 2,000 times from a
+fixed seed, which gives a design-based reference that does not lean on a
+clustered normal approximation with only 109 exposed PRs. The unconditional
+version permutes across the whole cohort, and its reference is not centred at
+zero: 423 of 469 repositories contain no exposure variation, and without
+repository fixed effects the between-repository part of the coefficient is
+invariant to a within-repository permutation. The conditional version therefore
+restricts the fit to the 46 repositories that can actually be re-randomised and
+adds repository fixed effects; its reference is centred on zero, the observed
+within-repository estimate is $+16.4$ points, and the two-sided $p$ is $0.007$.
+The conditional version is the one quoted in the article, and the unconditional
+version is kept so the difference is on the record.
 
 These are fragility bounds. A confounder above the reported strength would still
-overturn the association, and no check here converts it into a causal effect or
-into evidence that the review point was resolved. The measured controls also
-contain no proxy for task difficulty, so the E-value should be read as the
-strength required beyond the observed public activity record, not beyond
-everything that matters.
+overturn the association, no check here converts it into a causal effect, and
+the measured controls contain no proxy for task difficulty, so the E-value is
+the strength required beyond the observed public activity record and no more.
 
-\paragraph{Two design-level extensions.} The bounds above all keep the hour-48
-cohort fixed. Two further analyses change the design instead, and the last block
-of the table reports both. The first removes the cohort restriction. Every
-cross-product inline-trigger PR with a complete 30-day horizon is followed from
-its trigger. Follow-up is cut into eleven intervals, short at first and longer
-later, and each PR contributes one row per interval it survives. The exact
-addressed edge enters as a time-varying covariate: a PR is unexposed until its
-own first exact reply and exposed afterwards. This is what stops the model from
+\paragraph{Two design-level extensions.} The bounds above keep the hour-48
+cohort fixed; two further analyses change the design instead. The first drops
+the cohort restriction: every cross-product inline-trigger PR with a complete
+30-day horizon is followed from its trigger, follow-up is cut into eleven
+intervals, and the exact addressed edge enters as a time-varying covariate, so a
+PR is unexposed until its own first exact reply. That is what stops the model
 crediting the edge with time that passed before the reply existed. The estimate
 is an odds ratio for merging in the next interval, from a pooled logistic model
-with interval indicators and repository-clustered standard errors. It stays near
-1.7 across all three control sets.
+with interval indicators and repository-clustered standard errors; it stays near
+1.7 across all three control sets, which is why those three share one row.
 
-The second asks who wrote the edge. Each exposed PR is labelled by the account
-that wrote its first exact reply, and that account is checked against the same
-strict prior-history rule used for RQ2: a submitted review by the same account,
-in the same repository, on a different PR, strictly before the trigger. The
-resulting split is large. It does not survive repository fixed effects. Prior
-reviewers and newcomers are mostly found in different repositories, and those
-repositories differ in how often anything merges. We therefore report the split
-as a description of where the association sits. It is not evidence that
-repository familiarity is what makes the reply work, and the article says so.
+The second asks who wrote the edge, labelling each exposed PR by the account
+that wrote its first exact reply and checking that account against the strict
+prior-history rule used for RQ2. The split is large and does not survive
+repository fixed effects. Prior reviewers and newcomers are mostly in different
+repositories, and those repositories differ in how often anything merges, so the
+split describes where the association sits rather than showing that repository
+familiarity is what makes the reply work.
 
 \input{apx_tables_rq3.tex}
 \FloatBarrier
 
-\subsection{Placebo exposures and what the reply says}\label{app:specificity}
+\subsection{Placebo exposures, reply content, and who wrote the edge}\label{app:specificity}
 
 Everything above tests whether the addressed-edge association is fragile. It
 does not test whether the association is about the \emph{anchoring} at all, and
-Table~\ref{tab:s-specificity}, Panel A, does. Three placebo exposures replace
-the real edge in turn: a reply anchored to a different inline comment on the
-same PR, a permuted anchor that keeps every reply event but reassigns which
-replying PR counts as anchored, and an edge time drawn independently of the
-PR's own history. The off-target reply gives the same estimate as the real
-edge, and the permuted-anchor null is centred at 16.8 points against an
-observed 17.3, so the anchoring itself adds nothing: what the estimate tracks
-is that somebody replied inline within the window, which is exactly the coarse
-diagnostic in the last row. Only the time-shifted null is centred near zero, so
-the landmark rule alone does not manufacture the contrast. Panel B then reads
-the reply text. Of 105 user-written edges, 56\% are substantive engineering
-prose, 27\% are acknowledgement only, and 17\% route the point onward to a
-machine or are GitHub's own button text; a full hand reading of all 105 texts
-disagrees with the rule on ten. The contrast survives when only a substantive
-reply counts as exposure and is indistinguishable from zero when only a routing
-reply does, although both subgroups are small.
+Table~\ref{tab:s-specificity} does, in four panels.
 
-\subsection{Automation heuristics on the accounts that write the edges}\label{app:actors}
+Panel A replaces the real edge with three placebo exposures in turn: a reply
+anchored to a different inline comment on the same PR, a permuted anchor that
+keeps every reply event but reassigns which replying PR counts as anchored, and
+an edge time drawn independently of the PR's own history. The article reports
+what this shows; the panel adds the null distributions, their percentile
+positions, and the joint model that puts the real edge and the off-target reply
+in one fit. Only the time-shifted null is centred near zero, so the landmark
+rule alone does not manufacture the contrast.
 
-RQ3 rests on the claim that a person, not a script, writes the addressed edge,
-and that claim is an account-type label rather than a verified observation.
-Table~\ref{tab:s-actors} stress-tests it. Panel A scores the 80 user accounts
-that write the 105 user-written edges on four pre-registered machine-likeness
-heuristics -- template repetition, regular inter-comment timing, a missing
-diurnal dip, and sustained comment volume -- using 7,141 of their earlier
-comments. One account trips the two-heuristic rule and seven trip any single
-heuristic, and the highest machine-likeness score in the set is 0.47. Panel B
-re-estimates the later-merge contrast after dropping the affected PRs; it moves
-up rather than down, and stays interval-positive even under the loosest drop
+Panel B classifies the reply text under a four-rule priority ladder fixed in
+advance, and reports both the rule's counts and a full hand reading of all 105
+texts, which disagree on ten rows, always in the conservative direction.
+
+Panels C and D stress-test the claim that a person, not a script, writes the
+edge, since that claim is an account-type label rather than a verified
+observation. Panel C scores the 80 user accounts that write the 105 user-written
+edges on four pre-registered machine-likeness heuristics, using 7,141 of their
+earlier comments; the highest machine-likeness score in the set is 0.47. Panel D
+re-estimates the later-merge contrast after dropping the affected PRs, and it
+moves up rather than down, staying interval-positive even under the loosest drop
 rule. Reading the flagged accounts by hand shows the repetition that drives the
 template heuristic is hand-issued agent invocations and platform button text
-rather than generated prose. These are behavioural proxies over public traces,
-so they cannot detect a person pasting model output; they can only show that
-the actor label is not obviously wrong.
+rather than generated prose. These are behavioural proxies over public traces:
+they cannot detect a person pasting model output, only show that the actor label
+is not obviously wrong.
 
 \input{apx_tables_specificity.tex}
 \FloatBarrier
 
-\section{RQ4 details: task context across the boundary}\label{app:rq4}
+\section{RQ4: task context across the boundary}\label{app:rq4}
 
 RQ4 asks whether a pre-trigger property of the change alters who answers a
-review point. The exposure is an issue reference written in the pull request
-body. Table~\ref{tab:s-task-context} carries every cell and every model.
-
-Two measurement decisions shape the design and both are enforced in code rather
+review point. Table~\ref{tab:s-task-context} carries every cell and every model.
+Two measurement decisions shape the design, and both are enforced in code rather
 than assumed.
 
 First, the outcome is rebuilt from the raw inline-comment table for both
@@ -629,38 +547,30 @@ reviewer relations. The frozen response-event product holds cross-product
 triggers only, so using it would give the same-product arm an outcome that is
 empty by construction rather than by observation.
 
-Second, the reply target names the first comment of a thread, as
-Section~\ref{app:reply-target} records. A trigger that sits mid-thread therefore
-cannot receive such a reply at all. That restriction is mild for cross-product
+Second, the reply target names the first comment of a thread
+(Section~\ref{app:reply-target}), so a trigger that sits mid-thread cannot
+receive such a reply at all. That restriction is mild for cross-product
 triggers, at 0.4 per cent, and severe for same-product triggers, at 46 per cent.
 Comparing the two arms without restricting to thread-root triggers would set a
 possible outcome against an impossible one, so the primary population is
 thread-root triggers and the unrestricted version is reported beside it.
 
-Among thread-root triggers, a same-product review point is answered at about a
-fifth whether or not the body links an issue. A cross-product review point is
-answered at 12.7 per cent without a link and 28.3 per cent with one. The
-difference between those two differences is $+13.3$ percentage points with
-repository and month fixed effects, and $+14.6$ with repository fixed effects
-alone. Dropping each of the fifteen most influential repositories in turn leaves
-a range of $+11.4$ to $+16.1$ points. Shuffling the link label inside each
-repository, the same device used against the order claim in
-Section~\ref{app:rq1}, produces a reference distribution centred near zero
-against which the observed value has a two-sided $p$ of $0.001$.
-
-The direction of the main effect is not new. Issue linkage is already reported
-to relate to how agent-authored pull requests fare while showing no such
-relation for human-authored ones \citep{yoshioka2026meaningful}. What the
-interaction adds is that the link behaves as a property of the boundary rather
-than of the pull request: the same link does nothing when author and reviewer
-share a product.
+The table adds three things the article states without their supporting rows:
+the specification with repository fixed effects alone ($+14.6$ points) beside
+the one with repository and month ($+13.3$), the unrestricted population,
+and the leave-one-repository-out range of $+11.4$ to $+16.1$ points over
+fifteen refits.
 
 Three limits are worth stating plainly. The release carries no timestamp for the
-issue link and pull request bodies can be edited, so the link is assumed rather
-than shown to precede the trigger. The interaction cell holds 364 pull requests,
-which supports the interval reported and no finer split. And an answered review
-point is still not a resolved one (Section~\ref{app:boundary}): this section
-measures who replies, not what the reply achieved.
+issue link and PR bodies can be edited, so the link is assumed rather than shown
+to precede the trigger. The interaction cell holds 364 pull requests, which
+supports the interval reported and no finer split. And an answered review point
+is still not a resolved one (Section~\ref{app:boundary}): this section measures
+who replies, not what the reply achieved. The direction of the main effect is
+not new; issue linkage is already reported to relate to how agent-authored pull
+requests fare while showing no such relation for human-authored ones
+\citep{yoshioka2026meaningful}. What the interaction adds is that the link
+behaves as a property of the boundary rather than of the pull request.
 
 \input{apx_tables_task_context.tex}
 \FloatBarrier
@@ -668,35 +578,33 @@ measures who replies, not what the reply achieved.
 \section{Evidence we screened and did not promote}\label{app:screened}
 
 Three bodies of evidence looked, at first, as though they could carry a claim.
-None of them survived its own gate. We record them together because the reason
-is always the same: the evidence does not observe the unit the article measures.
+None survived its own gate, and the reason is always the same: the evidence does
+not observe the unit the article measures.
 
 \subsection{Structural review overlap and the semantic coding gate}\label{app:collision}
 
 An exploratory cohort finds comments from two mapped reviewer products at the
-same original commit, path, and diff position. This is a structural overlap,
-not semantic duplication or complementarity. Table~\ref{tab:s-external},
-Panel A, reports the population, timing, concentration, and frozen gates.
+same original commit, path, and diff position. This is a structural overlap, not
+semantic duplication or complementarity. Table~\ref{tab:s-external}, Panel A,
+reports the population, timing, concentration, and frozen gates.
 
 The semantic gate is kept separate because designed multi-agent review already
 shows that structured disagreement and role separation can matter
-\citep{qiu2026adversarial,zhang2026reporeviewer}. Public co-location alone does
-not show the same mechanism.
-
-Both blinded coder packets contain the complete structural population and omit
-product labels. Semantic categories remain empty. No product-general claim is
-allowed because one product pair exceeds the frozen concentration threshold.
-Even after coding, a headline requires agreement of at least $\kappa=0.70$, no
-more than 30\% unclear or boilerplate cases, and enough support for any named
-category. Automated timing and exact-text checks cannot replace this coding.
+\citep{qiu2026adversarial,zhang2026reporeviewer}, and public co-location alone
+does not show the same mechanism. Both blinded coder packets contain the
+complete structural population and omit product labels. Semantic categories
+remain empty. No product-general claim is allowed because one product pair
+exceeds the frozen concentration threshold. Even after coding, a headline
+requires agreement of at least $\kappa=0.70$, no more than 30\% unclear or
+boilerplate cases, and enough support for any named category. Automated timing
+and exact-text checks cannot replace this coding.
 
 \subsection{Evidence ladder, replication gate, and attribution concordance}
 \label{app:ladder}
 
-Table~\ref{tab:s-external}, Panel B, records the evidence role assigned to
-each external source after schema, license, overlap, and construct
-checks; the failed exact-edge replication gate; and the independent attribution
-check.
+Table~\ref{tab:s-external}, Panel B, records the evidence role assigned to each
+external source after schema, license, overlap, and construct checks; the failed
+exact-edge replication gate; and the independent attribution check.
 
 A large source does not enter the analysis merely because it contains agent
 activity. It must preserve the same event unit and observation horizon. Sources
@@ -715,9 +623,9 @@ is a failed replication gate, not a claim that public connections cannot occur.
 
 The third block joins the fixed landmark cohort to the independently released
 AI-to-AI cross-product cohort derived from CodAGE \citep{selvanayagam2026a2a}.
-The join uses repository, PR number, and exact product labels; it imports no
+The join uses repository, PR number, and exact product labels, and imports no
 outcome or post-trigger feature. Product-pair attribution and trigger timing
-agree for nearly all observed overlap. This supports the event anchors, but not
+agree for nearly all observed overlap. This supports the event anchors but not
 external generalization: the sources observe some of the same public GitHub PRs,
 and only nine overlapping PRs have an exact addressed edge. The wide outcome
 intervals are retained as an appendix sensitivity and not used as a headline.
@@ -727,88 +635,55 @@ intervals are retained as an appendix sensitivity and not used as a headline.
 SWE-PRBench contains real merged PRs and human-written initiating feedback
 \citep{kumar2026sweprbench}, but it removes the usable reply path, uses
 synthetic per-PR comment identifiers, and supplies no event time or review-batch
-identifier. Its annotation files and PR-level summary counts also disagree, so
-the annotation files are the only accepted source of record. The
-AIReviewAction artifact linked to the developer-response study
-\citep{cynthia2026responses} has mixed comment and file-fragment grain. Its
-actionability and response labels are model-derived, with a small double-human
-audit, and its ``addressed'' label means an inferred later code change rather
-than an exact public reply. Its full-label lineage is also incomplete. A
-leave-one-source-out text-transfer check failed its frozen generalization gate,
-so no transferred label enters the AIDev analysis. These sources may inform a
-future codebook; they do not validate the four RQs.
+identifier; its annotation files and PR-level summary counts also disagree, so
+the annotation files are the only accepted source of record. The AIReviewAction
+artifact linked to the developer-response study \citep{cynthia2026responses} has
+mixed comment and file-fragment grain. Its actionability and response labels are
+model-derived, with a small double-human audit, and its ``addressed'' label
+means an inferred later code change rather than an exact public reply. Its
+full-label lineage is also incomplete, and a leave-one-source-out text-transfer
+check failed its frozen generalization gate, so no transferred label enters the
+AIDev analysis. These sources may inform a future codebook; they do not validate
+the four RQs.
 
 \input{apx_tables_external.tex}
 \FloatBarrier
 
-\section{Data quality, leakage, and the variable dictionary}\label{app:quality}
-
-Table~\ref{tab:s-quality} carries both halves of the measurement contract. Its
-first block lists the load-bearing validation gates. Event order must be
-strictly after the trigger and inside its declared window. Each PR must have one
-state per threshold. Review batches must be distinct. Prior-history rows must
-exclude the focal PR and all future or equal timestamps. Landmark features must
-occur before hour 48, and outcomes only after it.
-
-Nine exact duplicate force-push rows occur on two PRs. The analytical event view
-deduplicates them. The first-state assignment is identical with and without the
-surplus rows. Ordinary \texttt{committed} and \texttt{reviewed} timeline events
-have no usable timestamps in this release, so they are excluded from temporal
-claims.
-
-The second block lists every column of the derived landmark cohort with its
-type, its prose definition, and the leakage tag stored beside it. The tag has
-three values: available at or before the trigger, available after the trigger by
-hour 48, or an outcome read only after hour 48. This is the column-by-column
-form of the pre-trigger-only claim. The primary specification draws only on
-columns tagged at or before the trigger. Columns tagged after the trigger appear
-only in the secondary route decomposition and in the exposure itself. Columns
-tagged as outcome are never used as inputs. The block records where each value
-can be observed, not whether it is a good measure of the thing it is named
-after.
-
-\input{apx_tables_quality.tex}
-\FloatBarrier
-
 \section{The record: what we ran, and what we kept}\label{app:reproduction}
-
-\subsection{Disposition of every experiment}\label{app:disposition}
-
-Table~\ref{tab:s-record}, Panel B, records which attractive exploratory
-stories were kept, moved to this appendix, or rejected. Results are rejected when their
-construct cannot be observed, a stronger comparison removes the pattern, or a
-placebo reproduces it. This policy prevents the paper from selecting only
-positive estimates.
 
 \subsection{Run order}\label{app:runorder}
 
-The reproducibility bundle pins the dataset revision; creates cross-product
-triggers, response events, and landmark cohorts; runs all robustness,
-falsification, and sensitivity analyses; generates the six main figures, the two appendix figures, and this appendix's
-tables;
-executes the automated test suite; compiles both PDFs; and scans the LaTeX logs.
-Public release must exclude private coder keys and any restricted raw material.
+Table~\ref{tab:s-record}, Panel A, is the reproduction contract: the ordered
+sequence of commands, what each step produces, and the frozen row count of one
+of its products where a stable count exists. The sequence pins the dataset
+revision; creates cross-product triggers, response events, and landmark cohorts;
+runs all robustness, falsification, and sensitivity analyses; generates the
+article figures, the two appendix figures, and this appendix's tables; executes
+the automated test suite; compiles both PDFs; and scans the LaTeX logs.
 
-Table~\ref{tab:s-record}, Panel A, gives that sequence step by step, with what
-each step produces and the frozen row count of one of its products where a stable count
-exists. The order is read from the repository README, so the table cannot drift
-from the documented commands. A rerun that changes a listed count is a signal to
-compare inputs rather than to accept the new number. The project requires Python
-3.11 or newer, and \texttt{uv.lock} pins the fully resolved dependency graph, so
-\texttt{uv sync} installs the same package versions that produced these tables.
-The table records the order and the sizes. It does not certify that a rerun on a
-different dataset revision would give the same estimates. Resampling seeds and
-draw counts are in Table~\ref{tab:s-specifications}
-(Section~\ref{app:specifications}).
+A rerun that changes a listed count is a signal to compare inputs rather than to
+accept the new number. The project requires Python 3.11 or newer, and a lock
+file pins the fully resolved dependency graph, so a sync installs the same
+package versions that produced these tables. The table records the order and the
+sizes; it does not certify that a rerun on a different dataset revision would
+give the same estimates. Resampling seeds and draw counts are in
+Table~\ref{tab:s-specifications} (Section~\ref{app:specifications}).
 
-\subsection{External raw packages}\label{app:external-packages}
+External raw packages are excluded from the release. Their revisions, licenses,
+sizes, and integrity checks are recorded in a frozen acquisition manifest, and
+separate profilers recreate the tracked aggregate audits when the pinned
+third-party downloads are available. The standard build consumes those aggregate
+records; it makes no network calls and never silently replaces a missing
+external field with a negative event. The public release excludes private coder
+keys and any restricted raw material.
 
-External raw packages are excluded from the release. Their revisions,
-licenses, sizes, and integrity checks are recorded in a frozen acquisition
-manifest. Separate profilers recreate the tracked aggregate audits when the
-pinned third-party downloads are available. The standard paper build consumes
-those aggregate records and does not make network calls or silently replace a
-missing external field with a negative event.
+\subsection{Disposition of every experiment}\label{app:disposition}
+
+Table~\ref{tab:s-record}, Panel B, records which attractive exploratory stories
+were kept, moved to this appendix, or rejected. Results are rejected when their
+construct cannot be observed, a stronger comparison removes the pattern, or a
+placebo reproduces it. Keeping the rejected rows on the record is what stops the
+paper from selecting only positive estimates.
 
 \input{apx_tables_reproduction.tex}
 \FloatBarrier

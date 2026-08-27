@@ -5,45 +5,35 @@
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.22\textwidth}L{0.57\textwidth}L{0.17\textwidth}@{}}
-\caption{Attribution allowlist and the glossary of load-bearing terms.}\label{tab:s-definitions}\\
+\begin{longtable}{@{}L{0.27\textwidth}L{0.71\textwidth}@{}}
+\caption{Attribution allowlist and the rules behind the load-bearing labels.}\label{tab:s-definitions}\\
 \endfirsthead
-\caption*{Attribution allowlist and the glossary of load-bearing terms. (continued)}\\
+\caption*{Attribution allowlist and the rules behind the load-bearing labels. (continued)}\\
 \endhead
 \toprule
-\multicolumn{3}{@{}l}{\textbf{Panel A. Attribution allowlist}} \\
+\multicolumn{2}{@{}l}{\textbf{Panel A. Attribution allowlist}} \\
 \midrule
-Mapped product & Exact GitHub login(s), matched case-insensitively &  \\
+Mapped product & Exact GitHub login(s), matched case-insensitively \\
 \midrule
-\texttt{Claude\_Code} & \texttt{claude[bot]} &  \\
-\texttt{Copilot} & \texttt{copilot}, \texttt{copilot-pull-request-reviewer[bot]}, \texttt{copilot-swe-agent[bot]} &  \\
-\texttt{Cursor} & \texttt{cursor[bot]} &  \\
-\texttt{Devin} & \texttt{devin-ai-integration[bot]} &  \\
-\texttt{Google\_Jules} & \texttt{google-labs-jules[bot]} &  \\
-\texttt{OpenAI\_Codex} & \texttt{chatgpt-codex-connector[bot]} &  \\
+\texttt{Claude\_Code} & \texttt{claude[bot]} \\
+\texttt{Copilot} & \texttt{copilot}, \texttt{copilot-pull-request-reviewer[bot]}, \texttt{copilot-swe-agent[bot]} \\
+\texttt{Cursor} & \texttt{cursor[bot]} \\
+\texttt{Devin} & \texttt{devin-ai-integration[bot]} \\
+\texttt{Google\_Jules} & \texttt{google-labs-jules[bot]} \\
+\texttt{OpenAI\_Codex} & \texttt{chatgpt-codex-connector[bot]} \\
 \midrule
-\multicolumn{3}{@{}l}{\textbf{Panel B. Glossary of load-bearing terms}} \\
+\multicolumn{2}{@{}l}{\textbf{Panel B. Terms whose exact rule the article does not state}} \\
 \midrule
-Term & Definition in the code & Where it is defined \\
+Term & The rule the analysis code applies \\
 \midrule
-Decisive review & A submitted review whose state is APPROVED or CHANGES\_REQUESTED. Commented and pending reviews are not decisive. & Landmark cohort builder \\
-Branch movement & A \texttt{head\_ref\_force\_pushed} timeline event on the PR. It is visible movement of the branch, not a verified repair. & Timeline event filter \\
-Untyped activity & A post-trigger event row that is not a user account, a mapped product, or another bot. It is the residual class and is always reported together with branch movement. & First-state classifier \\
-State: user account & The event's GitHub user type is User. User evidence takes precedence over product mapping. & First-state classifier \\
-State: mapped product & The event is not a User event and its account is on the six-product allowlist. & First-state classifier \\
-State: other bot & The event's user type is Bot and the account is not on the allowlist. & First-state classifier \\
-State: branch movement or untyped activity & Every remaining event row, which in this release is branch movement and untyped rows. & First-state classifier \\
-State: no later action within seven days & No post-burst event occurs inside the seven-day response window. & First-state classifier \\
-Role: the PR author's own user account & A User account whose login equals the PR author's login. & Response actor roles \\
-Role: the PR author's product & A mapped product equal to the product attributed to the PR author. & Response actor roles \\
-Role: the triggering product & A mapped product equal to the product that wrote the trigger. & Response actor roles \\
-Role: a different mapped product & Any other account on the six-product allowlist. & Response actor roles \\
-Role: an unmapped bot & A Bot account that is not on the allowlist. & Response actor roles \\
-Role: another user account & Any other User account. & Response actor roles \\
-Role: unknown actor & An event with no usable user type. The class is kept so that the seven roles stay exhaustive. & Response actor roles \\
-Automation episode & A run of post-burst events on one PR in which each event follows the previous one by no more than the gap parameter; a larger gap starts a new episode. The primary gap is five minutes, and the first five minutes after the trigger are excluded before episodes are built. & Episode sessionization \\
-Episode state & The highest-priority state inside the episode, using the same priority order as the tie rule. At the five-minute gap, 2,529 of 14,842 episodes mix states. & Episode sessionization \\
+Decisive review & A submitted review whose state is APPROVED or CHANGES\_REQUESTED. Commented and pending reviews are not decisive. \\
+Branch movement & A force-push event on the PR branch. It is visible movement of the branch, not a verified repair. \\
+Untyped activity & A post-trigger event row that is not a user account, a mapped product, or another bot. It is the residual class and is always reported together with branch movement. \\
+The five first-state classes, in priority order & (1) user account, the event's GitHub user type is User, which takes precedence over product mapping; (2) mapped product, a non-User account on the six-product allowlist; (3) other bot, a Bot account not on the allowlist; (4) branch movement or untyped activity, every remaining event row; (5) no later action within seven days. The classes are mutually exclusive and cover every PR at every burst threshold. \\
+The seven response actor roles, in evaluation order & (1) the PR author's own user account, a User whose login equals the author's; (2) the PR author's product; (3) the triggering product; (4) a different mapped product; (5) an unmapped bot; (6) another user account; (7) unknown actor, an event with no usable user type, kept so the roles stay exhaustive. The first matching branch wins. \\
+Automation episode & A run of post-burst events on one PR in which each event follows the previous one by no more than the gap parameter; a larger gap starts a new episode. The primary gap is five minutes, and the first five minutes after the trigger are excluded before episodes are built. \\
+Episode state & The highest-priority state inside the episode, using the same priority order as the tie rule. At the five-minute gap, 2,529 of 14,842 episodes mix states. \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} Panel A is the exact public-account allowlist used for reviewer-product attribution; logins are matched case-insensitively. Only exact aliases are mapped. Similar names and unknown bots stay outside the six-product registry. Panel B is read from the analysis code: each definition is the rule the code applies, not an interpretation of it. The five states are mutually exclusive and cover every PR at every burst threshold. The seven roles are evaluated in the listed order, so the first matching branch wins. None of these labels reports intent, private activity, or whether a review point was resolved.
+\noindent\footnotesize \textit{Note:} Panel A is the exact public-account allowlist used for reviewer-product attribution. Only exact aliases are mapped; similar names and unknown bots stay outside the six-product registry. Panel B is read back from the analysis code, so each entry is the rule the code applies rather than an interpretation of it. Terms the article already defines are not repeated here. None of these labels reports intent, private activity, or whether a review point was resolved.
 \endgroup

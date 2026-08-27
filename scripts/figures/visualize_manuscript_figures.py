@@ -963,7 +963,7 @@ def figure_boundary() -> None:
     legend = ax.legend(
         handles=list(handles),
         loc="lower left",
-        bbox_to_anchor=(-0.005, -0.045),
+        bbox_to_anchor=(-0.005, 0.015),
         frameon=False,
         fontsize=7.1,
         handletextpad=0.4,
@@ -1199,12 +1199,12 @@ def figure_sensitivity() -> None:
         measured["outcome_gap_pp"].abs().to_numpy().argmax()
     ]
     ax.annotate(
-        "every factor we did measure" + chr(10) + "sits down here",
+        "the factors we" + chr(10) + "did measure",
         xy=(
             float(strongest["prevalence_gap_pp"]),
             abs(float(strongest["outcome_gap_pp"])),
         ),
-        xytext=(13.0, 30.0),
+        xytext=(1.0, 34.0),
         ha="left",
         va="center",
         fontsize=7.1,

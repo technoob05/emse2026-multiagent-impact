@@ -5,10 +5,10 @@
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.27\textwidth}L{0.06\textwidth}L{0.07\textwidth}L{0.10\textwidth}L{0.16\textwidth}L{0.26\textwidth}@{}}
-\caption{Placebo exposures and what the reply actually says.}\label{tab:s-specificity}\\
+\begin{longtable}{@{}L{0.26\textwidth}L{0.07\textwidth}L{0.09\textwidth}L{0.11\textwidth}L{0.15\textwidth}L{0.28\textwidth}@{}}
+\caption{Placebo exposures, what the reply says, and whether a person wrote it.}\label{tab:s-specificity}\\
 \endfirsthead
-\caption*{Placebo exposures and what the reply actually says. (continued)}\\
+\caption*{Placebo exposures, what the reply says, and whether a person wrote it. (continued)}\\
 \endhead
 \toprule
 \multicolumn{6}{@{}l}{\textbf{Panel A. Placebo exposures against the observed addressed edge}} \\
@@ -33,35 +33,19 @@ Acknowledgement only, below the twelve-word floor & 28 & 26.7 & 21 & -- & -- \\
 Substantive engineering prose & 59 & 56.2 & 67 & +16.8 & [+3.7, +29.9] \\
 Routing edge: the first two categories combined & 18 & 17.1 & -- & +8.7 & [-20.6, +38.1] \\
 Any addressed edge, the published exposure & 105 & 100.0 & 105 & +17.3 & [+7.3, +27.4] \\
-\bottomrule
-\end{longtable}
-\noindent\footnotesize \textit{Note:} Panel A is one row per exposure or per placebo null, all on the same inline-trigger landmark cohort and the same pre-trigger control set. Rows one to three are clustered linear-probability estimates; rows four to six are null distributions over 2,000 draws, so their interval is the 2.5 to 97.5 percentile of the null rather than a confidence interval. Read plainly: an off-target reply, which points at a different inline comment and therefore carries no addressed edge, gives the same estimate as the real edge, and the permuted-anchor null is centred near the observed estimate (+16.8 pp against an observed +17.3 pp). Permuting which replying PR is anchored to its own trigger reproduces the estimate, so the anchoring adds nothing beyond the presence of a reply; the frozen verdict recorded with the analysis is NOT\_SPECIFIC\_ANCHORING\_NULL\_REPRODUCES\_ESTIMATE. Only the time-shifted null is centred near zero, which rules out the weaker worry that the hour-48 landmark rule alone manufactures the contrast. The last row names what the two liveness-preserving controls suggest the estimate actually tracks. Panel B classifies every addressed-edge reply by what it says, using a four-rule priority ladder, and re-estimates the contrast by category. Shares are of the 105 user-written edges among the 128 exposure events; the rule and a full hand reading of all 105 texts disagree on 10 rows (9.5\%), always in the conservative direction. The subgroup contrasts are underpowered by construction and are description, not a causal decomposition. Full rows are in the pseudo-edge control products contrasts.csv and permutation\_null.csv and in the reply-content products reply\_content\_rule\_set.csv and addressed\_edge\_reply\_classification.csv.
-\endgroup
-
-
-\FloatBarrier
-\needspace{8\baselineskip}
-\begingroup
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.22\textwidth}L{0.08\textwidth}L{0.10\textwidth}L{0.09\textwidth}L{0.10\textwidth}L{0.33\textwidth}@{}}
-\caption{Automation heuristics on the accounts that write the edges.}\label{tab:s-actors}\\
-\endfirsthead
-\caption*{Automation heuristics on the accounts that write the edges. (continued)}\\
-\endhead
-\toprule
-\multicolumn{6}{@{}l}{\textbf{Panel A. Machine-likeness heuristics on the edge-writing accounts}} \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel C. Machine-likeness heuristics on the edge-writing accounts}} \\
 \midrule
 Heuristic & Accounts & Account share (\%) & Edge events & Event share (\%) & Pre-registered statistic and threshold \\
 \midrule
-Template repetition & 7 & 8.8 & 11 & 10.5 & duplicate\_normalised\_text\_share ($\ge$ 0.5 with $\ge$ 10 comments) \\
-Regular inter-comment timing & 1 & 1.2 & 1 & 1.0 & inter\_comment\_gap\_cv or narrow\_band\_gap\_share (cv $\le$ 0.5 or $\ge$ 0.25 of gaps within $\pm$10\% of the median gap, with $\ge$ 20 gaps) \\
-No diurnal dip in the clock & 0 & 0.0 & 0 & 0.0 & active\_utc\_hours and min\_hour\_share\_of\_uniform (all 24 UTC hours occupied and the quietest hour holds $\ge$ 0.5 of the uniform expectation, with $\ge$ 48 comments) \\
-Sustained comments per active day & 0 & 0.0 & 0 & 0.0 & comments\_per\_active\_day ($\ge$ 20.0 comments per active day with $\ge$ 50 comments) \\
+Template repetition & 7 & 8.8 & 11 & 10.5 & share of the account's comments that repeat an already-seen normalised text ($\ge$ 0.5 with $\ge$ 10 comments) \\
+Regular inter-comment timing & 1 & 1.2 & 1 & 1.0 & coefficient of variation of inter-comment gaps, or the share of gaps in a narrow band around the median (cv $\le$ 0.5 or $\ge$ 0.25 of gaps within $\pm$10\% of the median gap, with $\ge$ 20 gaps) \\
+No diurnal dip in the clock & 0 & 0.0 & 0 & 0.0 & number of occupied UTC hours, and the quietest hour's share of the uniform expectation (all 24 UTC hours occupied and the quietest hour holds $\ge$ 0.5 of the uniform expectation, with $\ge$ 48 comments) \\
+Sustained comments per active day & 0 & 0.0 & 0 & 0.0 & comments per active day ($\ge$ 20.0 comments per active day with $\ge$ 50 comments) \\
 Any single heuristic & 7 & 8.8 & 11 & 10.5 & -- \\
 At least two heuristics (pre-registered rule) & 1 & 1.2 & 1 & 1.0 & -- \\
 \midrule
-\multicolumn{6}{@{}l}{\textbf{Panel B. The later-merge contrast after dropping flagged accounts}} \\
+\multicolumn{6}{@{}l}{\textbf{Panel D. The later-merge contrast after dropping flagged accounts}} \\
 \midrule
 Cohort & PRs & Exposed & Exposed merge (\%) & Estimate (pp) & Repository-cluster 95\% interval \\
 \midrule
@@ -70,5 +54,5 @@ dropping PRs whose edge was written by an account tripping $\ge$ 2 heuristics & 
 dropping PRs whose edge was written by an account tripping any heuristic & 1,058 & 100 & 53.0 & +15.2 & [+4.6, +25.8] \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} The rows of Panel A are the four pre-registered machine-likeness heuristics and the two combination rules, scored on the 80 user accounts that write the 105 user-written addressed edges among the 128 exposure events, using 7,141 of their earlier comments. An account is flagged when it trips at least two heuristics. The median machine-likeness score is 0.198 and the maximum is 0.471, so no account is near the automated end of the scale. The rows of Panel B re-estimate the published later-merge contrast after dropping every PR whose edge a flagged account wrote; the estimate moves in the opposite direction to the worry, and dropping any account that trips even one heuristic leaves the interval excluding zero. Of the 105 edge texts, 102 are distinct after normalisation and the most repeated text appears 3 times; hand reading of the 20 highest-scoring accounts finds the repetition to be hand-issued agent invocations and platform button text rather than generated output. These heuristics are behavioural proxies over public traces, not ground truth about who or what operates an account, and they cannot detect a person pasting model output. Per-account scores and the hand-review sheet are in the account automation products account\_machine\_likeness\_scores.csv and manual\_review\_top\_accounts.csv.
+\noindent\footnotesize \textit{Note:} Panel A is one row per exposure or per placebo null, all on the same inline-trigger landmark cohort and the same pre-trigger control set. Rows one to three are clustered linear-probability estimates; rows four to six are null distributions over 2,000 draws, so their interval is the 2.5 to 97.5 percentile of the null rather than a confidence interval. Read plainly: an off-target reply, which points at a different inline comment and therefore carries no addressed edge, gives the same estimate as the real edge, and the permuted-anchor null is centred near the observed estimate (+16.8 pp against an observed +17.3 pp). Permuting which replying PR is anchored to its own trigger reproduces the estimate, so the anchoring adds nothing beyond the presence of a reply; the frozen verdict recorded with the analysis is NOT\_SPECIFIC\_ANCHORING\_NULL\_REPRODUCES\_ESTIMATE. Only the time-shifted null is centred near zero, which rules out the weaker worry that the hour-48 landmark rule alone manufactures the contrast. The last row names what the two liveness-preserving controls suggest the estimate actually tracks. Panel B classifies every addressed-edge reply by what it says, using a four-rule priority ladder, and re-estimates the contrast by category. Shares are of the 105 user-written edges among the 128 exposure events; the rule and a full hand reading of all 105 texts disagree on 10 rows (9.5\%), always in the conservative direction. The subgroup contrasts are underpowered by construction and are description, not a causal decomposition. Every classified reply and every placebo draw is in the public artifact. The rows of Panel C are the four pre-registered machine-likeness heuristics and the two combination rules, scored on the 80 user accounts that write the 105 user-written addressed edges among the 128 exposure events, using 7,141 of their earlier comments. An account is flagged when it trips at least two heuristics. The median machine-likeness score is 0.198 and the maximum is 0.471, so no account is near the automated end of the scale. The rows of Panel D re-estimate the published later-merge contrast after dropping every PR whose edge a flagged account wrote; the estimate moves in the opposite direction to the worry, and dropping any account that trips even one heuristic leaves the interval excluding zero. Of the 105 edge texts, 102 are distinct after normalisation and the most repeated text appears 3 times; hand reading of the 20 highest-scoring accounts finds the repetition to be hand-issued agent invocations and platform button text rather than generated output. These heuristics are behavioural proxies over public traces, not ground truth about who or what operates an account, and they cannot detect a person pasting model output. Per-account scores and the hand-review sheet are in the public artifact.
 \endgroup
