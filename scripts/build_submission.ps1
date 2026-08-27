@@ -131,6 +131,10 @@ try {
     Invoke-Checked $pythonExe scripts\analysis\run_addressed_edge_reply_content_audit.py
     Assert-ProjectFile "scripts\analysis\run_heterogeneity_audit.py"
     Invoke-Checked $pythonExe scripts\analysis\run_heterogeneity_audit.py
+    Assert-ProjectFile "scripts\analysis\run_worked_example.py"
+    Invoke-Checked $pythonExe scripts\analysis\run_worked_example.py
+    Assert-ProjectFile "scripts\analysis\run_confounder_benchmarks.py"
+    Invoke-Checked $pythonExe scripts\analysis\run_confounder_benchmarks.py
     Invoke-Checked $pythonExe scripts\analysis\run_cross_corpus_attribution_sensitivity.py
     Invoke-Checked $pythonExe scripts\audit\prepare_feedback_response_audit.py
     Invoke-Checked $pythonExe scripts\audit\prepare_review_collision_audit.py

@@ -1,30 +1,74 @@
+# Citation File Format 1.2.0 — https://citation-file-format.github.io
+#
+# ---------------------------------------------------------------------------
+# BEFORE THE ZENODO DEPOSIT, A HUMAN MUST REPLACE EVERY PLACEHOLDER BELOW.
+# Nothing here may be guessed. A fabricated ORCID, affiliation, or email in a
+# citation file is worse than a blank one, because it silently mis-attributes.
+#
+# The `orcid`, `email`, `date-released`, and `doi` keys are pattern-constrained
+# by the CFF 1.2.0 schema, so a literal placeholder in them would make this file
+# fail validation. They are therefore left COMMENTED OUT below. Uncomment each
+# one as you fill it in. The file as it stands is schema-valid and honest about
+# what it does not yet know.
+#
+#   ORCID-PENDING          -> the author's real ORCID iD, as a full URL, e.g.
+#                             https://orcid.org/0000-0000-0000-0000
+#                             If an author has no ORCID, delete their `orcid:`
+#                             line entirely rather than inventing a value.
+#   AFFILIATION-PENDING    -> the author's institution, exactly as it will read
+#                             on the title page of the manuscript.
+#   EMAIL-PENDING          -> the corresponding author's email address.
+#   DOI-PENDING            -> the reserved Zenodo DOI (see
+#                             docs/guides/ARTIFACT_DEPOSIT.md, step 2), added
+#                             as an `identifiers:` entry and, after release, as
+#                             the top-level `doi:` field.
+#   VERSION-PENDING        -> the release tag, e.g. v1.0.0.
+#   DATE-RELEASED-PENDING  -> the deposit date, as YYYY-MM-DD.
+#
+# The same placeholders exist in .zenodo.json; keep the two files in step.
+# ---------------------------------------------------------------------------
+
 cff-version: 1.2.0
 title: >-
   Participation Is Not Collaboration: Tracing Public Ownership After
   Cross-Product Agent Review
 message: >-
-  If you use this artifact, please cite the accompanying paper. Author
-  affiliations and the archival DOI are pending and will be filled in at
-  submission.
+  If you use this artifact, please cite the accompanying paper and this
+  software record.
 type: software
 authors:
   - given-names: Dao Sy Duy
     family-names: Minh
+    affiliation: AFFILIATION-PENDING
+    # email: EMAIL-PENDING   <- corresponding author's address; uncomment
+    # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
   - given-names: Huynh Trung
     family-names: Kiet
+    affiliation: AFFILIATION-PENDING
+    # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
   - given-names: Tran Chi
     family-names: Nguyen
+    affiliation: AFFILIATION-PENDING
+    # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
   - given-names: Pham Phu
     family-names: Hoa
+    affiliation: AFFILIATION-PENDING
+    # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
   - given-names: Nguyen Lam Phu
     family-names: Quy
+    affiliation: AFFILIATION-PENDING
+    # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
 abstract: >-
   Reproducible analysis artifact for a study of what happens after one coding
   agent reviews a pull request written by a different coding agent. The
   repository pins the AIDev-7.6M release, reconstructs the public event path
   from cross-product review to an exact addressed edge, a next visible owner,
   and a later merge state, and reports every robustness check and rejected
-  claim.
+  claim. It contains the analysis and figure code, the reproduction contract,
+  the tests, and the derived analysis products the manuscript tables and
+  figures are built from. It does not redistribute the AIDev release, and it
+  does not contain the private coder keys used by the blinded human-coding
+  audits.
 keywords:
   - mining software repositories
   - coding agents
@@ -32,14 +76,20 @@ keywords:
   - code review
   - human-agent collaboration
   - pull requests
+  - reproducibility artifact
 license: MIT
 repository-code: 'https://github.com/technoob05/emse2026-multiagent-impact'
+version: VERSION-PENDING
+# date-released: DATE-RELEASED-PENDING   <- uncomment, as YYYY-MM-DD
+# doi: DOI-PENDING                       <- the reserved Zenodo DOI
 references:
   - type: data
     title: 'AIDev: Studying AI Coding Agents on GitHub'
     authors:
       - family-names: Li
         given-names: Hao
+    repository: 'https://huggingface.co/datasets/hao-li/AIDev-7.6M'
     notes: >-
       Source data. Pinned at revision
-      37bbe1533e26cc1e1374917dba1186d1c8a4dc81. Not redistributed here.
+      37bbe1533e26cc1e1374917dba1186d1c8a4dc81. Third-party data under its own
+      terms; not redistributed in this artifact.

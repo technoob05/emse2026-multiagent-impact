@@ -43,6 +43,8 @@ SCOPE = ROOT / "outputs" / "addressed_edge_scope"
 EXTENSIONS = ROOT / "outputs" / "rq3_extensions"
 CONTEXT = ROOT / "outputs" / "task_context_interaction"
 CURVES = ROOT / "outputs" / "merge_curves"
+EXAMPLE = ROOT / "outputs" / "worked_example"
+BENCHMARKS = ROOT / "outputs" / "confounder_benchmarks"
 OUTPUT = ROOT / "build" / "figures"
 
 # Palette. Every hue is taken unaltered from Paul Tol's colour schemes, whose
@@ -448,122 +450,100 @@ def write_colour_proofs(stems: Sequence[str]) -> list[str]:
 
 
 def figure_measurement_contract() -> None:
-    """Schematic of the event anchor, exclusion rules, and observation windows.
+    """One real pull request, with every rule applied to it in order.
 
-    The figure is structural. It carries no cohort estimate, so it is drawn
-    from the analysis contract rather than from a results table.
+    Panel A is a worked example rather than a drawing: the times and the roles
+    come from outputs/worked_example/, so a reader can check each rule against
+    an actual trace instead of taking the rule on trust.
     """
-    fig = new_figure(3.20)
-    layout = Layout(left=0.030, right=0.985, top=0.890, bottom=0.045, gap=0.085)
-    top_rect, bottom_rect = layout.rects((1.0, 0.72))
+    steps = read_csv(
+        EXAMPLE / "timeline.csv",
+        ("order", "minutes_after_trigger", "actor_role", "event", "verdict", "rule"),
+    ).sort_values("order")
+    example = json.loads((EXAMPLE / "summary.json").read_text(encoding="utf-8"))
+
+    fig = new_figure(4.55)
+    layout = Layout(left=0.030, right=0.985, top=0.925, bottom=0.040, gap=0.075)
+    top_rect, bottom_rect = layout.rects((1.0, 0.40))
 
     ax = fig.add_axes(top_rect)
     ax.set_xlim(0, 100)
-    ax.set_ylim(0, 10)
+    ax.set_ylim(0, 100)
     ax.axis("off")
-    panel_title(ax, "A", "One trigger, three exclusion rules")
+    panel_title(ax, "A", "Every rule applied to one real pull request")
 
-    timeline_y = 3.4
-    marker_y = 5.4
-    label_y = 6.05
+    def clock(minutes: float) -> str:
+        if minutes < 1.0:
+            return "same minute"
+        if minutes < 90.0:
+            return f"+{minutes:.0f} min"
+        if minutes < 2880.0:
+            return f"+{minutes / 60.0:.1f} h"
+        return f"+{minutes / 1440.0:.1f} days"
 
-    ax.add_patch(
-        Rectangle(
-            (35.0, timeline_y),
-            11.0,
-            marker_y - timeline_y + 0.5,
-            facecolor=PALE_ORANGE,
-            edgecolor="none",
-            zorder=0,
-        )
-    )
-    ax.annotate(
-        "",
-        xy=(99.0, timeline_y),
-        xytext=(2.0, timeline_y),
-        arrowprops={"arrowstyle": "-|>", "color": INK, "linewidth": 0.9},
-    )
-
-    def event(x: float, color: str, face: str, marker: str) -> None:
+    kept = {"trigger", "addressed edge", "landmark", "outcome"}
+    row_height = 100.0 / (len(steps) + 0.9)
+    for index, step in enumerate(steps.itertuples(index=False)):
+        y = 100.0 - row_height * (index + 0.85)
+        accepted = step.rule in kept
+        colour = TEAL if accepted else ORANGE
+        # A filled marker is a rule that keeps the event; a hollow one drops it.
         ax.plot(
-            [x, x],
-            [timeline_y + 0.12, marker_y - 0.45],
-            color=MID,
-            linewidth=0.6,
-            linestyle=(0, (1.6, 1.6)),
-            zorder=2,
+            [3.2],
+            [y],
+            marker="o",
+            markersize=4.6,
+            markerfacecolor=colour if accepted else "white",
+            markeredgecolor=colour,
+            markeredgewidth=1.1,
+            clip_on=False,
         )
-        ax.scatter(x, timeline_y, s=10, color=INK, zorder=4)
-        ax.scatter(
-            x,
-            marker_y,
-            s=40,
-            marker=marker,
-            facecolor=face,
-            edgecolor=color,
-            linewidth=1.1,
-            zorder=4,
-        )
-
-    events = [
-        (9.0, BLUE, BLUE, "o", "Trigger", BLUE),
-        (24.0, BLUE, WHITE, "o", "Same batch:\nnot a reply", SLATE),
-        (40.0, ORANGE, ORANGE, "^", "Rapid burst:\nexcluded", ORANGE),
-        (60.0, TEAL, TEAL, "o", "Exact parent\nreply", TEAL),
-    ]
-    for x, color, face, marker, label, label_color in events:
-        event(x, color, face, marker)
+        if index < len(steps) - 1:
+            ax.plot(
+                [3.2, 3.2],
+                [y - 1.6, y - row_height + 1.6],
+                color=MID,
+                linewidth=0.8,
+                zorder=0,
+            )
         ax.text(
-            x, label_y, label, ha="center", va="bottom", fontsize=7.1, color=label_color
+            8.0,
+            y,
+            clock(float(step.minutes_after_trigger)),
+            ha="left",
+            va="center",
+            fontsize=7.0,
+            color=SLATE,
+        )
+        actor = "" if step.actor_role == "--" else f"{step.actor_role}: "
+        ax.text(
+            22.5,
+            y,
+            f"{actor}{step.event}",
+            ha="left",
+            va="center",
+            fontsize=7.0,
+            color=INK,
+        )
+        ax.text(
+            99.0,
+            y - row_height * 0.42,
+            step.verdict,
+            ha="right",
+            va="center",
+            fontsize=7.0,
+            color=colour,
+            style="italic",
         )
 
-    # The review-batch bracket sits under the timeline so that it cannot
-    # collide with the annotation row above it.
-    ax.plot([6.0, 27.0], [2.15, 2.15], color=BLUE, linewidth=0.9)
-    ax.plot([6.0, 6.0], [2.15, 2.65], color=BLUE, linewidth=0.9)
-    ax.plot([27.0, 27.0], [2.15, 2.65], color=BLUE, linewidth=0.9)
     ax.text(
-        16.5,
-        1.75,
-        "one submitted review batch",
-        ha="center",
-        va="top",
-        fontsize=7.0,
-        color=BLUE,
-    )
-
-    ax.annotate(
-        "",
-        xy=(60.0, 8.85),
-        xytext=(9.0, 8.85),
-        arrowprops={"arrowstyle": "-|>", "color": TEAL, "linewidth": 1.1},
-    )
-    ax.text(
-        34.5,
-        9.1,
-        "reply parent identifier equals the trigger identifier",
-        ha="center",
+        3.2,
+        1.4,
+        f"{example['reviewing_product'].replace('_', ' ')} reviews a "
+        f"{example['author_product'].replace('_', ' ')} pull request. "
+        f"Filled marks are kept; hollow marks are dropped by a rule.",
+        ha="left",
         va="bottom",
-        fontsize=7.0,
-        color=TEAL,
-    )
-
-    ax.plot([78.0, 78.0], [timeline_y, 6.6], color=INK, linewidth=1.0)
-    ax.text(
-        78.0, 6.8, "hour 48 landmark", ha="center", va="bottom", fontsize=7.1, color=INK
-    )
-    ax.annotate(
-        "",
-        xy=(98.0, 2.15),
-        xytext=(78.0, 2.15),
-        arrowprops={"arrowstyle": "-|>", "color": SLATE, "linewidth": 0.9},
-    )
-    ax.text(
-        88.0,
-        1.75,
-        "later merge, to day 30",
-        ha="center",
-        va="top",
         fontsize=7.0,
         color=SLATE,
     )
@@ -572,13 +552,33 @@ def figure_measurement_contract() -> None:
     ax.set_xlim(0, 100)
     ax.set_ylim(0, 10)
     ax.axis("off")
-    panel_title(ax, "B", "Four evidence levels, read separately")
+    panel_title(ax, "B", "Four levels of proof, never treated as one")
 
     levels = [
-        ("Product presence", "two products\non one PR", PALE_BLUE, BLUE),
-        ("Addressed edge", "reply points at\nthe trigger", PALE_TEAL, TEAL),
-        ("Next owner", "first actor after\nthe burst", PALE_TEAL, TEAL),
-        ("Later state", "merge only after\nhour 48", GRID, SLATE),
+        (
+            "1. Both present",
+            "two products act\non the same PR",
+            PALE_BLUE,
+            BLUE,
+        ),
+        (
+            "2. Answered",
+            "a reply names the\nreview comment",
+            PALE_TEAL,
+            TEAL,
+        ),
+        (
+            "3. Taken up",
+            "who acts next, once\nthe burst is over",
+            PALE_TEAL,
+            TEAL,
+        ),
+        (
+            "4. Accepted",
+            "merged, counted only\nafter hour 48",
+            GRID,
+            SLATE,
+        ),
     ]
     box_width = 22.0
     gap = (100.0 - len(levels) * box_width) / (len(levels) - 1)
@@ -836,24 +836,33 @@ def figure_participation() -> None:
 
 
 def figure_boundary() -> None:
-    contrast = exactly_one(
-        read_csv(
-            TOPOLOGY / "matched_visibility_contrasts.csv",
-            (
-                "specification",
-                "outcome",
-                "pairs",
-                "repositories",
-                "cross_rate",
-                "same_rate",
-                "paired_difference",
-                "repository_cluster_bootstrap_ci_low",
-                "repository_cluster_bootstrap_ci_high",
-            ),
+    contrasts = read_csv(
+        TOPOLOGY / "matched_visibility_contrasts.csv",
+        (
+            "specification",
+            "outcome",
+            "pairs",
+            "repositories",
+            "cross_rate",
+            "same_rate",
+            "paired_difference",
+            "repository_cluster_bootstrap_ci_low",
+            "repository_cluster_bootstrap_ci_high",
         ),
-        specification="exact_author_user",
-        outcome="any_visible_followup",
     )
+    primary = contrasts[contrasts["specification"] == "exact_author_user"]
+
+    # Plain names, because "any_visible_followup" is our vocabulary, not a
+    # reader's. Order runs from the outcome that moves to the ones that do not.
+    OUTCOMES = (
+        ("any_visible_followup", "Anyone does anything visible"),
+        ("later_pr_comment", "Someone comments on the PR"),
+        ("new_review_round", "A new round of review starts"),
+        ("exact_trigger_reply", "The review point gets a reply"),
+        ("visible_force_push", "The branch is rewritten"),
+        ("merge_within_7d", "Merged inside seven days"),
+    )
+
     mediator = exactly_one(
         read_csv(
             HISTORY / "first_mediator_role_summary.csv",
@@ -876,139 +885,133 @@ def figure_boundary() -> None:
         population="all_distinct_48h_user_responders",
     )
 
-    fig = new_figure(4.10)
-    layout = Layout(left=0.275, right=0.80, top=0.915, bottom=0.095, gap=0.165)
-    top_rect, bottom_rect = layout.rects((0.62, 1.0))
+    fig = new_figure(4.55)
+    layout = Layout(left=0.315, right=0.870, top=0.930, bottom=0.105, gap=0.150)
+    top_rect, bottom_rect = layout.rects((1.0, 0.52))
 
+    # --- Panel A: every matched outcome, not just the one that moved --------
     ax = fig.add_axes(top_rect)
-    same = float(contrast["same_rate"]) * 100
-    cross = float(contrast["cross_rate"]) * 100
-    ax.hlines(1.0, cross, same, color=MID, linewidth=2.0, zorder=1)
-    ax.scatter(
-        same,
-        1.0,
-        s=52,
-        facecolor=WHITE,
-        edgecolor=BLUE,
-        linewidth=1.6,
-        marker="o",
-        zorder=3,
-    )
-    ax.scatter(
-        cross,
-        1.0,
-        s=54,
-        facecolor=ORANGE,
-        edgecolor=ORANGE,
-        linewidth=1.0,
-        marker="^",
-        zorder=3,
-    )
-    ax.set_yticks([1.0], ["Matched pairs"])
-    ax.set_ylim(0.0, 2.35)
-    ax.set_xlim(60, 88)
-    ax.text(
-        same,
-        1.30,
-        f"Same-product  {same:.1f}%",
-        ha="center",
-        va="bottom",
-        color=BLUE,
-        fontsize=7.2,
-    )
-    ax.text(
-        cross,
-        0.70,
-        f"Cross-product  {cross:.1f}%",
-        ha="center",
-        va="top",
-        color=ORANGE,
-        fontsize=7.2,
-    )
-
-    difference = float(contrast["paired_difference"]) * 100
-    low = float(contrast["repository_cluster_bootstrap_ci_low"]) * 100
-    high = float(contrast["repository_cluster_bootstrap_ci_high"]) * 100
-    ax.text(
-        0.015,
-        0.98,
-        minus(
-            f"Cross − same: {difference:+.1f} pp   95% interval "
-            f"[{low:+.1f}, {high:+.1f}]"
-        ),
-        transform=ax.transAxes,
-        ha="left",
-        va="top",
-        fontsize=7.3,
-        fontweight="bold",
-        color=INK,
-    )
-    ax.text(
-        0.985,
-        0.03,
-        f"{int(contrast['pairs']):,} pairs · "
-        f"{int(contrast['repositories']):,} repositories",
-        transform=ax.transAxes,
-        ha="right",
-        va="bottom",
-        fontsize=7.1,
-        color=SLATE,
-    )
-    ax.set_xlabel("PRs with any later public action (%)")
-    panel_title(ax, "A", "The matched product boundary is quieter")
-    category_axis(ax)
-
-    ax = fig.add_axes(bottom_rect)
-    rows = [
-        (
-            "First decisive reviewer",
-            decisive["prior_reviewer_share"],
-            int(decisive["prs"]),
-            "s",
-            TEAL,
-            TEAL,
-            1.0,
-        ),
-        (
-            "First user bridge",
-            mediator["prior_reviewer_share"],
-            int(mediator["prs"]),
-            "o",
-            TEAL,
-            TEAL,
-            1.0,
-        ),
-        (
-            "Any 48-hour responder",
-            responders["prior_reviewer_share"],
-            int(responders["rows"]),
-            "o",
-            WHITE,
-            SLATE,
-            1.5,
-        ),
-    ]
-    y = np.arange(len(rows))[::-1]
-    for position, row in zip(y, rows, strict=True):
-        label, share, count, marker, face, edge, width = row
-        value = float(share) * 100
-        lollipop(ax, position, 60, value, marker, face, edge, width)
+    rows = list(OUTCOMES)
+    positions = np.arange(len(rows))[::-1]
+    pairs = repositories = 0
+    for position, (key, label) in zip(positions, rows, strict=True):
+        row = exactly_one(primary, outcome=key)
+        cross = float(row["cross_rate"]) * 100
+        same = float(row["same_rate"]) * 100
+        pairs = int(row["pairs"])
+        repositories = int(row["repositories"])
+        low = float(row["repository_cluster_bootstrap_ci_low"]) * 100
+        high = float(row["repository_cluster_bootstrap_ci_high"]) * 100
+        separated = low > 0 or high < 0
+        line_colour = SLATE if separated else MID
+        ax.plot(
+            [cross, same],
+            [position, position],
+            color=line_colour,
+            linewidth=1.6 if separated else 1.1,
+            solid_capstyle="round",
+            zorder=1,
+        )
+        ax.plot(
+            [cross],
+            [position],
+            marker="o",
+            markersize=5.0,
+            markerfacecolor=ORANGE,
+            markeredgecolor=ORANGE,
+            zorder=3,
+        )
+        ax.plot(
+            [same],
+            [position],
+            marker="o",
+            markersize=5.0,
+            markerfacecolor="white",
+            markeredgecolor=BLUE,
+            markeredgewidth=1.3,
+            zorder=3,
+        )
+        gap = cross - same
         ax.text(
-            value + 0.95,
+            101.5,
             position,
-            f"{value:.1f}%  ·  n={count:,}",
+            f"{minus(f'{gap:+.1f}')} pp" if separated else f"{minus(f'{gap:+.1f}')} pp",
             ha="left",
             va="center",
-            fontsize=7.2,
+            fontsize=7.1,
+            color=INK if separated else SLATE,
+            fontweight="bold" if separated else "normal",
+        )
+
+    ax.set_yticks(positions)
+    ax.set_yticklabels([label for _, label in rows], fontsize=7.2)
+    ax.set_xlim(0, 100)
+    ax.set_xticks([0, 25, 50, 75, 100])
+    ax.set_ylim(-1.75, len(rows) - 0.45)
+    ax.set_xlabel("Matched pairs where it happened (%)")
+    panel_title(ax, "A", "Only one thing changes at the product boundary")
+    clean_axis(ax, "x")
+
+    handles = (
+        Line2D([], [], linestyle="none", marker="o", markersize=5.0,
+               markerfacecolor=ORANGE, markeredgecolor=ORANGE,
+               label="reviewed by a different product"),
+        Line2D([], [], linestyle="none", marker="o", markersize=5.0,
+               markerfacecolor="white", markeredgecolor=BLUE, markeredgewidth=1.3,
+               label="reviewed by the same product"),
+    )
+    legend = ax.legend(
+        handles=list(handles),
+        loc="lower left",
+        bbox_to_anchor=(-0.005, -0.045),
+        frameon=False,
+        fontsize=7.1,
+        handletextpad=0.4,
+        labelspacing=0.3,
+        borderpad=0.0,
+        title=f"{pairs:,} matched pairs in {repositories} repositories; "
+        "a bold gap clears zero",
+    )
+    legend.get_title().set_fontsize(7.0)
+    legend.get_title().set_color(SLATE)
+    legend.get_title().set_ha("left")
+    # --- Panel B: bars, because these are shares of a whole ----------------
+    ax = fig.add_axes(bottom_rect)
+    bars = (
+        ("Whoever replies first", mediator, "prs"),
+        ("Whoever reviews decisively", decisive, "prs"),
+        ("Any person acting in 48 h", responders, "rows"),
+    )
+    positions = np.arange(len(bars))[::-1]
+    for position, (label, row, count_key) in zip(positions, bars, strict=True):
+        share = float(row["prior_reviewer_share"]) * 100
+        ax.barh(
+            position,
+            share,
+            height=0.52,
+            color=PALE_TEAL,
+            edgecolor=TEAL,
+            linewidth=0.9,
+            zorder=2,
+        )
+        ax.text(
+            share + 1.4,
+            position,
+            f"{share:.0f}%   n = {int(row[count_key]):,}",
+            ha="left",
+            va="center",
+            fontsize=7.1,
             color=INK,
         )
-    ax.set_yticks(y, [row[0] for row in rows])
-    ax.set_xlim(60, 82)
-    ax.set_ylim(-0.6, 2.6)
-    ax.set_xlabel("Accounts with a strict prior review in this repository (%)")
-    panel_title(ax, "B", "History is common across user responders")
-    category_axis(ax)
-    fit_right_labels(ax)
+
+    ax.set_yticks(positions)
+    ax.set_yticklabels([label for label, _, _ in bars], fontsize=7.2)
+    ax.set_xlim(0, 100)
+    ax.set_xticks([0, 25, 50, 75, 100])
+    ax.set_ylim(-0.6, len(bars) - 0.4)
+    ax.set_xlabel("Had reviewed in this repository before (%)")
+    panel_title(ax, "B", "Whoever steps in has usually been here before")
+    clean_axis(ax, "x")
 
     save(fig, "Fig3_v2")
 
@@ -1121,6 +1124,10 @@ def figure_sensitivity() -> None:
         SCOPE / "conditional_randomisation_inference.csv",
         ("threshold_hours", "permutation_p_value_two_sided", "repositories"),
     )
+    measured = read_csv(
+        BENCHMARKS / "measured_factor_positions.csv",
+        ("label", "prevalence_gap_pp", "outcome_gap_pp"),
+    )
     primary = exactly_one(evalues, threshold_hours="48")
     test = exactly_one(permutation, threshold_hours="48")
 
@@ -1137,7 +1144,7 @@ def figure_sensitivity() -> None:
     ax.plot(
         delta, interval_line, color=SLATE, linewidth=1.4, linestyle=(0, (4, 2)), zorder=3
     )
-    ax.set_xlim(5, 60)
+    ax.set_xlim(-2, 60)
     ax.set_ylim(0, 100)
     ax.set_yticks([0, 25, 50, 75, 100])
     ax.set_xlabel("How much more common the hidden cause is among answered PRs (pp)")
@@ -1176,6 +1183,41 @@ def figure_sensitivity() -> None:
         color=INK,
     )
 
+    # The factors we actually measured, on the same two axes as the shaded
+    # corner. All of them sit far outside it, which is the point.
+    ax.scatter(
+        measured["prevalence_gap_pp"].to_numpy(),
+        measured["outcome_gap_pp"].abs().to_numpy(),
+        s=26,
+        facecolor=ORANGE,
+        edgecolor=WHITE,
+        linewidth=0.6,
+        zorder=5,
+        clip_on=True,
+    )
+    strongest = measured.iloc[
+        measured["outcome_gap_pp"].abs().to_numpy().argmax()
+    ]
+    ax.annotate(
+        "every factor we did measure" + chr(10) + "sits down here",
+        xy=(
+            float(strongest["prevalence_gap_pp"]),
+            abs(float(strongest["outcome_gap_pp"])),
+        ),
+        xytext=(13.0, 30.0),
+        ha="left",
+        va="center",
+        fontsize=7.1,
+        color=ORANGE,
+        arrowprops={
+            "arrowstyle": "-",
+            "color": ORANGE,
+            "linewidth": 0.7,
+            "shrinkA": 3.0,
+            "shrinkB": 3.0,
+        },
+    )
+
     save(fig, "Fig5_v2")
 
 
@@ -1211,20 +1253,28 @@ def figure_task_context() -> None:
         models, specification="Thread-root triggers, repository and month FE"
     )
 
-    fig = new_figure(3.55)
-    layout = Layout(left=0.165, right=0.775, top=0.900, bottom=0.140, gap=0.0)
-    (rect,) = layout.rects((1.0,))
-    ax = fig.add_axes(rect)
+    fig = new_figure(4.15)
+    layout = Layout(left=0.165, right=0.745, top=0.910, bottom=0.150, gap=0.150)
+    top_rect, bottom_rect = layout.rects((1.0, 0.30))
+    ax = fig.add_axes(top_rect)
 
     series = (
         ("cross_product", "A different product\nis reviewing", TEAL, "o", "-"),
         ("same_product", "The same product\nis reviewing", SLATE, "s", (0, (4, 2))),
     )
+    rates = {}
+    for relation, *_ in series:
+        rates[relation] = [
+            float(exactly_one(cells, reviewer_relation=relation, body_issue_link=link)["answered_rate"]) * 100
+            for link in (False, True)
+        ]
     for relation, label, colour, marker, style in series:
-        values = []
+        other = next(key for key in rates if key != relation)
+        values, counts = [], []
         for link in (False, True):
             row = exactly_one(cells, reviewer_relation=relation, body_issue_link=link)
             values.append(float(row["answered_rate"]) * 100)
+            counts.append(int(row["prs"]))
         ax.plot(
             [0, 1],
             values,
@@ -1239,11 +1289,12 @@ def figure_task_context() -> None:
             clip_on=False,
             zorder=3,
         )
-        for position, value in zip((0, 1), values, strict=True):
-            above = relation == "cross_product"
+        for position, value, count in zip((0, 1), values, counts, strict=True):
+            # Label away from the other line, or the two collide where they cross.
+            above = value >= rates[other][position]
             ax.text(
                 position,
-                value + (2.4 if above else -2.4),
+                value + (2.6 if above else -2.6),
                 f"{value:.1f}%",
                 ha="center",
                 va="bottom" if above else "top",
@@ -1251,8 +1302,17 @@ def figure_task_context() -> None:
                 fontweight="bold",
                 color=colour,
             )
+            ax.text(
+                position,
+                value + (6.4 if above else -6.4),
+                f"of {count:,} PRs",
+                ha="center",
+                va="bottom" if above else "top",
+                fontsize=7.0,
+                color=SLATE,
+            )
         ax.text(
-            1.06,
+            1.07,
             values[1],
             label,
             ha="left",
@@ -1262,32 +1322,67 @@ def figure_task_context() -> None:
         )
 
     ax.set_xlim(-0.12, 1.12)
-    ax.set_ylim(0, 34)
+    ax.set_ylim(0, 38)
     ax.set_xticks([0, 1], ["No issue link", "PR body links an issue"])
     ax.set_ylabel("Review points answered\nwithin 48 hours (%)")
-    panel_title(ax, "", "Task context only helps across the boundary")
+    panel_title(ax, "A", "Task context only helps across the boundary")
     clean_axis(ax, "y")
 
+    # --- the quantity the paper actually claims, with its uncertainty -------
+    ax = fig.add_axes(bottom_rect)
     estimates = loo["estimate"].to_numpy() * 100
+    point = float(primary["estimate"]) * 100
+    low = float(primary["ci_low"]) * 100
+    high = float(primary["ci_high"]) * 100
+
+    ax.axvline(0.0, color=SLATE, linewidth=0.9, zorder=1)
+    ax.plot(
+        [estimates.min(), estimates.max()],
+        [0, 0],
+        color=PALE_TEAL,
+        linewidth=7.0,
+        solid_capstyle="butt",
+        zorder=2,
+    )
+    ax.plot([low, high], [0, 0], color=TEAL, linewidth=1.8, zorder=3)
+    for edge in (low, high):
+        ax.plot([edge, edge], [-0.16, 0.16], color=TEAL, linewidth=1.3, zorder=3)
+    ax.plot(
+        [point],
+        [0],
+        marker="o",
+        markersize=6.2,
+        markerfacecolor=TEAL,
+        markeredgecolor=WHITE,
+        markeredgewidth=0.7,
+        zorder=4,
+    )
     ax.text(
-        0.015,
-        0.035,
-        minus(
-            f"gap between the two slopes: {float(primary['estimate']) * 100:+.1f} pp "
-            f"[{float(primary['ci_low']) * 100:+.1f}, "
-            f"{float(primary['ci_high']) * 100:+.1f}]\n"
-            f"holds from {estimates.min():+.1f} to {estimates.max():+.1f} when any one "
-            f"repository is dropped\n"
-            f"shuffling the link label gives "
-            f"p = {float(shuffle['p_value_two_sided']):.3f}"
-        ),
-        transform=ax.transAxes,
-        ha="left",
+        point,
+        0.42,
+        minus(f"{point:+.1f} pp"),
+        ha="center",
         va="bottom",
-        fontsize=7.1,
+        fontsize=7.4,
+        fontweight="bold",
+        color=TEAL,
+    )
+    ax.text(
+        0.0,
+        -0.52,
+        "no difference",
+        ha="center",
+        va="top",
+        fontsize=7.0,
         color=SLATE,
     )
-
+    ax.set_xlim(-4.0, 26.0)
+    ax.set_ylim(-1.0, 1.0)
+    ax.set_yticks([])
+    ax.set_xlabel("How much more the link helps across the boundary (pp)")
+    panel_title(ax, "B", "The gap between the two slopes")
+    clean_axis(ax, "x")
+    ax.spines["left"].set_visible(False)
     save(fig, "Fig6_v2")
 
 

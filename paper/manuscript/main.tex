@@ -46,11 +46,31 @@ end'' \citep{monperrus2026endofreview}. Our data speak to that directly. In this
 corpus the person is not a formality on top of an agent loop. They are the only
 part of the loop that visibly closes.
 
-The gap also matters for measurement. A short burst of bot events can look like
-a conversation. A new review can be part of the same API call. A user account
-can act next without having been chosen as a go-between. Mining GitHub has long
-been known to reward this kind of care \citep{kalliamvakou2016perils}. If these
-cases are mixed together, a product count becomes a weak measure of teamwork.
+Before going further it helps to fix the vocabulary, because the whole argument
+turns on small details of how GitHub records review. A \emph{pull request}, or
+PR, is a proposed change to a project, offered for others to inspect before it is
+accepted. Accepting it is called \emph{merging}. People and tools discuss a PR in
+three separate places, and GitHub stores them in three separate tables. An
+\emph{inline review comment} is attached to one line of the proposed change. A
+\emph{review} is a batch: a reviewer looks at the change, writes several inline
+comments at once, and submits them together under a single summary, so every
+comment in that batch carries the same review identifier. A \emph{PR comment} is
+a general remark on the PR, attached to no particular line.
+
+Only inline comments can be answered in a way the platform records. When someone
+replies to one, GitHub stores a \emph{reply target}: the identifier of the
+comment being replied to. That single stored number is what makes this study
+possible, and its absence elsewhere is what limits it.
+
+The gap also matters for measurement, and each of these details is a trap. A short
+\emph{burst} --- many events landing within seconds or minutes of each other,
+faster than a person reads --- can look like a conversation when it is one tool
+posting its output. A new review can belong to the same submission batch as the
+comment it seems to answer, so a tool appears to reply to itself. A user account
+can act next simply because it was watching, not because anyone chose it as a
+go-between. Mining GitHub has long been known to reward this kind of care
+\citep{kalliamvakou2016perils}. If these cases are mixed together, a product count
+becomes a weak measure of teamwork.
 
 Field studies already tell us a lot. They count agent-authored PRs, measure how
 common AI review is, model reviewer order, and study how developers answer agent
@@ -78,10 +98,12 @@ before it: can a public handoff be seen at all?
 \item[RQ2 -- Who bridges the boundary?] How much public follow-up happens across
 the boundary between two products? And when a person steps in, have they worked
 on this repository before?
-\item[RQ3 -- Who writes the connection, and does it mark a later state?] Two
-signals say that something connected: a reply pointing at the exact review
-comment, and automation followed by a person. Does either go together with the
-change being merged later, and who is it that writes the reply?
+\item[RQ3 -- Who writes the connection, and does the change get merged later?]
+Two things in the trace suggest that somebody actually picked the review point up.
+The first is a reply whose stored reply target is the review comment itself, so
+the platform records what it is answering. The second is looser: an automated
+action followed by a person acting. Does either go together with the change being
+accepted later, and who writes the reply --- another tool, or a person?
 \item[RQ4 -- What makes someone answer across the boundary?] A pull request
 body often points at an issue. That pointer is written before any review, and
 it gives a reader context the diff alone does not. Does it change whether a
@@ -90,10 +112,12 @@ review point gets answered, and does that depend on who is reviewing?
 
 We make four contributions.
 
-\textbf{An evidence ladder, and a test of its own rungs.} We separate four things
-that a product count runs together: both products appearing on one PR, a reply
-that points at the exact review comment, the next visible owner, and the later
-state of the PR. The second rung is machine-checkable and strict, which is what
+\textbf{An evidence ladder, and a test of its own rungs.} By \emph{evidence
+ladder} we mean an ordered set of claims where each step demands more of the data
+than the one below, so a study has to say which step it actually reached. Ours
+has four steps, which a product count runs together: both products appearing on
+one PR, a reply that points at the exact review comment, who takes the next
+visible action, and whether the PR is accepted afterwards. The second rung is machine-checkable and strict, which is what
 makes the paper falsifiable. We then falsify part of it. Placebo exposures show
 that, for predicting a later merge, that strict rung is not distinguishable from a
 much looser one: a reply anchored anywhere on the pull request does as well.
@@ -258,11 +282,16 @@ disagreement \citep{qiu2026adversarial}. SWE-Review tests a known
 generate--review--revise loop \citep{wang2026swereview}. Controlled traces can
 therefore reveal roles and messages directly.
 
-Public GitHub traces are weaker but more natural. Product co-presence does not
-prove shared memory, a joint plan, or private communication. We use
-\emph{cross-product feedback} for the trigger and reserve \emph{public
-coordination} for observable connections and ownership. This measurement
-boundary is central to our novelty.
+Public GitHub traces are weaker evidence, but they show real projects rather than
+a laboratory. The weakness is specific: seeing two products on one PR does not
+show that they shared memory, followed a joint plan, or talked to each other
+privately. We therefore keep two names apart for the whole paper.
+\emph{Cross-product feedback} is the plain fact that one product wrote review
+activity on another product's PR --- presence, nothing more. \emph{Public
+coordination} is the stronger claim that we can point at a connection in the
+record: a reply that names what it answers, or a change of hands that the trace
+shows. We never let the first stand in for the second, and keeping them apart is
+what the rest of the method is for.
 
 \section{Data and Method}\label{sec:method}
 
@@ -286,10 +315,18 @@ afterwards is measured from the trigger. Online Resource~1 gives the full identi
 table coverage, joins, and denominators. Inline comments join to a submitted
 review by review ID and then to the PR.
 
-An \emph{addressed edge} means one thing only: a later comment carries the
-trigger comment's own identifier as its reply target. A reply somewhere else on
-the same PR does not count. A later review must also carry a different
-review-batch ID. These rules stop one API call from appearing to answer itself.
+An \emph{addressed edge} means one thing only: a later comment stores the trigger
+comment's own identifier as its reply target. In plain terms, GitHub itself
+records that this comment is answering that one. A reply posted somewhere else on
+the same PR does not count, however relevant it reads, because nothing in the data
+ties it to the trigger.
+
+One further rule closes a loophole. A reviewer submits many inline comments in a
+single batch, and every comment in the batch shares one review identifier. Without
+care, a second comment from that same submission could be counted as an answer to
+the first --- a tool appearing to reply to itself, when in truth both were written
+at once. We therefore require any later review to carry a different review
+identifier from the trigger's.
 
 We checked what that identifier actually points at, because the paper rests on
 it. GitHub sets the reply target to the \emph{first} comment of an inline
@@ -318,31 +355,44 @@ returns to what the unseen share might hold.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{Fig1.pdf}
-\caption{How we measure. Panel A puts one cross-product trigger on a single PR
-and marks what each rule removes. A sibling comment in the same submitted review
-batch is not a reply. An event inside the tested burst window does not define the
-next owner. Only a comment whose parent identifier is the trigger's own
-identifier counts as an addressed edge. The later state is read after a fixed
-check point at hour 48. Panel B lists the four evidence levels in order. This is
-a drawing, not data: the positions are for illustration only.}
+\caption{How we measure, shown on one real pull request. Panel A traces an actual
+case from our cohort, top to bottom, with the time each event arrived. A coding
+product reviews another product's change; that first review comment is the
+\emph{trigger}, and everything is measured from it. Three rules then decide what
+counts. A second comment written in the same submitted batch of review comments
+is not an answer, because both were posted at once. An event inside the first few
+minutes does not decide who took the change up, because automation posts that
+fast. Only a comment that GitHub records as replying to the trigger --- storing
+the trigger's identifier as its reply target --- counts as an \emph{addressed
+edge}. Here that reply comes from a person, 22.5 hours later. Filled marks are
+kept by the rules; hollow marks are dropped. Panel B names the four levels of
+proof the paper keeps apart, each demanding more of the record than the one
+before it. The example is the first pull request in the cohort that exercises
+every rule; accounts are named by role rather than by login.}
 \label{fig:contract}
 \end{figure}
 
 \subsection{Three analytic views}
 
-A \emph{relay} means the next visible step is taken by a product different from
-the one that wrote the trigger. It is the thing a multi-agent workflow would
-produce, and it is what RQ1 looks for.
+A \emph{relay} is the handover we are hunting for: the next visible step on the
+PR is taken by a \emph{different} product from the one that wrote the review
+comment. If two coding tools were really working as a team, this is the trace it
+would leave --- one raises a point, the other acts on it. RQ1 asks how often that
+actually happens.
 
 For RQ1, we follow each first cross-product trigger for seven days, ending at
 PR closure when earlier. We join exact replies, new review rounds, later PR
 comments, and visible force-push events. The first later owner is a user
 account, mapped product, other bot, branch movement or untyped activity, or no
-action. We repeat this state after excluding the first 0, 1, 5, 10, or 30
-minutes. These windows test how much one fast automation burst is driving the
-answer. They do not reveal a private run boundary. We then apply a second
-five-minute waiting period, to test whether a mapped-product-first state really
-becomes a relay to another product.
+action. We then repeat the whole calculation while ignoring everything in the first 0, 1,
+5, 10, or 30 minutes after the trigger. The reason is the burst problem above.
+Automation posts within seconds, so if we simply take the next event we will
+usually be reading a machine finishing its own output rather than anyone
+responding. Waiting a few minutes before looking is a crude but honest way to ask
+who acts once that first rush is over. It does not tell us where one tool's run
+ended; nothing in the public record does. We then wait a second five minutes, to
+check whether a PR whose first post-burst actor was a product genuinely goes on to
+a \emph{different} product, which would be a real relay.
 
 For RQ2 we build matched pairs. Each cross-product trigger is paired with a
 same-product trigger from the same repository, the same PR-author account, the
@@ -352,27 +402,41 @@ We also identify the first distinct user account within 48 hours. Prior public
 history requires that account to have submitted a review in the same repository
 on a different PR strictly before the trigger.
 
-For RQ4 the exposure is a pre-trigger property of the change: the PR body
-references an issue. The outcome is whether the review point gets answered
-within 48 hours. Two measurement choices matter and we enforce both. We rebuild
-the outcome from the raw comment table for cross-product and same-product
-triggers alike, because our cross-product event tables cannot supply the
-same-product side. And we restrict the comparison to triggers that open their
-own thread, because a mid-thread trigger cannot receive an edge at all: that
-affects 0.4\% of cross-product triggers but 46\% of same-product ones, so
-leaving it in would compare a possible outcome with an impossible one. We then
-compare the two boundaries inside the same repository and the same month.
+For RQ3 we fix a check point at hour 48 after the trigger. The reason is timing.
+If we simply asked whether answered PRs merge more often, a reply that arrived
+\emph{after} the merge would count in its favour, which is backwards. So we keep
+only PRs still open at hour 48, ask whether a reply had arrived by then, and count
+merges only from that moment on. Cause is kept before effect by construction.
 
-For RQ3 we fix a check point at hour 48. We study only PRs that are still open
-at that point, and we count merges only after it. This keeps cause before effect
-in time. It is also a limit. Most cross-product inline-trigger PRs finish sooner,
-so they fall outside the group, and we report how many with the results rather
-than leaving it unsaid. The group also needs 30 complete days of later
-observation. The exposure is an exact addressed
-edge by hour 48; the outcome is merge after hour 48 and by day 30. A secondary
-cohort classifies the first 48 hours as user first, automation then user,
-automation without a user event, movement, other activity, or no action. This
-lets us compare an automation-to-user relay with automation alone.
+This costs us most of the population, and we would rather say so than hide it.
+Most cross-product inline-trigger PRs are finished before hour 48, so they never
+enter this group; we report how many alongside the result. A PR also needs 30 full
+days of later observation to be included, so nothing near the end of the data
+window can quietly count as unmerged.
+
+A second, looser cohort sorts the first 48 hours by what visibly happened: a
+person acted first, automation acted and then a person did, automation acted with
+no person following, the branch moved, something else happened, or nothing did.
+This is how we compare an automation-to-person handover against automation on its
+own.
+
+For RQ4 we ask about something written before any review happened: whether the PR
+description links to an issue --- a numbered task in the project's tracker saying
+what the change is for. The outcome is whether the review point gets answered
+within 48 hours.
+
+Two choices matter here, and both are about making the comparison fair. First, we
+rebuild the outcome from the raw comment table for cross-product and same-product
+triggers alike. The event tables we built for the cross-product side simply do not
+cover the same-product side, and comparing a carefully built number against a
+differently built one proves nothing. Second, we keep only triggers that open
+their own discussion thread. A comment posted into an existing thread can never
+receive an addressed edge, because replies in a thread point at whichever comment
+started it. Including such triggers would compare cases where the outcome was
+possible against cases where it was impossible by construction. This barely
+touches the cross-product side and removes nearly half of the same-product side,
+which is precisely why it has to be done. We then compare the two kinds of
+reviewer inside the same repository and the same month.
 
 We report percentage-point contrasts because they are easy to read. Main
 intervals cluster or resample by repository. Outcome models adjust for product,
@@ -438,12 +502,18 @@ write four in five of those exact replies.
 \centering
 \includegraphics[width=\linewidth]{Fig2.pdf}
 \caption{Public activity narrows before any connected edge appears. Panel A
-shows the share and count of PRs that meet each stronger evidence rule; the full
-cohort holds 8,608 PRs. Panel B shows the first visible owner after each of five
-tested burst windows, among PRs that still have an action. At five minutes,
-4,771 PRs still have one, and user accounts own 53\% of those actions against
-19\% for mapped products. The windows are test settings, not known private run
-boundaries.}
+shows how many PRs survive each stronger rule, starting from all 8,608 PRs where
+one product reviewed another product's change. Panel B asks who acts next once
+the opening rush of automated events is set aside, and repeats the question for
+five different waiting periods. The four kinds of actor are: a \emph{user
+account}, meaning an ordinary GitHub account rather than one we recognise as a
+coding product; a \emph{mapped product}, meaning one of the six coding products
+we identify by its official account; \emph{other bot}, meaning automation we
+cannot attribute to any of those six; and \emph{branch movement}, meaning the
+author rewrote the branch without anyone writing anything. At a five-minute wait,
+4,771 PRs still have an action left, and user accounts own 53\% of those against
+19\% for the products. The waiting periods are our test settings; nothing in the
+public record says where one tool's run ended.}
 \label{fig:topology}
 \end{figure}
 
@@ -490,18 +560,18 @@ special product-persistence mechanism.
 \centering
 \includegraphics[width=\linewidth]{Fig3.pdf}
 \caption{A quieter boundary, and a history that is common on both sides of it.
-Panel A compares later public action for cross- and same-product triggers in
-nearest-time matched pairs. Pairs share repository, author account, author
-product, source, and month. The sample holds 546 pairs from 149 repositories,
-with follow-up after 68.1\% of cross-product and 81.5\% of same-product
-triggers; the gap is 13.4 points, 95\% interval $-19.9$ to $-4.0$ from
-resampling repositories.
-Panel B compares the first user bridge, the first later decisive reviewer, and
-all users who answered within 48 hours. A decisive reviewer is one who approves
-or asks for changes. History means a public review on another PR in the same
-repository before the trigger. The open circle marks the wider responder
-baseline. A past review does not tell us whether an account used a tool,
-remembered the repository, worked by hand, or was picked on purpose.}
+Panel A pairs each cross-product trigger with a same-product trigger that matches
+it on repository, author account, author product, channel, and month, then asks
+what happened next. Every outcome we measured is shown, not only the one that
+moved. The filled mark is the cross-product side of a pair, the hollow mark the
+same-product side, and the number on the right is the difference between them.
+Only the broadest outcome, whether anyone did anything visible at all, has an
+interval clear of zero; it is printed in bold. Panel B asks how often the person
+who steps in had already reviewed some other pull request in that same repository
+before the trigger. The three bars are three ways of choosing whom to look at:
+whoever replied first, whoever later approved or asked for changes, and every
+person who acted at all inside 48 hours. Having reviewed before does not tell us
+whether an account used a tool, remembered the repository, worked by hand, or was picked on purpose.}
 \label{fig:bridge}
 \end{figure}
 
@@ -661,23 +731,31 @@ than automation alone, after the same kind of pre-trigger adjustment.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{Fig5.pdf}
-\caption{How much hidden structure it would take to remove the edge result. One
-missing yes-or-no factor, fixed before the trigger, removes it only inside the
-shaded corner: the factor must be much more common among answered PRs
-\emph{and} carry a large later-merge difference of its own. The dashed line is
-the weaker requirement that only blurs the interval. This is bias arithmetic, not
-evidence about any particular cause. Online Resource~1 reports the three
-before-the-fact outcomes, one of which leans positive and is not treated as a
-pass.}
+\caption{What it would take for a hidden cause to explain the result away.
+Suppose some factor we never measured, already true before the trigger, were
+really driving both the reply and the merge. How strong would it have to be? It
+would need two things at once: to be much more common among answered PRs than
+among silent ones, which is the horizontal axis, and to shift later merge a long
+way on its own, which is the vertical axis. Only inside the shaded corner does it
+remove the result; the dashed line marks the weaker feat of merely blurring the
+interval. The four dots are the factors we \emph{did} measure, placed on the same
+two axes. They sit in the bottom-left, nowhere near the corner, so a hidden cause
+strong enough to erase the finding would have to be unlike anything visible in
+this data. That is an argument about arithmetic and about what we observed; it is
+not proof that no such factor exists.}
 \label{fig:sensitivity}
 \end{figure}
 
-Figure~\ref{fig:sensitivity} asks how fragile that result is. The E-value here
-is 2.27. A hidden cause would have to be tied to both the exact edge and to
-later merge by at least that much, on top of every control we already measure,
-before it could explain the result away. Panel~A shows the same idea as a
-grid. The shaded corner is where such a factor would have to sit, and it is a
-demanding corner.
+Figure~\ref{fig:sensitivity} asks how fragile that result is. The worry is always
+the same with observational data: some factor we never measured might be driving
+both the reply and the merge. We cannot rule that out, but we can say how strong
+such a factor would have to be. That is what an \emph{E-value} does
+\citep{vanderweele2017evalue}. It asks: how strongly would a hidden factor need
+to be tied to \emph{both} the reply and the merge, over and above everything we
+already control for, before it could account for the whole result? Here the answer
+is 2.27 --- roughly, it would have to more than double the odds on both sides at
+once. The figure shows the same question as a map: the shaded corner is where such
+a factor would have to live, and it is a demanding corner to reach.
 
 A shuffle test gives a second check, one that rests on the design rather than
 on a formula. We keep only repositories that hold both kinds of PR. Inside each
@@ -685,16 +763,19 @@ one we shuffle the exposure label many times and refit. The shuffled results
 centre on zero, and the real result sits far out in the tail ($p=0.007$,
 two-sided). So the finding does not rest on the standard interval formula.
 
-The three before-the-fact outcomes are the weakest of these checks, so we
-report them as estimates rather than as a verdict. Two of them, an earlier
-decisive review and earlier branch movement, sit close to zero at every reply
-window. The third does not. Earlier user activity is $+7.0$ points at the
-48-hour window, with a 95\% interval of $-1.7$ to $15.7$. At one hour it is
-$+16.7$ points, and that interval clears zero. The one-hour value is a plain
-failure, and it is why 48 hours is our main window. The 48-hour value is a
-small leftover, based on too few PRs to be sure. It points in exactly the
-direction a doubtful reader would expect, so we report it as an estimate and
-not as a clean zero.
+The last check is the weakest, and it half fails. The idea is simple. We apply the
+same model to three things that had already finished \emph{before} the trigger.
+The trigger cannot reach back in time, so a well-behaved analysis should find
+nothing there. Two of the three behave, sitting on zero at every reply window. The
+third does not: PRs that were already busy beforehand lean towards being answered,
+and at the shortest reply window that lean is big enough to be real.
+
+That is specific rather than fatal. It means answered PRs were already somewhat
+different PRs, and our controls do not remove all of that difference. The lean
+bites hardest at the shortest window, which is one reason 48 hours is our main
+window rather than one hour. At 48 hours it is small and its interval includes
+zero, so we call it an estimate rather than a clean pass. Online Resource~1 prints
+all three.
 
 Two further checks matter more than any of the bounds above, because they attack
 the design rather than the arithmetic.
@@ -757,12 +838,20 @@ doubles the chance of an answer when the reviewer is a different one.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{Fig6.pdf}
-\caption{An issue link in the PR body and whether the review point gets
-answered, among triggers that open their own thread. Two lines, one for each
-kind of reviewer. Within a product the line is flat: the link changes nothing.
-Across a product boundary it climbs steeply. The gap between the two slopes is
-the result, and the note reports it with the checks it survived. These are links
-in observed data, not causes.}
+\caption{Whether naming an issue in the pull request helps depends on who is
+reviewing. An \emph{issue} is a numbered task in the project's own tracker, and
+linking one in the PR description tells any reader what the change is for. Panel
+A follows two groups: PRs reviewed by the same coding product that wrote them,
+and PRs reviewed by a different one. Within a product the line is flat, so the
+link changes nothing. Across a product boundary it climbs steeply. Each point
+shows how many PRs it rests on, since the linked cross-product group is much the
+smallest. Panel B shows the quantity we actually claim: the difference between
+those two slopes, with its 95\% interval, against a line at no difference. The
+pale band behind it is the range left when any one repository is dropped in turn.
+Shuffling the issue-link label at random inside each repository gives $p=0.001$.
+Both panels restrict to triggers that open their own discussion thread, because a
+trigger posted mid-thread could not be answered by our rule at all. These are
+links in observed data, not causes.}
 \label{fig:context}
 \end{figure}
 

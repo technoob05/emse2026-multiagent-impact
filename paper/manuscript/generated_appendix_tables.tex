@@ -182,6 +182,46 @@ All outcome regressions & resampling unit: None & no resampling & -- & Cluster-r
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.28\textwidth}L{0.08\textwidth}L{0.11\textwidth}L{0.12\textwidth}L{0.12\textwidth}L{0.21\textwidth}@{}}
+\caption{Measurement reach and the burst-window convention.}\label{tab:s-coverage}\\
+\endfirsthead
+\caption*{Measurement reach and the burst-window convention. (continued)}\\
+\endhead
+\toprule
+\multicolumn{6}{@{}l}{\textbf{Panel A. Which review interactions can carry a reply anchor at all}} \\
+\midrule
+Interaction channel & Reply anchor & Reviewer-side events & Share of events (\%) & Trigger PRs & Share of triggers (\%) \\
+\midrule
+Inline review comment (pr\_review\_comments) & Yes & 9,086 & 42.7 & 1,067 & 61.6 \\
+Review submission body (pr\_reviews) & No & 6,490 & 30.5 & 353 & 20.4 \\
+PR-level comment (pr\_comments) & No & 5,719 & 26.9 & 313 & 18.1 \\
+All channels that carry no reply anchor & No & 12,209 & 57.3 & 666 & 38.4 \\
+Inline thread roots, the only events an exact reply can name & Yes & 8,897 & 81.2 & -- & -- \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel B. RQ1 first-owner split under nine burst-window schemes}} \\
+\midrule
+Burst-window scheme & Cut (min) & User (\%) & Mapped product (\%) & User $-$ mapped (pp) & Repository-cluster 95\% interval \\
+\midrule
+Fixed convention, no burst excluded & 0 & 27.7 & 15.2 & +12.5 & [+7.6, +18.3] \\
+Fixed convention & 1 & 28.2 & 13.9 & +14.3 & [+9.6, +19.9] \\
+Fixed convention (published) & 5 & 29.3 & 10.7 & +18.6 & [+14.3, +23.8] \\
+Fixed convention & 10 & 28.0 & 9.6 & +18.4 & [+14.2, +23.1] \\
+Fixed convention & 30 & 25.2 & 7.6 & +17.6 & [+14.1, +21.6] \\
+Data-driven global log-hazard change point & 0.9 & 28.2 & 14.0 & +14.2 & [+9.3, +19.7] \\
+Same rule, search capped at 60 minutes & 0.9 & 28.2 & 14.0 & +14.2 & [+9.4, +19.9] \\
+Per-product log-hazard change point & 0.9--458.3 & 25.1 & 10.5 & +14.6 & [+11.0, +18.5] \\
+Per-product rule, search capped at 60 minutes & 0.6--8.6 & 27.8 & 13.4 & +14.5 & [+9.8, +19.7] \\
+\bottomrule
+\end{longtable}
+\noindent\footnotesize \textit{Note:} Panel A counts interaction events on the 1,733 trigger PRs of the landmark cohort, split by the channel that carries them; only inline review comments carry a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, fires on 51.4\% of PR-level-comment triggers against 34.2\% of inline triggers; it is reported as a reach diagnostic and is never used for estimation. Panel B re-runs the RQ1 first-owner split under nine burst conventions. No data-driven burst cut exists: the log gap density has a single dominant mode at 4.25 minutes with no interior antimode below 60 minutes, and that rule finds a burst-region antimode in only 16.8\% of repository bootstrap replicates. The change-point rule always returns a value, 0.90 minutes globally, but it marks where responses start arriving rather than where a machine burst ends. The five-minute window is therefore a stated convention, not a discovered boundary. It matters for magnitude and not for direction: state agreement with the five-minute convention ranges from 79.8\% to 91.2\%, while the user-minus-mapped-product difference stays positive with a repository-clustered interval excluding zero under every scheme. Per-product cuts, gap histograms, and the hazard grid are in the burst threshold selection products selected\_cuts.csv, gap\_histogram.csv, and next\_event\_hazard.csv.
+\endgroup
+
+
+\FloatBarrier
+\needspace{8\baselineskip}
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
 \begin{longtable}{@{}r L{0.21\textwidth}r r L{0.14\textwidth}r@{}}
 \caption{First public state after each rapid-burst threshold.}\label{tab:s-burst}\\
 \toprule
@@ -335,6 +375,50 @@ Cross-feedback PR author accounts & 8,608 & 1,416 & 40.4 & 4 &  \\
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.26\textwidth}L{0.07\textwidth}L{0.09\textwidth}L{0.11\textwidth}L{0.16\textwidth}L{0.23\textwidth}@{}}
+\caption{Where the matched gap lives, and what repository descriptors explain.}\label{tab:s-heterogeneity}\\
+\endfirsthead
+\caption*{Where the matched gap lives, and what repository descriptors explain. (continued)}\\
+\endhead
+\toprule
+\multicolumn{6}{@{}l}{\textbf{Panel A. Composition of the matched pairs and the gap inside each product pair}} \\
+\midrule
+Ordered product pair & Pairs & Repos & Cross (\%) & Same (\%) & Difference (pp) and repository-cluster 95\% interval \\
+\midrule
+All matched pairs (published gap) & 546 & 149 & 68.1 & 81.5 & -13.4 [-19.9, -4.0] \\
+OpenAI\_Codex to Claude\_Code & 152 & 19 & 59.9 & 85.5 & -25.7 [-32.7, +3.6] \\
+OpenAI\_Codex to Copilot & 145 & 50 & 64.1 & 84.1 & -20.0 [-31.8, -5.1] \\
+Copilot to OpenAI\_Codex & 73 & 36 & 76.7 & 75.3 & +1.4 [-9.9, +13.8] \\
+OpenAI\_Codex to Cursor & 53 & 21 & 66.0 & 67.9 & -1.9 [-15.0, +10.9] \\
+Copilot to Claude\_Code & 44 & 10 & 77.3 & 75.0 & +2.3 [-7.1, +25.0] \\
+Copilot to Cursor & 33 & 16 & 75.8 & 81.8 & -6.1 [-21.9, +5.7] \\
+5 further pairs below the 30-pair floor & 46 & -- & -- & -- & not estimated \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel B. Repository descriptors behind the familiar-replier split}} \\
+\midrule
+Specification or pre-trigger descriptor & Familiar & Newcomer & Estimate or median gap & 95\% interval & Share explained or verdict \\
+\midrule
+Primary (pre-trigger adjusted) & -- & -- & +40.7 pp & [+22.4, +59.1] & 0.0\% explained \\
+Primary + repository moderators & -- & -- & +33.4 pp & [+15.3, +51.5] & 18.1\% explained \\
+Repository fixed effects & -- & -- & +8.7 pp & [-16.8, +34.2] & 78.5\% explained \\
+Repository moderators + fixed effects & -- & -- & +8.7 pp & [-16.9, +34.4] & 78.5\% explained \\
+pre\_total\_prs & 18.50 & 5.00 & 13.50 & [-3.00, 21.50] & does not separate \\
+pre\_distinct\_contributors & 2.00 & 3.00 & -1.00 & [-2.00, 1.50] & does not separate \\
+pre\_merge\_rate & 0.56 & 0.27 & 0.30 & [0.05, 0.44] & separates \\
+pre\_reviews\_per\_pr & 1.44 & 0.24 & 1.20 & [0.50, 1.62] & separates \\
+pre\_share\_prs\_any\_review & 0.49 & 0.14 & 0.35 & [-0.02, 0.58] & does not separate \\
+pre\_repo\_age\_days & 70.47 & 71.09 & -0.62 & [-127.63, 81.32] & does not separate \\
+\bottomrule
+\end{longtable}
+\noindent\footnotesize \textit{Note:} The rows of Panel A are the published matched-pair gap and then the same gap inside each ordered product pair with at least 30 pairs. The gap is general by the pre-registered rule, verdict general: every leave-one-repository-out refit and every leave-one-product-pair-out refit stays negative (repository range -13.9 to -9.3 pp), and 4 of 6 qualifying pairs reproduce its sign. It is not uniform in size: only 1 qualifying pair has an interval excluding zero on its own, the two Codex-authored pairs carry the average, and the remaining pairs are near zero, so the average should be read as concentrated in the Codex-authored strata. The pairs are also unevenly spread, with the largest repository holding 20.9\% of pairs, the largest ordered pair 27.8\%, a repository Gini of 0.583, and a median of 2 pairs per repository. The rows of Panel B are first the four RQ3 familiar-versus-newcomer models, in percentage points, and then the six pre-trigger repository descriptors, each in its own units: counts of PRs and contributors, rates between zero and one, reviews per PR, and days. The descriptors are measured only on pull requests and reviews strictly before each repository's first trigger. They explain 18.1\% of the split, while repository fixed effects leave an interval covering zero, so the split is a between-repository difference that these governance and volume descriptors do not account for. Group sizes are 40 familiar-dominant, 26 newcomer-dominant, 3 tied, and 400 repositories with no user-written edge. Per-repository descriptors and every leave-one-out refit are in the heterogeneity audit products repository\_moderators.csv, matched\_pair\_composition.csv, and matched\_pair\_leave\_one\_out.csv.
+\endgroup
+
+
+\FloatBarrier
+\needspace{8\baselineskip}
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
 \begin{longtable}{@{}L{0.08\textwidth}L{0.26\textwidth}L{0.10\textwidth}L{0.15\textwidth}L{0.13\textwidth}L{0.20\textwidth}@{}}
 \caption{Exact-parent addressed edge, specificity controls, and the four-state gradient at the 48-hour landmark.}\label{tab:s-addressed-edge}\\
 \toprule
@@ -466,6 +550,80 @@ Who wrote the edge & Prior reviewer minus newcomer: leave one exposed repository
 \bottomrule
 \end{longtable}
 \noindent\footnotesize \textit{Note:} Unless a row says otherwise, every check uses the 1,067-PR inline-trigger landmark cohort and the pre-trigger adjusted specification. Cohort-restriction rows show that the landmark cohort is the slower-resolving remainder of the cross-product inline-trigger population. The exposure rule requires a reply whose parent identifier is the trigger's own identifier; it does not require another product to write it, and the composition rows report who actually wrote the 128 exposure events on the 109 exposed PRs. Exposure-definition rows refit the primary model on the same cohort under stricter definitions. A standardized mean difference is the group difference divided by the pooled standard deviation; every value is below 0.16 in absolute size, and balance on measured variables says nothing about unmeasured structure such as task difficulty. E-values are computed on an approximate risk-ratio scale from the adjusted risk difference and the unexposed later-merge rate; they state the minimum association an unmeasured factor would need with both the exact edge and later merge, beyond the measured controls. Negative-control outcomes were complete before the trigger, so the exposure cannot produce them and a non-null estimate signals residual confounding rather than an effect. The unconditional randomisation rows permute across the whole cohort and their bracketed pair is the 2.5th to 97.5th percentile of the permuted reference distribution, not a confidence interval; that distribution is not centred on zero because 423 of 469 repositories contain no exposure variation. The conditional row, which is the one quoted in the article, uses only repositories containing both exposed and unexposed PRs and adds repository fixed effects, so its reference is centred. The whole-population rows drop the hour-48 restriction: every cross-product inline-trigger PR with a complete 30-day horizon is followed from its trigger, follow-up is split into eleven intervals, and the exact addressed edge enters as a time-varying covariate, so a PR contributes unexposed periods until its own first exact reply; the estimate is an odds ratio from a pooled logistic model with interval indicators and repository-clustered standard errors. The edge-class rows split the 109 exposed PRs by the account that wrote the first exact reply, using the same strict prior-history rule as the RQ2 analysis, and the fixed-effect row is the decisive one: the gap between a prior reviewer and a newcomer is largely a difference between repositories, not within them, so these rows describe where the signal sits and do not identify a mechanism. None of these checks identifies a causal effect.
+\endgroup
+
+
+\FloatBarrier
+\needspace{8\baselineskip}
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.27\textwidth}L{0.06\textwidth}L{0.07\textwidth}L{0.10\textwidth}L{0.16\textwidth}L{0.26\textwidth}@{}}
+\caption{Placebo exposures and what the reply actually says.}\label{tab:s-specificity}\\
+\endfirsthead
+\caption*{Placebo exposures and what the reply actually says. (continued)}\\
+\endhead
+\toprule
+\multicolumn{6}{@{}l}{\textbf{Panel A. Placebo exposures against the observed addressed edge}} \\
+\midrule
+Exposure or placebo null & PRs & Exposed & Estimate or null mean (pp) & 95\% interval or null 2.5--97.5\% & $p$ or position in the null \\
+\midrule
+Observed addressed edge (published exposure) & 1,067 & 109 & +17.3 & [+7.3, +27.4] & p < 0.001 \\
+Placebo: exact reply anchored to a different inline comment & 958 & 75 & +17.5 & [+5.0, +30.1] & p = 0.006 \\
+Joint model: addressed edge minus off-target reply & 1,067 & -- & +1.0 & [-13.1, +15.1] & p = 0.891 \\
+Placebo: permuted anchor, calendar month, fully permutable & 1,067 & 109 & +16.8 & [+10.3, +23.5] & observed at percentile 56.10, p = 0.439 \\
+Placebo: permuted anchor, repository by month, degenerate support & 1,067 & 109 & +16.3 & [+15.1, +17.6] & observed at percentile 83.70, p = 0.163 \\
+Placebo: time-shifted edge, drawn independently of the PR's history & 1,067 & 109.4 & -0.2 & [-9.7, +9.9] & observed at percentile 99.95, p < 0.001 \\
+Diagnostic: any inline reply inside the window & 1,067 & 184 & +18.4 & [+9.5, +27.4] & p < 0.001 \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel B. What the addressed-edge reply actually says}} \\
+\midrule
+Reply category & Edges (rule) & Share (\%) & Edges (hand read) & Contrast (pp) & Repository-cluster 95\% interval \\
+\midrule
+Platform button text written on the person's behalf & 4 & 3.8 & 4 & -- & -- \\
+Agent invocation: the point is handed to a machine & 14 & 13.3 & 13 & -- & -- \\
+Acknowledgement only, below the twelve-word floor & 28 & 26.7 & 21 & -- & -- \\
+Substantive engineering prose & 59 & 56.2 & 67 & +16.8 & [+3.7, +29.9] \\
+Routing edge: the first two categories combined & 18 & 17.1 & -- & +8.7 & [-20.6, +38.1] \\
+Any addressed edge, the published exposure & 105 & 100.0 & 105 & +17.3 & [+7.3, +27.4] \\
+\bottomrule
+\end{longtable}
+\noindent\footnotesize \textit{Note:} Panel A is one row per exposure or per placebo null, all on the same inline-trigger landmark cohort and the same pre-trigger control set. Rows one to three are clustered linear-probability estimates; rows four to six are null distributions over 2,000 draws, so their interval is the 2.5 to 97.5 percentile of the null rather than a confidence interval. Read plainly: an off-target reply, which points at a different inline comment and therefore carries no addressed edge, gives the same estimate as the real edge, and the permuted-anchor null is centred near the observed estimate (+16.8 pp against an observed +17.3 pp). Permuting which replying PR is anchored to its own trigger reproduces the estimate, so the anchoring adds nothing beyond the presence of a reply; the frozen verdict recorded with the analysis is NOT\_SPECIFIC\_ANCHORING\_NULL\_REPRODUCES\_ESTIMATE. Only the time-shifted null is centred near zero, which rules out the weaker worry that the hour-48 landmark rule alone manufactures the contrast. The last row names what the two liveness-preserving controls suggest the estimate actually tracks. Panel B classifies every addressed-edge reply by what it says, using a four-rule priority ladder, and re-estimates the contrast by category. Shares are of the 105 user-written edges among the 128 exposure events; the rule and a full hand reading of all 105 texts disagree on 10 rows (9.5\%), always in the conservative direction. The subgroup contrasts are underpowered by construction and are description, not a causal decomposition. Full rows are in the pseudo-edge control products contrasts.csv and permutation\_null.csv and in the reply-content products reply\_content\_rule\_set.csv and addressed\_edge\_reply\_classification.csv.
+\endgroup
+
+
+\FloatBarrier
+\needspace{8\baselineskip}
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.22\textwidth}L{0.08\textwidth}L{0.10\textwidth}L{0.09\textwidth}L{0.10\textwidth}L{0.33\textwidth}@{}}
+\caption{Automation heuristics on the accounts that write the edges.}\label{tab:s-actors}\\
+\endfirsthead
+\caption*{Automation heuristics on the accounts that write the edges. (continued)}\\
+\endhead
+\toprule
+\multicolumn{6}{@{}l}{\textbf{Panel A. Machine-likeness heuristics on the edge-writing accounts}} \\
+\midrule
+Heuristic & Accounts & Account share (\%) & Edge events & Event share (\%) & Pre-registered statistic and threshold \\
+\midrule
+Template repetition & 7 & 8.8 & 11 & 10.5 & duplicate\_normalised\_text\_share ($\ge$ 0.5 with $\ge$ 10 comments) \\
+Regular inter-comment timing & 1 & 1.2 & 1 & 1.0 & inter\_comment\_gap\_cv or narrow\_band\_gap\_share (cv $\le$ 0.5 or $\ge$ 0.25 of gaps within $\pm$10\% of the median gap, with $\ge$ 20 gaps) \\
+No diurnal dip in the clock & 0 & 0.0 & 0 & 0.0 & active\_utc\_hours and min\_hour\_share\_of\_uniform (all 24 UTC hours occupied and the quietest hour holds $\ge$ 0.5 of the uniform expectation, with $\ge$ 48 comments) \\
+Sustained comments per active day & 0 & 0.0 & 0 & 0.0 & comments\_per\_active\_day ($\ge$ 20.0 comments per active day with $\ge$ 50 comments) \\
+Any single heuristic & 7 & 8.8 & 11 & 10.5 & -- \\
+At least two heuristics (pre-registered rule) & 1 & 1.2 & 1 & 1.0 & -- \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel B. The later-merge contrast after dropping flagged accounts}} \\
+\midrule
+Cohort & PRs & Exposed & Exposed merge (\%) & Estimate (pp) & Repository-cluster 95\% interval \\
+\midrule
+full landmark cohort (published estimate) & 1,067 & 109 & 55.0 & +17.3 & [+7.3, +27.4] \\
+dropping PRs whose edge was written by an account tripping $\ge$ 2 heuristics & 1,066 & 108 & 55.6 & +17.9 & [+7.8, +28.0] \\
+dropping PRs whose edge was written by an account tripping any heuristic & 1,058 & 100 & 53.0 & +15.2 & [+4.6, +25.8] \\
+\bottomrule
+\end{longtable}
+\noindent\footnotesize \textit{Note:} The rows of Panel A are the four pre-registered machine-likeness heuristics and the two combination rules, scored on the 80 user accounts that write the 105 user-written addressed edges among the 128 exposure events, using 7,141 of their earlier comments. An account is flagged when it trips at least two heuristics. The median machine-likeness score is 0.198 and the maximum is 0.471, so no account is near the automated end of the scale. The rows of Panel B re-estimate the published later-merge contrast after dropping every PR whose edge a flagged account wrote; the estimate moves in the opposite direction to the worry, and dropping any account that trips even one heuristic leaves the interval excluding zero. Of the 105 edge texts, 102 are distinct after normalisation and the most repeated text appears 3 times; hand reading of the 20 highest-scoring accounts finds the repetition to be hand-issued agent invocations and platform button text rather than generated output. These heuristics are behavioural proxies over public traces, not ground truth about who or what operates an account, and they cannot detect a person pasting model output. Per-account scores and the hand-review sheet are in the account automation products account\_machine\_likeness\_scores.csv and manual\_review\_top\_accounts.csv.
 \endgroup
 
 
@@ -660,13 +818,19 @@ Step & Command & Expected rows & Produces \\
 14 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}r\allowbreak{}q\allowbreak{}3\allowbreak{}\_\allowbreak{}e\allowbreak{}x\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 3 rows & Whole-population time-varying hazard, and the edge split by who wrote it \\
 15 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}t\allowbreak{}a\allowbreak{}s\allowbreak{}k\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}e\allowbreak{}x\allowbreak{}t\allowbreak{}\_\allowbreak{}i\allowbreak{}n\allowbreak{}t\allowbreak{}e\allowbreak{}r\allowbreak{}a\allowbreak{}c\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 8 rows & RQ4 issue-link interaction across the product boundary \\
 16 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}m\allowbreak{}e\allowbreak{}r\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}c\allowbreak{}u\allowbreak{}r\allowbreak{}v\allowbreak{}e\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 73 rows & Cumulative merge curves for the exact-edge contrast \\
-17 & \texttt{p\allowbreak{}r\allowbreak{}e\allowbreak{}p\allowbreak{}a\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}l\allowbreak{}l\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}d\allowbreak{}i\allowbreak{}t\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 8 rows & Blinded structural same-locus coder packets \\
-18 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}l\allowbreak{}l\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}s\allowbreak{}c\allowbreak{}r\allowbreak{}i\allowbreak{}p\allowbreak{}t\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}x\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 5 rows & Descriptive timing and concentration for the same-locus population \\
-19 & \texttt{g\allowbreak{}e\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}t\allowbreak{}e\allowbreak{}c\allowbreak{}h\allowbreak{}n\allowbreak{}i\allowbreak{}c\allowbreak{}a\allowbreak{}l\allowbreak{}\_\allowbreak{}a\allowbreak{}p\allowbreak{}p\allowbreak{}e\allowbreak{}n\allowbreak{}d\allowbreak{}i\allowbreak{}x\allowbreak{}\_\allowbreak{}t\allowbreak{}a\allowbreak{}b\allowbreak{}l\allowbreak{}e\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Every table in this appendix \\
-20 & \texttt{v\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}d\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}p\allowbreak{}o\allowbreak{}n\allowbreak{}s\allowbreak{}e\allowbreak{}\_\allowbreak{}o\allowbreak{}w\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}s\allowbreak{}h\allowbreak{}i\allowbreak{}p\allowbreak{}\_\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}p\allowbreak{}u\allowbreak{}t\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Re-checks the ownership products against their frozen contracts \\
-21 & \texttt{v\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}d\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}o\allowbreak{}r\allowbreak{}d\allowbreak{}i\allowbreak{}n\allowbreak{}a\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}e\allowbreak{}x\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}p\allowbreak{}u\allowbreak{}t\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Re-checks the topology and landmark products \\
-22 & \texttt{v\allowbreak{}i\allowbreak{}s\allowbreak{}u\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}z\allowbreak{}e\allowbreak{}\_\allowbreak{}m\allowbreak{}a\allowbreak{}n\allowbreak{}u\allowbreak{}s\allowbreak{}c\allowbreak{}r\allowbreak{}i\allowbreak{}p\allowbreak{}t\allowbreak{}\_\allowbreak{}f\allowbreak{}i\allowbreak{}g\allowbreak{}u\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & The five article figures and the two appendix figures \\
-23 & \texttt{u\allowbreak{}v\allowbreak{} r\allowbreak{}u\allowbreak{}n\allowbreak{} -\allowbreak{}-\allowbreak{}w\allowbreak{}i\allowbreak{}t\allowbreak{}h\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}e\allowbreak{}s\allowbreak{}t\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}n\allowbreak{} -\allowbreak{}m\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}e\allowbreak{}s\allowbreak{}t\allowbreak{} -\allowbreak{}q\allowbreak{}} & -- & Automated test suite \\
+17 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}a\allowbreak{}n\allowbreak{}c\allowbreak{}h\allowbreak{}o\allowbreak{}r\allowbreak{}a\allowbreak{}b\allowbreak{}i\allowbreak{}l\allowbreak{}i\allowbreak{}t\allowbreak{}y\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}v\allowbreak{}e\allowbreak{}r\allowbreak{}a\allowbreak{}g\allowbreak{}e\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 3 rows & Which review channels carry a reply anchor, and the share of triggers in scope \\
+18 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}b\allowbreak{}u\allowbreak{}r\allowbreak{}s\allowbreak{}t\allowbreak{}\_\allowbreak{}t\allowbreak{}h\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}h\allowbreak{}o\allowbreak{}l\allowbreak{}d\allowbreak{}\_\allowbreak{}s\allowbreak{}e\allowbreak{}l\allowbreak{}e\allowbreak{}c\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 9 rows & Data-driven burst cuts, per-product cuts, RQ1 owner split under nine schemes \\
+19 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}p\allowbreak{}s\allowbreak{}e\allowbreak{}u\allowbreak{}d\allowbreak{}o\allowbreak{}\_\allowbreak{}e\allowbreak{}d\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}n\allowbreak{}e\allowbreak{}g\allowbreak{}a\allowbreak{}t\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}r\allowbreak{}o\allowbreak{}l\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 4 rows & Off-target, permuted-anchor, and time-shifted placebo exposures \\
+20 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}u\allowbreak{}s\allowbreak{}e\allowbreak{}r\allowbreak{}\_\allowbreak{}a\allowbreak{}c\allowbreak{}c\allowbreak{}o\allowbreak{}u\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}t\allowbreak{}o\allowbreak{}m\allowbreak{}a\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}d\allowbreak{}i\allowbreak{}t\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 6 rows & Machine-likeness heuristics on edge-writing accounts and the re-estimated contrast \\
+21 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}a\allowbreak{}d\allowbreak{}d\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}s\allowbreak{}e\allowbreak{}d\allowbreak{}\_\allowbreak{}e\allowbreak{}d\allowbreak{}g\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}p\allowbreak{}l\allowbreak{}y\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}n\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}t\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}d\allowbreak{}i\allowbreak{}t\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 12 rows & Reply-content classification of every addressed edge and the contrast by category \\
+22 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}h\allowbreak{}e\allowbreak{}t\allowbreak{}e\allowbreak{}r\allowbreak{}o\allowbreak{}g\allowbreak{}e\allowbreak{}n\allowbreak{}e\allowbreak{}i\allowbreak{}t\allowbreak{}y\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}d\allowbreak{}i\allowbreak{}t\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 11 rows & Matched-pair composition, per-product-pair gaps, repository moderators \\
+23 & \texttt{p\allowbreak{}r\allowbreak{}e\allowbreak{}p\allowbreak{}a\allowbreak{}r\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}v\allowbreak{}i\allowbreak{}e\allowbreak{}w\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}l\allowbreak{}l\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}a\allowbreak{}u\allowbreak{}d\allowbreak{}i\allowbreak{}t\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 8 rows & Blinded structural same-locus coder packets \\
+24 & \texttt{r\allowbreak{}u\allowbreak{}n\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}l\allowbreak{}l\allowbreak{}i\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}d\allowbreak{}e\allowbreak{}s\allowbreak{}c\allowbreak{}r\allowbreak{}i\allowbreak{}p\allowbreak{}t\allowbreak{}i\allowbreak{}v\allowbreak{}e\allowbreak{}\_\allowbreak{}e\allowbreak{}x\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & 5 rows & Descriptive timing and concentration for the same-locus population \\
+25 & \texttt{g\allowbreak{}e\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}t\allowbreak{}e\allowbreak{}c\allowbreak{}h\allowbreak{}n\allowbreak{}i\allowbreak{}c\allowbreak{}a\allowbreak{}l\allowbreak{}\_\allowbreak{}a\allowbreak{}p\allowbreak{}p\allowbreak{}e\allowbreak{}n\allowbreak{}d\allowbreak{}i\allowbreak{}x\allowbreak{}\_\allowbreak{}t\allowbreak{}a\allowbreak{}b\allowbreak{}l\allowbreak{}e\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Every table in this appendix \\
+26 & \texttt{v\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}d\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}p\allowbreak{}o\allowbreak{}n\allowbreak{}s\allowbreak{}e\allowbreak{}\_\allowbreak{}o\allowbreak{}w\allowbreak{}n\allowbreak{}e\allowbreak{}r\allowbreak{}s\allowbreak{}h\allowbreak{}i\allowbreak{}p\allowbreak{}\_\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}p\allowbreak{}u\allowbreak{}t\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Re-checks the ownership products against their frozen contracts \\
+27 & \texttt{v\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}d\allowbreak{}a\allowbreak{}t\allowbreak{}e\allowbreak{}\_\allowbreak{}c\allowbreak{}o\allowbreak{}o\allowbreak{}r\allowbreak{}d\allowbreak{}i\allowbreak{}n\allowbreak{}a\allowbreak{}t\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}e\allowbreak{}x\allowbreak{}t\allowbreak{}e\allowbreak{}n\allowbreak{}s\allowbreak{}i\allowbreak{}o\allowbreak{}n\allowbreak{}\_\allowbreak{}o\allowbreak{}u\allowbreak{}t\allowbreak{}p\allowbreak{}u\allowbreak{}t\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & Re-checks the topology and landmark products \\
+28 & \texttt{v\allowbreak{}i\allowbreak{}s\allowbreak{}u\allowbreak{}a\allowbreak{}l\allowbreak{}i\allowbreak{}z\allowbreak{}e\allowbreak{}\_\allowbreak{}m\allowbreak{}a\allowbreak{}n\allowbreak{}u\allowbreak{}s\allowbreak{}c\allowbreak{}r\allowbreak{}i\allowbreak{}p\allowbreak{}t\allowbreak{}\_\allowbreak{}f\allowbreak{}i\allowbreak{}g\allowbreak{}u\allowbreak{}r\allowbreak{}e\allowbreak{}s\allowbreak{}.\allowbreak{}p\allowbreak{}y\allowbreak{}} & -- & The five article figures and the two appendix figures \\
+29 & \texttt{u\allowbreak{}v\allowbreak{} r\allowbreak{}u\allowbreak{}n\allowbreak{} -\allowbreak{}-\allowbreak{}w\allowbreak{}i\allowbreak{}t\allowbreak{}h\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}e\allowbreak{}s\allowbreak{}t\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}h\allowbreak{}o\allowbreak{}n\allowbreak{} -\allowbreak{}m\allowbreak{} p\allowbreak{}y\allowbreak{}t\allowbreak{}e\allowbreak{}s\allowbreak{}t\allowbreak{} -\allowbreak{}q\allowbreak{}} & -- & Automated test suite \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{Panel B. Disposition of every experiment and claim}} \\
 \midrule

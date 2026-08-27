@@ -1,0 +1,12 @@
+{
+  "repository": "https://api.github.com/repos/liam-hq/liam",
+  "author_product": "Devin",
+  "reviewing_product": "Copilot",
+  "burst_minutes": 5,
+  "landmark_hours": 48,
+  "reply_written_by": "a person",
+  "hours_trigger_to_reply": 22.5,
+  "days_trigger_to_merge": 2.1,
+  "selection": "first pull request by identifier in the landmark cohort that exercises every rule: cross-product inline trigger, a sibling comment from the same submitted review, an event inside the burst window, an exact reply to the trigger, and a merge after hour 48",
+  "note": "accounts are reported by role rather than by login; the pull request is public but naming individuals adds nothing"
+}

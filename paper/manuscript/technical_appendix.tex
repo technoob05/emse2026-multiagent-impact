@@ -74,16 +74,20 @@ Tied first timestamps, the fixed priority order, every leave-one-out exclusion, 
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ2 -- who bridges the boundary?}} \\
 13.4-point matched gap in later visible action across the product boundary, and the seven in ten first user bridges who had already reviewed in the repository & \ref{tab:s-rq2} & \pageref{tab:s-rq2} \\
+Where the matched gap actually lives across repositories and product pairs, and which pre-trigger repository descriptors explain the familiar-replier split & \ref{tab:s-heterogeneity} & \pageref{tab:s-heterogeneity} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ3 -- who writes the connection, and does it mark a later state?}} \\
 17.3-point addressed-edge contrast, reply windows, repository fixed effects, product-pair drops, specificity control, and the four-state 48-hour gradient & \ref{tab:s-addressed-edge} & \pageref{tab:s-addressed-edge} \\
 Landmark selection, who writes the edge, stricter edge rules, pre-trigger balance, the E-value of 2.27, tipping grid, negative controls, the conditional shuffle test at $p=0.007$, and the whole-population hazard near 1.7 & \ref{tab:s-sensitivity} & \pageref{tab:s-sensitivity} \\
+Placebo exposures against the real addressed edge, and what the reply text actually says & \ref{tab:s-specificity} & \pageref{tab:s-specificity} \\
+Machine-likeness heuristics on the accounts that write the edges, and the contrast after dropping flagged accounts & \ref{tab:s-actors} & \pageref{tab:s-actors} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ4 -- what makes someone answer across the boundary?}} \\
 Issue link and answered review points, by reviewer relation, with the shuffled-label check & \ref{tab:s-task-context} & \pageref{tab:s-task-context} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{Measurement contract used by all four questions}} \\
 Release layers, units, and event-table coverage & \ref{tab:s-dataset} & \pageref{tab:s-dataset} \\
+Which review interactions can carry a reply anchor at all, and the RQ1 owner split under nine burst-window schemes & \ref{tab:s-coverage} & \pageref{tab:s-coverage} \\
 Exact account allowlist and the code-level glossary & \ref{tab:s-definitions} & \pageref{tab:s-definitions} \\
 Named estimation specifications, their formulas, and every resampling setting & \ref{tab:s-specifications} & \pageref{tab:s-specifications} \\
 Data-quality and temporal gates, with column-by-column leakage tags & \ref{tab:s-quality} & \pageref{tab:s-quality} \\
@@ -288,6 +292,25 @@ Section~\ref{app:ordering}.
 \input{apx_tables_cohorts.tex}
 \FloatBarrier
 
+\subsection{Measurement reach and the burst-window convention}\label{app:coverage}
+
+Two stated conventions bound everything that follows, and
+Table~\ref{tab:s-coverage} reports both. Panel A asks how much of the review
+record can carry an exact reply anchor at all. Only inline review comments do:
+they are 43\% of reviewer-side interaction events and 62\% of triggers, so the
+addressed edge is silent about the other 57\% of events and 38\% of triggers by
+construction, not by finding. Panel B asks whether the five-minute rapid-burst
+window is discoverable from the data. It is not. The trigger-to-next-event gap
+has one dominant mode near four minutes and no valley inside any defensible
+burst region, so we treat the window as a declared convention and re-run the
+RQ1 owner split under nine schemes, including the cuts a change-point rule
+selects on its own and per-product cuts. The magnitude of the user-minus-mapped
+gap moves between 12.5 and 18.6 points; its sign and its repository-clustered
+interval never change.
+
+\input{apx_tables_coverage.tex}
+\FloatBarrier
+
 \section{RQ1 details: burst collapse and relay topology}\label{app:rq1}
 
 \subsection{Burst thresholds, the tie rule, and leave-one-out ordering}\label{app:ordering}
@@ -367,6 +390,27 @@ is zero in the valid request rows. The paper therefore rejects the claim that
 the triggering product was deliberately routed or requested.
 
 \input{apx_tables_rq2.tex}
+\FloatBarrier
+
+\subsection{Where the matched gap lives}\label{app:heterogeneity}
+
+An average over 546 matched pairs can hide a gap that exists in only one
+corner of the data, so Table~\ref{tab:s-heterogeneity} opens the average up.
+Panel A shows that the pairs are unevenly spread -- one repository holds 21\% of
+them and one ordered product pair holds 28\% -- and then re-estimates the gap
+inside each product pair large enough to stand alone. The direction is general
+by the pre-registered rule: every leave-one-repository-out and
+leave-one-product-pair-out refit stays negative, and four of six qualifying
+pairs reproduce the sign. The size is not general. The two Codex-authored pairs
+carry the average, only one pair has an interval excluding zero on its own, and
+the rest sit near zero, which is how the gap should be read. Panel B turns to
+the RQ3 familiar-versus-newcomer split and asks what six pre-trigger repository
+descriptors explain. They account for 18\% of it; repository fixed effects
+absorb most of the rest and leave an interval covering zero. Familiar repliers
+and newcomers are largely in different repositories, and the descriptors we can
+measure do not say what separates those repositories.
+
+\input{apx_tables_heterogeneity.tex}
 \FloatBarrier
 
 \section{RQ3 details: connected signals and later integration}\label{app:rq3}
@@ -527,6 +571,48 @@ as a description of where the association sits. It is not evidence that
 repository familiarity is what makes the reply work, and the article says so.
 
 \input{apx_tables_rq3.tex}
+\FloatBarrier
+
+\subsection{Placebo exposures and what the reply says}\label{app:specificity}
+
+Everything above tests whether the addressed-edge association is fragile. It
+does not test whether the association is about the \emph{anchoring} at all, and
+Table~\ref{tab:s-specificity}, Panel A, does. Three placebo exposures replace
+the real edge in turn: a reply anchored to a different inline comment on the
+same PR, a permuted anchor that keeps every reply event but reassigns which
+replying PR counts as anchored, and an edge time drawn independently of the
+PR's own history. The off-target reply gives the same estimate as the real
+edge, and the permuted-anchor null is centred at 16.8 points against an
+observed 17.3, so the anchoring itself adds nothing: what the estimate tracks
+is that somebody replied inline within the window, which is exactly the coarse
+diagnostic in the last row. Only the time-shifted null is centred near zero, so
+the landmark rule alone does not manufacture the contrast. Panel B then reads
+the reply text. Of 105 user-written edges, 56\% are substantive engineering
+prose, 27\% are acknowledgement only, and 17\% route the point onward to a
+machine or are GitHub's own button text; a full hand reading of all 105 texts
+disagrees with the rule on ten. The contrast survives when only a substantive
+reply counts as exposure and is indistinguishable from zero when only a routing
+reply does, although both subgroups are small.
+
+\subsection{Automation heuristics on the accounts that write the edges}\label{app:actors}
+
+RQ3 rests on the claim that a person, not a script, writes the addressed edge,
+and that claim is an account-type label rather than a verified observation.
+Table~\ref{tab:s-actors} stress-tests it. Panel A scores the 80 user accounts
+that write the 105 user-written edges on four pre-registered machine-likeness
+heuristics -- template repetition, regular inter-comment timing, a missing
+diurnal dip, and sustained comment volume -- using 7,141 of their earlier
+comments. One account trips the two-heuristic rule and seven trip any single
+heuristic, and the highest machine-likeness score in the set is 0.47. Panel B
+re-estimates the later-merge contrast after dropping the affected PRs; it moves
+up rather than down, and stays interval-positive even under the loosest drop
+rule. Reading the flagged accounts by hand shows the repetition that drives the
+template heuristic is hand-issued agent invocations and platform button text
+rather than generated prose. These are behavioural proxies over public traces,
+so they cannot detect a person pasting model output; they can only show that
+the actor label is not obviously wrong.
+
+\input{apx_tables_specificity.tex}
 \FloatBarrier
 
 \section{RQ4 details: task context across the boundary}\label{app:rq4}

@@ -1,0 +1,7 @@
+order,minutes_after_trigger,actor_role,event,verdict,rule
+0,0.0,reviewing product,inline review comment on one line of the change,this is the trigger,trigger
+1,0.0,reviewing product,another inline comment from the same submitted review,not an answer: same review batch,same-batch exclusion
+2,0.0,reviewing product,inline comment inside the first five minutes,does not decide the next owner: inside the burst,burst exclusion
+3,1348.8,a person,reply whose stored reply target is the trigger comment,this is the addressed edge,addressed edge
+4,2880.0,--,hour-48 check point; the PR is still open here,outcome counting starts now,landmark
+5,3002.7,--,the change is merged,counts as the outcome: after the check point,outcome

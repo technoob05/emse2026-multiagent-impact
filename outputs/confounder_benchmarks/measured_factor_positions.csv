@@ -1,0 +1,5 @@
+factor,label,prevalence_gap_pp,outcome_gap_pp,share_exposed,share_unexposed,adjusted_coefficient_pp,prs
+pre_bot_events,automation had already acted,8.41,-6.74,0.6697,0.5856,-0.35,1067
+pre_user_events,a person had already acted,5.64,8.13,0.3028,0.2463,0.33,1067
+pre_force_pushes,the branch had already been rewritten,1.74,19.13,0.1009,0.0835,1.51,1067
+pre_decisive_reviews,a decisive review already existed,-0.4,7.16,0.0367,0.0407,5.05,1067

@@ -1,0 +1,60 @@
+{
+  "title": "Participation Is Not Collaboration: Tracing Public Ownership After Cross-Product Agent Review",
+  "upload_type": "software",
+  "description": "<p>Reproducible analysis artifact for the EMSE 2026 Special Issue paper &quot;Participation Is Not Collaboration: Tracing Public Ownership After Cross-Product Agent Review&quot;.</p><p><strong>Context.</strong> A pull request written by one coding-agent product and reviewed by another looks like a multi-agent workflow. Two products on one pull request do not show that one addressed the other. <strong>Objective.</strong> We trace the public path from cross-product review to an addressed edge, a next owner, and a later state. <strong>Method.</strong> From a pinned AIDev release we analyse 8,608 trigger pull requests, 546 matched pairs, and a 1,067-PR outcome cohort. Exact account, comment, and review-batch identifiers anchor every event to one trigger. We set aside automation bursts, fix an hour-48 check point, and test the exposure against placebo anchors. <strong>Results.</strong> Direct dialogue between products is rare; after a five-minute burst, user accounts own most remaining first actions. Cross-product triggers get 13 percentage points less visible follow-up than matched same-product triggers. An exact reply to the trigger goes with 17 points more later merge, and a person writes it four times in five. Placebo exposures then qualify it: a reply anchored anywhere else on the pull request does as well, and shuffling the anchor leaves the estimate unmoved. Across all 105 user-written replies, the association sits with the ones a person wrote, not the one-click hand-offs to another machine. Naming an issue in the pull request body roughly doubles the chance a review point is answered across the boundary, and changes nothing within a product. <strong>Conclusions.</strong> Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention, not a resolved review point, and strict anchoring buys attribution rather than prediction.</p><p><strong>What this archive contains.</strong> The analysis and figure code, the reproduction contract and protocol ledgers, the test suite, the licence files, the README, the citation metadata, and the derived analysis products under <code>outputs/</code> that the manuscript tables and figures are built from.</p><p><strong>What this archive deliberately excludes.</strong> The AIDev-7.6M release itself, which is third-party data under its own terms and has its own home; the pinned revision is recorded here and in the code so a user can fetch exactly the same one. Also excluded, and asserted on at build time, are the private coder keys and answer keys that would de-blind the human-coding audits, the author-metadata audit, ad-hoc exploration scratch, and the submission-portal staging folder.</p><p><strong>Licence scope.</strong> The MIT licence covers the analysis code, figure code, build scripts, and the derived analysis products. It does not cover the AIDev-7.6M release or any other third-party dataset screened during the external-evidence audit, nor the manuscript text and figures, whose rights transfer is governed by the publisher agreement. See <code>NOTICE.md</code> in the archive.</p><p><strong>PLACEHOLDERS.</strong> Author affiliations, ORCID iDs, and the corresponding email are marked <code>AFFILIATION-PENDING</code>, <code>ORCID-PENDING</code>, and <code>EMAIL-PENDING</code> and MUST be filled in before this record is published. See <code>docs/guides/ARTIFACT_DEPOSIT.md</code>.</p>",
+  "creators": [
+    {
+      "name": "Minh, Dao Sy Duy",
+      "affiliation": "AFFILIATION-PENDING",
+      "orcid": "ORCID-PENDING"
+    },
+    {
+      "name": "Kiet, Huynh Trung",
+      "affiliation": "AFFILIATION-PENDING",
+      "orcid": "ORCID-PENDING"
+    },
+    {
+      "name": "Nguyen, Tran Chi",
+      "affiliation": "AFFILIATION-PENDING",
+      "orcid": "ORCID-PENDING"
+    },
+    {
+      "name": "Hoa, Pham Phu",
+      "affiliation": "AFFILIATION-PENDING",
+      "orcid": "ORCID-PENDING"
+    },
+    {
+      "name": "Quy, Nguyen Lam Phu",
+      "affiliation": "AFFILIATION-PENDING",
+      "orcid": "ORCID-PENDING"
+    }
+  ],
+  "license": "mit",
+  "access_right": "open",
+  "version": "VERSION-PENDING",
+  "language": "eng",
+  "keywords": [
+    "mining software repositories",
+    "coding agents",
+    "agentic software engineering",
+    "code review",
+    "human-agent collaboration",
+    "pull requests",
+    "reproducibility artifact"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://huggingface.co/datasets/hao-li/AIDev-7.6M/tree/37bbe1533e26cc1e1374917dba1186d1c8a4dc81",
+      "relation": "isDerivedFrom",
+      "resource_type": "dataset",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/technoob05/emse2026-multiagent-impact",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    }
+  ],
+  "notes": "PLACEHOLDERS: every AFFILIATION-PENDING, ORCID-PENDING, and VERSION-PENDING value in this file must be replaced with a real value before the record is published; Zenodo will reject ORCID-PENDING, which is deliberate. See docs/guides/ARTIFACT_DEPOSIT.md. Source data: hao-li/AIDev-7.6M, pinned at revision 37bbe1533e26cc1e1374917dba1186d1c8a4dc81, read from DATASET_REVISION in src/multiagent_impact/pipeline.py. The AIDev release is not redistributed in this archive. Build the archive with scripts/release/build_zenodo_archive.py, which refuses to run if any never-publish path would be included."
+}

@@ -36,13 +36,12 @@ EXPECTED_LABELS = {
     "tab:s-cohort",
     "tab:s-specifications",
     "tab:s-burst",
-    "tab:s-rq1-robustness",
     "tab:s-rq2",
     "tab:s-addressed-edge",
     "tab:s-sensitivity",
+    "tab:s-specificity",
     "tab:s-task-context",
     "tab:s-external",
-    "tab:s-quality",
     "tab:s-record",
 }
 
@@ -324,40 +323,82 @@ def release_table() -> str:
         "outputs/tables/dataset_join_coverage.csv",
         ("feature_group", "event_rows", "matched_pr_ids", "coverage_pct_of_aidev_pop", "orphan_pr_ids"),
     )
-    rows: list[tuple[str, ...]] = []
+    inventory_rows: list[tuple[str, ...]] = []
     for item in inventory:
-        rows.append(
+        inventory_rows.append(
             (
-                tex("Release inventory"),
                 breakable_identifier(item["table"]),
-                tex(item["scope"].replace("AIDev-pop (>100 stars)", "Rich layer")),
+                tex(item["scope"].replace("AIDev-pop (>100 stars)", "Rich")),
                 tex(item["grain"]),
                 integer(item["rows"]),
-                tex(f"{integer(item['columns'])} fields; {item['role']}"),
+                integer(item["columns"]),
+                tex(item["role"]),
             )
         )
+    coverage_rows: list[tuple[str, ...]] = []
     for item in coverage:
-        rows.append(
+        coverage_rows.append(
             (
-                tex("PR coverage"),
                 tex(item["feature_group"]),
-                tex("Rich layer"),
-                tex("Linked event or feature rows"),
+                tex("Rich"),
+                tex("Linked rows"),
                 integer(item["event_rows"]),
+                integer(item["matched_pr_ids"]),
                 tex(
-                    f"{integer(item['matched_pr_ids'])} matched PRs; "
-                    f"{number(item['coverage_pct_of_aidev_pop']):.2f}% PR coverage; "
-                    f"{integer(item['orphan_pr_ids'])} orphan PR IDs"
+                    f"{number(item['coverage_pct_of_aidev_pop']):.2f}% of the backbone; "
+                    f"{integer(item['orphan_pr_ids'])} orphan PR identifiers"
                 ),
             )
         )
-    return longtable(
-        "Release inventory, units, analytical roles, and event-table coverage.",
+    anchor = read_json("outputs/anchorability_coverage/summary.json")
+    proxy = read_csv(
+        "outputs/anchorability_coverage/coarse_unanchored_proxy.csv",
+        ("trigger_channel", "trigger_prs", "coarse_proxy_rate"),
+    )
+    out_of_scope_proxy = one(proxy, trigger_channel="pr_comment")
+    inline_proxy = one(proxy, trigger_channel="inline_review_comment")
+    note = (
+        "The rich layer contains repositories with more than 100 stars. Inventory row counts come from release metadata, so large content "
+        "tables are not expanded in memory. Panel B describes the 361,296 rich-layer pull requests that form the backbone: coverage means that a "
+        "pull request has at least one linked row, and inline comments resolve through their submitted-review identifier before joining to the "
+        "pull request. Missing linked rows are not read as negative events, which is why each analysis declares its own denominator. "
+        f"Panel C counts reviewer-side interaction events on the {integer(anchor['cohort']['trigger_prs'])} trigger PRs, split by the channel that "
+        "carries them; only inline review comments store a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares "
+        "in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring "
+        "ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, fires on "
+        f"{percent(out_of_scope_proxy['coarse_proxy_rate'])}% of PR-level-comment triggers against {percent(inline_proxy['coarse_proxy_rate'])}% of "
+        "inline triggers; it is reported to size the blind spot and is never used for estimation."
+    )
+    return paneled_longtable(
+        "Release inventory, backbone coverage, and which review channels can carry a reply anchor.",
         "tab:s-dataset",
-        r"L{0.12\textwidth}L{0.20\textwidth}L{0.07\textwidth}L{0.13\textwidth}L{0.09\textwidth}L{0.31\textwidth}",
-        ("Block", "Table or feature group", "Scope", "Unit", "Rows", "Fields, coverage, and role"),
-        rows,
-        "The rich layer contains repositories with more than 100 stars. Inventory row counts come from Parquet metadata, so large content tables are not expanded in memory. The coverage block describes the 361,296 AIDev-pop pull requests: coverage means that a pull request has at least one linked row, and inline comments resolve through their submitted-review identifier before joining to the pull request.",
+        r"L{0.21\textwidth}L{0.06\textwidth}L{0.15\textwidth}L{0.10\textwidth}L{0.10\textwidth}L{0.34\textwidth}",
+        6,
+        (
+            (
+                "Panel A. Release inventory",
+                ("Release table", "Layer", "Unit", "Rows", "Fields", "Role"),
+                inventory_rows,
+            ),
+            (
+                "Panel B. Coverage of the 361,296-PR rich-layer backbone",
+                ("Feature group", "Layer", "Unit", "Rows", "Matched PRs", "Coverage and join integrity"),
+                coverage_rows,
+            ),
+            (
+                "Panel C. Which review channels can carry a reply anchor at all",
+                (
+                    "Interaction channel",
+                    "Anchor",
+                    "Reviewer events",
+                    "Share (\\%)",
+                    "Trigger PRs",
+                    "Share of triggers (\\%)",
+                ),
+                anchorability_rows(),
+            ),
+        ),
+        note,
     )
 
 
@@ -2000,6 +2041,12 @@ REPRODUCTION_STEPS: dict[str, tuple[str, str]] = {
     "run_task_context_interaction.py": ("RQ4 issue-link interaction across the product boundary", "outputs/task_context_interaction/answer_rate_cells.csv"),
     "run_rq3_extensions.py": ("Whole-population time-varying hazard, and the edge split by who wrote it", "outputs/rq3_extensions/edge_class_contrasts.csv"),
     "run_merge_curves.py": ("Cumulative merge curves for the exact-edge contrast", "outputs/merge_curves/cumulative_merge.csv"),
+    "run_anchorability_coverage.py": ("Which review channels carry a reply anchor, and the share of triggers in scope", "outputs/anchorability_coverage/trigger_channel_composition.csv"),
+    "run_burst_threshold_selection.py": ("Data-driven burst cuts, per-product cuts, RQ1 owner split under nine schemes", "outputs/burst_threshold_selection/owner_split_sensitivity.csv"),
+    "run_pseudo_edge_negative_control.py": ("Off-target, permuted-anchor, and time-shifted placebo exposures", "outputs/pseudo_edge_control/contrasts.csv"),
+    "run_user_account_automation_audit.py": ("Machine-likeness heuristics on edge-writing accounts and the re-estimated contrast", "outputs/user_account_automation/heuristic_incidence.csv"),
+    "run_addressed_edge_reply_content_audit.py": ("Reply-content classification of every addressed edge and the contrast by category", "outputs/user_account_automation/reply_content_category_counts.csv"),
+    "run_heterogeneity_audit.py": ("Matched-pair composition, per-product-pair gaps, repository moderators", "outputs/heterogeneity_audit/matched_pair_by_product_pair.csv"),
     "prepare_review_collision_audit.py": ("Blinded structural same-locus coder packets", "outputs/review_collision/product_pair_concentration.csv"),
     "run_collision_descriptive_extension.py": ("Descriptive timing and concentration for the same-locus population", "outputs/novelty_collision_extension/timing_distribution.csv"),
     "generate_technical_appendix_tables.py": ("Every table in this appendix", ""),
@@ -2276,117 +2323,800 @@ def glossary_rows() -> list[tuple[str, str, str]]:
     )
     primary = one(episodes, episode_gap_minutes="5")
 
-    entries: list[tuple[str, str, str]] = [
+    # Only terms whose exact rule the article does not already state are kept.
+    # The five actor states and the seven response roles are each one row, in
+    # priority order, rather than one row per branch of the same classifier.
+    entries: list[tuple[str, str]] = [
         (
             "Decisive review",
             "A submitted review whose state is APPROVED or CHANGES\\_REQUESTED. Commented and pending reviews are not decisive.",
-            "Landmark cohort builder",
         ),
         (
             "Branch movement",
-            "A \\texttt{head\\_ref\\_force\\_pushed} timeline event on the PR. It is visible movement of the branch, not a verified repair.",
-            "Timeline event filter",
+            "A force-push event on the PR branch. It is visible movement of the branch, not a verified repair.",
         ),
         (
             "Untyped activity",
             "A post-trigger event row that is not a user account, a mapped product, or another bot. It is the residual class and is always reported together with branch movement.",
-            "First-state classifier",
         ),
         (
-            "State: user account",
-            "The event's GitHub user type is User. User evidence takes precedence over product mapping.",
-            "First-state classifier",
+            "The five first-state classes, in priority order",
+            "(1) user account, the event's GitHub user type is User, which takes precedence over product mapping; "
+            "(2) mapped product, a non-User account on the six-product allowlist; "
+            "(3) other bot, a Bot account not on the allowlist; "
+            "(4) branch movement or untyped activity, every remaining event row; "
+            "(5) no later action within seven days. The classes are mutually exclusive and cover every PR at every burst threshold.",
         ),
         (
-            "State: mapped product",
-            "The event is not a User event and its account is on the six-product allowlist.",
-            "First-state classifier",
-        ),
-        (
-            "State: other bot",
-            "The event's user type is Bot and the account is not on the allowlist.",
-            "First-state classifier",
-        ),
-        (
-            "State: branch movement or untyped activity",
-            "Every remaining event row, which in this release is branch movement and untyped rows.",
-            "First-state classifier",
-        ),
-        (
-            "State: no later action within seven days",
-            "No post-burst event occurs inside the seven-day response window.",
-            "First-state classifier",
-        ),
-        (
-            "Role: the PR author's own user account",
-            "A User account whose login equals the PR author's login.",
-            "Response actor roles",
-        ),
-        (
-            "Role: the PR author's product",
-            "A mapped product equal to the product attributed to the PR author.",
-            "Response actor roles",
-        ),
-        (
-            "Role: the triggering product",
-            "A mapped product equal to the product that wrote the trigger.",
-            "Response actor roles",
-        ),
-        (
-            "Role: a different mapped product",
-            "Any other account on the six-product allowlist.",
-            "Response actor roles",
-        ),
-        (
-            "Role: an unmapped bot",
-            "A Bot account that is not on the allowlist.",
-            "Response actor roles",
-        ),
-        (
-            "Role: another user account",
-            "Any other User account.",
-            "Response actor roles",
-        ),
-        (
-            "Role: unknown actor",
-            "An event with no usable user type. The class is kept so that the seven roles stay exhaustive.",
-            "Response actor roles",
+            "The seven response actor roles, in evaluation order",
+            "(1) the PR author's own user account, a User whose login equals the author's; "
+            "(2) the PR author's product; (3) the triggering product; (4) a different mapped product; "
+            "(5) an unmapped bot; (6) another user account; (7) unknown actor, an event with no usable user type, kept so the roles stay exhaustive. "
+            "The first matching branch wins.",
         ),
         (
             "Automation episode",
             "A run of post-burst events on one PR in which each event follows the previous one by no more than the gap parameter; a larger gap starts a new episode. The primary gap is five minutes, and the first five minutes after the trigger are excluded before episodes are built.",
-            "Episode sessionization",
         ),
         (
             "Episode state",
             "The highest-priority state inside the episode, using the same priority order as the tie rule. At the five-minute gap, "
             + f"{integer(primary['mixed_state_episodes'])} of {integer(primary['episodes'])} episodes mix states.",
-            "Episode sessionization",
         ),
     ]
-    return [(tex(term), definition, tex(source)) for term, definition, source in entries]
+    return [(tex(term), definition) for term, definition in entries]
 
 
 def definitions_table() -> str:
-    allowlist = [(product, aliases, "") for product, aliases in identity_rows()]
     return paneled_longtable(
-        "Attribution allowlist and the glossary of load-bearing terms.",
+        "Attribution allowlist and the rules behind the load-bearing labels.",
         "tab:s-definitions",
-        r"L{0.22\textwidth}L{0.57\textwidth}L{0.17\textwidth}",
-        3,
+        r"L{0.27\textwidth}L{0.71\textwidth}",
+        2,
         (
             (
                 "Panel A. Attribution allowlist",
-                ("Mapped product", "Exact GitHub login(s), matched case-insensitively", ""),
-                allowlist,
+                ("Mapped product", "Exact GitHub login(s), matched case-insensitively"),
+                identity_rows(),
             ),
             (
-                "Panel B. Glossary of load-bearing terms",
-                ("Term", "Definition in the code", "Where it is defined"),
+                "Panel B. Terms whose exact rule the article does not state",
+                ("Term", "The rule the analysis code applies"),
                 glossary_rows(),
             ),
         ),
-        "Panel A is the exact public-account allowlist used for reviewer-product attribution; logins are matched case-insensitively. Only exact aliases are mapped. Similar names and unknown bots stay outside the six-product registry. Panel B is read from the analysis code: each definition is the rule the code applies, not an interpretation of it. The five states are mutually exclusive and cover every PR at every burst threshold. The seven roles are evaluated in the listed order, so the first matching branch wins. None of these labels reports intent, private activity, or whether a review point was resolved.",
+        "Panel A is the exact public-account allowlist used for reviewer-product attribution. Only exact aliases are mapped; similar names and unknown bots stay outside the six-product registry. Panel B is read back from the analysis code, so each entry is the rule the code applies rather than an interpretation of it. Terms the article already defines are not repeated here. None of these labels reports intent, private activity, or whether a review point was resolved.",
+    )
+
+
+def pp_value(value: object, digits: int = 1, signed: bool = True) -> str:
+    """Format a quantity that the analysis product already stores in points."""
+    amount = number(value)
+    return f"{amount:+.{digits}f}" if signed else f"{amount:.{digits}f}"
+
+
+def ci_pp_value(low: object, high: object, digits: int = 1) -> str:
+    return f"[{pp_value(low, digits)}, {pp_value(high, digits)}]"
+
+
+def comparison_math(value: object) -> str:
+    """Escape for TeX, then set inequality and tolerance signs in math mode."""
+    return (
+        tex(value)
+        .replace(">=", r"$\ge$")
+        .replace("<=", r"$\le$")
+        .replace("+/-", r"$\pm$")
+    )
+
+
+def p_text(value: object) -> str:
+    amount = number(value)
+    return "p < 0.001" if amount < 0.001 else f"p = {amount:.3f}"
+
+
+def anchorability_rows() -> list[tuple[str, ...]]:
+    summary = read_json("outputs/anchorability_coverage/summary.json")
+    volume = read_csv(
+        "outputs/anchorability_coverage/channel_interaction_volume.csv",
+        ("channel", "channel_label", "carries_reply_anchor", "reviewer_side_events", "share_of_reviewer_side_events"),
+    )
+    triggers = read_csv(
+        "outputs/anchorability_coverage/trigger_channel_composition.csv",
+        ("trigger_channel", "in_scope_for_the_addressed_edge", "trigger_prs", "share_of_trigger_prs"),
+    )
+    split = read_csv(
+        "outputs/anchorability_coverage/inline_root_reply_split.csv",
+        ("position", "can_receive_an_exact_parent_edge", "inline_events", "share_of_inline_events"),
+    )
+    rows: list[tuple[str, ...]] = []
+    for item in volume:
+        trigger = one(triggers, trigger_channel=item["channel"])
+        if item["carries_reply_anchor"] != trigger["in_scope_for_the_addressed_edge"]:
+            raise ValueError(f"Anchor flag disagrees with trigger scope for {item['channel']}")
+        # The release table name is already given in the inventory panel, so the
+        # parenthetical is dropped rather than repeated as prose.
+        label = re.sub(r"\s*\([^)]*\)\s*$", "", item["channel_label"])
+        rows.append(
+            (
+                tex(label),
+                "Yes" if item["carries_reply_anchor"] == "True" else "No",
+                integer(item["reviewer_side_events"]),
+                percent(item["share_of_reviewer_side_events"]),
+                integer(trigger["trigger_prs"]),
+                percent(trigger["share_of_trigger_prs"]),
+            )
+        )
+    reviewer = summary["reviewer_side_interaction_volume"]
+    composition = summary["trigger_channel_composition"]
+    rows.append(
+        (
+            tex("All channels that carry no reply anchor"),
+            "No",
+            integer(reviewer["non_anchorable_events"]),
+            percent(reviewer["non_anchorable_share_of_reviewer_side_events"]),
+            integer(composition["out_of_scope_trigger_prs"]),
+            percent(composition["out_of_scope_trigger_share"]),
+        )
+    )
+    root = one(split, position="thread_root")
+    rows.append(
+        (
+            tex("Inline thread roots, the only events an exact reply can name"),
+            "Yes",
+            integer(root["inline_events"]),
+            percent(root["share_of_inline_events"]),
+            "--",
+            "--",
+        )
+    )
+    return rows
+
+
+BURST_SCHEME_LABELS = {
+    "fixed_0_minutes": "Fixed convention, no burst excluded",
+    "fixed_1_minutes": "Fixed convention",
+    "fixed_5_minutes": "Fixed convention (published)",
+    "fixed_10_minutes": "Fixed convention",
+    "fixed_30_minutes": "Fixed convention",
+    "global_log_hazard_change_point": "Data-driven global log-hazard change point",
+    "global_log_hazard_change_point_burst_region": "Same rule, search capped at 60 minutes",
+    "product_specific_log_hazard_change_point": "Per-product log-hazard change point",
+    "product_specific_log_hazard_change_point_burst_region": "Per-product rule, search capped at 60 minutes",
+}
+
+
+def burst_threshold_rows() -> list[tuple[str, ...]]:
+    summary = read_json("outputs/burst_threshold_selection/summary.json")
+    applied = summary["product_specific_cuts_applied"]
+    data = read_csv(
+        "outputs/burst_threshold_selection/owner_split_sensitivity.csv",
+        (
+            "scheme",
+            "scheme_kind",
+            "threshold_minutes",
+            "user_share_all_prs",
+            "mapped_share_all_prs",
+            "user_minus_mapped_percentage_points_all_prs",
+            "user_minus_mapped_ci_low_pp_all_prs",
+            "user_minus_mapped_ci_high_pp_all_prs",
+            "user_exceeds_mapped_interval_excludes_zero",
+        ),
+    )
+    rows: list[tuple[str, ...]] = []
+    for item in data:
+        scheme = item["scheme"]
+        if scheme not in BURST_SCHEME_LABELS:
+            raise ValueError(f"Unknown burst threshold scheme: {scheme}")
+        if item["scheme_kind"] == "product_specific":
+            rule = scheme.replace("product_specific_", "")
+            cuts = applied.get(rule)
+            if not isinstance(cuts, dict) or not cuts:
+                raise ValueError(f"No applied per-product cuts recorded for {rule}")
+            values = sorted(number(value) for value in cuts.values())
+            cut = f"{compact_number(values[0])}--{compact_number(values[-1])}"
+        else:
+            cut = compact_number(item["threshold_minutes"])
+        if item["user_exceeds_mapped_interval_excludes_zero"] != "True":
+            raise ValueError(f"Scheme {scheme} no longer excludes zero; the note would be wrong")
+        rows.append(
+            (
+                tex(BURST_SCHEME_LABELS[scheme]),
+                cut,
+                percent(item["user_share_all_prs"]),
+                percent(item["mapped_share_all_prs"]),
+                pp_value(item["user_minus_mapped_percentage_points_all_prs"]),
+                ci_pp_value(
+                    item["user_minus_mapped_ci_low_pp_all_prs"],
+                    item["user_minus_mapped_ci_high_pp_all_prs"],
+                ),
+            )
+        )
+    return rows
+
+
+def coverage_table() -> str:
+    anchor = read_json("outputs/anchorability_coverage/summary.json")
+    proxy = read_csv(
+        "outputs/anchorability_coverage/coarse_unanchored_proxy.csv",
+        ("trigger_channel", "trigger_prs", "coarse_proxy_rate"),
+    )
+    burst = read_json("outputs/burst_threshold_selection/summary.json")
+    agreement = read_csv(
+        "outputs/burst_threshold_selection/agreement_with_five_minutes.csv",
+        ("scheme", "state_agreement_with_fixed_five_minutes"),
+    )
+    others = [
+        number(item["state_agreement_with_fixed_five_minutes"])
+        for item in agreement
+        if item["scheme"] != "fixed_5_minutes"
+    ]
+    if not others:
+        raise ValueError("The agreement product has no comparison schemes")
+    antimode = one(
+        read_csv(
+            "outputs/burst_threshold_selection/selected_cuts.csv",
+            ("scope", "group", "rule", "cut_exists", "share_of_replicates_with_a_cut"),
+        ),
+        scope="global",
+        group="all",
+        rule="log_gap_kde_antimode",
+    )
+    if antimode["cut_exists"] != "False":
+        raise ValueError("The antimode rule now selects a cut; the note would be wrong")
+    hazard = burst["global_data_driven_cuts"]["log_hazard_change_point"]
+    shape = burst["gap_distribution"]
+    out_of_scope_proxy = one(proxy, trigger_channel="pr_comment")
+    inline_proxy = one(proxy, trigger_channel="inline_review_comment")
+    note = (
+        f"Panel A counts interaction events on the {integer(anchor['cohort']['trigger_prs'])} trigger PRs of the landmark cohort, split by the channel that carries them; "
+        "only inline review comments carry a machine-readable reply anchor, so only they can produce an exact addressed edge. "
+        "Shares in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, "
+        f"and it gives the anchoring ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, "
+        f"fires on {percent(out_of_scope_proxy['coarse_proxy_rate'])}% of PR-level-comment triggers against "
+        f"{percent(inline_proxy['coarse_proxy_rate'])}% of inline triggers; it is reported as a reach diagnostic and is never used for estimation. "
+        "Panel B re-runs the RQ1 first-owner split under nine burst conventions. No data-driven burst cut exists: the log gap density has a single "
+        f"dominant mode at {compact_number(shape['kde_mode_minutes'][0], 2)} minutes with no interior antimode below "
+        f"{compact_number(burst['gap_distribution']['burst_region_max_minutes'])} minutes, and that rule finds a burst-region antimode in only "
+        f"{percent(antimode['share_of_replicates_with_a_cut'])}% of repository bootstrap replicates. The change-point rule always returns a value, "
+        f"{compact_number(hazard['cut_minutes'], 2)} minutes globally, but it marks where responses start arriving rather than where a machine burst ends. "
+        "The five-minute window is therefore a stated convention, not a discovered boundary. It matters for magnitude and not for direction: state agreement with "
+        f"the five-minute convention ranges from {percent(min(others))}% to {percent(max(others))}%, while the user-minus-mapped-product difference stays positive "
+        "with a repository-clustered interval excluding zero under every scheme. Per-product cuts, gap histograms, and the hazard grid are in the "
+        "burst threshold selection products selected_cuts.csv, gap_histogram.csv, and next_event_hazard.csv."
+    )
+    return paneled_longtable(
+        "Measurement reach and the burst-window convention.",
+        "tab:s-coverage",
+        r"L{0.28\textwidth}L{0.08\textwidth}L{0.11\textwidth}L{0.12\textwidth}L{0.12\textwidth}L{0.21\textwidth}",
+        6,
+        (
+            (
+                "Panel A. Which review interactions can carry a reply anchor at all",
+                (
+                    "Interaction channel",
+                    "Reply anchor",
+                    "Reviewer-side events",
+                    "Share of events (\\%)",
+                    "Trigger PRs",
+                    "Share of triggers (\\%)",
+                ),
+                anchorability_rows(),
+            ),
+            (
+                "Panel B. RQ1 first-owner split under nine burst-window schemes",
+                (
+                    "Burst-window scheme",
+                    "Cut (min)",
+                    "User (\\%)",
+                    "Mapped product (\\%)",
+                    "User $-$ mapped (pp)",
+                    "Repository-cluster 95\\% interval",
+                ),
+                burst_threshold_rows(),
+            ),
+        ),
+        note,
+    )
+
+
+PSEUDO_EDGE_LABELS = {
+    "addressed_edge_observed": "Observed addressed edge (published exposure)",
+    "off_target_reply": "Placebo: exact reply anchored to a different inline comment",
+    "any_inline_reply_diagnostic": "Diagnostic: any inline reply inside the window",
+}
+
+
+def pseudo_edge_rows() -> list[tuple[str, ...]]:
+    summary = read_json("outputs/pseudo_edge_control/summary.json")
+    models = read_csv(
+        "outputs/pseudo_edge_control/observed_exposure_models.csv",
+        ("exposure", "prs", "exposed_prs", "estimate_pp", "ci_low", "ci_high", "p_value"),
+    )
+    nulls = read_csv(
+        "outputs/pseudo_edge_control/permutation_null_summary.csv",
+        (
+            "control",
+            "null_mean_pp",
+            "null_quantile_025_pp",
+            "null_quantile_975_pp",
+            "observed_percentile_in_null",
+            "p_value_two_sided",
+            "null_centred_near_zero",
+        ),
+    )
+
+    def model_row(exposure: str) -> tuple[str, ...]:
+        item = one(models, exposure=exposure)
+        return (
+            tex(PSEUDO_EDGE_LABELS[exposure]),
+            integer(item["prs"]),
+            integer(item["exposed_prs"]),
+            pp_value(item["estimate_pp"]),
+            ci_pp_value(item["ci_low"], item["ci_high"]),
+            tex(p_text(item["p_value"])),
+        )
+
+    def null_row(control: str, label: str, exposed: str) -> tuple[str, ...]:
+        item = one(nulls, control=control)
+        return (
+            tex(label),
+            integer(summary["cohort_prs"]),
+            exposed,
+            pp_value(item["null_mean_pp"]),
+            ci_pp_value(item["null_quantile_025_pp"], item["null_quantile_975_pp"]),
+            tex(
+                f"observed at percentile {number(item['observed_percentile_in_null']):.2f}, "
+                + p_text(item["p_value_two_sided"])
+            ),
+        )
+
+    joint = summary["joint_on_vs_off_target"]
+    rows = [
+        model_row("addressed_edge_observed"),
+        model_row("off_target_reply"),
+        (
+            tex("Joint model: addressed edge minus off-target reply"),
+            integer(joint["prs"]),
+            "--",
+            pp_value(joint["difference_pp"]),
+            ci_pp_value(joint["difference_ci_low"], joint["difference_ci_high"]),
+            tex(p_text(joint["difference_p_value"])),
+        ),
+        null_row(
+            "permuted_anchor[calendar_month]",
+            "Placebo: permuted anchor, calendar month, fully permutable",
+            integer(summary["permuted_anchor_null_reference"]["exposed_prs_per_draw"]),
+        ),
+        null_row(
+            "permuted_anchor[repository_month]",
+            "Placebo: permuted anchor, repository by month, degenerate support",
+            integer(summary["permuted_anchor_null_primary"]["exposed_prs_per_draw"]),
+        ),
+        null_row(
+            "time_shifted_edge",
+            "Placebo: time-shifted edge, drawn independently of the PR's history",
+            compact_number(summary["time_shifted_null"]["mean_exposed_prs_per_draw"]),
+        ),
+        model_row("any_inline_reply_diagnostic"),
+    ]
+    return rows
+
+
+REPLY_CONTENT_LABELS = {
+    "platform_generated": "Platform button text written on the person's behalf",
+    "agent_invocation": "Agent invocation: the point is handed to a machine",
+    "acknowledgement_only": "Acknowledgement only, below the twelve-word floor",
+    "substantive_response": "Substantive engineering prose",
+}
+
+
+def reply_content_rows() -> list[tuple[str, ...]]:
+    summary = read_json("outputs/user_account_automation/reply_content_summary.json")
+    counts = read_csv(
+        "outputs/user_account_automation/reply_content_category_counts.csv",
+        ("scope", "labelling", "category", "edges", "edges_total", "share"),
+    )
+    contrasts = read_csv(
+        "outputs/user_account_automation/addressed_edge_contrast_by_reply_content.csv",
+        ("contrast", "exposure", "exposed_prs", "estimate", "ci_low", "ci_high", "dropped_prs"),
+    )
+    total = number(summary["user_written_edges"])
+    rows: list[tuple[str, ...]] = []
+    for category, label in REPLY_CONTENT_LABELS.items():
+        rule = one(counts, scope="user_written_edges", labelling="rule_category", category=category)
+        read = one(counts, scope="user_written_edges", labelling="human_category", category=category)
+        if category == "substantive_response":
+            model = one(
+                contrasts,
+                contrast="substantive user-written edge; other exposed PRs counted as unexposed",
+            )
+            estimate = pp(model["estimate"])
+            interval = ci_pp(model["ci_low"], model["ci_high"])
+        else:
+            estimate = "--"
+            interval = "--"
+        rows.append(
+            (
+                tex(label),
+                integer(rule["edges"]),
+                percent(rule["share"]),
+                integer(read["edges"]),
+                estimate,
+                interval,
+            )
+        )
+    routing = one(
+        contrasts,
+        contrast="routing edge (agent invocation or platform text); other exposed PRs counted as unexposed",
+    )
+    rows.append(
+        (
+            tex("Routing edge: the first two categories combined"),
+            integer(summary["routing_edges_user_written"]),
+            percent(summary["routing_share_user_written"]),
+            "--",
+            pp(routing["estimate"]),
+            ci_pp(routing["ci_low"], routing["ci_high"]),
+        )
+    )
+    published = one(contrasts, contrast="any exact addressed edge (published estimate)")
+    rows.append(
+        (
+            tex("Any addressed edge, the published exposure"),
+            integer(total),
+            percent(1.0),
+            integer(total),
+            pp(published["estimate"]),
+            ci_pp(published["ci_low"], published["ci_high"]),
+        )
+    )
+    return rows
+
+
+def specificity_table() -> str:
+    summary = read_json("outputs/pseudo_edge_control/summary.json")
+    content = read_json("outputs/user_account_automation/reply_content_summary.json")
+    verdict = str(summary["specificity_verdict"])
+    if "NOT_SPECIFIC" not in verdict:
+        raise ValueError("The frozen specificity verdict changed; the note would be wrong")
+    agreement = content["rule_versus_reading"]
+    note = (
+        "Panel A is one row per exposure or per placebo null, all on the same inline-trigger landmark cohort and the same pre-trigger control set. "
+        "Rows one to three are clustered linear-probability estimates; rows four to six are null distributions over 2,000 draws, so their interval is the "
+        "2.5 to 97.5 percentile of the null rather than a confidence interval. Read plainly: an off-target reply, which points at a different inline comment "
+        "and therefore carries no addressed edge, gives the same estimate as the real edge, and the permuted-anchor null is centred near the observed estimate "
+        f"({pp_value(summary['permuted_anchor_null_reference']['null_mean_pp'])} pp against an observed {pp_value(summary['addressed_edge']['estimate_pp'])} pp). "
+        "Permuting which replying PR is anchored to its own trigger reproduces the estimate, so the anchoring adds nothing beyond the presence of a reply; "
+        f"the frozen verdict recorded with the analysis is {verdict}. Only the time-shifted null is centred near zero, which rules out the weaker worry that the "
+        "hour-48 landmark rule alone manufactures the contrast. The last row names what the two liveness-preserving controls suggest the estimate actually tracks. "
+        "Panel B classifies every addressed-edge reply by what it says, using a four-rule priority ladder, and re-estimates the contrast by category. Shares are of the "
+        f"{integer(content['user_written_edges'])} user-written edges among the {integer(content['all_edges'])} exposure events; the rule and a full hand reading of all "
+        f"{integer(agreement['edges_hand_read'])} texts disagree on {integer(agreement['disagreements'])} rows "
+        f"({percent(agreement['disagreement_rate'])}%), always in the conservative direction. The subgroup contrasts are underpowered by construction and are description, "
+        "not a causal decomposition. Full rows are in the pseudo-edge control products contrasts.csv and permutation_null.csv and in the reply-content products "
+        "reply_content_rule_set.csv and addressed_edge_reply_classification.csv."
+    )
+    return paneled_longtable(
+        "Placebo exposures and what the reply actually says.",
+        "tab:s-specificity",
+        r"L{0.27\textwidth}L{0.06\textwidth}L{0.07\textwidth}L{0.10\textwidth}L{0.16\textwidth}L{0.26\textwidth}",
+        6,
+        (
+            (
+                "Panel A. Placebo exposures against the observed addressed edge",
+                (
+                    "Exposure or placebo null",
+                    "PRs",
+                    "Exposed",
+                    "Estimate or null mean (pp)",
+                    "95\\% interval or null 2.5--97.5\\%",
+                    "$p$ or position in the null",
+                ),
+                pseudo_edge_rows(),
+            ),
+            (
+                "Panel B. What the addressed-edge reply actually says",
+                (
+                    "Reply category",
+                    "Edges (rule)",
+                    "Share (\\%)",
+                    "Edges (hand read)",
+                    "Contrast (pp)",
+                    "Repository-cluster 95\\% interval",
+                ),
+                reply_content_rows(),
+            ),
+        ),
+        note,
+    )
+
+
+AUTOMATION_FLAG_LABELS = {
+    "flag_template": "Template repetition",
+    "flag_timing": "Regular inter-comment timing",
+    "flag_clock": "No diurnal dip in the clock",
+    "flag_volume": "Sustained comments per active day",
+    "flag_any": "Any single heuristic",
+    "flag_combined": "At least two heuristics (pre-registered rule)",
+}
+
+
+def automation_flag_rows() -> list[tuple[str, ...]]:
+    incidence = read_csv(
+        "outputs/user_account_automation/heuristic_incidence.csv",
+        ("flag", "accounts", "account_share", "edge_events", "edge_event_share"),
+    )
+    thresholds = read_csv(
+        "outputs/user_account_automation/preregistered_thresholds.csv",
+        ("heuristic", "statistic", "threshold"),
+    )
+    rows: list[tuple[str, ...]] = []
+    for item in incidence:
+        flag = item["flag"]
+        if flag not in AUTOMATION_FLAG_LABELS:
+            raise ValueError(f"Unknown machine-likeness heuristic: {flag}")
+        matches = [entry for entry in thresholds if entry["heuristic"] == flag]
+        if len(matches) > 1:
+            raise ValueError(f"Duplicate threshold definition for {flag}")
+        rule = (
+            comparison_math(f"{matches[0]['statistic']} ({matches[0]['threshold']})")
+            if matches
+            else "--"
+        )
+        rows.append(
+            (
+                tex(AUTOMATION_FLAG_LABELS[flag]),
+                integer(item["accounts"]),
+                percent(item["account_share"]),
+                integer(item["edge_events"]),
+                percent(item["edge_event_share"]),
+                rule,
+            )
+        )
+    return rows
+
+
+def automation_contrast_rows() -> list[tuple[str, ...]]:
+    data = read_csv(
+        "outputs/user_account_automation/addressed_edge_contrast_after_dropping_flagged.csv",
+        ("cohort", "n_prs", "exposed_prs", "exposed_raw_merge_rate", "estimate", "ci_low", "ci_high", "dropped_prs"),
+    )
+    return [
+        (
+            comparison_math(item["cohort"]),
+            integer(item["n_prs"]),
+            integer(item["exposed_prs"]),
+            percent(item["exposed_raw_merge_rate"]),
+            pp(item["estimate"]),
+            ci_pp(item["ci_low"], item["ci_high"]),
+        )
+        for item in data
+    ]
+
+
+def actors_table() -> str:
+    summary = read_json("outputs/user_account_automation/summary.json")
+    repetition = summary["addressed_edge_text_repetition"]
+    note = (
+        f"The rows of Panel A are the four pre-registered machine-likeness heuristics and the two combination rules, scored on the "
+        f"{integer(summary['edge_writing_user_accounts'])} user accounts that write the "
+        f"{integer(summary['edge_events_written_by_user_accounts'])} user-written addressed edges among the "
+        f"{integer(summary['exposure_events_total'])} exposure events, using {integer(summary['comment_history_rows_scored'])} of their earlier comments. "
+        f"An account is flagged when it trips at least two heuristics. The median machine-likeness score is {compact_number(summary['machine_likeness_score_median'], 3)} "
+        f"and the maximum is {compact_number(summary['machine_likeness_score_max'], 3)}, so no account is near the automated end of the scale. "
+        "The rows of Panel B re-estimate the published later-merge contrast after dropping every PR whose edge a flagged account wrote; the estimate moves in the "
+        "opposite direction to the worry, and dropping any account that trips even one heuristic leaves the interval excluding zero. "
+        f"Of the {integer(repetition['edge_texts'])} edge texts, {integer(repetition['distinct_normalised_edge_texts'])} are distinct after normalisation "
+        f"and the most repeated text appears {integer(repetition['most_frequent_count'])} times; hand reading of the "
+        f"{integer(summary['manual_review_accounts'])} highest-scoring accounts finds the repetition to be hand-issued agent invocations and platform button text "
+        "rather than generated output. These heuristics are behavioural proxies over public traces, not ground truth about who or what operates an account, and they "
+        "cannot detect a person pasting model output. Per-account scores and the hand-review sheet are in the account automation products "
+        "account_machine_likeness_scores.csv and manual_review_top_accounts.csv."
+    )
+    return paneled_longtable(
+        "Automation heuristics on the accounts that write the edges.",
+        "tab:s-actors",
+        r"L{0.22\textwidth}L{0.08\textwidth}L{0.10\textwidth}L{0.09\textwidth}L{0.10\textwidth}L{0.33\textwidth}",
+        6,
+        (
+            (
+                "Panel A. Machine-likeness heuristics on the edge-writing accounts",
+                (
+                    "Heuristic",
+                    "Accounts",
+                    "Account share (\\%)",
+                    "Edge events",
+                    "Event share (\\%)",
+                    "Pre-registered statistic and threshold",
+                ),
+                automation_flag_rows(),
+            ),
+            (
+                "Panel B. The later-merge contrast after dropping flagged accounts",
+                (
+                    "Cohort",
+                    "PRs",
+                    "Exposed",
+                    "Exposed merge (\\%)",
+                    "Estimate (pp)",
+                    "Repository-cluster 95\\% interval",
+                ),
+                automation_contrast_rows(),
+            ),
+        ),
+        note,
+    )
+
+
+def matched_pair_rows() -> list[tuple[str, ...]]:
+    summary = read_json("outputs/heterogeneity_audit/summary.json")
+    overall = summary["part1_matched_pair_spread"]["overall_gap"]
+    pairs = read_csv(
+        "outputs/heterogeneity_audit/matched_pair_by_product_pair.csv",
+        (
+            "ordered_product_pair",
+            "pairs",
+            "repositories",
+            "qualifies",
+            "cross_rate",
+            "same_rate",
+            "paired_difference",
+            "repository_cluster_ci_low",
+            "repository_cluster_ci_high",
+        ),
+    )
+    rows: list[tuple[str, ...]] = [
+        (
+            tex("All matched pairs (published gap)"),
+            integer(overall["pairs"]),
+            integer(overall["repositories"]),
+            percent(overall["cross_rate"]),
+            percent(overall["same_rate"]),
+            pp(overall["paired_difference"])
+            + " "
+            + ci_pp(overall["repository_cluster_ci_low"], overall["repository_cluster_ci_high"]),
+        )
+    ]
+    below: list[Mapping[str, str]] = []
+    for item in pairs:
+        if item["qualifies"] != "True":
+            below.append(item)
+            continue
+        rows.append(
+            (
+                tex(item["ordered_product_pair"].replace("->", "to")),
+                integer(item["pairs"]),
+                integer(item["repositories"]),
+                percent(item["cross_rate"]),
+                percent(item["same_rate"]),
+                pp(item["paired_difference"])
+                + " "
+                + ci_pp(item["repository_cluster_ci_low"], item["repository_cluster_ci_high"]),
+            )
+        )
+    if not below:
+        raise ValueError("Every ordered product pair now qualifies; the summary row is stale")
+    rows.append(
+        (
+            tex(f"{len(below)} further pairs below the 30-pair floor"),
+            integer(sum(number(item["pairs"]) for item in below)),
+            "--",
+            "--",
+            "--",
+            tex("not estimated"),
+        )
+    )
+    return rows
+
+
+def repository_moderator_rows() -> list[tuple[str, ...]]:
+    models = read_csv(
+        "outputs/heterogeneity_audit/rq3_moderator_models.csv",
+        ("specification", "estimate", "ci_low", "ci_high", "share_of_primary_explained", "interval_excludes_zero"),
+    )
+    contrasts = read_csv(
+        "outputs/heterogeneity_audit/moderator_group_contrasts.csv",
+        (
+            "moderator",
+            "familiar_dominant_median",
+            "newcomer_dominant_median",
+            "median_difference",
+            "repository_cluster_ci_low",
+            "repository_cluster_ci_high",
+            "separates_groups",
+        ),
+    )
+    rows: list[tuple[str, ...]] = []
+    for item in models:
+        rows.append(
+            (
+                tex(item["specification"]),
+                "--",
+                "--",
+                pp(item["estimate"]) + " pp",
+                ci_pp(item["ci_low"], item["ci_high"]),
+                percent(item["share_of_primary_explained"]) + tex("% explained"),
+            )
+        )
+    for item in contrasts:
+        rows.append(
+            (
+                tex(item["moderator"]),
+                f"{number(item['familiar_dominant_median']):.2f}",
+                f"{number(item['newcomer_dominant_median']):.2f}",
+                f"{number(item['median_difference']):.2f}",
+                f"[{number(item['repository_cluster_ci_low']):.2f}, {number(item['repository_cluster_ci_high']):.2f}]",
+                tex("separates" if item["separates_groups"] == "True" else "does not separate"),
+            )
+        )
+    return rows
+
+
+def heterogeneity_table() -> str:
+    summary = read_json("outputs/heterogeneity_audit/summary.json")
+    part1 = summary["part1_matched_pair_spread"]
+    concentration = part1["concentration"]
+    loo = part1["leave_one_out_ranges"]
+    generality = part1["generality"]
+    part2 = summary["part2_repository_moderators"]
+    groups = part2["familiarity_group_counts"]
+    qualifying = part1["qualifying_product_pairs"]
+    excluding_zero = sum(
+        1
+        for item in qualifying
+        if number(item["repository_cluster_ci_low"]) < 0 and number(item["repository_cluster_ci_high"]) < 0
+    )
+    note = (
+        f"The rows of Panel A are the published matched-pair gap and then the same gap inside each ordered product pair with at least "
+        f"{integer(part1['minimum_pairs_per_product_pair'])} pairs. The gap is general by the pre-registered rule, verdict "
+        f"{generality['verdict']}: every leave-one-repository-out refit and every leave-one-product-pair-out refit stays negative "
+        f"(repository range {pp(loo['repository']['min'])} to {pp(loo['repository']['max'])} pp), and "
+        f"{integer(generality['qualifying_product_pairs_negative'])} of {integer(generality['qualifying_product_pairs'])} qualifying pairs reproduce its sign. "
+        f"It is not uniform in size: only {excluding_zero} qualifying pair has an interval excluding zero on its own, the two Codex-authored pairs carry the "
+        "average, and the remaining pairs are near zero, so the average should be read as concentrated in the Codex-authored strata. The pairs are also unevenly "
+        f"spread, with the largest repository holding {percent(concentration['largest_repository_share'])}% of pairs, the largest ordered pair "
+        f"{percent(concentration['largest_product_pair_share'])}%, a repository Gini of {compact_number(concentration['repository_gini'], 3)}, and a median of "
+        f"{compact_number(concentration['median_pairs_per_repository'])} pairs per repository. "
+        "The rows of Panel B are first the four RQ3 familiar-versus-newcomer models, in percentage points, and then the six pre-trigger repository descriptors, each in "
+        "its own units: counts of PRs and contributors, rates between zero and one, reviews per PR, and days. The descriptors are measured only on pull requests and "
+        f"reviews strictly before each repository's first trigger. They explain {percent(number(one(read_csv('outputs/heterogeneity_audit/rq3_moderator_models.csv'), specification='Primary + repository moderators')['share_of_primary_explained']))}% of the split, while repository fixed effects leave an interval covering zero, so the split is a between-repository "
+        f"difference that these governance and volume descriptors do not account for. Group sizes are {integer(groups['familiar_dominant'])} familiar-dominant, "
+        f"{integer(groups['newcomer_dominant'])} newcomer-dominant, {integer(groups['mixed_tie'])} tied, and {integer(groups['no_user_written_edge'])} repositories with no "
+        "user-written edge. Per-repository descriptors and every leave-one-out refit are in the heterogeneity audit products repository_moderators.csv, "
+        "matched_pair_composition.csv, and matched_pair_leave_one_out.csv."
+    )
+    return paneled_longtable(
+        "Where the matched gap lives, and what repository descriptors explain.",
+        "tab:s-heterogeneity",
+        r"L{0.26\textwidth}L{0.07\textwidth}L{0.09\textwidth}L{0.11\textwidth}L{0.16\textwidth}L{0.23\textwidth}",
+        6,
+        (
+            (
+                "Panel A. Composition of the matched pairs and the gap inside each product pair",
+                (
+                    "Ordered product pair",
+                    "Pairs",
+                    "Repos",
+                    "Cross (\\%)",
+                    "Same (\\%)",
+                    "Difference (pp) and repository-cluster 95\\% interval",
+                ),
+                matched_pair_rows(),
+            ),
+            (
+                "Panel B. Repository descriptors behind the familiar-replier split",
+                (
+                    "Specification or pre-trigger descriptor",
+                    "Familiar",
+                    "Newcomer",
+                    "Estimate or median gap",
+                    "95\\% interval",
+                    "Share explained or verdict",
+                ),
+                repository_moderator_rows(),
+            ),
+        ),
+        note,
     )
 
 
@@ -2408,6 +3138,18 @@ def validate(rendered: str) -> None:
     for forbidden in ("outputs/", "outputs\\", "scripts/", "scripts\\"):
         if forbidden in lowered:
             raise ValueError(f"Paper-unsafe or invalid generated text contains {forbidden!r}")
+    # A reader of the published Online Resource has no repository checkout, so no
+    # internal artifact file name may reach the page. Line-breaking helpers slice
+    # identifiers up, so the text is normalised before the gate is applied. The
+    # ordered reproduction contract is the single documented exception: it names
+    # the commands a reader runs, so ".py" stays legal.
+    flattened = lowered.replace(r"\allowbreak{}", "").replace("\\_", "_").replace("\\", "")
+    for extension in (".csv", ".parquet", ".json", ".tsv", ".jsonl", ".xlsx"):
+        if extension in flattened:
+            raise ValueError(
+                f"Generated text names an internal artifact file ({extension}); "
+                "describe the public artifact instead of a repository path"
+            )
     if re.search(r"(?<![a-z])(?:nan|infinity)(?![a-z])", lowered):
         raise ValueError("Generated text contains a non-finite numeric token")
 
@@ -2421,9 +3163,12 @@ TABLE_GROUPS = (
     ("data", (release_table,)),
     ("identity", (definitions_table,)),
     ("cohorts", (cohort_table, specifications_table)),
+    ("coverage", (coverage_table,)),
     ("rq1", (burst_table, rq1_robustness_table)),
     ("rq2", (rq2_table,)),
+    ("heterogeneity", (heterogeneity_table,)),
     ("rq3", (addressed_edge_table, rq3_robustness_table)),
+    ("specificity", (specificity_table, actors_table)),
     ("external", (external_table,)),
     ("task_context", (task_context_table,)),
     ("quality", (quality_table,)),

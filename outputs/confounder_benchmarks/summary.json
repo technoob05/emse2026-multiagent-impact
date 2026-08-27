@@ -1,0 +1,11 @@
+{
+  "threshold_hours": 48,
+  "exposure": "exact_parent_reply_by_48h",
+  "factors": 4,
+  "prs": 1067,
+  "largest_prevalence_gap_pp": 8.41,
+  "largest_prevalence_gap_factor": "automation had already acted",
+  "max_abs_outcome_gap_pp": 19.13,
+  "axes": "x: how much more common the factor is among answered PRs, in percentage points; y: the factor's own unadjusted difference in later merge, in percentage points",
+  "interpretation": "these are the factors we measured, placed on the same plane as the hypothetical hidden cause, so the tipping region can be read against something observed rather than in the abstract"
+}
