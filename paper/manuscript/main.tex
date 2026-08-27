@@ -150,8 +150,7 @@ is the point.
 
 \textbf{A reusable check for order-based claims.} Reviewer order is often read
 as evidence of coordination. We show that shuffling the order of events inside
-the same PR reproduces the apparent pattern almost exactly. Prior work on review
-order compares against an alphabetical baseline \citep{bouraffa2025orders}; we
+the same PR reproduces the apparent pattern almost exactly. The nearest prior baseline for an order claim is alphabetical, and it is over files rather than reviewers \citep{bouraffa2025orders}; we
 argue a shuffled baseline is the one that can falsify a coordination claim.
 
 \textbf{One lever that survives.} Almost everything that looked like a mechanism
@@ -186,16 +185,20 @@ than a new discovery.
 
 \emph{Who reviews, and in what order.} Zhong et al. model ordered human, LLM,
 and agent reviewer sequences across review eras \citep{zhong2026agenticreview}.
-Bouraffa et al. ask whether the order of review activity is meaningful at all,
-using an alphabetical baseline \citep{bouraffa2025orders}. Neither compares the
-observed order against a shuffled one, which is the check we add.
+Bouraffa et al.\ ask whether the order in which a reviewer works through the
+files of one pull request is meaningful, benchmarking it against GitHub's
+default alphabetical file listing \citep{bouraffa2025orders}. That is a
+different order from ours, over files rather than over reviewers, and neither
+study compares an observed order against a shuffled one, which is the check we
+add.
 
 \emph{Who does the work.} Several studies find that people still carry the
 review. Zhong et al. report that developers adopt human suggestions far more
 often than agent suggestions \citep{zhong2026synergy}. Chowdhury et al. report a
 lower merge rate for PRs reviewed only by an agent than for PRs reviewed only by
-people \citep{chowdhury2026industry}. Duma et al. report that most AI-generated
-PRs get no review at all \citep{duma2026reviews}. Our RQ3 result agrees with the
+people \citep{chowdhury2026industry}. Duma et al. report that most AI-generated PRs in popular repositories get no
+review at all, while cautioning that an absent review record is not proof of
+absent human oversight \citep{duma2026reviews}. Our RQ3 result agrees with the
 direction of this work. What we add is a much stricter definition of what counts
 as the human contribution, and a design that keeps it before the outcome.
 
@@ -209,8 +212,10 @@ review comment was good, only whether someone addressed it.
 
 \emph{Bots and review participation before agents.} The questions we ask are
 older than coding agents. Review bots \citep{wessel2022gatekeepers} and workflow automation
-\citep{wessel2023ghactions} both change how a PR behaves. Coverage alone does not explain post-release quality, and participation adds to it \citep{mcintosh2016mcr,thongtanunam2017participation}, and human factors decide
-whether an invited reviewer engages at all \citep{ruangwan2019humanfactors}.
+\citep{wessel2023ghactions} both change how a PR behaves. Coverage alone does not explain post-release quality, and participation adds
+to it \citep{mcintosh2016mcr}; prior participation is in turn the strongest
+indicator of which patches attract no reviewer at all
+\citep{thongtanunam2017participation}, and human factors are strongly associated with whether an invited reviewer engages at all \citep{ruangwan2019humanfactors}.
 Among pull requests that draw comments at all, the reviewer's first response time is the largest factor in how long the request takes \citep{zhang2022latency},
 which is why we place our check point after it rather than before. Our
 contribution is to carry those questions across a product boundary that did not
@@ -227,15 +232,16 @@ Review platforms record replies. They do not record resolutions. A large body of
 work therefore recovers the missing link from the code itself, and it is the
 route we chose not to take.
 
-Hirao et al.\ recover review links that the platform never stored and label them
-with classifiers reaching F1 between 0.71 and 0.79, which is the clearest
-demonstration that recovered edges buy real analytic power at a measurable error
-rate \citep{hirao2019linkage}. The code-review-automation datasets take the same
-route by assumption, pairing a comment with the next revision of the method it annotated, or with the diff hunk, to build training triples at a scale no anchored rule could reach \citep{tufano2022pretrained,li2022codereviewer}. Industry does it explicitly.
-Google judges
-whether its own review comments were resolved by checking whether the commented
-lines changed before submission, then confirming a sample by hand
-\citep{vijayvergiya2024autocommenter}, and reports that 7.5\% of all its
+Hirao et al.\ recover review links that the platform does not store as
+first-class relations, and classify what kind of link each one is with
+classifiers reaching F1 between 0.71 and 0.79. It is the clearest
+demonstration that recovered edges buy real analytic power at a measurable
+error rate \citep{hirao2019linkage}. The code-review-automation datasets take the same
+route by assumption, pairing a comment with the next revision of the method it annotated, or of the diff hunk it sat on, to build training triples at a scale no anchored rule could reach \citep{tufano2022pretrained,li2022codereviewer}. Industry does it explicitly.
+Google judges whether its \emph{automated} review comments were resolved by
+re-running the model on the merged snapshot and asking whether the comment
+still fires on the same lines, then confirming a hand-read sample, which puts
+resolution near 40\% \citep{vijayvergiya2024autocommenter}, and reports that 7.5\% of all its
 reviewer comments are addressed by applying a machine-suggested edit
 \citep{frommgen2024resolving}. Closest to our own setting, Sun et al.\ mine more than 22,000 AI review comments across 178 repositories and
 adjudicate 4,486 of them, drawn from 51, with a two-stage LLM-assisted framework
