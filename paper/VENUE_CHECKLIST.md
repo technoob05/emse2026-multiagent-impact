@@ -18,9 +18,9 @@ copy of the official template on 2026-08-27.
   byte-identical to that release.
 - Class options: `sn-basic` is correct for computer science and gives author-year
   citations. Do not add `Numbered`.
-- Peer-review copy: the user manual asks for the `referee` option, which sets
-  double line spacing. It roughly doubles the page count, which is expected.
-  Remove it for the final version.
+- Peer-review copy: the user manual offers a `referee` option that sets double
+  line spacing. The wording is a request, not a requirement, and it doubles the
+  page count, so we submit single-spaced. Add it only if an editor asks.
 - Structure: `\backmatter` must precede the declarations and the bibliography.
   Back-matter headings use `\bmhead`.
 - Declarations: eight headings are expected, each present even when the answer is

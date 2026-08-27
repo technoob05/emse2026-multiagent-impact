@@ -1,8 +1,9 @@
 % Working draft for the EMSE 2026 Special Issue on Agentic SE.
 % Author metadata, declarations, and the public artifact DOI remain open gates.
-% The referee option gives the double line spacing the Springer Nature user
-% manual requests for the peer-review copy. Remove it for the final version.
-\documentclass[referee,lineno,pdflatex,sn-basic]{sn-jnl}
+% Springer's user manual offers a [referee] option that sets double line
+% spacing for review copies. It is a request, not a requirement, and it doubles
+% the page count, so we submit single-spaced.
+\documentclass[lineno,pdflatex,sn-basic]{sn-jnl}
 
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
@@ -388,7 +389,7 @@ row is not a stage inside the branch above it. Branch A and Branch B are two
 cohorts drawn from the same 4,824 parent for different questions, and neither
 contains the other.}
 \label{tab:flow}
-\begin{tabular}{@{}p{0.42\textwidth}rrr@{}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.44\textwidth}rrr@{}}
 \toprule
 Filter applied & Before & Removed & After \\
 \midrule
@@ -407,7 +408,7 @@ A reply names the trigger within 48 hours & 1,067 & 958 & 109 \\
 \multicolumn{4}{@{}l}{\textit{Branch B: the thread-position lane}} \\
 Earliest review of either kind is the cross-product one & 4,824 & 1,298 & 3,526 \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{table}
 
 Two units run through that table and we keep them apart everywhere. The primary
