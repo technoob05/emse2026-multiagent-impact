@@ -9,12 +9,19 @@ This is not the same thing as `build/`, which holds generated deliverables
 
 ## Current
 
+One directory per analysis, written by the script of the matching name under
+`scripts/analysis/`. This list is regenerated from the directory itself, so it
+cannot drift from what is here.
+
 - `addressed_edge_landmark/`
 - `addressed_edge_scope/`
 - `addressed_edge_sensitivity/`
 - `addressed_edge_specificity/`
+- `anchorability_coverage/`
+- `burst_threshold_selection/`
 - `burst_topology/`
 - `cache/`
+- `confounder_benchmarks/`
 - `coordination_topology/`
 - `cross_agent_review/`
 - `deep_coordination/`
@@ -22,17 +29,23 @@ This is not the same thing as `build/`, which holds generated deliverables
 - `feedback_response_audit/`
 - `feedback_routing/`
 - `figures/`
+- `heterogeneity_audit/`
 - `human_audit/`
 - `human_memory_bridge/`
 - `manual_audit/`
+- `merge_curves/`
 - `novelty_collision_extension/`
 - `ownership_persistence/`
+- `pseudo_edge_control/`
 - `response_ownership/`
 - `review_collision/`
 - `review_request_context/`
 - `rq3_extensions/`
 - `tables/`
+- `task_context_interaction/`
 - `task_label_validation/`
+- `user_account_automation/`
+- `worked_example/`
 
 ## Superseded
 

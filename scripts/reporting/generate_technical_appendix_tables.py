@@ -475,7 +475,7 @@ def burst_table() -> str:
     return paneled_longtable(
         "RQ1: first public state after each burst threshold, the burst-window convention, ordering diagnostics, and order placebos.",
         "tab:s-burst",
-        r"L{0.17\textwidth}L{0.25\textwidth}L{0.09\textwidth}L{0.11\textwidth}L{0.15\textwidth}L{0.21\textwidth}",
+        r"L{0.13\textwidth}L{0.29\textwidth}L{0.08\textwidth}L{0.09\textwidth}L{0.16\textwidth}L{0.21\textwidth}",
         6,
         (
             (
@@ -645,7 +645,7 @@ def rq1_placebo_rows() -> list[tuple[str, ...]]:
 
 
 PLACEBO_NOTE = (
-    "Deep-transition next-state shares use 924 mapped-first PRs; the same-product placebo uses 495 PRs with a later mapped-product event and preserves each PR's future product composition. Escalation rows compare the observed user-next share with a within-PR order permutation. Ownership rows condition on a visible next action; their difference column is user-first minus mapped-first. Same-layer continuation and cross-layer bounce show no clear group difference, while exact owner repetition is higher after a mapped-product first state."
+    "In Panel D the deep-transition shares use 924 mapped-first PRs; the same-product placebo uses 495 PRs with a later mapped-product event and preserves each PR's future product composition. Escalation rows compare the observed user-next share with a within-PR order permutation. Ownership rows condition on a visible next action, and their difference column is user-first minus mapped-first."
 )
 
 
@@ -1418,7 +1418,7 @@ def rq3_robustness_table() -> str:
     return longtable(
         "RQ3 robustness: cohort scope, exposure composition, measured balance, sensitivity bounds, and design extensions.",
         "tab:s-sensitivity",
-        r"L{0.12\textwidth}L{0.29\textwidth}L{0.09\textwidth}L{0.14\textwidth}L{0.34\textwidth}",
+        r"L{0.10\textwidth}L{0.25\textwidth}L{0.08\textwidth}L{0.13\textwidth}L{0.42\textwidth}",
         (
             "Check",
             "Item",
@@ -1427,7 +1427,7 @@ def rq3_robustness_table() -> str:
             "Size and detail",
         ),
         rows,
-        "Unless a row says otherwise, every check uses the 1,067-PR inline-trigger landmark cohort and the pre-trigger adjusted specification. Cohort-restriction rows show that the landmark cohort is the slower-resolving remainder of the cross-product inline-trigger population. The exposure rule requires a reply whose parent identifier is the trigger's own identifier; it does not require another product to write it, and the composition rows report who actually wrote the 128 exposure events on the 109 exposed PRs. Exposure-definition rows refit the primary model on the same cohort under stricter definitions. A standardized mean difference is the group difference divided by the pooled standard deviation; every value is below 0.16 in absolute size, and balance on measured variables says nothing about unmeasured structure such as task difficulty. E-values are computed on an approximate risk-ratio scale from the adjusted risk difference and the unexposed later-merge rate; they state the minimum association an unmeasured factor would need with both the exact edge and later merge, beyond the measured controls. Negative-control outcomes were complete before the trigger, so the exposure cannot produce them and a non-null estimate signals residual confounding rather than an effect. The unconditional randomisation rows permute across the whole cohort and their bracketed pair is the 2.5th to 97.5th percentile of the permuted reference distribution, not a confidence interval; that distribution is not centred on zero because 423 of 469 repositories contain no exposure variation. The conditional row, which is the one quoted in the article, uses only repositories containing both exposed and unexposed PRs and adds repository fixed effects, so its reference is centred. The whole-population rows drop the hour-48 restriction: every cross-product inline-trigger PR with a complete 30-day horizon is followed from its trigger, follow-up is split into eleven intervals, and the exact addressed edge enters as a time-varying covariate, so a PR contributes unexposed periods until its own first exact reply; the estimate is an odds ratio from a pooled logistic model with interval indicators and repository-clustered standard errors. The edge-class rows split the 109 exposed PRs by the account that wrote the first exact reply, using the same strict prior-history rule as the RQ2 analysis, and the fixed-effect row is the decisive one: the gap between a prior reviewer and a newcomer is largely a difference between repositories, not within them, so these rows describe where the signal sits and do not identify a mechanism. None of these checks identifies a causal effect.",
+        "Unless a row says otherwise, every check uses the 1,067-PR inline-trigger landmark cohort and the pre-trigger adjusted specification. A standardized mean difference is the group difference divided by the pooled standard deviation. E-values are computed on an approximate risk-ratio scale from the adjusted risk difference and the unexposed later-merge rate, and state the minimum association an unmeasured factor would need with both the exact edge and later merge, beyond the measured controls. The bracketed pair on the unconditional randomisation row is the 2.5th to 97.5th percentile of the permuted reference distribution, not a confidence interval, and that distribution is not centred on zero because 423 of 469 repositories contain no exposure variation; the conditional row, which is the one quoted in the article, uses only repositories containing both exposed and unexposed PRs and adds repository fixed effects, so its reference is centred. The whole-population row is an odds ratio from a pooled logistic model with interval indicators and repository-clustered standard errors, on follow-up split into eleven intervals with the edge entering as a time-varying covariate. Among the edge-class rows the fixed-effect row is the decisive one: the gap between a prior reviewer and a newcomer is largely a difference between repositories, not within them, so those rows describe where the signal sits and do not identify a mechanism. None of these checks identifies a causal effect.",
     )
 
 
@@ -1938,9 +1938,9 @@ def breakable_code(value: object) -> str:
 
 
 BALANCE_VARIABLE_LABELS = {
-    "log1p_trigger_age_hours": "Log trigger age in hours since PR creation",
-    "log1p_pre_events": "Log pre-trigger interaction events",
-    "pre_user_events": "Pre-trigger user-account events",
+    "log1p_trigger_age_hours": "Log trigger age (h)",
+    "log1p_pre_events": "Log pre-trigger events",
+    "pre_user_events": "Pre-trigger user events",
     "pre_bot_events": "Pre-trigger bot events",
     "pre_decisive_reviews": "Pre-trigger decisive reviews",
     "pre_force_pushes": "Pre-trigger branch movements",
@@ -2320,7 +2320,7 @@ def record_table() -> str:
     ]
     # Panel B has no step number, so its claim spans the step and command columns
     # instead of leaving a blank cell in front of every row.
-    claim_width = r"0.456\textwidth"
+    claim_width = r"0.35\textwidth"
     dispositions = [
         (span(2, claim_width, claim, first=True), status, reason)
         for claim, status, reason in disposition_rows()
@@ -2328,7 +2328,7 @@ def record_table() -> str:
     return paneled_longtable(
         "Ordered reproduction contract and the disposition of every experiment.",
         "tab:s-record",
-        r"L{0.05\textwidth}L{0.40\textwidth}L{0.09\textwidth}L{0.44\textwidth}",
+        r"L{0.04\textwidth}L{0.29\textwidth}L{0.09\textwidth}L{0.54\textwidth}",
         4,
         (
             (
@@ -2505,7 +2505,7 @@ def ordering_rows() -> list[tuple[str, ...]]:
 
 
 ORDERING_NOTE = (
-    "In Panel C the priority order applied to tied first timestamps is user account, then mapped product, then other bot, then branch movement or untyped activity. Ties are common because many events share a whole-second timestamp, but a tie changes the assigned state only when the tied events fall in different states, and that happens once in the whole study. The order favours the user-account state, which is the state the RQ1 ordering claim rests on, so the diagnostic is reported rather than assumed harmless. The gate rows drop one repository, or one ordered author--reviewer product pair, at a time and refit the ordering; two gates are checked in every exclusion, namely that the user-account share stays above the mapped-product share and that no later action within seven days stays the largest state. Because both gates hold everywhere, the four non-published thresholds are collapsed to their range. The share-range rows report each state at the primary five-minute threshold, first for repository exclusions and then for product-pair exclusions. These checks show that the ordering is not carried by one repository or one product pair. They do not remove selection into the cohort."
+    "In Panel C the two gates checked in every exclusion are that the user-account share stays above the mapped-product share and that no later action within seven days stays the largest state. Because both hold everywhere, the four non-published thresholds are collapsed to their range. The share-range rows report each state at the five-minute threshold, first for repository exclusions and then for product-pair exclusions. These checks show that the ordering is not carried by one repository or one product pair; they do not remove selection into the cohort."
 )
 
 
@@ -2925,18 +2925,14 @@ def specificity_table() -> str:
     agreement = content["rule_versus_reading"]
     note = (
         "Panel A is one row per exposure or per placebo null, all on the same inline-trigger landmark cohort and the same pre-trigger control set. "
-        "Rows one to three are clustered linear-probability estimates; rows four to six are null distributions over 2,000 draws, so their interval is the "
-        "2.5 to 97.5 percentile of the null rather than a confidence interval. Read plainly: an off-target reply, which points at a different inline comment "
-        "and therefore carries no addressed edge, gives the same estimate as the real edge, and the permuted-anchor null is centred near the observed estimate "
-        f"({pp_value(summary['permuted_anchor_null_reference']['null_mean_pp'])} pp against an observed {pp_value(summary['addressed_edge']['estimate_pp'])} pp). "
-        "Permuting which replying PR is anchored to its own trigger reproduces the estimate, so the anchoring adds nothing beyond the presence of a reply; "
-        f"the frozen verdict recorded with the analysis is {verdict}. Only the time-shifted null is centred near zero, which rules out the weaker worry that the "
-        "hour-48 landmark rule alone manufactures the contrast. The last row names what the two liveness-preserving controls suggest the estimate actually tracks. "
-        "Panel B classifies every addressed-edge reply by what it says, using a four-rule priority ladder, and re-estimates the contrast by category. Shares are of the "
-        f"{integer(content['user_written_edges'])} user-written edges among the {integer(content['all_edges'])} exposure events; the rule and a full hand reading of all "
-        f"{integer(agreement['edges_hand_read'])} texts disagree on {integer(agreement['disagreements'])} rows "
-        f"({percent(agreement['disagreement_rate'])}%), always in the conservative direction. The subgroup contrasts are underpowered by construction and are description, "
-        "not a causal decomposition. Every classified reply and every placebo draw is in the public artifact. "
+        "Rows one to three are clustered linear-probability estimates; rows four to six are null distributions over 2,000 draws, so their bracketed pair is the "
+        "2.5 to 97.5 percentile of the null rather than a confidence interval. The permuted-anchor null is centred near the observed estimate "
+        f"({pp_value(summary['permuted_anchor_null_reference']['null_mean_pp'])} pp against an observed {pp_value(summary['addressed_edge']['estimate_pp'])} pp), "
+        f"and the frozen verdict recorded with the analysis is {verdict}. "
+        f"Panel B shares are of the {integer(content['user_written_edges'])} user-written edges among the {integer(content['all_edges'])} exposure events; the rule "
+        f"and a full hand reading of all {integer(agreement['edges_hand_read'])} texts disagree on {integer(agreement['disagreements'])} rows "
+        f"({percent(agreement['disagreement_rate'])}%), always in the conservative direction. Its subgroup contrasts are underpowered by construction and are "
+        "description, not a causal decomposition. Every classified reply and every placebo draw is in the public artifact. "
         + actors_note()
     )
     return paneled_longtable(
@@ -3081,14 +3077,11 @@ def actors_note() -> str:
         f"{integer(summary['edge_events_written_by_user_accounts'])} user-written addressed edges among the "
         f"{integer(summary['exposure_events_total'])} exposure events, using {integer(summary['comment_history_rows_scored'])} of their earlier comments. "
         f"An account is flagged when it trips at least two heuristics. The median machine-likeness score is {compact_number(summary['machine_likeness_score_median'], 3)} "
-        f"and the maximum is {compact_number(summary['machine_likeness_score_max'], 3)}, so no account is near the automated end of the scale. "
-        "The rows of Panel D re-estimate the published later-merge contrast after dropping every PR whose edge a flagged account wrote; the estimate moves in the "
-        "opposite direction to the worry, and dropping any account that trips even one heuristic leaves the interval excluding zero. "
+        f"and the maximum is {compact_number(summary['machine_likeness_score_max'], 3)}. "
         f"Of the {integer(repetition['edge_texts'])} edge texts, {integer(repetition['distinct_normalised_edge_texts'])} are distinct after normalisation "
         f"and the most repeated text appears {integer(repetition['most_frequent_count'])} times; hand reading of the "
-        f"{integer(summary['manual_review_accounts'])} highest-scoring accounts finds the repetition to be hand-issued agent invocations and platform button text "
-        "rather than generated output. These heuristics are behavioural proxies over public traces, not ground truth about who or what operates an account, and they "
-        "cannot detect a person pasting model output. Per-account scores and the hand-review sheet are in the public artifact."
+        f"{integer(summary['manual_review_accounts'])} highest-scoring accounts finds that repetition to be hand-issued agent invocations and platform button text "
+        "rather than generated output. Per-account scores and the hand-review sheet are in the public artifact."
     )
     return note
 
@@ -3223,22 +3216,18 @@ def heterogeneity_note() -> str:
         if number(item["repository_cluster_ci_low"]) < 0 and number(item["repository_cluster_ci_high"]) < 0
     )
     note = (
-        f"The rows of Panel B are the published matched-pair gap and then the same gap inside each ordered product pair with at least "
-        f"{integer(part1['minimum_pairs_per_product_pair'])} pairs. The gap is general by the pre-registered rule, verdict "
-        f"{generality['verdict']}: every leave-one-repository-out refit and every leave-one-product-pair-out refit stays negative "
-        f"(repository range {pp(loo['repository']['min'])} to {pp(loo['repository']['max'])} pp), and "
-        f"{integer(generality['qualifying_product_pairs_negative'])} of {integer(generality['qualifying_product_pairs'])} qualifying pairs reproduce its sign. "
-        f"It is not uniform in size: only {excluding_zero} qualifying pair has an interval excluding zero on its own, the two Codex-authored pairs carry the "
-        "average, and the remaining pairs are near zero, so the average should be read as concentrated in the Codex-authored strata. The pairs are also unevenly "
-        f"spread, with the largest repository holding {percent(concentration['largest_repository_share'])}% of pairs, the largest ordered pair "
-        f"{percent(concentration['largest_product_pair_share'])}%, a repository Gini of {compact_number(concentration['repository_gini'], 3)}, and a median of "
-        f"{compact_number(concentration['median_pairs_per_repository'])} pairs per repository. "
-        "The rows of Panel D are first the four RQ3 familiar-versus-newcomer models, in percentage points, and then the six pre-trigger repository descriptors, each in "
-        "its own units: counts of PRs and contributors, rates between zero and one, reviews per PR, and days. The descriptors are measured only on pull requests and "
-        f"reviews strictly before each repository's first trigger. They explain {percent(number(one(read_csv('outputs/heterogeneity_audit/rq3_moderator_models.csv'), specification='Primary + repository moderators')['share_of_primary_explained']))}% of the split, while repository fixed effects leave an interval covering zero, so the split is a between-repository "
-        f"difference that these governance and volume descriptors do not account for. Group sizes are {integer(groups['familiar_dominant'])} familiar-dominant, "
-        f"{integer(groups['newcomer_dominant'])} newcomer-dominant, {integer(groups['mixed_tie'])} tied, and {integer(groups['no_user_written_edge'])} repositories with no "
-        "user-written edge. Per-repository descriptors and every leave-one-out refit are in the public artifact."
+        f"Panel B repeats the published gap inside each ordered product pair with at least "
+        f"{integer(part1['minimum_pairs_per_product_pair'])} pairs; the frozen generality verdict is {generality['verdict']}, because every "
+        f"leave-one-repository-out refit stays negative ({pp(loo['repository']['min'])} to {pp(loo['repository']['max'])} pp) and "
+        f"{integer(generality['qualifying_product_pairs_negative'])} of {integer(generality['qualifying_product_pairs'])} qualifying pairs reproduce the sign, "
+        f"while only {excluding_zero} pair has an interval excluding zero on its own. The pairs are unevenly spread: the largest repository holds "
+        f"{percent(concentration['largest_repository_share'])}% of them, the largest ordered pair {percent(concentration['largest_product_pair_share'])}%, "
+        f"the repository Gini is {compact_number(concentration['repository_gini'], 3)}, and the median is "
+        f"{compact_number(concentration['median_pairs_per_repository'])} pairs per repository. Panel D gives the four familiar-versus-newcomer models in "
+        "percentage points and then six pre-trigger repository descriptors, each in its own units and measured only on pull requests and reviews strictly "
+        f"before each repository's first trigger. Group sizes are {integer(groups['familiar_dominant'])} familiar-dominant, "
+        f"{integer(groups['newcomer_dominant'])} newcomer-dominant, {integer(groups['mixed_tie'])} tied, and {integer(groups['no_user_written_edge'])} "
+        "repositories with no user-written edge. Per-repository descriptors and every leave-one-out refit are in the public artifact."
     )
     return note
 

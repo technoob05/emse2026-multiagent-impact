@@ -22,7 +22,7 @@
 \affil*[1]{\orgdiv{Affiliation pending}, \orgname{Institution pending},
   \orgaddress{\city{City pending}, \country{Country pending}}}
 
-\abstract{\textbf{Context:} A pull request (PR) written by one coding-agent product and reviewed by another looks like a multi-agent workflow. Two products on one PR do not show that one addressed the other. \textbf{Objective:} We trace the public path from cross-product review to an addressed edge, a next owner, and a later state. \textbf{Method:} From a pinned AIDev release we analyse 8,608 trigger PRs, 546 matched pairs, and a 1,067-PR outcome cohort. Exact account, comment, and review-batch identifiers anchor every event to one trigger. We set aside automation bursts, fix an hour-48 check point, and test the exposure against placebo anchors. \textbf{Results:} Direct dialogue between products is rare; after a five-minute burst, user accounts own most remaining first actions. Cross-product triggers get 13 percentage points less visible follow-up than matched same-product triggers. An exact reply to the trigger goes with 17 points more later merge, and a person writes it four times in five. Placebo exposures then qualify it: a reply anchored anywhere else on the PR does as well, and shuffling the anchor leaves the estimate unmoved. Across all 105 user-written replies, the association sits with the ones a person wrote, not the one-click hand-offs to another machine. Naming an issue in the PR body roughly doubles the chance a review point is answered across the boundary, and changes nothing within a product. \textbf{Conclusions:} Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention, not a resolved review point, and strict anchoring buys attribution rather than prediction.}
+\abstract{\textbf{Context:} A pull request (PR) written by one coding-agent product and reviewed by another looks like a multi-agent workflow, but two products on one PR do not show that one addressed the other. \textbf{Objective:} We ask what connected public path follows one cross-product review event. \textbf{Method:} From a pinned AIDev release we analyse 8,608 trigger PRs, 546 matched pairs, and a 1,067-PR outcome cohort, anchoring every event to one trigger by exact account, comment, and review-batch identifiers. We set aside automation bursts, fix an hour-48 check point, and test the exposure against placebo anchors. \textbf{Results:} Direct dialogue between products is rare; after a five-minute burst, people own most remaining first actions. Cross-product triggers get 13 percentage points less visible follow-up than matched same-product triggers. An exact reply to the trigger goes with 17 points more later merge, and a person writes it four times in five. Placebo exposures qualify it: a reply anchored elsewhere on the PR does as well, and shuffling the anchor leaves the estimate unmoved. Across all 105 user-written replies, the association sits with those a person wrote, not the one-click hand-offs to another machine. Naming an issue in the PR body roughly doubles the chance a review point is answered across the boundary, and changes nothing within a product. \textbf{Conclusions:} Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention rather than a resolved review point, and strict anchoring buys attribution, not prediction.}
 
 \keywords{coding agents, multi-agent software engineering, code review, human-agent collaboration, pull requests, mining software repositories}
 \maketitle
@@ -445,29 +445,20 @@ channel or month where relevant, trigger age, and public activity known before
 the trigger. We vary the addressed-edge window, add repository fixed effects,
 and remove each product pair in turn.
 
-The later-state comparison comes from watching, not from an experiment. So we
-also ask how much hidden structure it would take to remove the result. We run
-four checks.
+The later-state comparison comes from watching, not from an experiment, so a
+large part of our effort goes into trying to break it. Six checks do that, and
+the Results section reports each one where it belongs. Two of them ask how strong
+an unmeasured cause would have to be: an E-value \citep{vanderweele2017evalue},
+which puts a single number on that strength, and a grid showing the same thing as
+a region. Two more attack the exposure itself, by moving the reply's anchor to a
+different comment and by shuffling which comment each reply is anchored to. The
+last two attack the design: one drops the hour-48 rule and follows every trigger
+PR over time, and one applies the model to outcomes that had already finished
+before the trigger, where nothing should be found.
 
-First, an E-value \citep{vanderweele2017evalue}. It asks a simple question: how
-strong would a cause we did not measure have to be, before it could wipe out our
-result? A larger number means a more demanding requirement. Second, a grid that
-shows how big one missing yes-or-no factor would have to be. Third, three
-outcomes that had already finished before the trigger. The trigger cannot change
-the past, so these should show no difference; if one of them does, that is a
-warning sign and we report it as such. Fourth, a shuffle test that reassigns the
-exposure label inside each repository.
-
-We also run two checks that attack the design rather than the arithmetic. The
-first drops the hour-48 rule and models the chance of merging over time across
-the whole trigger population, with the edge switching on when it actually
-happens. The second splits the edge by whether the person who wrote it had
-already reviewed in that repository, and then repeats that split inside single
-repositories.
-
-These checks put a limit on fragility. They do not tell us what an intervention
-would do. Task difficulty and maintainer intent are not measured here. Either
-one could shape both the public path and the outcome.
+All six put a limit on fragility. None tells us what an intervention would do.
+Task difficulty and maintainer intent are not measured here, and either could
+shape both the public path and the outcome.
 
 \subsection{Reproducibility and AI use}
 
