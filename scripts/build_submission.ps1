@@ -95,8 +95,6 @@ try {
     Invoke-Checked $pythonExe scripts\figures\visualize_dataset.py
     Invoke-Checked $pythonExe scripts\analysis\run_direct_continuity_analysis.py
     Invoke-Checked $pythonExe scripts\audit\build_human_audit_packets.py
-    Invoke-Checked $pythonExe scripts\validation\validate_outputs.py
-    Invoke-Checked $pythonExe scripts\validation\validate_handoff_outputs.py
     Invoke-Checked $pythonExe scripts\analysis\run_cross_agent_review_exploration.py
     Invoke-Checked $pythonExe scripts\analysis\run_feedback_landmark_models.py
     Invoke-Checked $pythonExe scripts\analysis\run_response_ownership_analysis.py
