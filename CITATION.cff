@@ -1,31 +1,33 @@
 # Citation File Format 1.2.0 — https://citation-file-format.github.io
 #
 # ---------------------------------------------------------------------------
-# BEFORE THE ZENODO DEPOSIT, A HUMAN MUST REPLACE EVERY PLACEHOLDER BELOW.
-# Nothing here may be guessed. A fabricated ORCID, affiliation, or email in a
-# citation file is worse than a blank one, because it silently mis-attributes.
+# STATUS: author metadata is confirmed. Two things are still unknown, and both
+# need a human, so both are left COMMENTED OUT rather than filled with a
+# literal placeholder. The `orcid`, `doi`, and `date-released` keys are
+# pattern-constrained by the CFF 1.2.0 schema, so a placeholder string in them
+# would make this file fail validation. The file as it stands is schema-valid
+# and honest about what it does not yet know.
 #
-# The `orcid`, `email`, `date-released`, and `doi` keys are pattern-constrained
-# by the CFF 1.2.0 schema, so a literal placeholder in them would make this file
-# fail validation. They are therefore left COMMENTED OUT below. Uncomment each
-# one as you fill it in. The file as it stands is schema-valid and honest about
-# what it does not yet know.
+#   ORCID-PENDING  -> each author's real ORCID iD, as a full URL, e.g.
+#                     https://orcid.org/0000-0000-0000-0000. Uncomment the
+#                     author's `orcid:` line as you fill it in. If an author
+#                     has no ORCID, delete their commented line rather than
+#                     inventing a value.
+#   DOI-PENDING    -> the reserved Zenodo DOI (see
+#                     docs/guides/ARTIFACT_DEPOSIT.md, step 1). Uncomment the
+#                     top-level `doi:` line and set `date-released` to the
+#                     deposit date at the same time.
 #
-#   ORCID-PENDING          -> the author's real ORCID iD, as a full URL, e.g.
-#                             https://orcid.org/0000-0000-0000-0000
-#                             If an author has no ORCID, delete their `orcid:`
-#                             line entirely rather than inventing a value.
-#   AFFILIATION-PENDING    -> the author's institution, exactly as it will read
-#                             on the title page of the manuscript.
-#   EMAIL-PENDING          -> the corresponding author's email address.
-#   DOI-PENDING            -> the reserved Zenodo DOI (see
-#                             docs/guides/ARTIFACT_DEPOSIT.md, step 2), added
-#                             as an `identifiers:` entry and, after release, as
-#                             the top-level `doi:` field.
-#   VERSION-PENDING        -> the release tag, e.g. v1.0.0.
-#   DATE-RELEASED-PENDING  -> the deposit date, as YYYY-MM-DD.
+# Nothing else here is pending. Author order, joint first authorship, the two
+# affiliations, the corresponding email, the licence, and the pinned source
+# data revision are all final and match the manuscript title page in
+# paper/manuscript/main.tex.
 #
-# The same placeholders exist in .zenodo.json; keep the two files in step.
+# Duy Minh Dao Sy and Trung Kiet Huynh contributed equally to this work and are
+# joint first authors. CFF 1.2.0 has no field for that, so it is stated here,
+# in the manuscript, and in the notes of .zenodo.json.
+#
+# Keep this file in step with .zenodo.json.
 # ---------------------------------------------------------------------------
 
 cff-version: 1.2.0
@@ -37,27 +39,50 @@ message: >-
   software record.
 type: software
 authors:
-  - given-names: Dao Sy Duy
-    family-names: Minh
-    affiliation: AFFILIATION-PENDING
-    # email: EMAIL-PENDING   <- corresponding author's address; uncomment
+  - given-names: Duy Minh
+    family-names: Dao Sy
+    email: 23122041@student.hcmus.edu.vn
+    affiliation: >-
+      Faculty of Information Technology, Ho Chi Minh City University of Science
+      (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi
+      Minh City (VNU-HCM), Ho Chi Minh City, Vietnam
     # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
-  - given-names: Huynh Trung
-    family-names: Kiet
-    affiliation: AFFILIATION-PENDING
+  - given-names: Trung Kiet
+    family-names: Huynh
+    affiliation: >-
+      Faculty of Information Technology, Ho Chi Minh City University of Science
+      (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi
+      Minh City (VNU-HCM), Ho Chi Minh City, Vietnam
     # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
-  - given-names: Tran Chi
+  - given-names: Chi Nguyen
+    family-names: Tran
+    affiliation: >-
+      Faculty of Information Technology, Ho Chi Minh City University of Science
+      (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi
+      Minh City (VNU-HCM), Ho Chi Minh City, Vietnam
+    # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
+  - given-names: Phu Hoa
+    family-names: Pham
+    affiliation: >-
+      Faculty of Information Technology, Ho Chi Minh City University of Science
+      (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi
+      Minh City (VNU-HCM), Ho Chi Minh City, Vietnam
+    # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
+  - given-names: Lam Phu Quy
     family-names: Nguyen
-    affiliation: AFFILIATION-PENDING
+    affiliation: >-
+      Faculty of Information Technology, Ho Chi Minh City University of Science
+      (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi
+      Minh City (VNU-HCM), Ho Chi Minh City, Vietnam
     # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
-  - given-names: Pham Phu
-    family-names: Hoa
-    affiliation: AFFILIATION-PENDING
-    # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
-  - given-names: Nguyen Lam Phu
-    family-names: Quy
-    affiliation: AFFILIATION-PENDING
-    # orcid: ORCID-PENDING   <- https://orcid.org/0000-0000-0000-0000
+contact:
+  - given-names: Duy Minh
+    family-names: Dao Sy
+    email: 23122041@student.hcmus.edu.vn
+    affiliation: >-
+      Faculty of Information Technology, Ho Chi Minh City University of Science
+      (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi
+      Minh City (VNU-HCM), Ho Chi Minh City, Vietnam
 abstract: >-
   Reproducible analysis artifact for a study of what happens after one coding
   agent reviews a pull request written by a different coding agent. The
@@ -79,9 +104,9 @@ keywords:
   - reproducibility artifact
 license: MIT
 repository-code: 'https://github.com/technoob05/emse2026-multiagent-impact'
-version: VERSION-PENDING
-# date-released: DATE-RELEASED-PENDING   <- uncomment, as YYYY-MM-DD
-# doi: DOI-PENDING                       <- the reserved Zenodo DOI
+version: v1.0.0
+# date-released: 2026-01-01   <- uncomment and set to the deposit date, YYYY-MM-DD
+# doi: DOI-PENDING            <- uncomment and set to the reserved Zenodo DOI
 references:
   - type: data
     title: 'AIDev: Studying AI Coding Agents on GitHub'

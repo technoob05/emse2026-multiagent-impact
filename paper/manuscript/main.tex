@@ -499,11 +499,42 @@ touches the cross-product side and removes nearly half of the same-product side,
 which is precisely why it has to be done. We then compare the two kinds of
 reviewer inside the same repository and the same month.
 
-We report percentage-point contrasts because they are easy to read. Main
-intervals cluster or resample by repository. Outcome models adjust for product,
-channel or month where relevant, trigger age, and public activity known before
-the trigger. We vary the addressed-edge window, add repository fixed effects,
-and remove each product pair in turn.
+We report percentage-point contrasts because they are easy to read, and because a
+point difference in probability is what a practitioner can act on. Being precise
+about how they are produced matters more than the phrasing, so the estimator is
+written out here.
+
+Every outcome model is a linear probability model fitted by ordinary least
+squares, with standard errors clustered on the repository. The unit is one pull
+request. For the RQ3 result the equation is
+\begin{equation}
+\label{eq:rq3}
+\Pr(M_i = 1) = \beta_0 + \beta_1 E_i + \gamma' X_i,
+\end{equation}
+where $M_i$ is one if pull request $i$ merges after hour 48 and within 30 days,
+$E_i$ is one if a reply naming the trigger arrived by hour 48, and $X_i$ holds
+everything visible before the trigger: the authoring product, the reviewing
+product, and the calendar month as sets of indicators, the age of the pull
+request at the trigger on a log scale, the count of earlier public events on the
+same scale, and separate counts of earlier user events, earlier automated events,
+earlier decisive reviews, and earlier force-pushes. The estimand is $\beta_1$: the
+difference in later-merge probability between answered and unanswered pull
+requests, among those still open at hour 48, holding the pre-trigger record fixed.
+It is an association, not an effect.
+
+The RQ4 model is the same family with an interaction. It regresses whether the
+review point is answered within 48 hours on an issue-link indicator, a
+cross-product indicator, their product, and absorbed repository and calendar-month
+indicators; the estimand is the coefficient on the product term. RQ2 needs no
+model: it is a paired difference over matched pairs.
+
+Uncertainty comes from resampling whole repositories with replacement, because
+pull requests inside one repository share people and policy. Permutation tests
+shuffle the label of interest inside the repository and refit. Draw counts and
+seeds for every interval and every test are in Online Resource~1, which also
+carries the full covariate list, the matching rule, and the pre-trigger balance
+after matching. We vary the reply window from one to 48 hours, add repository
+indicators, and remove each ordered product pair in turn.
 
 The later-state comparison comes from watching, not from an experiment, so a
 large part of our effort goes into trying to break it. Six checks do that, and
