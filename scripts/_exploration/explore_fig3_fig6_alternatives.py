@@ -23,15 +23,15 @@ import matplotlib.pyplot as plt  # noqa: E402
 import visualize_manuscript_figures as house  # noqa: E402
 
 INK = house.INK
-BLUE = house.BLUE
-ORANGE = house.ORANGE
-TEAL = house.TEAL
+BLUE = house.GOLD_INK
+ORANGE = house.BRICK
+TEAL = house.STEEL
 SLATE = house.SLATE
 MID = house.MID
 GRID = house.GRID
-PALE_BLUE = house.PALE_BLUE
-PALE_TEAL = house.PALE_TEAL
-PALE_ORANGE = house.PALE_ORANGE
+PALE_BLUE = house.PALE_GOLD
+PALE_TEAL = house.PALE_STEEL
+PALE_ORANGE = house.PALE_BRICK
 WHITE = house.WHITE
 minus = house.minus
 Layout = house.Layout

@@ -28,7 +28,12 @@ import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
 from matplotlib.colors import to_rgb  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
-from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Rectangle  # noqa: E402
+from matplotlib.patches import (  # noqa: E402
+    FancyArrowPatch,
+    FancyBboxPatch,
+    Patch,
+    Rectangle,
+)
 from matplotlib.text import Text  # noqa: E402
 
 
@@ -48,45 +53,68 @@ BENCHMARKS = ROOT / "outputs" / "confounder_benchmarks"
 THREAD_POSITION = ROOT / "outputs" / "matched_thread_position"
 OUTPUT = ROOT / "build" / "figures"
 
-# Palette. Every hue is taken unaltered from Paul Tol's colour schemes, whose
-# qualitative sets are constructed to stay distinguishable under the three
-# dichromacies; the "dark" set is the one Tol specifies for text and lines on
-# white, and the "pale" set is the one he specifies as a background for black
-# text. The neutral ink is the black of the Okabe-Ito colour-universal-design
-# palette. Values transcribed from:
-#   https://sronpersonalpages.nl/~pault/
-#   https://jfly.uni-koeln.de/color/
+# Palette. A three-hue family in the idiom systematic reviews use for their
+# risk-of-bias summaries: a steel blue for the series in focus, a goldenrod for
+# the middle term, and a brick red for the series that contrasts with, or
+# argues against, the focal one. The neutral ink is black.
 #
-#   Role                                   Constant       Tol scheme
-#   text, axes, primary neutral marks      INK            Okabe-Ito black
-#   mapped / same-product reference        BLUE           muted indigo
-#   cross-product boundary contrast        ORANGE         dark gold
-#   addressed edge, user-account ownership TEAL           dark teal
-#   context and comparison groups          SLATE          dark grey
-#   spines, connectors, leader lines       MID            light grey
-#   grid, separators, lollipop stems       GRID           pale grey
-#   pale fills carrying black text         PALE_*         pale scheme
-# Hues are Okabe and Ito's colour-universal set, the palette Nature Methods
-# recommends. The two-category pair used throughout, vermillion against blue,
-# separates under protanopia, deuteranopia and tritanopia, and also in
-# greyscale, because the two differ in lightness and not only in hue.
-# Two of those hues sit below the WCAG 4.5:1 text floor on white, because the
-# set was designed for fills rather than for small lettering, so vermillion and
-# bluish green are darkened by the least amount that clears it.
+#   Role                                   Constant   Hex
+#   text, axes, primary neutral marks      INK        #000000
+#   addressed edge, user-account ownership STEEL      #2E7EA1  focal series
+#   cross-product boundary contrast        BRICK      #C0524C  contrasting
+#   mapped / same-product reference        GOLD_INK   #8A5A10  gold, as text
+#   goldenrod, fills only                  GOLD       #DFA83E  middle term
+#   context and comparison groups          SLATE      #444444
+#   spines, connectors, leader lines       MID        #BBBBBB
+#   grid, separators, lollipop stems       GRID       #DDDDDD
+#   pale fills carrying black text         PALE_*     tints of the three hues
+#
+# Goldenrod is the one hue in the family that cannot carry lettering: #DFA83E
+# reaches only 2.14:1 on white, far under the WCAG 4.5:1 floor for text. It is
+# therefore declared FILL_ONLY and paired with GOLD_INK, a dark amber of the
+# same hue that reaches 5.91:1, wherever the gold series has to say something in
+# words. ``assert_palette_contrast`` enforces both halves of that rule.
+#
+# Steel and brick sit at nearly the same relative luminance by construction
+# (4.55:1 and 4.61:1 on white), which is what makes them read as equals rather
+# than as a ranking. The cost is that they do not separate on luminance alone,
+# so anywhere the two appear as adjacent *areas* they also carry a hatch, and
+# anywhere they appear as lines they also carry a marker and a dash pattern.
 INK = "#000000"
-BLUE = "#008662"
-ORANGE = "#C25600"
-TEAL = "#0072B2"
+STEEL = "#2E7EA1"
+BRICK = "#B03A34"
+GOLD = "#DFA83E"
+GOLD_INK = "#8A5A10"
 SLATE = "#444444"
 MID = "#BBBBBB"
 GRID = "#DDDDDD"
-PALE_BLUE = "#A8E6D3"
-PALE_TEAL = "#B3DCF2"
-PALE_ORANGE = "#F7CBB0"
+PALE_STEEL = "#CFE3EE"
+PALE_GOLD = "#F6E3BE"
+PALE_BRICK = "#F2D3D1"
 WHITE = "#FFFFFF"
 
-TEXT_COLOURS = (INK, BLUE, ORANGE, TEAL, SLATE)
-PALE_FILLS = (PALE_BLUE, PALE_TEAL, PALE_ORANGE, GRID)
+TEXT_COLOURS = (INK, STEEL, BRICK, GOLD_INK, SLATE)
+FILL_ONLY = (GOLD,)
+PALE_FILLS = (PALE_STEEL, PALE_GOLD, PALE_BRICK, GRID)
+
+# Every place a figure sets lettering on top of something other than the white
+# page. Checked explicitly, because the floor on TEXT_COLOURS only speaks about
+# the page and says nothing about text reversed out of a filled mark.
+TEXT_ON_FILL = (
+    ("white on steel", WHITE, STEEL),
+    ("ink on goldenrod", INK, GOLD),
+    ("ink on pale steel", INK, PALE_STEEL),
+    ("ink on pale gold", INK, PALE_GOLD),
+    ("ink on pale brick", INK, PALE_BRICK),
+    ("ink on grid grey", INK, GRID),
+)
+
+# Hatches for the two hues that share a luminance. Kept sparse: at 372 pt a
+# dense hatch turns into a grey wash on the page.
+HATCH_STEEL = "//"
+HATCH_BRICK = "\\\\"
+HATCH_GOLD = ".."
+HATCH_LINEWIDTH = 0.45
 
 MIN_CONTRAST_RATIO = 4.5
 MIN_FILL_CONTRAST_RATIO = 1.15
@@ -154,6 +182,7 @@ plt.rcParams.update(
         "xtick.color": INK,
         "ytick.color": INK,
         "axes.linewidth": 0.7,
+        "hatch.linewidth": HATCH_LINEWIDTH,
         "lines.solid_capstyle": "round",
         "figure.facecolor": WHITE,
         "axes.facecolor": WHITE,
@@ -294,6 +323,87 @@ def fit_right_labels(ax: plt.Axes, pad_fraction: float = 0.035) -> None:
     padded = left + (needed - left) * (1.0 + pad_fraction)
     if padded > right:
         ax.set_xlim(left, padded)
+
+
+def swatch_key(
+    ax: plt.Axes,
+    x: float,
+    y: float,
+    entries: Sequence[tuple[str, dict, str]],
+    *,
+    fontsize: float = 8.0,
+    swatch_width: float = 2.0,
+    swatch_height: float = 0.62,
+    label_pad: float = 0.9,
+    gap: float = 3.0,
+    line_length: float = 3.4,
+) -> float:
+    """Draw a colour key: small filled marks in a row, each label to its right.
+
+    A journal figure names its colours instead of asking the reader to infer
+    them from context, so this is the one primitive every multi-hue panel here
+    uses. Entries are placed left to right in the axes' own data coordinates
+    and each one is measured after it is drawn, because the width of a label is
+    typographic and cannot be guessed from its character count.
+
+    ``kind`` is ``"rect"`` for an area encoding, ``"marker"`` for a point
+    encoding, and ``"line"`` for a series drawn as a line, so the key mark is
+    always the same kind of mark as the thing it names.
+    """
+    figure = ax.figure
+    cursor = x
+    for kind, spec, label in entries:
+        if kind == "rect":
+            ax.add_patch(
+                Rectangle(
+                    (cursor, y - swatch_height / 2),
+                    swatch_width,
+                    swatch_height,
+                    facecolor=spec.get("facecolor", WHITE),
+                    edgecolor=spec.get("edgecolor", INK),
+                    linewidth=spec.get("linewidth", 0.7),
+                    hatch=spec.get("hatch"),
+                    zorder=6,
+                    clip_on=False,
+                )
+            )
+            text_x = cursor + swatch_width + label_pad
+        elif kind == "marker":
+            ax.plot(
+                [cursor + swatch_width / 2],
+                [y],
+                zorder=6,
+                clip_on=False,
+                linestyle="none",
+                **spec,
+            )
+            text_x = cursor + swatch_width + label_pad
+        elif kind == "line":
+            ax.plot(
+                [cursor, cursor + line_length],
+                [y, y],
+                zorder=6,
+                clip_on=False,
+                **spec,
+            )
+            text_x = cursor + line_length + label_pad
+        else:
+            raise ValueError(f"Unknown key entry kind {kind!r}")
+        text = ax.text(
+            text_x,
+            y,
+            label,
+            ha="left",
+            va="center",
+            fontsize=fontsize,
+            color=INK,
+            zorder=6,
+            clip_on=False,
+        )
+        figure.canvas.draw()
+        box = text.get_window_extent(renderer=figure.canvas.get_renderer())
+        cursor = ax.transData.inverted().transform((box.x1, box.y0))[0] + gap
+    return cursor
 
 
 # ---------------------------------------------------------------------------
@@ -441,14 +551,34 @@ def assert_palette_contrast() -> None:
     """Fail before rendering if a palette entry is illegible at print size.
 
     Every hue that carries text has to clear the WCAG 4.5:1 ratio against the
-    white page, and every pale fill has to stay visibly tinted against that
-    same page while still holding black text.
+    white page; every pale fill has to stay visibly tinted against that same
+    page while still holding black text; every place a figure reverses text out
+    of a filled mark has to clear the floor against that fill and not against
+    the page; and a fill-only hue must never leak into the text set.
     """
     for colour in TEXT_COLOURS:
         ratio = contrast(colour, WHITE)
         if ratio < MIN_CONTRAST_RATIO:
             raise AssertionError(
                 f"{colour} reaches only {ratio:.2f}:1 on white, "
+                f"below the {MIN_CONTRAST_RATIO}:1 text floor"
+            )
+    for colour in FILL_ONLY:
+        if colour in TEXT_COLOURS:
+            raise AssertionError(
+                f"{colour} is declared fill-only but appears in TEXT_COLOURS"
+            )
+        ratio = contrast(colour, WHITE)
+        if ratio >= MIN_CONTRAST_RATIO:
+            raise AssertionError(
+                f"{colour} now clears {ratio:.2f}:1 on white; either promote it "
+                "into TEXT_COLOURS or stop calling it fill-only"
+            )
+    for name, ink, fill in TEXT_ON_FILL:
+        ratio = contrast(ink, fill)
+        if ratio < MIN_CONTRAST_RATIO:
+            raise AssertionError(
+                f"{name} ({ink} on {fill}) reaches only {ratio:.2f}:1, "
                 f"below the {MIN_CONTRAST_RATIO}:1 text floor"
             )
     for colour in PALE_FILLS:
@@ -492,10 +622,19 @@ def write_colour_proofs(stems: Sequence[str]) -> list[str]:
 
 
 def figure_measurement_contract() -> None:
-    """Two tracks on one real pull request: what happened, and what we count.
+    """One real pull request as a chain of actors, and the levels of proof.
 
-    Panel A reads outputs/worked_example/, so the times and the roles are those
-    of an actual pull request rather than an illustration.
+    Panel A reads outputs/worked_example/, so every actor, every time and both
+    discarded events belong to an actual pull request rather than to an
+    illustration. It is drawn as a chain because that is the paper's claim:
+    two products took part, but the step that carries the change forward runs
+    through a person, and a figure of events on a line does not say that.
+
+    The horizontal axis is the order of the chain, not elapsed time. The real
+    elapsed time is printed under each link instead, because the gap between
+    the review and the reply is a hundredfold the gap between the two events a
+    rule discards, and a true time axis would collapse the discards into the
+    origin where nothing about them could be read.
     """
     steps = read_csv(
         EXAMPLE / "timeline.csv",
@@ -503,26 +642,33 @@ def figure_measurement_contract() -> None:
     ).sort_values("order")
     example = json.loads((EXAMPLE / "summary.json").read_text(encoding="utf-8"))
     at = {row.rule: float(row.minutes_after_trigger) for row in steps.itertuples()}
+    role = {row.rule: str(row.actor_role) for row in steps.itertuples()}
+
+    # The chain is only honest if the roles in the artifact are the ones drawn.
+    if role["trigger"] != "reviewing product":
+        raise ValueError("The trigger is no longer written by the reviewing product")
+    if role["addressed edge"] != "a person":
+        raise ValueError(
+            "The worked example's reply is no longer written by a person; the "
+            "panel's claim that the chain runs through a person is drawn from "
+            f"that field, which now reads {role['addressed edge']!r}"
+        )
+    for rule in ("same-batch exclusion", "burst exclusion"):
+        if rule not in role:
+            raise ValueError(f"The worked example no longer exercises {rule}")
+
+    author = example["author_product"].replace("_", " ")
+    reviewer = example["reviewing_product"].replace("_", " ")
 
     fig = new_figure(3.95)
-    layout = Layout(left=0.030, right=0.980, top=0.900, bottom=0.045, gap=0.105)
-    top_rect, bottom_rect = layout.rects((1.0, 0.62))
+    layout = Layout(left=0.030, right=0.980, top=0.900, bottom=0.045, gap=0.115)
+    top_rect, bottom_rect = layout.rects((1.0, 0.72))
 
     ax = fig.add_axes(top_rect)
     ax.set_xlim(0, 100)
     ax.set_ylim(0, 10)
     ax.axis("off")
-    panel_title(ax, "A", "One real pull request: what happened, and what we count")
-
-    SEEN, KEPT = 8.4, 3.9
-    spots = {
-        "trigger": 32.0,
-        "sibling": 41.0,
-        "burst": 50.0,
-        "edge": 66.0,
-        "landmark": 80.0,
-        "merge": 91.0,
-    }
+    panel_title(ax, "A", "Two products took part; the chain runs through a person")
 
     def clock(minutes: float) -> str:
         if minutes < 1.0:
@@ -530,122 +676,168 @@ def figure_measurement_contract() -> None:
         if minutes < 120.0:
             return f"{minutes:.0f} min"
         if minutes < 2880.0:
-            return f"{minutes / 60.0:.0f} h"
+            return f"{minutes / 60.0:.1f} h"
         return f"{minutes / 1440.0:.1f} days"
 
-    for lane, label, side in (
-        (SEEN, "everything that" + chr(10) + "happened", "left"),
-        (KEPT, "what our rule" + chr(10) + "counts", "left"),
-    ):
-        ax.annotate(
-            "",
-            xy=(98.0, lane),
-            xytext=(27.0, lane),
-            arrowprops={"arrowstyle": "-|>", "color": MID, "linewidth": 0.9},
+    # Each link is one actor: who did it, what they did, and when. The merge
+    # has no actor in the record, so it is drawn as an outcome and not as a
+    # fifth account.
+    links = (
+        (author, "wrote the change", "", PALE_GOLD, GOLD_INK),
+        (reviewer, "posted the review", clock(at["trigger"]), PALE_GOLD, GOLD_INK),
+        ("a person", "answered it", clock(at["addressed edge"]), PALE_STEEL, STEEL),
+        ("merged", "", clock(at["outcome"]), GRID, SLATE),
+    )
+    WIDTH = 21.0
+    GAP = (100.0 - len(links) * WIDTH) / (len(links) - 1)
+    TOP, HEIGHT = 5.30, 3.30
+    centres = []
+    for index, (who, does, when, face, edge) in enumerate(links):
+        x = index * (WIDTH + GAP)
+        centres.append(x + WIDTH / 2)
+        ax.add_patch(
+            FancyBboxPatch(
+                (x, TOP),
+                WIDTH,
+                HEIGHT,
+                boxstyle="round,pad=0.2,rounding_size=0.9",
+                facecolor=face,
+                edgecolor=edge,
+                linewidth=0.9,
+                zorder=2,
+            )
         )
         ax.text(
-            25.0,
-            lane,
-            label,
-            ha="right",
+            x + WIDTH / 2,
+            TOP + HEIGHT - (0.95 if does else HEIGHT / 2),
+            who,
+            ha="center",
             va="center",
-            fontsize=8.0,
-            color=SLATE,
+            fontsize=8.5,
+            fontweight="bold",
+            color=INK,
         )
-
-    # Everything that happened, on the upper track.
-    seen = (
-        ("trigger", TEAL, True),
-        ("sibling", ORANGE, False),
-        ("burst", ORANGE, False),
-        ("edge", TEAL, True),
-        ("merge", SLATE, True),
-    )
-    for key, colour, kept in seen:
-        ax.plot(
-            [spots[key]],
-            [SEEN],
-            marker="o",
-            markersize=6.0,
-            markerfacecolor=colour if kept else "white",
-            markeredgecolor=colour,
-            markeredgewidth=1.3,
-            zorder=4,
-        )
-        if kept:
-            # Kept events drop straight down to the counted track.
-            ax.annotate(
-                "",
-                xy=(spots[key], KEPT + 0.45),
-                xytext=(spots[key], SEEN - 0.45),
-                arrowprops={
-                    "arrowstyle": "-|>",
-                    "color": colour,
-                    "linewidth": 0.9,
-                    "shrinkA": 0,
-                    "shrinkB": 0,
-                },
+        if does:
+            ax.text(
+                x + WIDTH / 2,
+                TOP + HEIGHT - 2.15,
+                does,
+                ha="center",
+                va="center",
+                fontsize=8.0,
+                color=INK,
             )
-            ax.plot(
-                [spots[key]],
-                [KEPT],
-                marker="o",
-                markersize=6.0,
-                markerfacecolor=colour,
-                markeredgecolor=WHITE,
-                markeredgewidth=0.7,
-                zorder=4,
+        if when:
+            ax.text(
+                x + WIDTH / 2,
+                TOP - 0.55,
+                when,
+                ha="center",
+                va="top",
+                fontsize=8.0,
+                color=SLATE,
             )
-        else:
-            # Dropped events fall away instead, and say which rule caught them.
-            ax.annotate(
-                "",
-                xy=(spots[key] + 3.4, SEEN - 2.1),
-                xytext=(spots[key] + 0.6, SEEN - 0.6),
-                arrowprops={
-                    "arrowstyle": "-|>",
-                    "color": ORANGE,
-                    "linewidth": 0.8,
-                    "linestyle": (0, (2, 1.6)),
-                },
+        if index:
+            # The review-to-person arrow is the addressed edge, so it is the
+            # one drawn heavy and in the focal hue.
+            carries = index == 2
+            ax.add_patch(
+                FancyArrowPatch(
+                    (x - GAP + 0.4, TOP + HEIGHT / 2),
+                    (x - 0.4, TOP + HEIGHT / 2),
+                    arrowstyle="-|>",
+                    mutation_scale=9,
+                    color=STEEL if carries else SLATE,
+                    linewidth=2.2 if carries else 1.0,
+                    zorder=3,
+                )
             )
-
-    ax.text(spots["trigger"], SEEN + 0.75, "review comment", ha="center", va="bottom",
-            fontsize=8.2, color=TEAL, fontweight="bold")
-    ax.text(spots["edge"], SEEN + 0.75, "a person replies", ha="center", va="bottom",
-            fontsize=8.2, color=TEAL, fontweight="bold")
-    ax.text(spots["merge"], SEEN + 0.75, "merged", ha="center", va="bottom",
-            fontsize=8.2, color=SLATE, fontweight="bold")
-    ax.text(spots["sibling"] + 3.8, SEEN - 2.35, "same review batch",
-            ha="left", va="top", fontsize=8.0, color=ORANGE)
-    ax.text(spots["burst"] + 3.8, SEEN - 3.35, "inside the burst",
-            ha="left", va="top", fontsize=8.0, color=ORANGE)
-
-    ax.plot(
-        [spots["landmark"], spots["landmark"]],
-        [KEPT - 0.9, KEPT + 1.5],
-        color=INK,
-        linewidth=1.1,
-        zorder=3,
-    )
-    ax.text(spots["landmark"], KEPT + 1.65, "hour 48", ha="center", va="bottom",
-            fontsize=8.2, color=INK, fontweight="bold")
-
-    for key, rule in (("trigger", "trigger"), ("edge", "addressed edge"),
-                      ("merge", "outcome")):
-        ax.text(spots[key], KEPT - 0.75, clock(at[rule]), ha="center", va="top",
-                fontsize=8.0, color=SLATE)
-
     ax.text(
-        5.0,
-        0.15,
-        f"{example['reviewing_product'].replace('_', ' ')} reviewing a "
-        f"{example['author_product'].replace('_', ' ')} pull request." + chr(10)
-        + "Hollow marks are the ones a rule throws out.",
-        ha="left",
+        (centres[1] + centres[2]) / 2,
+        TOP + HEIGHT + 0.40,
+        "the one connecting edge",
+        ha="center",
+        va="bottom",
+        fontsize=8.2,
+        fontweight="bold",
+        color=STEEL,
+    )
+    ax.text(
+        centres[3],
+        TOP + HEIGHT + 0.40,
+        "after hour 48",
+        ha="center",
         va="bottom",
         fontsize=8.0,
         color=SLATE,
+    )
+
+    # What our rules throw away hangs off the chain instead of sitting on it,
+    # which is what filtering looks like.
+    BRANCH = 2.75
+    ax.add_patch(
+        FancyArrowPatch(
+            (centres[1] + 7.0, TOP - 0.15),
+            (centres[1] + 2.4, BRANCH + 0.55),
+            arrowstyle="-|>",
+            mutation_scale=8,
+            color=BRICK,
+            linewidth=0.9,
+            linestyle=(0, (2.4, 1.8)),
+            zorder=3,
+        )
+    )
+    ax.text(
+        centres[1] - 2.4,
+        BRANCH - 0.35,
+        f"also {reviewer}, not counted:",
+        ha="right",
+        va="center",
+        fontsize=8.0,
+        color=BRICK,
+    )
+    for index, label in enumerate(("same review batch", "inside the burst")):
+        y = BRANCH + 0.30 - index * 1.30
+        ax.plot(
+            [centres[1] + 3.4],
+            [y],
+            marker="o",
+            markersize=5.6,
+            markerfacecolor=WHITE,
+            markeredgecolor=BRICK,
+            markeredgewidth=1.3,
+            zorder=5,
+        )
+        ax.text(
+            centres[1] + 5.6,
+            y,
+            label,
+            ha="left",
+            va="center",
+            fontsize=8.0,
+            color=BRICK,
+        )
+
+    swatch_key(
+        ax,
+        0.6,
+        0.35,
+        (
+            ("rect", {"facecolor": PALE_GOLD, "edgecolor": GOLD_INK}, "coding product"),
+            ("rect", {"facecolor": PALE_STEEL, "edgecolor": STEEL}, "person"),
+            ("rect", {"facecolor": GRID, "edgecolor": SLATE}, "outcome"),
+            (
+                "marker",
+                {
+                    "marker": "o",
+                    "markersize": 5.6,
+                    "markerfacecolor": WHITE,
+                    "markeredgecolor": BRICK,
+                    "markeredgewidth": 1.3,
+                },
+                "dropped by a rule",
+            ),
+        ),
     )
 
     ax = fig.add_axes(bottom_rect)
@@ -658,20 +850,23 @@ def figure_measurement_contract() -> None:
         (
             "1. Both present",
             "two products act\non the same PR",
-            PALE_BLUE,
-            BLUE,
+            PALE_GOLD,
+            GOLD_INK,
+        ),
+        # Order matters: each rung must ask more of the record than the one
+        # before it. "Somebody acted next" is weaker than "a reply names the
+        # comment", so it comes first. The article's ladder uses this order.
+        (
+            "2. Acted on",
+            "somebody takes the\nnext visible step",
+            PALE_STEEL,
+            STEEL,
         ),
         (
-            "2. Answered",
-            "a reply names\nthe comment",
-            PALE_TEAL,
-            TEAL,
-        ),
-        (
-            "3. Taken up",
-            "who acts once the\nburst is over",
-            PALE_TEAL,
-            TEAL,
+            "3. Answered",
+            "a reply names\nthe comment itself",
+            PALE_STEEL,
+            STEEL,
         ),
         (
             "4. Accepted",
@@ -725,15 +920,18 @@ def figure_measurement_contract() -> None:
                     linewidth=0.9,
                 )
             )
-    ax.text(
-        50.0,
-        1.3,
-        "A level never implies the level to its right. None of them observes a private "
-        "run,\na shared plan, or whether the review point was understood.",
-        ha="center",
-        va="center",
-        fontsize=8.0,
-        color=SLATE,
+    # The colours group the four levels into what they are evidence of, so
+    # they are named rather than left to be inferred from the box order. The
+    # sentence that used to sit here said what the caption already says.
+    swatch_key(
+        ax,
+        0.6,
+        1.35,
+        (
+            ("rect", {"facecolor": PALE_GOLD, "edgecolor": GOLD_INK}, "participation"),
+            ("rect", {"facecolor": PALE_STEEL, "edgecolor": STEEL}, "a connected edge"),
+            ("rect", {"facecolor": GRID, "edgecolor": SLATE}, "the outcome"),
+        ),
     )
 
     save(fig, "Fig1_v2")
@@ -784,8 +982,14 @@ def figure_participation() -> None:
 
     ax = fig.add_axes(top_rect)
     y = np.arange(4)[::-1]
+    # Steel and brick share a luminance and would merge in a greyscale print
+    # wherever a reader has to tell one filled area from another. Here they do
+    # not: the four bars are a funnel, each is named on its own axis row, and
+    # the last two are 8.5% and 0.9% long. A hatch on a bar that narrow is a
+    # smudge, not a signal, so this panel stays flat and the hatching is spent
+    # where the colour itself carries a judgement (Online Resource 1, Fig. S2).
     for position, share, count, color in zip(
-        y, shares, counts, (BLUE, PALE_BLUE, TEAL, ORANGE), strict=True
+        y, shares, counts, (GOLD, PALE_GOLD, STEEL, BRICK), strict=True
     ):
         ax.barh(
             position,
@@ -820,9 +1024,9 @@ def figure_participation() -> None:
     thresholds = [0, 1, 5, 10, 30]
     positions = np.arange(len(thresholds), dtype=float)
     contract = [
-        ("user_account", "User account", TEAL, "o", "-"),
-        ("mapped_product", "Mapped product", BLUE, "s", "-"),
-        ("other_bot", "Other bot", ORANGE, "^", "--"),
+        ("user_account", "User account", STEEL, "o", "-"),
+        ("mapped_product", "Mapped product", GOLD_INK, "s", "-"),
+        ("other_bot", "Other bot", BRICK, "^", "--"),
         ("branch_movement_untyped", "Branch movement", SLATE, "D", ":"),
     ]
     values_by_state: dict[str, np.ndarray] = {}
@@ -888,8 +1092,8 @@ def figure_participation() -> None:
         xytext=(2.16, user_at_five + 5.5),
         fontsize=8.4,
         fontweight="bold",
-        color=TEAL,
-        arrowprops={"arrowstyle": "-", "color": TEAL, "linewidth": 0.7},
+        color=STEEL,
+        arrowprops={"arrowstyle": "-", "color": STEEL, "linewidth": 0.7},
     )
     ax.annotate(
         f"{product_at_five:.0f}%",
@@ -898,8 +1102,8 @@ def figure_participation() -> None:
         ha="right",
         fontsize=8.4,
         fontweight="bold",
-        color=BLUE,
-        arrowprops={"arrowstyle": "-", "color": BLUE, "linewidth": 0.7},
+        color=GOLD_INK,
+        arrowprops={"arrowstyle": "-", "color": GOLD_INK, "linewidth": 0.7},
     )
 
     visible = [item[0] for item in contract]
@@ -1060,7 +1264,7 @@ def figure_boundary() -> None:
         positions,
         gaps,
         height=0.62,
-        color=[ORANGE if separated else MID for separated in moved],
+        color=[BRICK if separated else MID for separated in moved],
         edgecolor=[SLATE if separated else MID for separated in moved],
         linewidth=0.8,
         zorder=2,
@@ -1109,15 +1313,39 @@ def figure_boundary() -> None:
             clip_on=False,
         )
 
-    # The note belongs to Panel A but is wider than its axes, so it sits in the
-    # band between the panels rather than inside one of them.
+    # The bar colour carries the panel's judgement, so it is named rather than
+    # left to be inferred. Key and caption both call the zero line "no
+    # difference", so the two agree word for word. The key and the
+    # denominators are wider than Panel A's own axes, so they live in a
+    # full-width strip in the band between the panels.
     narrow = restricted_row(RESTRICTED_OUTCOME)
-    fig.text(
-        top_rect[0],
-        top_rect[1] - 0.140,
-        f"{pairs:,} matched pairs in {repositories} repositories"
-        + chr(10)
-        + f"*{int(narrow['pairs']):,} pairs where a reply is possible on both sides",
+    band = fig.add_axes((0.030, top_rect[1] - 0.185, 0.955, 0.105))
+    band.set_xlim(0, 100)
+    band.set_ylim(0, 10)
+    band.axis("off")
+    swatch_key(
+        band,
+        0.0,
+        7.0,
+        (
+            (
+                "rect",
+                {"facecolor": BRICK, "edgecolor": SLATE, "linewidth": 0.8},
+                "interval clears no difference",
+            ),
+            (
+                "rect",
+                {"facecolor": MID, "edgecolor": MID, "linewidth": 0.8},
+                "interval includes it",
+            ),
+        ),
+        swatch_height=2.6,
+    )
+    band.text(
+        0.0,
+        1.4,
+        f"{pairs:,} matched pairs in {repositories} repositories; "
+        f"*{int(narrow['pairs']):,} where a reply is possible on both sides",
         ha="left",
         va="center",
         fontsize=8.0,
@@ -1138,8 +1366,8 @@ def figure_boundary() -> None:
             position,
             share,
             height=0.52,
-            color=PALE_TEAL,
-            edgecolor=TEAL,
+            color=PALE_STEEL,
+            edgecolor=STEEL,
             linewidth=0.9,
             zorder=2,
         )
@@ -1186,8 +1414,8 @@ def figure_merge_curves() -> None:
 
     days = curve["days_since_trigger"].to_numpy()
     series = (
-        ("reply_off_target", ORANGE, (0, (5, 1.6)), "reply anchored elsewhere", 1.0),
-        ("reply_on_target", TEAL, "-", "reply on the trigger thread", -1.0),
+        ("reply_off_target", BRICK, (0, (5, 1.6)), "reply anchored elsewhere", 1.0),
+        ("reply_on_target", STEEL, "-", "reply on the trigger thread", -1.0),
         ("no_reply", SLATE, (0, (2, 2)), "no inline reply", 0.0),
     )
     for arm, colour, style, label, _ in series:
@@ -1201,6 +1429,10 @@ def figure_merge_curves() -> None:
         ends[arm] = centre[-1]
         ax.plot(days, centre, color=colour, linewidth=1.8, linestyle=style, zorder=3)
 
+    # A line series is keyed by a line, not by a rectangle: colour alone does
+    # not identify these three, the dash pattern does half the work, and a
+    # filled block would throw that half away in a greyscale print. The shaded
+    # bands are an area, so they do get a rectangle.
     handles = [
         Line2D(
             [],
@@ -1212,6 +1444,14 @@ def figure_merge_curves() -> None:
         )
         for arm, colour, style, label, _ in series
     ]
+    handles.append(
+        Patch(
+            facecolor=SLATE,
+            alpha=0.14,
+            edgecolor="none",
+            label="95% interval",
+        )
+    )
     legend = ax.legend(
         handles=handles,
         loc="lower right",
@@ -1290,8 +1530,8 @@ def figure_sensitivity() -> None:
     delta = frontier["prevalence_difference"].to_numpy() * 100
     point_line = frontier["outcome_difference_to_remove_point_estimate"].to_numpy() * 100
     interval_line = frontier["outcome_difference_to_remove_interval"].to_numpy() * 100
-    ax.fill_between(delta, point_line, 100, color=PALE_TEAL, alpha=0.75, zorder=0)
-    ax.plot(delta, point_line, color=TEAL, linewidth=1.8, zorder=3)
+    ax.fill_between(delta, point_line, 100, color=PALE_STEEL, alpha=0.75, zorder=0)
+    ax.plot(delta, point_line, color=STEEL, linewidth=1.8, zorder=3)
     ax.plot(
         delta, interval_line, color=SLATE, linewidth=1.4, linestyle=(0, (4, 2)), zorder=3
     )
@@ -1302,24 +1542,6 @@ def figure_sensitivity() -> None:
     ax.set_ylabel("Its own effect on\nlater merge (pp)")
     panel_title(ax, "", "A hidden cause would have to be large and lopsided")
     clean_axis(ax, "y")
-    ax.text(
-        40.0,
-        74.0,
-        "only in here does\nthe result disappear",
-        ha="center",
-        va="center",
-        fontsize=8.2,
-        color=TEAL,
-    )
-    ax.text(
-        33.0,
-        7.0,
-        "enough to blur the interval",
-        ha="center",
-        va="center",
-        fontsize=8.1,
-        color=SLATE,
-    )
     ax.text(
         0.985,
         0.955,
@@ -1340,33 +1562,54 @@ def figure_sensitivity() -> None:
         measured["prevalence_gap_pp"].to_numpy(),
         measured["outcome_gap_pp"].abs().to_numpy(),
         s=26,
-        facecolor=ORANGE,
+        facecolor=BRICK,
         edgecolor=WHITE,
         linewidth=0.6,
         zorder=5,
         clip_on=True,
     )
-    strongest = measured.iloc[
-        measured["outcome_gap_pp"].abs().to_numpy().argmax()
-    ]
-    ax.annotate(
-        "the factors we" + chr(10) + "did measure",
-        xy=(
-            float(strongest["prevalence_gap_pp"]),
-            abs(float(strongest["outcome_gap_pp"])),
+    # Three marks, three meanings, none of them readable from an axis: they go
+    # in a key rather than in three sentences pinned to the plot. The wording
+    # is the caption's, so the two agree.
+    swatch_key(
+        ax,
+        14.0,
+        9.4,
+        (
+            (
+                "rect",
+                {"facecolor": PALE_STEEL, "edgecolor": STEEL, "linewidth": 1.2},
+                "the result disappears",
+            ),
+            (
+                "line",
+                {"color": SLATE, "linewidth": 1.4, "linestyle": (0, (4, 2))},
+                "the interval blurs",
+            ),
         ),
-        xytext=(1.0, 34.0),
-        ha="left",
-        va="center",
-        fontsize=8.1,
-        color=ORANGE,
-        arrowprops={
-            "arrowstyle": "-",
-            "color": ORANGE,
-            "linewidth": 0.7,
-            "shrinkA": 3.0,
-            "shrinkB": 3.0,
-        },
+        swatch_width=2.6,
+        swatch_height=3.6,
+        line_length=3.4,
+        gap=2.6,
+    )
+    swatch_key(
+        ax,
+        14.0,
+        3.0,
+        (
+            (
+                "marker",
+                {
+                    "marker": "o",
+                    "markersize": 5.2,
+                    "markerfacecolor": BRICK,
+                    "markeredgecolor": WHITE,
+                    "markeredgewidth": 0.6,
+                },
+                f"the {len(measured)} factors we did measure",
+            ),
+        ),
+        swatch_width=2.6,
     )
 
     save(fig, "Fig5_v2")
@@ -1437,7 +1680,7 @@ def figure_task_context() -> None:
         [0, 1],
         [cross[0], ghost],
         [cross[0], cross[1]],
-        color=PALE_TEAL,
+        color=PALE_STEEL,
         linewidth=0.0,
         zorder=1,
     )
@@ -1464,11 +1707,11 @@ def figure_task_context() -> None:
     ax.plot(
         [0, 1],
         cross,
-        color=TEAL,
+        color=STEEL,
         linewidth=2.2,
         marker="o",
         markersize=6.0,
-        markerfacecolor=TEAL,
+        markerfacecolor=STEEL,
         markeredgecolor=WHITE,
         markeredgewidth=0.6,
         clip_on=False,
@@ -1489,65 +1732,42 @@ def figure_task_context() -> None:
         zorder=4,
     )
 
-    # Left-hand cells label downwards and upwards respectively, so neither runs
-    # into the other line or into the y axis.
+    # Every point now says one thing: its rate and the count behind it. Which
+    # series a point belongs to is the key's job, not a second line of text
+    # pinned to the mark.
     for relation, value, colour, offset in (
-        ("cross_product", cross[0], TEAL, -1.0),
-        ("same_product", same[0], SLATE, 1.0),
+        ("cross_product", cross[0], STEEL, -1.2),
+        ("same_product", same[0], SLATE, 1.2),
     ):
-        vertical = "top" if offset < 0 else "bottom"
         ax.text(
             0.03,
             value + offset,
-            f"{value:.1f}%",
+            f"{value:.1f}%  of {counts[relation][0]:,} PRs",
             ha="left",
-            va=vertical,
-            fontsize=8.3,
+            va="top" if offset < 0 else "bottom",
+            fontsize=8.2,
             fontweight="bold",
             color=colour,
         )
-        ax.text(
-            0.03,
-            value + offset * 4.4,
-            f"of {counts[relation][0]:,} PRs",
-            ha="left",
-            va=vertical,
-            fontsize=8.0,
-            color=SLATE,
-        )
 
-    ax.text(
-        1.035,
-        cross[1],
-        f"{cross[1]:.1f}%  of {counts['cross_product'][1]:,} PRs"
-        + chr(10)
-        + "a different product",
-        ha="left",
-        va="center",
-        fontsize=8.2,
-        fontweight="bold",
-        color=TEAL,
-    )
-    ax.text(
-        1.035,
-        same[1],
-        f"{same[1]:.1f}%  of {counts['same_product'][1]:,} PRs"
-        + chr(10)
-        + "the same product",
-        ha="left",
-        va="center",
-        fontsize=8.2,
-        fontweight="bold",
-        color=SLATE,
-    )
+    for value, count, colour in (
+        (cross[1], counts["cross_product"][1], STEEL),
+        (same[1], counts["same_product"][1], SLATE),
+    ):
+        ax.text(
+            1.035,
+            value,
+            f"{value:.1f}%  of {count:,} PRs",
+            ha="left",
+            va="center",
+            fontsize=8.2,
+            fontweight="bold",
+            color=colour,
+        )
     ax.text(
         1.035,
         ghost,
-        f"{ghost:.1f}%  if it moved"
-        + chr(10)
-        + "like the same product"
-        + chr(10)
-        + "(not observed)",
+        f"{ghost:.1f}%  not observed",
         ha="left",
         va="center",
         fontsize=8.0,
@@ -1567,6 +1787,49 @@ def figure_task_context() -> None:
         fontweight="bold",
         color=INK,
         zorder=5,
+    )
+
+    # The key is measured in data coordinates, so the axis limits have to be
+    # final before it is laid out.
+    ax.set_xlim(-0.12, 1.12)
+    ax.set_ylim(0, 38)
+
+    # Four things are drawn here and only one of them, the shaded region, is
+    # named on the plot. The other three are named in a key, in the caption's
+    # own words, in the empty band under the two lines.
+    swatch_key(
+        ax,
+        -0.105,
+        5.0,
+        (
+            (
+                "line",
+                {"color": STEEL, "linewidth": 2.2},
+                "a different product reviews",
+            ),
+            (
+                "line",
+                {"color": SLATE, "linewidth": 2.0, "linestyle": (0, (4, 2))},
+                "the same product reviews",
+            ),
+        ),
+        line_length=0.075,
+        label_pad=0.020,
+        gap=0.055,
+    )
+    swatch_key(
+        ax,
+        -0.105,
+        1.7,
+        (
+            (
+                "line",
+                {"color": MID, "linewidth": 1.6, "linestyle": (0, (1, 2))},
+                "if the link had moved it like the same product",
+            ),
+        ),
+        line_length=0.075,
+        label_pad=0.020,
     )
 
     ax.set_xlim(-0.12, 1.12)
@@ -1591,8 +1854,8 @@ def figure_task_context() -> None:
         [high - low],
         left=low,
         height=0.42,
-        color=PALE_TEAL,
-        edgecolor=TEAL,
+        color=PALE_STEEL,
+        edgecolor=STEEL,
         linewidth=0.9,
         zorder=2,
     )
@@ -1601,7 +1864,7 @@ def figure_task_context() -> None:
         [estimates.max() - estimates.min()],
         left=estimates.min(),
         height=0.18,
-        color=TEAL,
+        color=STEEL,
         alpha=0.45,
         linewidth=0.0,
         zorder=3,
@@ -1612,7 +1875,7 @@ def figure_task_context() -> None:
         [0],
         marker="D",
         markersize=6.6,
-        markerfacecolor=TEAL,
+        markerfacecolor=STEEL,
         markeredgecolor=WHITE,
         markeredgewidth=0.9,
         zorder=5,
@@ -1638,7 +1901,7 @@ def figure_task_context() -> None:
         va="bottom",
         fontsize=8.4,
         fontweight="bold",
-        color=TEAL,
+        color=STEEL,
     )
     ax.text(
         raw,

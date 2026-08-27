@@ -41,6 +41,7 @@ one repository share policy and people.
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from datetime import timedelta
@@ -62,7 +63,13 @@ OUTPUT = ROOT / "outputs" / "merge_curves"
 
 HORIZON_DAYS = 30
 GRID = np.concatenate([np.arange(0, 2, 0.125), np.arange(2, 30.5, 0.5)])
-BOOTSTRAP_DRAWS = 400
+# Raised from 400 to 2,000 on the strength of the draw-count sweep in
+# `outputs/constant_sensitivity/`: the point estimates are deterministic and do
+# not move at all, and no qualitative conclusion changes, but at 400 draws a
+# band edge sits up to 1.7 percentage points away from its 2,000-draw value.
+# 2,000 also puts this script inside the 1,000-10,000 range every other
+# analysis in the repository uses. Override with --bootstrap-draws.
+BOOTSTRAP_DRAWS = 2_000
 SEED = 20260826
 EXPECTED_POPULATION = 3_942
 # The pre-existing edge column comes from build_cross_feedback_response_events,
@@ -240,15 +247,17 @@ def cumulative_incidence(frame: pd.DataFrame) -> dict[str, np.ndarray]:
     return curves
 
 
-def bootstrap(frame: pd.DataFrame) -> dict[str, np.ndarray]:
+def bootstrap(
+    frame: pd.DataFrame, bootstrap_draws: int = BOOTSTRAP_DRAWS
+) -> dict[str, np.ndarray]:
     generator = np.random.default_rng(SEED)
     repositories = frame["repo_id"].to_numpy()
     unique = np.unique(repositories)
     index_by_repo = {repo: np.flatnonzero(repositories == repo) for repo in unique}
 
     names = ("no_edge", "with_edge", "no_reply", "off_target", "on_target")
-    draws = {name: np.empty((BOOTSTRAP_DRAWS, len(GRID))) for name in names}
-    for draw in range(BOOTSTRAP_DRAWS):
+    draws = {name: np.empty((bootstrap_draws, len(GRID))) for name in names}
+    for draw in range(bootstrap_draws):
         picked = generator.choice(unique, size=len(unique), replace=True)
         rows = np.concatenate([index_by_repo[repo] for repo in picked])
         sample = frame.iloc[rows]
@@ -320,11 +329,29 @@ def overlap_diagnostics(
     }
 
 
+def parse_args() -> argparse.Namespace:
+    """Expose the draw count and destination without moving the defaults.
+
+    `BOOTSTRAP_DRAWS` and `OUTPUT` remain the primary path; the arguments exist
+    so the draw count can be swept rather than asserted. Only the bands depend
+    on the draw count - the point estimates are deterministic.
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--bootstrap-draws", type=int, default=BOOTSTRAP_DRAWS)
+    parser.add_argument("--output-dir", type=Path, default=OUTPUT)
+    args = parser.parse_args()
+    if args.bootstrap_draws < 100:
+        raise ValueError("--bootstrap-draws must be at least 100")
+    return args
+
+
 def main() -> None:
-    OUTPUT.mkdir(parents=True, exist_ok=True)
+    args = parse_args()
+    output_dir = args.output_dir
+    output_dir.mkdir(parents=True, exist_ok=True)
     frame = build_cohort()
     curves = cumulative_incidence(frame)
-    bands = bootstrap(frame)
+    bands = bootstrap(frame, args.bootstrap_draws)
     if not np.allclose(curves["with_edge"], curves["on_target"]):
         raise AssertionError(
             "The legacy edge curve and the three-arm on-target curve must be "
@@ -351,7 +378,7 @@ def main() -> None:
             "merged_reply_on_target_high": bands["on_target_high"],
         }
     )
-    table.to_csv(OUTPUT / "cumulative_merge.csv", index=False)
+    table.to_csv(output_dir / "cumulative_merge.csv", index=False)
 
     edge_days = frame["edge_days"].to_numpy(dtype=float)
     off_days = frame["off_target_days"].to_numpy(dtype=float)
@@ -372,7 +399,7 @@ def main() -> None:
         "prs_with_any_exact_edge": int(has_edge.sum()),
         "prs_merged_within_horizon": int(frame["merged_in_horizon"].sum()),
         "horizon_days": HORIZON_DAYS,
-        "bootstrap_draws": BOOTSTRAP_DRAWS,
+        "bootstrap_draws": args.bootstrap_draws,
         "bootstrap_unit": "repository",
         "seed": SEED,
         "merged_by_day_30_no_edge": float(curves["no_edge"][-1]),
@@ -420,7 +447,7 @@ def main() -> None:
             "difference rather than an anchoring one"
         ),
     }
-    (OUTPUT / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    (output_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))
 
 

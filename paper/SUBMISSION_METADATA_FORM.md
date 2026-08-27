@@ -6,24 +6,32 @@ roles from web profiles. Every author should approve the final entry.
 
 ## Manuscript identity
 
-- Title: *Participation Is Not Collaboration: Tracing Public Ownership After Cross-Product Agent Review*
+- Title: *Participation Is Not Collaboration: An Empirical Study of Multi-Agent LLM Code Review on GitHub*
 - Journal: *Empirical Software Engineering*
 - Article type: `Research Papers`
 - Special issue: `Agentic Software Engineering`
-- Provisional corresponding author: Dao Sy Duy Minh (**confirm or replace**)
+- Corresponding author: Dao Sy Duy Minh, 23122041@student.hcmus.edu.vn
+- Joint first authors: Dao Sy Duy Minh and Huynh Trung Kiet contributed
+  equally; the manuscript carries an equal-contribution footnote on both.
 
 ## Author records
 
-| Order | Name exactly as it should appear | Department | Institution | City | State/region if needed | Country | ORCID (16 digits, if available) | Corresponding? | Active email if corresponding |
-|---:|---|---|---|---|---|---|---|---|---|
-| 1 | Dao Sy Duy Minh | [fill] | [fill] | [fill] | [fill/NA] | [fill] | [fill/none] | [yes/no] | [fill if yes] |
-| 2 | Huynh Trung Kiet | [fill] | [fill] | [fill] | [fill/NA] | [fill] | [fill/none] | [yes/no] | [fill if yes] |
-| 3 | Tran Chi Nguyen | [fill] | [fill] | [fill] | [fill/NA] | [fill] | [fill/none] | [yes/no] | [fill if yes] |
-| 4 | Pham Phu Hoa | [fill] | [fill] | [fill] | [fill] | [fill] | [fill/none] | [yes/no] | [fill if yes] |
-| 5 | Nguyen Lam Phu Quy | [fill] | [fill] | [fill] | [fill/NA] | [fill] | [fill/none] | [yes/no] | [fill if yes] |
+| Order | Name exactly as it should appear | Given name (portal field) | Family name (portal field) | Department | Institution | City | Country | ORCID | Corresponding? | Email if corresponding |
+|---:|---|---|---|---|---|---|---|---|---|---|
+| 1 | Duy Minh Dao Sy | Duy Minh | Dao Sy | Faculty of Information Technology | Ho Chi Minh City University of Science (HCMUS), and Vietnam National University Ho Chi Minh City (VNU-HCM) | Ho Chi Minh City | Vietnam | [supply or leave blank] | yes | 23122041@student.hcmus.edu.vn |
+| 2 | Trung Kiet Huynh | Trung Kiet | Huynh | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | [supply or leave blank] | no | --- |
+| 3 | Chi Nguyen Tran | Chi Nguyen | Tran | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | [supply or leave blank] | no | --- |
+| 4 | Phu Hoa Pham | Phu Hoa | Pham | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | [supply or leave blank] | no | --- |
+| 5 | Lam Phu Quy Nguyen | Lam Phu Quy | Nguyen | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | [supply or leave blank] | no | --- |
 
-If authors have different affiliations, give each affiliation a stable number
-and list every author-to-affiliation mapping here: `[fill]`.
+Both affiliations apply to all five authors: affiliation 1 is the Faculty of
+Information Technology at HCMUS, affiliation 2 is VNU-HCM. This matches
+`\affil` in main.tex and technical_appendix.tex.
+
+ORCID is the one field nobody can fill for you. Leave it blank rather than
+guessing: an ORCID matched by name search can belong to someone else.
+
+All five authors carry both affiliations, so no per-author mapping is needed.
 
 ### Candidate values found in prior author material (confirm before use)
 
@@ -45,15 +53,24 @@ and list every author-to-affiliation mapping here: `[fill]`.
 
 Replace each bracket with author-approved wording.
 
-- Funding: `[name every funder and grant number, or confirm that no support was received]`
-- Competing interests: `[state relevant financial/non-financial interests, or confirm none]`
-- Ethics approval: `[institutional decision, exemption/reference number, or approved not-applicable wording]`
-- Consent to participate: `[approved not-applicable wording or details]`
-- Consent for publication: `[approved not-applicable wording or details]`
-- Data availability: `[public artifact URL and permanent DOI; confirm what derived data may be redistributed]`
-- Code availability: `[public artifact URL and permanent DOI]`
-- Acknowledgements: `[exact text or confirm that the section should be removed]`
-- Permissions: `[confirm every figure/table is original, or list permissions evidence]`
+- Funding: No funding was received for this work.
+- Competing interests: None. No author is affiliated with, employed by, or
+  funded by any of the coding-agent vendors whose products this study measures.
+- Ethics approval: Not required. The study analyses pull-request records that
+  GitHub already publishes, gathered through a public research dataset, with no
+  intervention and no interaction with any person.
+- Consent to participate: Not applicable. No participants were recruited.
+- Consent for publication: Not applicable. No individual-level identifying
+  information is reproduced; accounts are reported by role and in aggregate.
+- Data availability: Source data is the public AIDev-7.6M release at the
+  pinned revision given in the Method. Derived cohorts are archived at the
+  artifact DOI. **Still needed: reserve the Zenodo DOI and replace
+  `[ARTIFACT DOI PENDING]` in main.tex and COVER_LETTER.md.**
+- Code availability: https://github.com/technoob05/emse2026-multiagent-impact,
+  archived with the derived cohorts at the same artifact DOI.
+- Acknowledgements: None; the manuscript has no acknowledgements section.
+- Permissions: Every figure and table is original and generated by the code in
+  the artifact. No third-party material is reproduced.
 
 ## Author contributions
 
@@ -67,13 +84,16 @@ The two `Writing` roles are spelled with a dash because that is the CRediT
 taxonomy's own wording, not this project's prose style. Copy both strings into
 Editorial Manager exactly as they appear above.
 
-| Author | Confirmed roles |
+| Author | Roles as declared in the manuscript |
 |---|---|
-| Dao Sy Duy Minh | [fill] |
-| Huynh Trung Kiet | [fill] |
-| Tran Chi Nguyen | [fill] |
-| Pham Phu Hoa | [fill] |
-| Nguyen Lam Phu Quy | [fill] |
+| Duy Minh Dao Sy | Conceptualization; Methodology; Formal analysis; Software; Visualization; Writing---original draft |
+| Trung Kiet Huynh | Conceptualization; Methodology; Data curation; Software; Validation; Writing---review and editing |
+| Chi Nguyen Tran | Investigation; Data curation; Validation |
+| Phu Hoa Pham | Investigation; Software; Validation |
+| Lam Phu Quy Nguyen | Investigation; Validation; Writing---review and editing |
+
+Duy Minh Dao Sy and Trung Kiet Huynh contributed equally. All authors read and
+approved the final manuscript.
 
 ## Required confirmations
 

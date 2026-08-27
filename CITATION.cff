@@ -32,8 +32,8 @@
 
 cff-version: 1.2.0
 title: >-
-  Participation Is Not Collaboration: Tracing Public Ownership After
-  Cross-Product Agent Review
+  Participation Is Not Collaboration: An Empirical Study of Multi-Agent LLM
+  Code Review on GitHub
 message: >-
   If you use this artifact, please cite the accompanying paper and this
   software record.

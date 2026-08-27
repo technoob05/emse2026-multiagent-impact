@@ -31,11 +31,17 @@ def pages(pdf: pathlib.Path) -> int:
 def main() -> None:
     article = pages(MANUSCRIPT / "main.pdf")
     appendix = pages(MANUSCRIPT / "technical_appendix.pdf")
-    tables = len(
-        re.findall(
-            r"\\label\{tab:s-",
-            (MANUSCRIPT / "generated_appendix_tables.tex").read_text(encoding="utf-8"),
-        )
+    # Count every supplementary table, not only the generated ones: the
+    # constants sweep is written by hand and was silently missing from the total.
+    # Count the tables the appendix actually typesets: the ones it inputs, plus
+    # any written into the appendix itself. generated_appendix_tables.tex is the
+    # aggregate the splitter emits and is not included, so counting it as well
+    # doubles the total.
+    appendix_sources = [MANUSCRIPT / "technical_appendix.tex"]
+    appendix_sources += sorted(MANUSCRIPT.glob("apx_*.tex"))
+    tables = sum(
+        len(re.findall(r"\\label\{tab:s-", path.read_text(encoding="utf-8")))
+        for path in appendix_sources
     )
     figures = len(list(MANUSCRIPT.glob("Fig[0-9].pdf")))
     supplementary = len(list(MANUSCRIPT.glob("FigS[0-9].pdf")))

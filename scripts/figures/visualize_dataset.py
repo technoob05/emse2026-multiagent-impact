@@ -52,23 +52,81 @@ HOUSE_RC = {
     and repr(_DEFAULTS_BEFORE_HOUSE[key]) != repr(value)
 }
 plt.rcParams.update({key: _DEFAULTS_BEFORE_HOUSE[key] for key in HOUSE_RC})
+# Hatch weight is not a style choice that belongs to one figure family: a hatch
+# drawn at matplotlib's default 1.0 pt turns a 372 pt bar into a grey wash, so
+# the house weight is kept even where the rest of the house style is rolled back.
+plt.rcParams["hatch.linewidth"] = house.HATCH_LINEWIDTH
+HOUSE_RC["hatch.linewidth"] = house.HATCH_LINEWIDTH
 
 ANCHORABILITY = house.ROOT / "outputs" / "anchorability_coverage"
 BURST_SELECTION = house.ROOT / "outputs" / "burst_threshold_selection"
 
 
-INK = "#202631"
-BLUE = "#2C6EAA"
-ORANGE = "#C76B16"
-TEAL = "#16827C"
-SLATE = "#667085"
-GRID = "#E6E9EF"
-PALE_BLUE = "#B9CCE2"
+# The schema and coverage panels use the same three-hue family as the house
+# module, softened by one step for the near-white box fills this figure needs.
+# The two hues that carry lettering here are the steel blue and the brick red;
+# goldenrod appears only as a bar fill, and its dark amber partner GOLD_INK
+# carries the gold role wherever the mark is a line, an arrow or a word.
+STEEL = house.STEEL
+BRICK = house.BRICK
+GOLD = house.GOLD
+GOLD_INK = house.GOLD_INK
 
-PALE_BLUE_FILL = "#EAF1F8"
-PALE_ORANGE_FILL = "#FBEEE0"
-PALE_TEAL_FILL = "#E4F0EF"
-PALE_GREY_FILL = "#F4F5F8"
+INK = "#202631"
+# Body text inside a schema box sits on a tinted fill, not on the page, so the
+# grey is one step darker than it was: at #667085 it reached only 4.06:1 on the
+# palest of those fills, and at #5A6274 it clears 4.5:1 on all of them.
+SLATE = "#5A6274"
+GRID = "#E6E9EF"
+
+# Box fills, one step off white so a fill is visible in print but still holds
+# both INK and SLATE lettering above 4.5:1.
+PALE_STEEL_FILL = "#E1EDF5"
+PALE_BRICK_FILL = "#F7E4E2"
+PALE_GOLD_FILL = "#F9EBD2"
+PALE_GREY_FILL = "#ECEDF2"
+
+# Text-on-fill pairs this module introduces on top of the house set. Verified
+# with the house module's own contrast helper before anything is drawn.
+TEXT_ON_FILL = (
+    ("dataset ink on pale steel", INK, PALE_STEEL_FILL),
+    ("dataset ink on pale brick", INK, PALE_BRICK_FILL),
+    ("dataset ink on pale gold", INK, PALE_GOLD_FILL),
+    ("dataset ink on pale grey", INK, PALE_GREY_FILL),
+    ("dataset slate on pale steel", SLATE, PALE_STEEL_FILL),
+    ("dataset slate on pale brick", SLATE, PALE_BRICK_FILL),
+    ("dataset slate on pale gold", SLATE, PALE_GOLD_FILL),
+    ("dataset slate on pale grey", SLATE, PALE_GREY_FILL),
+)
+
+
+def assert_palette_contrast() -> None:
+    """Hold this module's own hues and fills to the house floor."""
+    house.assert_palette_contrast()
+    for colour in (INK, STEEL, BRICK, GOLD_INK, SLATE):
+        ratio = house.contrast(colour, house.WHITE)
+        if ratio < house.MIN_CONTRAST_RATIO:
+            raise AssertionError(
+                f"{colour} reaches only {ratio:.2f}:1 on white, below the "
+                f"{house.MIN_CONTRAST_RATIO}:1 text floor"
+            )
+    if GOLD in (INK, STEEL, BRICK, GOLD_INK, SLATE):
+        raise AssertionError("goldenrod is fill-only and must not carry text")
+    for name, ink, fill in TEXT_ON_FILL:
+        ratio = house.contrast(ink, fill)
+        if ratio < house.MIN_CONTRAST_RATIO:
+            raise AssertionError(
+                f"{name} ({ink} on {fill}) reaches only {ratio:.2f}:1, below "
+                f"the {house.MIN_CONTRAST_RATIO}:1 text floor"
+            )
+    for fill in (PALE_STEEL_FILL, PALE_BRICK_FILL, PALE_GOLD_FILL,
+                 PALE_GREY_FILL, GRID):
+        ratio = house.contrast(fill, house.WHITE)
+        if ratio < house.MIN_FILL_CONTRAST_RATIO:
+            raise AssertionError(
+                f"fill {fill} reaches only {ratio:.2f}:1 against the page and "
+                "washes out at print size"
+            )
 
 POINTS_PER_INCH = 72.0
 TEXT_WIDTH_PT = 372.0
@@ -199,27 +257,27 @@ def draw_schema(ax: plt.Axes, panel: str = "") -> None:
 
     # ---- full corpus layer -------------------------------------------------
     ax.text(2.0, 88.5, "FULL CORPUS", ha="left", va="bottom",
-            fontsize=SECTION_PT, fontweight="bold", color=BLUE)
+            fontsize=SECTION_PT, fontweight="bold", color=STEEL)
 
     top_y, top_h = 70.0, 15.0
     top_mid = top_y + top_h / 2
     add_box(ax, 2, top_y, 19, top_h, "all_user", ("400k users",),
-            PALE_BLUE_FILL, BLUE)
+            PALE_STEEL_FILL, STEEL)
     add_box(ax, 33, top_y, 30, top_h, "all_pull_request",
-            ("7.69M PRs", "agent, state, time"), PALE_BLUE_FILL, BLUE)
+            ("7.69M PRs", "agent, state, time"), PALE_STEEL_FILL, STEEL)
     add_box(ax, 75, top_y, 23, top_h, "all_repository", ("957k repos",),
-            PALE_BLUE_FILL, BLUE)
+            PALE_STEEL_FILL, STEEL)
 
-    arrow(ax, (21, top_mid), (33, top_mid), BLUE)
-    arrow(ax, (75, top_mid), (63, top_mid), BLUE)
-    join_label(ax, 27, top_mid + 1.6, "user_id", BLUE)
-    join_label(ax, 69, top_mid + 1.6, "repo_id", BLUE)
+    arrow(ax, (21, top_mid), (33, top_mid), STEEL)
+    arrow(ax, (75, top_mid), (63, top_mid), STEEL)
+    join_label(ax, 27, top_mid + 1.6, "user_id", STEEL)
+    join_label(ax, 69, top_mid + 1.6, "repo_id", STEEL)
 
     ax.plot([1, 99], [65, 65], color=GRID, lw=1.0, zorder=1)
 
     # ---- AIDev-pop rich layer ---------------------------------------------
     ax.text(2.0, 58.5, "AIDEV-POP RICH SUBSET  (>100 STARS)", ha="left",
-            va="bottom", fontsize=SECTION_PT, fontweight="bold", color=ORANGE)
+            va="bottom", fontsize=SECTION_PT, fontweight="bold", color=BRICK)
 
     left_x, left_w = 2.0, 28.0
     right_x, right_w = 70.0, 28.0
@@ -228,7 +286,7 @@ def draw_schema(ax: plt.Axes, panel: str = "") -> None:
     mids = [(low + high) / 2 for low, high in rows]
 
     hub = add_box(ax, hub_x, rows[2][0], hub_w, rows[0][1] - rows[2][0],
-                  "", (), PALE_ORANGE_FILL, ORANGE)
+                  "", (), PALE_BRICK_FILL, BRICK)
     hub.set_linewidth(1.3)
     unit = _y_units_per_point(ax)
     hub_top = 39.0 + (BOX_TITLE_PT * 1.32 + BODY_PT * 2.60) * unit / 2
@@ -245,10 +303,10 @@ def draw_schema(ax: plt.Axes, panel: str = "") -> None:
     add_box(ax, left_x, rows[0][0], left_w, 13, "pr_timeline",
             ("lifecycle events",), PALE_GREY_FILL, SLATE)
     add_box(ax, left_x, rows[1][0], left_w, 13, "discussion tables",
-            ("pr_comments", "pr_reviews"), PALE_TEAL_FILL, TEAL,
+            ("pr_comments", "pr_reviews"), PALE_GOLD_FILL, GOLD_INK,
             BOX_TITLE_SMALL_PT)
     add_box(ax, left_x, rows[2][0], left_w, 13, "pr_review_comments",
-            ("inline threads",), PALE_TEAL_FILL, TEAL, BOX_TITLE_SMALL_PT)
+            ("inline threads",), PALE_GOLD_FILL, GOLD_INK, BOX_TITLE_SMALL_PT)
 
     add_box(ax, right_x, rows[0][0], right_w, 13, "repository",
             ("project context",), PALE_GREY_FILL, SLATE)
@@ -262,19 +320,19 @@ def draw_schema(ax: plt.Axes, panel: str = "") -> None:
     # Horizontal joins into the hub. pr_review_comments is deliberately absent:
     # it reaches a PR only through its review batch.
     arrow(ax, (left_x + left_w, mids[0]), (hub_x, mids[0]), SLATE)
-    arrow(ax, (left_x + left_w, mids[1]), (hub_x, mids[1]), TEAL)
+    arrow(ax, (left_x + left_w, mids[1]), (hub_x, mids[1]), GOLD_INK)
     arrow(ax, (right_x, mids[0]), (hub_x + hub_w, mids[0]), SLATE)
     arrow(ax, (right_x, mids[1]), (hub_x + hub_w, mids[1]), SLATE)
     arrow(ax, (right_x, mids[2]), (hub_x + hub_w, mids[2]), SLATE)
     join_label(ax, 35, mids[0] + 1.6, "pr_id")
-    join_label(ax, 35, mids[1] + 1.6, "pr_id", TEAL)
+    join_label(ax, 35, mids[1] + 1.6, "pr_id", GOLD_INK)
     join_label(ax, 65, mids[0] + 1.6, "repo_id")
     join_label(ax, 65, mids[1] + 1.6, "pr_id")
     join_label(ax, 65, mids[2] + 1.6, "pr_id")
 
     # The indirection: inline comments join the review table, not the PR.
-    arrow(ax, (9, rows[2][1]), (9, rows[1][0]), TEAL)
-    join_label(ax, 12, (rows[2][1] + rows[1][0]) / 2, "review_id", TEAL,
+    arrow(ax, (9, rows[2][1]), (9, rows[1][0]), GOLD_INK)
+    join_label(ax, 12, (rows[2][1] + rows[1][0]) / 2, "review_id", GOLD_INK,
                ha="left", va="center")
 
 
@@ -300,13 +358,36 @@ def draw_coverage(ax: plt.Axes, coverage: pd.DataFrame, panel: str = "") -> None
     total = int(data["aidev_pop_prs"].iloc[0])
     values = data["coverage_pct_of_aidev_pop"].to_numpy()
     y = list(range(len(data)))
-    colors = [BLUE if v >= 50 else ORANGE if v >= 20 else TEAL for v in values]
+    # Three coverage tiers, read the way a risk-of-bias summary is read: steel
+    # blue where a feature covers most of the population, goldenrod in the
+    # middle, brick red where coverage is thin. Steel and brick share a
+    # luminance, so the tiers also carry opposed hatches and survive a
+    # greyscale print. No lettering sits on these bars; the labels are outside.
+    tiers = [
+        (STEEL, house.HATCH_STEEL) if v >= 50
+        else (GOLD, house.HATCH_GOLD) if v >= 20
+        else (BRICK, house.HATCH_BRICK)
+        for v in values
+    ]
+    colors = [colour for colour, _ in tiers]
 
-    ax.barh(y, values, color=colors, height=0.62, zorder=2)
+    ax.barh(
+        y,
+        values,
+        color=colors,
+        height=0.62,
+        edgecolor=INK,
+        linewidth=0.35,
+        hatch=[hatch for _, hatch in tiers],
+        zorder=2,
+    )
     ax.set_yticks(y)
     ax.set_yticklabels([label for _, label in COVERAGE_ORDER],
                        fontsize=BODY_PT, color=INK, linespacing=1.15)
     ax.invert_yaxis()
+    # One row of clear space under the last bar, which is where the tier key
+    # sits. Set explicitly, or the autoscaled limit clips it.
+    ax.set_ylim(len(data) + 0.35, -0.65)
     ax.set_xlim(0, 78)
     ax.set_xticks([0, 20, 40, 60])
     ax.set_xticklabels(["0%", "20%", "40%", "60%"], fontsize=BODY_PT, color=INK)
@@ -322,6 +403,27 @@ def draw_coverage(ax: plt.Axes, coverage: pd.DataFrame, panel: str = "") -> None
     for yi, value, count in zip(y, values, data["matched_pr_ids"]):
         ax.text(value + 1.4, yi, f"{value:.1f}%   {int(count) / 1000:.0f}k PRs",
                 va="center", ha="left", fontsize=BODY_PT, color=INK, zorder=3)
+
+    # Colour and hatch here encode a three-way judgement about coverage that no
+    # axis states, so the thresholds are named rather than left to be guessed.
+    house.swatch_key(
+        ax,
+        0.0,
+        len(data) - 0.05,
+        (
+            ("rect", {"facecolor": STEEL, "edgecolor": INK, "linewidth": 0.35,
+                      "hatch": house.HATCH_STEEL}, "50% or more"),
+            ("rect", {"facecolor": GOLD, "edgecolor": INK, "linewidth": 0.35,
+                      "hatch": house.HATCH_GOLD}, "20 to 50%"),
+            ("rect", {"facecolor": BRICK, "edgecolor": INK, "linewidth": 0.35,
+                      "hatch": house.HATCH_BRICK}, "under 20%"),
+        ),
+        fontsize=BODY_PT,
+        swatch_width=3.2,
+        swatch_height=0.44,
+        label_pad=1.2,
+        gap=4.0,
+    )
 
     # Headings are hung on the figure margin, not on the axes edge, so they
     # align with the footer note instead of floating above the bars. The
@@ -452,11 +554,14 @@ CHANNEL_SHORT = {
     "pr_comment": "PR comment",
 }
 # Dark, mid, light left to right, so the three channels stay ordered and
-# separable in the greyscale proof as well as in colour.
+# separable in the greyscale proof as well as in colour: steel at 4.55:1 against
+# the page, goldenrod at 2.14:1, pale brick at 1.40:1. That spread is why this
+# stack needs no hatching. Goldenrod cannot carry lettering, so the middle
+# segment reverses to ink rather than to white.
 CHANNEL_FACE = {
-    "inline_review_comment": house.TEAL,
-    "submitted_review": house.PALE_BLUE,
-    "pr_comment": house.PALE_ORANGE,
+    "inline_review_comment": house.STEEL,
+    "submitted_review": house.GOLD,
+    "pr_comment": house.PALE_BRICK,
 }
 CHANNEL_TEXT = {
     "inline_review_comment": house.WHITE,
@@ -470,7 +575,7 @@ CHANNEL_TEXT = {
 BURST_SCHEMES = (
     ("fixed_0_minutes", "Fixed window", False),
     ("fixed_1_minutes", "Fixed window", False),
-    ("fixed_5_minutes", "Fixed window (published)", True),
+    ("fixed_5_minutes", "Fixed window", True),
     ("fixed_10_minutes", "Fixed window", False),
     ("fixed_30_minutes", "Fixed window", False),
     ("global_log_hazard_change_point", "Global change point", False),
@@ -617,8 +722,8 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
         "triggers": int(triggers["trigger_prs"].sum()),
     }
 
-    fig = house.new_figure(4.65)
-    layout = house.Layout(left=0.205, right=0.972, top=0.925, bottom=0.185, gap=0.135)
+    fig = house.new_figure(4.20)
+    layout = house.Layout(left=0.205, right=0.972, top=0.925, bottom=0.175, gap=0.130)
     top_rect, bottom_rect = layout.rects((1.0, 0.34))
 
     ax = fig.add_axes(top_rect)
@@ -640,18 +745,16 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
                 linewidth=0.4,
                 zorder=2,
             )
-            label = f"{share:.1f}%"
-            if key == "events":
-                label = f"{CHANNEL_SHORT[channel]}\n{share:.1f}%"
+            # The channel names live in the key below, so a segment carries
+            # only its share and both rows read the same way.
             ax.text(
                 cursor + share / 2,
                 y,
-                label,
+                f"{share:.1f}%",
                 ha="center",
                 va="center",
                 fontsize=8.1,
                 color=CHANNEL_TEXT[channel],
-                linespacing=1.35,
                 zorder=4,
             )
             cursor += share
@@ -666,25 +769,17 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
         )
         reachable = int(frame.loc["inline_review_comment", count_column])
         text_y = y + bar_height / 2 + 0.20 if key == "events" else y - bar_height / 2 - 0.20
-        note = (
-            f"{boundary:.1f}% can carry a reply anchor\n"
-            f"{reachable:,} of {totals[key]:,} {unit}"
-        )
-        if key == "triggers":
-            note += (
-                "\nhollow mark: "
-                f"{float(landmark.loc['inline_review_comment', 'share_of_trigger_prs']) * 100:.1f}%"
-                " in the 48 h landmark subset"
-            )
+        # The share is already printed inside the segment and the panel title
+        # already says what the rule at the boundary is, so the only thing this
+        # line still has to carry is the count behind that share.
         ax.text(
             boundary,
             text_y,
-            note,
+            f"{reachable:,} of {totals[key]:,} {unit}",
             ha="center",
             va="bottom" if key == "events" else "top",
             fontsize=8.1,
             color=house.INK,
-            linespacing=1.3,
             zorder=5,
         )
 
@@ -701,9 +796,21 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
         markeredgewidth=1.1,
         zorder=5,
     )
+    # A lone hollow mark is ambiguous, so it is named where it sits.
+    ax.text(
+        landmark_boundary + 1.6,
+        bar_height / 2 + 0.13,
+        f"{landmark_boundary:.1f}% in the 48 h cohort",
+        ha="left",
+        va="center",
+        fontsize=8.1,
+        color=house.SLATE,
+        zorder=5,
+    )
     ax.set_xlim(0, 100)
     ax.set_xticks([0, 25, 50, 75, 100])
-    ax.set_ylim(-1.35, 1.95)
+    # Tightened when the three-line note under this panel became one line.
+    ax.set_ylim(-1.02, 1.78)
     ax.set_yticks([y_of[key] for key, *_ in rows])
     ax.set_yticklabels([tick for _, _, _, _, tick, _ in rows], fontsize=8.1,
                        linespacing=1.3)
@@ -715,7 +822,7 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
     cursor = 0.0
     ceiling = float(positions.loc["thread_root", "share_of_inline_events"]) * 100
     for position, face, ink, name in (
-        ("thread_root", house.TEAL, house.WHITE, "Thread root"),
+        ("thread_root", house.STEEL, house.WHITE, "Thread root"),
         ("reply_in_thread", house.GRID, house.INK, "Reply in a thread"),
     ):
         share = float(positions.loc[position, "share_of_inline_events"]) * 100
@@ -759,16 +866,34 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
     house.panel_title(ax, "B", "And inside it, only a thread root can be named")
     house.category_axis(ax)
 
-    fig.text(
-        0.006,
-        0.013,
-        "GitHub records review in three places, and only the inline one "
-        "stores a reply\ntarget, so no addressed edge can exist for the other two.",
-        ha="left",
-        va="bottom",
-        fontsize=8.0,
-        color=house.SLATE,
-        linespacing=1.3,
+    # The three channel colours repeat down both panels but are named only in
+    # the first row of Panel A, so they get a key of their own. It replaces the
+    # sentence that used to sit here, which said what the caption says.
+    key_axes = fig.add_axes((0.006, 0.012, 0.980, 0.055))
+    key_axes.set_xlim(0, 100)
+    key_axes.set_ylim(0, 10)
+    key_axes.axis("off")
+    heading = key_axes.text(0.0, 5.0, "Review channel:", ha="left", va="center",
+                            fontsize=8.0, color=house.SLATE)
+    key_axes.figure.canvas.draw()
+    start = key_axes.transData.inverted().transform(
+        (heading.get_window_extent(
+            renderer=key_axes.figure.canvas.get_renderer()).x1, 0.0)
+    )[0] + 2.4
+    house.swatch_key(
+        key_axes,
+        start,
+        5.0,
+        tuple(
+            (
+                "rect",
+                {"facecolor": CHANNEL_FACE[channel], "edgecolor": house.INK,
+                 "linewidth": 0.4},
+                CHANNEL_SHORT[channel],
+            )
+            for channel in CHANNEL_ORDER
+        ),
+        swatch_height=4.0,
     )
 
     stem = "anchorable_channel_coverage"
@@ -835,8 +960,8 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
         values = [float(part.split("=")[1]) for part in raw.split(";")]
         return f"{minutes(min(values))} to {minutes(max(values))}"
 
-    fig = house.new_figure(5.70)
-    layout = house.Layout(left=0.290, right=0.962, top=0.945, bottom=0.175, gap=0.140)
+    fig = house.new_figure(5.35)
+    layout = house.Layout(left=0.290, right=0.962, top=0.948, bottom=0.155, gap=0.128)
     top_rect, bottom_rect = layout.rects((1.0, 0.52))
 
     ax = fig.add_axes(top_rect)
@@ -852,7 +977,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
         previous_kind = kind
         y_positions.append(cursor)
         labels.append(name)
-        colours.append(house.TEAL if published else house.SLATE)
+        colours.append(house.STEEL if published else house.SLATE)
         cursor -= 1.0
 
     # The cut is a property of the scheme, not of the estimate, so it gets its
@@ -912,7 +1037,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
 
     nearest = min(lows)
     ax.axvline(0.0, color=house.INK, linewidth=1.0, zorder=1)
-    ax.axvspan(0.0, nearest, color=house.PALE_TEAL, alpha=0.45, zorder=0, linewidth=0)
+    ax.axvspan(0.0, nearest, color=house.PALE_STEEL, alpha=0.45, zorder=0, linewidth=0)
     bounds = (min(y_positions) - 1.05, max(y_positions) + 1.35)
     ax.text(
         0.9,
@@ -937,7 +1062,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     ax.set_yticks(y_positions)
     ax.set_yticklabels(labels, fontsize=8.1, linespacing=1.3)
     for tick, colour in zip(ax.get_yticklabels(), colours, strict=True):
-        tick.set_color(house.INK if colour == house.TEAL else house.SLATE)
+        tick.set_color(house.INK if colour == house.STEEL else house.SLATE)
     ax.set_ylim(*bounds)
     ax.set_xlim(-24.0, max(highs) + 4.0)
     ax.set_xticks([0, 10, 20, 30, 40, 50])
@@ -952,9 +1077,9 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     ax = fig.add_axes(bottom_rect)
     minutes = histogram["bin_centre_minutes"].to_numpy()
     density = histogram["kde_density_per_log10_minute"].to_numpy()
-    ax.fill_between(minutes, 0.0, density, color=house.PALE_TEAL, alpha=0.75,
+    ax.fill_between(minutes, 0.0, density, color=house.PALE_STEEL, alpha=0.75,
                     linewidth=0, zorder=1)
-    ax.plot(minutes, density, color=house.TEAL, linewidth=1.5, zorder=3)
+    ax.plot(minutes, density, color=house.STEEL, linewidth=1.5, zorder=3)
     ax.set_xscale("log")
     top = float(density.max()) * 1.52
     # The fixed windows are drawn where they fall on the density. The 0-minute
@@ -966,14 +1091,14 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
                 fontsize=8.0, color=house.SLATE, zorder=4)
     mode = float(gap["kde_mode_minutes"][0])
     antimode = float(gap["kde_antimode_minutes"][0])
-    ax.plot([antimode, antimode], [0.0, top * 0.62], color=house.ORANGE,
+    ax.plot([antimode, antimode], [0.0, top * 0.62], color=house.BRICK,
             linewidth=1.0, linestyle=(0, (4, 2)), zorder=2)
     ax.plot(
         [mode],
         [float(np.interp(mode, minutes, density))],
         marker="v",
         markersize=5.0,
-        markerfacecolor=house.TEAL,
+        markerfacecolor=house.STEEL,
         markeredgecolor=house.WHITE,
         markeredgewidth=0.6,
         zorder=4,
@@ -981,24 +1106,21 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     ax.text(
         mode,
         float(np.interp(mode, minutes, density)) + top * 0.06,
-        f"one rising mode at {mode:.1f} min;\nno valley to cut at",
+        f"one mode, {mode:.1f} min",
         ha="center",
         va="bottom",
         fontsize=8.1,
-        color=house.TEAL,
-        linespacing=1.3,
+        color=house.STEEL,
         zorder=4,
     )
     ax.text(
         antimode / 1.25,
-        top * 0.14,
-        "the only valley is the\novernight gap at "
-        f"{antimode / 60.0:.1f} h",
+        top * 0.16,
+        f"only valley: {antimode / 60.0:.1f} h, overnight",
         ha="right",
         va="bottom",
         fontsize=8.0,
-        color=house.ORANGE,
-        linespacing=1.3,
+        color=house.BRICK,
         zorder=4,
     )
     ax.set_xlim(0.02, 12000)
@@ -1017,17 +1139,40 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     house.clean_axis(ax, "y")
     ax.spines["left"].set_visible(False)
 
-    fig.text(
-        0.006,
-        0.012,
-        "Dashed grey lines are the fixed windows tested; the fifth, 0 min, has "
-        "no place on a\nlog axis. " + "≤" + " 60 min restricts the change-point "
-        "search to the burst region.",
-        ha="left",
-        va="bottom",
-        fontsize=8.0,
-        color=house.SLATE,
-        linespacing=1.3,
+    # Two hues and two dash patterns are in play across the two panels, so
+    # they are named in a key instead of being explained in a sentence.
+    key_axes = fig.add_axes((0.006, 0.008, 0.980, 0.046))
+    key_axes.set_xlim(0, 100)
+    key_axes.set_ylim(0, 10)
+    key_axes.axis("off")
+    house.swatch_key(
+        key_axes,
+        0.0,
+        5.0,
+        (
+            (
+                "rect",
+                {"facecolor": house.STEEL, "edgecolor": house.STEEL},
+                "the published window",
+            ),
+            (
+                "rect",
+                {"facecolor": house.SLATE, "edgecolor": house.SLATE},
+                "the eight alternatives",
+            ),
+            (
+                "line",
+                {"color": house.MID, "linewidth": 0.8, "linestyle": (0, (2, 2))},
+                "windows tested",
+            ),
+            (
+                "line",
+                {"color": house.BRICK, "linewidth": 1.0, "linestyle": (0, (4, 2))},
+                "antimode",
+            ),
+        ),
+        swatch_height=3.4,
+        gap=2.2,
     )
 
     stem = "burst_threshold_sensitivity"
@@ -1045,6 +1190,7 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path,
                         default=Path("outputs/figures"))
     args = parser.parse_args()
+    assert_palette_contrast()
     args.output_dir.mkdir(parents=True, exist_ok=True)
     coverage = pd.read_csv(args.coverage)
 
@@ -1070,31 +1216,36 @@ def main() -> None:
     schema_fig = plt.figure(figsize=(FIGURE_WIDTH, 4.30))
     schema_ax = schema_fig.add_axes([0.0, 0.055, 1.0, 0.945])
     draw_schema(schema_ax)
-    schema_fig.text(
-        0.01,
-        0.016,
-        "Join on identifiers, never on row order. Inline comments reach a PR "
-        "through their review batch.",
+    # The two layers are already named by their coloured section headings and
+    # every box carries its own name, so the only encoding a reader cannot read
+    # off the diagram is the gold group: the review path the addressed edge
+    # depends on. That one gets a key; the sentence that used to sit here said
+    # what the caption says.
+    schema_key = schema_fig.add_axes([0.008, 0.006, 0.984, 0.052])
+    schema_key.set_xlim(0, 100)
+    schema_key.set_ylim(0, 10)
+    schema_key.axis("off")
+    house.swatch_key(
+        schema_key,
+        0.0,
+        5.0,
+        (
+            ("rect", {"facecolor": PALE_GOLD_FILL, "edgecolor": GOLD_INK,
+                      "linewidth": 1.0}, "the inline review path"),
+            ("rect", {"facecolor": PALE_GREY_FILL, "edgecolor": SLATE,
+                      "linewidth": 1.0}, "other rich tables"),
+        ),
         fontsize=NOTE_PT,
-        color=SLATE,
-        ha="left",
-        va="bottom",
+        swatch_width=3.2,
+        swatch_height=3.6,
+        label_pad=1.2,
+        gap=4.0,
     )
     save(schema_fig, args.output_dir, "dataset_schema_and_joins")
 
-    coverage_fig = plt.figure(figsize=(FIGURE_WIDTH, 3.05))
-    coverage_ax = coverage_fig.add_axes([0.185, 0.155, 0.795, 0.700])
+    coverage_fig = plt.figure(figsize=(FIGURE_WIDTH, 3.20))
+    coverage_ax = coverage_fig.add_axes([0.185, 0.105, 0.795, 0.760])
     draw_coverage(coverage_ax, coverage)
-    coverage_fig.text(
-        0.01,
-        0.028,
-        "Coverage is observed availability, not random sampling. "
-        "Denominators are declared per model.",
-        fontsize=NOTE_PT,
-        color=SLATE,
-        ha="left",
-        va="bottom",
-    )
     save(coverage_fig, args.output_dir, "dataset_feature_coverage")
 
     # One combined overview is retained for artifact browsing. The manuscript
@@ -1104,16 +1255,6 @@ def main() -> None:
     draw_schema(schema_panel, panel="A")
     coverage_panel = fig.add_axes([0.145, 0.085, 0.825, 0.300])
     draw_coverage(coverage_panel, coverage, panel="B")
-    fig.text(
-        0.02,
-        0.022,
-        "Join on identifiers, never on row order. Rich-table coverage is "
-        "observed availability, not random sampling.",
-        fontsize=NOTE_PT,
-        color=SLATE,
-        ha="left",
-        va="bottom",
-    )
     save(fig, args.output_dir, "dataset_map_and_coverage")
 
     # The two evidence figures below replace appendix tables, so they follow the
@@ -1124,7 +1265,18 @@ def main() -> None:
             figure_anchorable_coverage(args.output_dir),
             figure_burst_threshold_sensitivity(args.output_dir),
         ]
-    proofs = write_house_colour_proofs(stems, args.output_dir)
+    # The schema and coverage panels are proofed too. The coverage bars encode a
+    # three-tier judgement in colour, and two of those tiers share a luminance,
+    # so the greyscale proof is the only place the hatching can be checked.
+    proofs = write_house_colour_proofs(
+        [
+            "dataset_schema_and_joins",
+            "dataset_feature_coverage",
+            "dataset_map_and_coverage",
+            *stems,
+        ],
+        args.output_dir,
+    )
     print(
         json.dumps(
             {

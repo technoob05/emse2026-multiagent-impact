@@ -15,7 +15,8 @@
 
 \begin{document}
 
-\title[Participation Is Not Collaboration]{Participation Is Not Collaboration: Tracing Public Ownership After Cross-Product Agent Review}
+\title[Participation Is Not Collaboration]{Participation Is Not Collaboration: An
+Empirical Study of Multi-Agent LLM Code Review on GitHub}
 
 \author*[1,2]{\fnm{Duy Minh} \sur{Dao Sy}}\email{23122041@student.hcmus.edu.vn}
 \equalcont{Duy Minh Dao Sy and Trung Kiet Huynh contributed equally to this work.}
@@ -34,7 +35,7 @@
 \affil[2]{\orgname{Vietnam National University Ho Chi Minh City (VNU-HCM)},
   \orgaddress{\city{Ho Chi Minh City}, \country{Vietnam}}}
 
-\abstract{\textbf{Context:} A pull request written by one coding-agent product and reviewed by another looks like a multi-agent workflow, but two products on one pull request do not show that either answered the other. \textbf{Objective:} We ask what connected public path follows one cross-product review comment. \textbf{Method:} From one fixed version of the AIDev dataset we analyse 8,608 pull requests where one product reviewed another's change, 546 matched pairs, and a 1,067-request outcome group. Measured activity is anchored to that comment by exact account, comment, and review-batch identifiers. We set aside the first minutes of automated posting, count outcomes only after hour 48 so the exposure precedes the outcome, and re-test the rule with deliberately wrong anchors. \textbf{Results:} Direct dialogue between products is rare; once the opening minutes are set aside, people take most remaining first actions. Cross-product review draws 13 percentage points less visible follow-up than matched same-product review. A reply that GitHub records as answering the comment goes with 17 points more later merging, and a user account writes it four times in five. The wrong-anchor tests then qualify that: a reply attached anywhere else does as well, and shuffling which comment each reply answers leaves the estimate unmoved. Reading all 105 replies, the association sits with those a person wrote, not with one-click hand-offs to another machine. Linking an issue in the request roughly doubles the chance a review point is answered across a product boundary, and changes nothing within one product. \textbf{Conclusions:} Report public multi-agent impact as a map of connections, not a count of products. The trace shows retained human attention, not a resolved review point.}
+\abstract{\textbf{Context:} Coding agents such as GitHub Copilot and Devin now open pull requests on their own; we call each a \emph{product}. Two products on one pull request is often called collaboration, but sharing a page is not answering each other. \textbf{Objective:} We ask what public path follows one cross-product review comment. \textbf{Method:} From AIDev, a dataset of agent-authored pull requests, we use three groups: 8,608 pull requests one product reviewed for another (who acts next), 546 matched to a comparable within-product review (does the boundary change the response), and 1,067 still open two days later (does being answered go with merging). Later actions are tied to the comment by GitHub's identifiers, not by timing, and merges are counted only from hour 48, so a reply is seen before the merge. \textbf{Results:} Direct exchange between products is rare; user accounts take most first actions. Review across the boundary draws 13 points less visible follow-up than its matched within-product twin. A reply that GitHub records as answering the comment goes with 17 points more later merging, and user accounts write four in five of those replies. Yet a reply attached elsewhere does as well, and shuffling the targets barely moves the estimate: the exact link buys attribution, not prediction. Linking an issue roughly doubles the raw answer rate across the boundary and changes nothing inside one product. \textbf{Conclusions:} Report multi-agent impact as a map of connections, not a count of products. The trace shows human attention, not a resolved review point.}
 
 \keywords{coding agents, multi-agent software engineering, code review, human-agent collaboration, pull requests, mining software repositories}
 \maketitle
@@ -69,10 +70,40 @@ comments at once, and submits them together under a single summary, so every
 comment in that batch carries the same review identifier. A \emph{PR comment} is
 a general remark on the PR, attached to no particular line.
 
+Two more words carry weight throughout. A \emph{coding agent} is a tool that
+takes a development task in natural language and acts on a repository by itself:
+it writes the change, opens the pull request, and in some cases reviews someone
+else's. It holds its own account, and it acts without a person driving each step.
+A \emph{product} is one such tool, identified by the account it posts from. Six
+appear in our data: Claude Code, GitHub Copilot, Cursor, Devin, Google Jules, and
+OpenAI Codex. A \emph{product count} is simply the number of distinct such tools
+that appear on a single PR. It is the measure this paper argues against, because
+two products on a PR says only that both left a mark, not that either one
+answered the other. Finally, GitHub tells us the kind of account behind an
+action, not the being behind it. So a \emph{user account} is what we observe,
+and a person is what we infer from it. We write ``person'' where the sentence is
+about what the trace appears to show, and ``user account'' where the claim has to
+be exact. RQ3 reads every one of these accounts by hand to test how far apart the
+two can be.
+
 Only inline comments can be answered in a way the platform records. When someone
 replies to one, GitHub stores a \emph{reply target}: the identifier of the
 comment being replied to. That single stored number is what makes this study
-possible, and its absence elsewhere is what limits it.
+possible, and its absence elsewhere is what limits it. To \emph{anchor} a later
+event means to attach it to one particular earlier comment through that stored
+number, rather than guessing from the clock that whatever happened next was a
+response. Anchoring is the difference between saying two things happened in order
+and saying one answered the other.
+
+Three more terms name the things we count. A \emph{trigger} is the event this
+whole study starts from: the first review, inline comment, or PR comment written
+by a product other than the one that wrote the pull request. A \emph{review
+point} is one specific thing a reviewer raised, which in practice means one
+inline comment, since that is the only kind GitHub lets anyone reply to on the
+record. And a \emph{cohort} is the particular set of pull requests one analysis
+runs on. This paper uses several, because different questions can be asked of
+different pull requests; Table~\ref{tab:flow} lists every one of them and
+how they relate.
 
 The gap also matters for measurement, and each of these details is a trap. A short \emph{burst} is many events landing within seconds or minutes of each
 other, faster than a person reads. It can look like a conversation when it is
@@ -128,11 +159,25 @@ review point gets answered, and does that depend on who is reviewing?
 We make four contributions.
 
 \textbf{An evidence ladder, and a test of its own rungs.} By \emph{evidence
-ladder} we mean an ordered set of claims where each step demands more of the data
-than the one below, so a study has to say which step it actually reached. Ours
-has four steps, which a product count runs together: both products appearing on
-one PR, a reply that points at the exact review comment, who takes the next
-visible action, and whether the PR is accepted afterwards. The second rung is machine-checkable and strict, which is what
+ladder} we mean an ordered set of claims about how far a public trace can carry
+you, so that a study has to say which one it actually reached rather than letting
+a reader assume the strongest. Ours has four rungs, which a product count runs
+together:
+
+\begin{enumerate}
+\item \textbf{Both were here.} Two products acted on the same pull request. This
+is what a product count sees, and it is the weakest thing the trace can say.
+\item \textbf{Something happened next.} Somebody took the next visible action
+after the review comment. Stronger, because it is about consequence rather than
+presence, but it does not say the action was a response to anything.
+\item \textbf{Something answered it.} A reply carries the review comment's own
+identifier as its target, so the platform itself records what is being answered.
+This is the strictest connection a public trace offers.
+\item \textbf{The change was accepted.} The pull request merged afterwards.
+\end{enumerate}
+
+\noindent Rungs 1 to 3 ask progressively more of the record; rung 4 is the
+outcome we then read off it. The third rung is machine-checkable and strict, which is what
 makes the paper falsifiable. We then falsify part of it. Placebo exposures show
 that, for predicting a later merge, that strict rung is not distinguishable from a
 much looser one: a reply anchored anywhere on the pull request does as well.
@@ -240,13 +285,11 @@ error rate \citep{hirao2019linkage}. The code-review-automation datasets take th
 route by assumption, pairing a comment with the next revision of the method it annotated, or of the diff hunk it sat on, to build training triples at a scale no anchored rule could reach \citep{tufano2022pretrained,li2022codereviewer}. Industry does it explicitly.
 Google judges whether its \emph{automated} review comments were resolved by
 re-running the model on the merged snapshot and asking whether the comment
-still fires on the same lines, then confirming a hand-read sample, which puts
-resolution near 40\% \citep{vijayvergiya2024autocommenter}, and reports that 7.5\% of all its
-reviewer comments are addressed by applying a machine-suggested edit
-\citep{frommgen2024resolving}. Closest to our own setting, Sun et al.\ mine more than 22,000 AI review comments across 178 repositories and
-adjudicate 4,486 of them, drawn from 51, with a two-stage LLM-assisted framework
-that reads the following diff rather than any reply
-\citep{sun2026aicodereview}.
+still fires on the same lines, then confirming a hand-read sample, and finds
+about two in five resolved \citep{vijayvergiya2024autocommenter,
+frommgen2024resolving}. Closest to our own setting, Sun et al.\ adjudicate
+thousands of AI review comments with a two-stage framework that reads the
+following diff rather than any reply \citep{sun2026aicodereview}.
 
 We take the other side of this trade on purpose. Our exposure is an explicit
 reply on the thread the trigger opened. It is narrow, and every edge it counts
@@ -269,14 +312,13 @@ reviewer tenure, and that it falls as changes grow \citep{bosu2015useful}; later
 mode on the machine side, describing how automated contributions come to be read as noise that overloads and disrupts human conversation \citep{wessel2021noise}. That is our
 thesis in an earlier vocabulary: volume is not participation.
 
-The agent era supplies numbers. Sun et al.\ report that between 0.9\% and 19.2\%
-of valid AI review comments lead to a code change, depending on the tool, against
-60\% for valid human comments in the same repositories
-\citep{sun2026aicodereview}. Meta's production system converts 19.7\% of
-actionable comments into an applied fix, and its binding constraint turned out to
-be where a person sat in the loop: showing patches to reviewers slowed review by
-more than 5\% until the interface showed them only to authors
-\citep{maddila2026aifixes}.
+The agent era supplies numbers, and they point one way. Sun et al.\ find that a
+valid AI review comment leads to a code change far less often than a valid human
+one in the very same repositories, by a margin of several times over
+\citep{sun2026aicodereview}. Meta's production system converts about one
+actionable comment in five into an applied fix, and its binding constraint turned
+out to be where a person sat in the loop: routing patches to reviewers rather
+than authors slowed review down \citep{maddila2026aifixes}.
 
 These studies and ours measure different things, and the difference is worth
 stating plainly. They ask whether a comment deserved action. We ask only whether
@@ -318,7 +360,8 @@ million agent-authored PRs from six products, with pull requests created through
 31 March 2026. The dataset paper describes an earlier release of 932,791 pull
 requests from five products \citep{li2026aidev}; the revision we pin is larger
 and adds Google Jules, so figures quoted here will not match that paper. From it we take the pull requests whose repository has more than 100 stars,
-which leaves 361,296. The release publishes a subset under this name; the count
+which leaves 361,296. The release publishes that subset under the name
+AIDev-pop, which is the name the Threats section uses; the count
 here is our own reconstruction of that rule on this revision, so a reader
 comparing against a published subset size should expect a different number.
 Online Resource~1 gives the filter and the per-product counts. A star threshold is a blunt instrument for this. Munaiah et al.\ show that
@@ -329,8 +372,10 @@ star filter because it is the one the release itself applies, and we treat it as
 a coarse screen rather than as evidence that every repository here is a serious
 project. Its event tables contain submitted
 reviews, inline review comments, PR comments, and selected lifecycle events.
-PRs are created through 31 March 2026; we use 15 April 2026 at 00:00 UTC as the
-common observation boundary.
+PRs are created through 31 March 2026, and we use 15 April 2026 at 00:00 UTC as
+the common observation boundary: the release keeps recording events for a
+fortnight after the last pull request is opened, so that is the last moment at
+which every pull request has been observed for the same length of time.
 
 The six products are Claude Code, GitHub Copilot, Cursor, Devin, Google Jules,
 and OpenAI Codex. Each posts under its own official GitHub account, and we map
@@ -359,9 +404,8 @@ We checked what that identifier actually points at, because the paper rests on
 it. Replies to an inline comment are grouped under it in what GitHub calls a
 \emph{thread}: the original comment, then everything written in answer to it,
 shown together beside the line of code. GitHub sets the reply target to the
-\emph{first} comment of that thread, not to whichever comment came just before. The release agrees: across
-88,907 inline replies, not one names a comment that is itself a reply, so reply
-threads are one level deep. An addressed edge is therefore \emph{a reply in the
+\emph{first} comment of that thread, not to whichever comment came just before. The release agrees: across all 88,907 inline replies it contains, not one names
+a comment that is itself a reply, so reply threads are one level deep. An addressed edge is therefore \emph{a reply in the
 thread that the trigger opened}. Section~\ref{sec:threats} reports what that costs us, which turns out to be very
 little in this cohort. Figure~\ref{fig:contract} shows the anchor, the three
 exclusion rules, and the four evidence levels that the rest of the paper keeps
@@ -385,18 +429,21 @@ them and cannot say which of its matches are real. Online Resource~1 reports the
 full channel breakdown, and Section~\ref{sec:threats} returns to what the unseen
 share might hold.
 
-Table~\ref{tab:flow} prints the whole narrowing in one place, because five
+Table~\ref{tab:flow} prints the whole narrowing in one place, because several
 different population sizes appear in this paper and a reader should not have to
-reconstruct how they relate. Two of them are not stages in one chain. The
-merge-curve cohort and the thread-position cohort are built from the same parent
-for different questions, and neither contains the other.
+reconstruct how they relate. They are not one chain. Each research question
+needs a population it can actually be asked of, so the table is a trunk with four
+branches, one per question, and a branch is never a subset of its neighbour.
 
 \begin{table}[htbp]
-\caption{How the study population narrows. Every row reconciles exactly: the
-count before, minus what the filter removes, equals the count after. The last
-row is not a stage inside the branch above it. Branch A and Branch B are two
-cohorts drawn from the same 4,824 parent for different questions, and neither
-contains the other.}
+\caption{How the study population narrows, and where each research question's
+cohort comes from. Within a branch every row reconciles: the count before, minus
+what the filter removes, equals the count after. The branches are not stages in
+one chain. A and B are drawn from the same 4,824 parent for different questions
+and neither contains the other; C is counted in matched pairs rather than pull
+requests, so its sizes are not comparable with the rest; D is built from all
+inline triggers, both reviewer relations, because RQ4 needs the within-product
+arm as its comparison.}
 \label{tab:flow}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}p{0.44\textwidth}rrr@{}}
 \toprule
@@ -416,26 +463,46 @@ A reply names the trigger within 48 hours & 1,067 & 958 & 109 \\
 \addlinespace
 \multicolumn{4}{@{}l}{\textit{Branch B: the thread-position lane}} \\
 Earliest review of either kind is the cross-product one & 4,824 & 1,298 & 3,526 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Branch C: the matched-pair lane (RQ2), counted in pairs}} \\
+A same-product trigger matches on author, repository, product, channel, month & --- & --- & 546 \\
+Both sides of the pair can record a reply & 546 & 305 & 241 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textit{Branch D: the task-context lane (RQ4)}} \\
+Trigger opens its own inline thread, either reviewer relation & --- & --- & 12,508 \\
+Reviewed by a different product, and the body links an issue & 12,508 & 12,144 & 364 \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
 Two units run through that table and we keep them apart everywhere. The primary
-unit is the pull request. Reply events are counted separately because one pull
-request can receive more than one: the 109 exposed pull requests carry 128 reply
-events, of which 105 are written by ordinary user accounts across 97 pull
-requests, and 59 of those 105 are substantive, falling on 56 pull requests.
+unit is the pull request; reply events are counted separately, because one pull
+request can receive more than one reply. So each narrowing below has two sizes,
+a count of replies and a count of the pull requests they sit on:
+
+\begin{itemize}
+\item Every reply that names the trigger: 128 replies on 109 pull requests.
+\item Of those, the ones written by ordinary user accounts rather than by a bot:
+105 replies on 97 pull requests.
+\item Of those, the ones we judged substantive after reading them, rather than a
+one-click hand-off: 59 replies on 56 pull requests.
+\end{itemize}
+
+\noindent Whenever a number appears later, it is one of these six, and we say
+which unit it is in.
 
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{Fig1.pdf}
-\caption{How we measure, on one real pull request. Panel A has two tracks:
-everything that happened after the trigger comment, and what our rules let
-through. Two events fall out on the way down, each labelled with the rule that
-caught it. Filled marks are kept. Panel B names the four levels of proof the
-paper keeps apart. The example is the first pull request in our data that
-exercises every rule; accounts are named by role.}
+\caption{The whole argument on one real pull request. Panel A follows a change
+Devin wrote and Copilot reviewed, in the repository \texttt{liam-hq/liam}, which
+is the first pull request in our data that exercises every rule. Two products
+took part, but the only step the record can show as an answer is the one that
+leaves them: a person replies 22.5 hours later, and the change merges on day 2.1.
+Two further Copilot events are dropped on the way, each labelled with the rule
+that caught it. Panel B names the four levels of proof the paper keeps apart,
+weakest first.}
 \label{fig:contract}
 \end{figure}
 
@@ -451,7 +518,12 @@ that would leave this trace. RQ1 asks how often the public handoff itself
 happens, not how often coordination of any kind does.
 
 For RQ1, we follow each first cross-product trigger for seven days, ending at
-PR closure when earlier. We join exact replies, new review rounds, later PR
+PR closure when earlier. Seven days is not a special number and we checked that it
+does not need to be: at 1, 3, 7, and 14 days user accounts are the most common
+owner of the next action, and the gap between them and the products excludes zero
+every time. The gap grows slightly as the window widens, from about 16 points at
+one day to about 19 at fourteen, so a shorter window would understate the result
+rather than manufacture it. We join exact replies, new review rounds, later PR
 comments, and visible force-push events. The first later owner is a user
 account, mapped product, other bot, branch movement or untyped activity, or no
 action. We then repeat the whole calculation while ignoring everything in the first 0, 1,
@@ -466,8 +538,9 @@ a \emph{different} product, which would be a real relay.
 
 For RQ2 we build matched pairs. Each cross-product trigger is paired with a
 same-product trigger from the same repository, the same PR-author account, the
-same author product, the same source channel, and the same month. Pairing uses
-nearest time without replacement.
+same author product, the same source channel, and the same month. Where several same-product triggers satisfy all
+five, we take the one closest in time to the cross-product trigger, and each is
+used at most once, so no same-product trigger stands in for two partners.
 We also identify the first distinct user account within 48 hours. Prior public
 history requires that account to have submitted a review in the same repository
 on a different PR strictly before the trigger.
@@ -476,13 +549,29 @@ For RQ3 we fix a check point at hour 48 after the trigger. The reason is timing.
 If we simply asked whether answered PRs merge more often, a reply that arrived
 \emph{after} the merge would count in its favour, which is backwards. So we keep
 only PRs still open at hour 48, ask whether a reply had arrived by then, and count
-merges only from that moment on. Cause is kept before effect by construction.
+merges only from that moment on. This forces the exposure to be observed before the
+outcome. It does not make the exposure a cause of the outcome.
+
+That argument says a check point is needed. It does not say the check point
+should be at 48 hours, so we moved it. At 24, 48, and 72 hours the association is
+positive and its interval excludes zero; at 96 hours it is still positive but the
+interval crosses zero, on a cohort a fifth smaller. We should also say what the
+sweep shows about our own choice: 48 hours gives the largest estimate of the
+four, and the estimate falls away on both sides of it. The finding is robust
+across a two to three day range rather than indifferent to the window, and the
+window we published is the peak of that range.
 
 This costs us most of the population, and we would rather say so than hide it.
 Most cross-product inline-trigger PRs are finished before hour 48, so they never
 enter this group; we report how many alongside the result. A PR also needs 30 full
 days of later observation to be included, so nothing near the end of the data
-window can quietly count as unmerged.
+window can quietly count as unmerged. Thirty days is a trade: a shorter window
+keeps more pull requests but catches fewer merges, and a longer one does the
+reverse. At 14 days the estimate is smaller and still clear of zero; at 60 days
+it is similar in size but its interval crosses zero, because requiring a full 60
+days leaves only 693 pull requests and 46 exposed ones. So 30 days is where power
+and observability meet, and again it is the largest of the three rather than a
+neutral middle.
 
 A second, looser cohort sorts the first 48 hours by what visibly happened: a
 person acted first, automation acted and then a person did, automation acted with
@@ -518,9 +607,16 @@ point difference in probability is what a practitioner can act on. Being precise
 about how they are produced matters more than the phrasing, so the estimator is
 written out here.
 
-Every outcome model is a linear probability model fitted by ordinary least
-squares, with standard errors clustered on the repository. The unit is one pull
-request. For the RQ3 result the equation is
+Every outcome model we report as a main result is a \emph{linear probability
+model}: an ordinary regression fitted to an outcome that is either zero or one,
+so that each coefficient reads directly as a change in probability, in percentage
+points. The price is that such a model can in principle predict a probability
+below zero or above one; we accept that in exchange for a coefficient a reader
+can act on, and we flag it as a limitation rather than a solved problem. We fit
+it by ordinary least squares, with standard errors clustered
+on the repository. The one exception is the whole-population timing check below,
+which is a pooled logistic regression and is reported on its own scale, as an
+odds ratio rather than in percentage points. The unit is one pull request. For the RQ3 result the equation is
 \begin{equation}
 \label{eq:rq3}
 \Pr(M_i = 1) = \beta_0 + \beta_1 E_i + \gamma' X_i,
@@ -534,7 +630,16 @@ same scale, and separate counts of earlier user events, earlier automated events
 earlier decisive reviews, and earlier force-pushes. The estimand is $\beta_1$: the
 difference in later-merge probability between answered and unanswered pull
 requests, among those still open at hour 48, holding the pre-trigger record fixed.
-It is an association, not an effect.
+It is an \emph{estimand}: the quantity the model is aimed at, stated before it is
+fitted so that it cannot be chosen afterwards to suit the answer. It is an
+association, not an effect.
+
+Two words for one idea, because Online Resource~1 uses the technical one. Putting
+a repository or a month in as a set of indicators means the comparison happens
+only between pull requests that share that repository or that month, so anything
+constant within a repository, its people and its policy, cannot explain the
+result. Statisticians call those indicators \emph{fixed effects}, and the
+appendix uses that name throughout.
 
 The RQ4 model is the same family with an interaction. It regresses whether the
 review point is answered within 48 hours on an issue-link indicator, a
@@ -544,8 +649,9 @@ model: it is a paired difference over matched pairs.
 
 Uncertainty comes from resampling whole repositories with replacement, because
 pull requests inside one repository share people and policy. Permutation tests
-shuffle the label of interest inside the repository and refit. Draw counts and
-seeds for every interval and every test are in Online Resource~1, which also
+shuffle the label of interest inside the repository and refit. Intervals use between 1,000 and 10,000
+resampled draws depending on the analysis, and permutation tests 5,000 or 10,000;
+the exact count and seed for each are in Online Resource~1, which also
 carries the full covariate list, the matching rule, and the pre-trigger balance
 after matching. We vary the reply window from one to 48 hours, add repository
 indicators, and remove each ordered product pair in turn.
@@ -569,7 +675,10 @@ shape both the public path and the outcome.
 
 The artifact pins the data revision, stores PR-grain cohorts, generates all
 tables and figures, and runs automated data and leakage checks. We also screened
-current public review and agent-trace datasets against the same event contract.
+current public review and agent-trace datasets against the same \emph{event
+contract}, by which we mean the fixed set of rules in Figure~\ref{fig:contract}:
+what counts as a trigger, what counts as an anchored reply, and when an outcome
+may be read.
 A separately published cohort of agent-to-agent review lets us check our product
 labels and event times on pull requests both studies happen to cover. We also
 applied our exact identity, reply-target, overlap, and hour-48 rules to a large
@@ -614,8 +723,9 @@ write four in five of those exact replies.
 counts the pull requests surviving each stricter rule, from all 8,608 where one
 product reviewed another product's change. Panel B shows who acts next once the
 opening rush of automated events is set aside, for five waiting periods; the
-four actor kinds are defined in the text above. At a five-minute wait, 4,771
-pull requests still have an action left. The waiting periods are our test
+four actor kinds are defined in the text above. At a five-minute wait, 4,771 of the 8,608
+still have an action left, so more than four in ten have nothing after the
+burst. The waiting periods are our test
 settings; nothing public says where one tool's run ended.}
 \label{fig:topology}
 \end{figure}
@@ -640,13 +750,18 @@ the change-point rule, one unrestricted and one confined to the burst region, an
 the same two rules applied per product. In every one of them, user accounts are the most
 common post-burst owner and stay ahead of the products, with an interval clear
 of zero. The
-size of the lead moves a good deal, from 19 to 41 points, and the direction never
-does. So we report the window as a stated convention that the result survives,
+size of the lead moves a good deal, from 19 to 41 points among pull requests that
+have any action after the wait, or 12 to 19 points if the denominator is every
+pull request, and the direction never does. So we report the window as a stated convention that the result survives,
 rather than as a discovered boundary.
 
 The next step is even more selective. Among PRs that are still mapped-product
 first after five minutes, only about one in twenty move next to a different
-mapped product after a second waiting period.
+mapped product after a second waiting period. That second wait is again a
+convention, so we ran the same count after waiting nothing at all, five minutes,
+thirty, and an hour. The relay share falls from 6.3\% to 3.8\% as the wait
+lengthens and never rises, so five minutes is the generous end of the range
+rather than the choice that flatters the result.
 
 The same product carrying on is far more common, and it is tempting to read
 that as an agent staying with the task. It is not. We shuffled the order of
@@ -687,15 +802,15 @@ quieter boundary leads to more branch movement or more merges.
 One of those outcomes needs a different denominator, and saying why matters more
 than the number. Whether the review point itself gets a reply can only be
 observed when the trigger opens its own inline thread, since that is the only
-case where GitHub records what a reply answers. The 546 pairs fall into four groups. On 293 the trigger is a review summary or a
-comment on the pull request, so no reply can be recorded for either side. On one
-pair both triggers sit mid-thread, which blocks both sides as well. On 11 the
-cross-product trigger opens a thread and its matched partner does not, so the
-outcome is possible on one side only, and every one of those 11 runs the same
-way, pulling the comparison towards zero from a single direction. That leaves 241
-pairs where a reply is reachable on both sides. We therefore estimate
-that row on the 241 pairs where a reply is possible on both sides, where the gap
-is $-3.3$ points rather than $-0.9$, still with an interval that spans zero. The
+case where GitHub records what a reply answers. On most of the 546 pairs it does
+not. Just over half have a trigger that is a review summary or a general comment,
+where no reply can be recorded on either side; a handful more are blocked on one
+side only, and those all lean the same way, which drags the comparison towards
+zero from a single direction. Fewer than half the pairs, 241 of them, allow a
+reply on both sides at once, and that is the only set on which this particular
+outcome means anything. Estimated there, the gap is $-3.3$ points rather than
+$-0.9$, still with an interval that spans zero. Online Resource~1 gives the four
+groups and their exact counts. The
 other five outcomes do not depend on thread position, and we checked that the
 broadest one never rests on an anchored reply alone.
 
@@ -706,7 +821,12 @@ supplies more than a quarter.
 We fixed a rule in advance for what would count as a general finding: the gap must
 stay negative when any single repository is dropped, stay negative when any single
 ordered product pair is dropped, and be negative in at least two thirds of the
-pairs large enough to estimate on their own. It passes all three. The direction,
+pairs large enough to estimate on their own, which we set at 30 matched pairs
+because below that a single repository can decide the sign.
+Two thirds is a majority rule we would rather state than defend: with only six
+qualifying pairs, no threshold in this range is principled, and we fixed it
+before looking so it could not be chosen to fit the outcome. It passes all
+three. The direction,
 then, is general by our own standard.
 
 The size is not, and that matters more than the verdict. Six ordered pairs are
@@ -720,8 +840,8 @@ full composition and every per-pair estimate.
 Figure~\ref{fig:bridge} joins the matched comparison with a wider history
 check. Seven in ten of the first user-account bridges had already reviewed
 another PR in that repository. That rate is close to the rate among all users
-who answered within 48 hours. So prior history is common right across the
-response layer. It does not tell us why one account rather than another
+who answered within 48 hours. So prior history is common among everyone who
+answers, not just among the accounts that bridge a boundary. It does not tell us why one account rather than another
 becomes the bridge.
 
 \noindent\textbf{Answer to RQ2.} Comparable cross-product feedback has less
@@ -740,7 +860,9 @@ sits in the lowest band it qualifies for and moves up when its own first reply
 of that kind arrives, so no time before a reply is credited to it. Shaded bands
 are 95\% intervals from resampling repositories. For the first two and a half
 days the silent curve is highest: a pull request still being replied to has not
-merged yet. The two reply curves overlap at all 73 grid points, so where the
+merged yet. We read both curves on the same grid of 73 time points, finer over
+the first two days and coarser afterwards, and they overlap at every one of
+them, so where the
 reply is anchored does not separate them.}
 \label{fig:relay}
 \end{figure}
@@ -766,8 +888,10 @@ signal here is a person acknowledging an agent's review point. It is not a
 conversation between agents.
 
 Later merge is more common when there is an exact reply to the trigger than when
-there is none: 55\% against 37.9\%. After adjusting for what was already
-visible before the trigger, the difference is 17.3 percentage points.
+there is none: 55.0\% against 37.9\%. After adjusting for what was already
+visible before the trigger, the difference is 17.3 percentage points (95\%
+interval: $7.3$ to $27.4$), on the 109 of these 1,067 pull requests that carry
+such a reply.
 It stays positive for reply windows from one to 48 hours, in a model that only
 compares PRs inside the same repository, and after removing each ordered product
 pair in turn. We also tested it against a harder comparison. Instead of an edge
@@ -782,18 +906,19 @@ the way we hoped.
 The first keeps the reply and moves the anchor. Take the PRs where a reply landed
 somewhere else on the pull request, not on the trigger's thread. That is still somebody active in review, so some association is expected. To
 compare the two like for like we put both in one model, against the same
-reference group of pull requests with no inline reply at all. The off-target
-reply is 17.9 points and the exact edge 18.9, so the gap between them is one
-point, with an interval running from $-13$ to $+15$. Fitting each exposure
-separately on its own support, as Online Resource~1 also reports, gives 17.5 and
-17.3; the two framings agree that the anchoring buys nothing, and the joint model
-is the one that licenses subtracting them. The second is harsher. Hold the reply events fixed and shuffle which comment each
+reference group of pull requests with no inline reply at all. The two exposures land on
+top of each other. The exact edge is ahead by a single percentage point, and the
+interval around that one point runs from $-13$ to $+15$, so we cannot tell the
+strict connection apart from a reply that landed anywhere else on the page.
+Fitting the two exposures separately instead of jointly gives the same verdict;
+Online Resource~1 carries both sets of coefficients. The second is harsher. Hold the reply events fixed and shuffle which comment each
 one is anchored to. If the anchoring carried the signal, that should knock the
 estimate down. It does not move. We had pre-specified shuffling inside repository
-and month, but too few PRs can move under that rule for the result to be readable,
-so we report the calendar-month version, where every PR can move. Its null centres
-on 16.8 points and our observed 17.3 sits in the middle of it rather than out in
-the tail. Every other stratification we tried agrees.
+and month, but too few PRs can move under that rule for the result to be
+readable, so we report the calendar-month version, where every PR can move. The
+shuffled world produces almost exactly the estimate the real world does, and our
+observed value sits in the middle of that reference distribution rather than out
+in its tail. Every other stratification we tried agrees.
 
 A third control, which we ran to check the design rather than the exposure, does
 behave. Give each PR a fake reply time drawn independently of its own history and
@@ -804,7 +929,9 @@ estimator. It is what the exposure means.
 \paragraph{What the reply says does matter.} If the anchor is not the active
 ingredient, something else must be. We read all 105 user-written replies and
 sorted them with a rule set fixed in advance: platform text, a hand-off to another
-automation, a short acknowledgement, or a substantive response. About one in six is a routing click: \texttt{@copilot fix this}, or GitHub's own
+automation, a short acknowledgement, or a substantive response. All 105 land in
+one of the four: 4 are platform text, 14 invoke an agent, 28 acknowledge without
+saying anything, and 59 respond substantively. About one in six is a routing click: \texttt{@copilot fix this}, or GitHub's own
 ``apply changes based on this feedback'' button, whose words belong to the
 interface rather than to the person. Fifty-nine of the 105 replies are
 substantive, and they fall on 56 pull requests.
@@ -837,8 +964,8 @@ Because most exposed replies are written by people, we refit the model under
 two stricter rules for what counts as an edge. One drops replies written by the
 triggering product itself. The other keeps only replies from a user account.
 Both give the same answer, with intervals that stay clear of zero. The result is
-a property of the addressed edge, not of a product answering itself. Only three PRs carry an exact reply from a mapped product other than the
-trigger's. That is far too few to model. The count is the RQ1 finding showing up
+a property of the addressed edge, not of a product answering itself. Inside this cohort, only three PRs carry an exact reply from a mapped product
+other than the trigger's. That is far too few to model. The count is the RQ1 finding showing up
 again at the outcome stage.
 
 The exact edge is not the only visible thing that goes with a later merge. A
@@ -923,10 +1050,15 @@ Two things are visible there that a single contrast hides. The curves cross
 early, because a PR that is still being replied to has not merged yet. And most
 of these PRs merge either way, so by day 30 the gap is a few points rather than
 the seventeen the hour-48 group shows. The direction survives. A separate discrete-time hazard model, fitted on the
-whole population by pooled logistic regression over daily risk periods with a
-baseline for each period and standard errors clustered on the repository, estimates a discrete-time merge hazard. Its odds ratio on the reply indicator is
-about 1.74, so the odds of merging in the next period are roughly that much
-higher while a reply is active. That figure barely moves as controls are added, from 1.73 with the
+whole population by pooled logistic regression over eleven risk periods. They
+are unequal on purpose, quarter-day at first and a week wide at the end, because
+most pull requests resolve in the first days and equal bins would spend most of
+their resolution where almost nothing happens. The model uses a
+baseline for each period and standard errors clustered on the repository, estimates a discrete-time event hazard. Its \emph{odds ratio} on the reply indicator is
+about 1.74. An odds ratio is a multiplier rather than a difference: it says the
+odds of merging in the next period run about three quarters higher while a reply
+is active, and it cannot be read in percentage points like the rest of the
+paper. That figure barely moves as controls are added, from 1.73 with the
 baseline alone to 1.74 with the full pre-trigger set, across 3,940 of the 3,942 pull requests, in 893 repositories. Two contribute no
 risk period at all, because their follow-up time is zero, so the hazard model
 has nothing to fit on them; the cumulative curves keep all 3,942. Online Resource~1 carries the specification. The large
@@ -976,8 +1108,10 @@ repository descriptors do not explain it. Nothing here is causal.
 \FloatBarrier
 \subsection{RQ4: task context matters only across the boundary}
 
-An issue link changes nothing when the reviewer is the same product. It roughly
-doubles the chance of an answer when the reviewer is a different one.
+An issue link changes nothing when the reviewer is the same product. When the
+reviewer is a different one it roughly doubles the raw answer rate, from 12.7\%
+to 28.3\%. That ratio is a description of the two raw rates and not an adjusted
+estimate; the adjusted figure below is a difference of 13.3 points.
 
 \begin{figure}[!htbp]
 \centering
@@ -1005,9 +1139,11 @@ A cross-product review point is answered 12.7\% of the time without a link and
 those two differences is 13.3 percentage points (95\% interval: $4.4$ to
 $22.2$) once we compare inside the same repository and the same month.
 
-We tried to break it. The estimate holds when the month is dropped and when each of the fifteen most
-influential repositories is removed in turn, which leaves a range of 11.4 to 16.1
-points. It also holds when mid-thread triggers are put back in. That check keeps
+We tried to break it. The estimate holds when the month is dropped, and when each
+of the fifteen repositories that carry the most exposed pull requests is removed
+in turn, which leaves a range of 11.4 to 16.1 points. Fifteen is where we stopped
+because those repositories hold 159 of the 364 exposed pull requests, so anything
+further down the list can move the estimate by very little. It also holds when mid-thread triggers are put back in. That check keeps
 the outcome definition exactly as it is, so those triggers enter the denominator
 carrying an outcome that cannot occur for them; the estimate falls only slightly,
 to 12.1 points, consistent with dilution from adding structurally impossible
@@ -1046,8 +1182,10 @@ wrong object.
 
 A count answers ``who appeared''. The thing anybody actually cares about is
 ``what connected''. Those two come apart almost completely here. Two products share a pull request 8,608 times. In 74 of those, fewer than one
-in a hundred, one answers the other's review point where the record can show
-it. Everything in between is real activity that never becomes a connection: the
+in a hundred, one product answers the other's review point where the record can
+show it. That count is over the whole cross-product cohort and its seven-day
+window; the three such replies reported in RQ3 are the same event counted inside
+the much smaller group of pull requests still open at hour 48. Everything in between is real activity that never becomes a connection: the
 reviews, the comments, the branch movement.
 
 Once you insist on a connection, the multi-agent story turns into a human one.
@@ -1124,7 +1262,9 @@ way we can observe of handing it to them. This is what reviewers are known to do
 first: orient themselves to context and rationale before deciding anything
 \citep{heander2026decisionmaking}, using references in the discussion to build
 common ground \citep{chopra2021referencing}. We cannot prove the link causes the
-answer, but it is a pre-trigger property of the change, it costs one line, and
+answer, and we cannot even show that it was already there when the review point
+arrived, because the release stores no time for it. What we can say is that the
+link is observed on the change, that writing one costs a single line, and that
 nothing else we measured behaves this way.
 
 \subsection{What to build, and what to stop counting}
@@ -1187,7 +1327,11 @@ GitHub \texttt{User} account does not prove that a person worked alone, and it
 does not prove a person at all: an account can be scripted. We tested that
 directly on the 80 accounts that write the edges, scoring each for repeated
 template text, regular timing, round-the-clock posting, and volume, with
-thresholds fixed in advance. One account trips two or more of them, and dropping
+thresholds fixed in advance and printed in Online Resource~1. An account is
+flagged for template text when half its comments repeat its own earlier wording,
+for timing when its gaps between comments are far more regular than a person's,
+for the clock when it posts in all 24 hours with no quiet period, and for volume
+when it sustains twenty or more comments a day. One account trips two or more of them, and dropping
 it leaves the estimate where it was. Reading the flagged cases showed the
 heuristics were mostly catching people, not scripts: the repeated strings are
 hand-typed agent invocations and GitHub's own button text. An exact reply target proves that someone addressed the
@@ -1222,18 +1366,18 @@ inert.
 The reply identifier is looser than the name suggests. It points at the first
 comment of a thread, so our edge means ``a reply in the thread the trigger
 opened''. Two things follow, and we measured both. First, the exposure can only
-fire when the trigger is itself the first comment of its thread. Among cross-product inline triggers that is almost always true: 13 of the 3,526
-in the thread-position cohort sit mid-thread. The hour-48 cohort is a different
-population rather than a subset of that one, and 3 of its 1,067 sit mid-thread,
-none of them exposed.
-The restriction bites hard for same-product triggers across the whole release,
-where 46\% sit mid-thread. Inside the 546 matched pairs it is milder, 12 of the
-253 same-product triggers that are inline at all, but it runs one way: no
-cross-product trigger is blocked where its partner is not. That is why the reply
-row of Figure~\ref{fig:bridge} uses the pairs where both sides can produce it. Second, inside a thread with several replies, a later reply may be
-answering an earlier reply rather than the trigger. Among the 109 exposed PRs,
-92 have exactly one reply in the thread, so for those the reply can only be
-answering the trigger. For the remaining 17 we cannot tell.
+fire when the trigger is itself the first comment of its thread. For cross-product triggers this costs us
+almost nothing: well under one per cent of them sit mid-thread, in either cohort.
+For same-product triggers it costs a great deal, close to half of them across the
+release. That asymmetry is the whole reason the reply row of
+Figure~\ref{fig:bridge} is estimated only on pairs where both sides can produce
+the outcome. The blocking never runs against the cross-product side, so leaving
+it in would compare a possible outcome with an impossible one. Online
+Resource~1 gives the counts behind each of these shares. Second, inside a thread
+with several replies, a later reply may be answering an earlier reply rather than
+the trigger. Five in six of the exposed pull requests have exactly one reply in
+the thread, so there the reply can only be answering the trigger. For the rest we
+cannot tell.
 
 \textbf{Selection and cause.} Matching holds several visible factors fixed, and
 the outcome models use pre-trigger controls and repository-aware intervals.
@@ -1273,7 +1417,9 @@ later state, not where on the page the reply was attached: an off-target reply
 does as well, and shuffling the anchor leaves the estimate where it was. The
 exact anchor still earns its place, because it is what lets us name the account
 and read what it wrote. It buys attribution, not prediction, and a count of
-products buys neither. Field evaluation of multi-agent work should ask, beyond mere co-presence, for three things: an addressed edge, a visible owner, and a later state.
+products buys neither. Field evaluation of multi-agent work should ask for the
+upper three rungs of the ladder rather than the first: a visible owner, an
+addressed edge, and a later state.
 
 \backmatter
 

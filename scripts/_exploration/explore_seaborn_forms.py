@@ -45,8 +45,8 @@ HISTORY = ROOT / "outputs" / "human_memory_bridge"
 CONTEXT = ROOT / "outputs" / "task_context_interaction"
 
 INK, SLATE, MID = house.INK, house.SLATE, house.MID
-BLUE, ORANGE, TEAL = house.BLUE, house.ORANGE, house.TEAL
-PALE_TEAL = house.PALE_TEAL
+BLUE, ORANGE, TEAL = house.GOLD_INK, house.BRICK, house.STEEL
+PALE_TEAL = house.PALE_STEEL
 
 
 def styled() -> None:

@@ -4,7 +4,7 @@
   "prs_with_any_exact_edge": 521,
   "prs_merged_within_horizon": 2949,
   "horizon_days": 30,
-  "bootstrap_draws": 2000,
+  "bootstrap_draws": 4000,
   "bootstrap_unit": "repository",
   "seed": 20260826,
   "merged_by_day_30_no_edge": 0.8035347832996748,
@@ -28,16 +28,16 @@
   "merged_by_day_30_reply_off_target": 0.8945721281805785,
   "merged_by_day_30_reply_on_target": 0.8462576723721191,
   "merged_by_day_30_no_reply_ci": [
-    0.7388732643829085,
-    0.8230475689740567
+    0.7380379835713251,
+    0.8235076593236913
   ],
   "merged_by_day_30_reply_off_target_ci": [
-    0.8349380772914384,
-    0.9395657104741224
+    0.8348517318691567,
+    0.9397609541805196
   ],
   "merged_by_day_30_reply_on_target_ci": [
     0.7809370322687357,
-    0.8968658589640753
+    0.898091663632699
   ],
   "three_arm_overlap_diagnostics": {
     "signed_gap_off_minus_on_min_pp": -3.168848051016515,

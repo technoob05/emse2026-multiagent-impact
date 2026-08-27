@@ -31,7 +31,7 @@
 
 \begin{document}
 
-\title[Online Resource 1]{Online Resource 1: Supplementary Information for ``Participation Is Not Collaboration: Tracing Public Ownership After Cross-Product Agent Review''}
+\title[Online Resource 1]{Online Resource 1: Supplementary Information for ``Participation Is Not Collaboration: An Empirical Study of Multi-Agent LLM Code Review on GitHub''}
 
 \author*[1,2]{\fnm{Duy Minh} \sur{Dao Sy}}\email{23122041@student.hcmus.edu.vn}
 \equalcont{Duy Minh Dao Sy and Trung Kiet Huynh contributed equally to this work.}
@@ -130,8 +130,10 @@ semantic response; account history is not verified memory retrieval; a
 force-push is visible branch movement, not a verified repair; and merge is an
 integration state, not code quality.
 
-Every outcome model here is therefore an observational association, and every
-one is a linear probability model, which can predict outside the unit interval.
+Every outcome model here is therefore an observational association. All of them
+are linear probability models, which can predict outside the unit interval,
+except the whole-population timing extension, which is a pooled logistic
+regression over eleven risk periods and is reported as an odds ratio.
 Task difficulty, maintainer intent, review meaning, and private activity are not
 measured, and any of them can select both the public topology and the later
 state. Section~\ref{app:bounds} bounds how much unmeasured structure would be
@@ -269,7 +271,8 @@ contract column by column.
 Table~\ref{tab:s-specifications}, Panel A, names every fitted model with its
 outcome, exposure term, denominators, and adjustment set. Every model is a
 linear probability model fitted by ordinary least squares with standard errors
-clustered on the repository. Most adjustment sets are read back from the formula
+clustered on the repository, apart from the whole-population hazard row, which is
+a pooled logistic regression. Most adjustment sets are read back from the formula
 stored with the analysis product itself, so the table cannot drift from the fits
 it describes; the two ownership-route rows and the two prior-history rows are
 read from the analysis code, which writes no formula. Reply-window variants at
@@ -300,8 +303,10 @@ Panel B settles a question the article raises and does not have room to answer:
 whether the five-minute window is discoverable from the data. It is not, so the
 window stays a declared convention and the owner split is re-run under nine
 schemes, including the cuts a change-point rule selects on its own and
-per-product cuts. Measured over the whole cohort, the user-minus-mapped gap
-moves between 12.5 and 18.6 points; its sign and its repository-clustered
+per-product cuts. Measured over the whole cohort, so that pull requests with no action after the
+wait sit in the denominator, the user-minus-mapped gap moves between 12.5 and
+18.6 points; measured only over pull requests that do act, which is the
+denominator the article and Figure~S4 use, it moves between 19.4 and 41.1; its sign and its repository-clustered
 interval never change.
 
 Panel C reports the tie rule and the leave-one-out evidence. The priority order
@@ -368,6 +373,21 @@ product pair large enough to stand alone, and its note carries the concentration
 statistics and the frozen generality verdict behind the article's statement that
 the direction is general and the size is not.
 
+One outcome in Panel A needs a smaller denominator than the rest, and the
+article states the conclusion without the counts. Whether the review point itself
+is answered can only be observed when the trigger opens its own inline thread,
+because only a thread root can be named by a reply target
+(Section~
+ef{app:reply-target}). Across the 546 matched pairs the split is: 293
+pairs where neither trigger is an inline comment at all, so the outcome is
+impossible on both sides; 1 pair where both triggers sit mid-thread, likewise
+impossible on both sides; 11 pairs where the cross-product trigger opens a thread
+and its matched partner does not, so the outcome is possible on one side only,
+and all 11 lean the same way; and 241 pairs where a reply can be recorded on both
+sides. The article's restricted estimate uses those 241. The 11 one-sided pairs
+are the reason the restriction matters: they do not add noise, they add a
+one-directional pull towards zero.
+
 For the first user-account mediator, prior history requires the same account,
 same repository, a different PR, and a submitted-review timestamp strictly
 before the trigger; the same rule is applied to the first later decisive
@@ -414,6 +434,63 @@ PRs, on a very wide interval. That is one reason the active-discussion subset
 rather than the four-state model remains the primary specificity contrast, and
 the gradient is not an ordering of response types.
 
+\subsection{Where the design constants came from}\label{app:constants}
+
+Three constants decide who is in the RQ3 cohort and when its outcome is read.
+None of them is discoverable from the data, so each was swept. The article gives
+the verdicts; these are the rows behind them. Every sweep re-derives the primary
+setting through the same code path and stops if it fails to reproduce the
+published estimate.
+
+\begin{table}[!ht]
+\caption{Sensitivity of the RQ3 later-merge estimate to the landmark and to the
+outcome horizon, and of the RQ1 owner split to the follow-up window. Each block
+moves one constant and holds the others at their published values. The published
+setting is in bold.}
+\label{tab:s-constants}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrl@{}}
+\toprule
+Setting & Cohort & Exposed & Estimate & 95\% interval \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Landmark, horizon held at 30 days (RQ3)}} \\
+24 hours & 1,264 & 124 & $+16.7$ & $[+7.4, +26.0]$ \\
+\textbf{48 hours} & \textbf{1,067} & \textbf{109} & $\mathbf{+17.3}$ & $\mathbf{[+7.3, +27.4]}$ \\
+72 hours & 945 & 93 & $+14.3$ & $[+3.6, +25.0]$ \\
+96 hours & 857 & 83 & $+11.3$ & $[-0.2, +22.8]$ \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textit{Outcome horizon, landmark held at 48 hours (RQ3)}} \\
+14 days & 1,294 & 155 & $+11.2$ & $[+2.5, +20.0]$ \\
+\textbf{30 days} & \textbf{1,067} & \textbf{109} & $\mathbf{+17.3}$ & $\mathbf{[+7.3, +27.4]}$ \\
+60 days & 693 & 46 & $+13.0$ & $[-2.2, +28.3]$ \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textit{Follow-up window, burst held at five minutes (RQ1)}} \\
+1 day & 8,621 & --- & $+15.7$ & $[+11.4, +20.4]$ \\
+3 days & 8,617 & --- & $+17.4$ & $[+13.1, +22.5]$ \\
+\textbf{7 days} & \textbf{8,608} & --- & $\mathbf{+18.6}$ & $\mathbf{[+14.3, +23.9]}$ \\
+14 days & 8,581 & --- & $+18.9$ & $[+14.6, +24.3]$ \\
+\bottomrule
+\end{tabular*}
+\end{table}
+\FloatBarrier
+
+\noindent\footnotesize \textit{Note:} The RQ3 blocks report the adjusted
+later-merge contrast in percentage points from the primary pre-trigger
+specification. The RQ1 block reports the user-account minus mapped-product share
+of the first post-burst owner among pull requests that have an action left, so
+its cohort column is the trigger cohort rather than an exposed subset and no
+exposed count applies. Two things a reader should take from this table. The RQ3
+estimate is significant at 24, 48 and 72 hours and at 14 and 30 days, and its
+interval crosses zero at 96 hours and at 60 days, in both cases on a much smaller
+cohort, so those are weak evidence of a null rather than evidence of one. And the
+published setting is the maximum of both RQ3 sweeps, which we state rather than
+leave to be discovered: the choice was fixed before the sweep was run, but it is
+the most favourable of the values tried. The RQ1 window is the opposite case,
+where the published seven days is the conservative end and a wider window would
+strengthen the result. Full rows, including the bootstrap draw-count sweep behind
+Figure~4 in the article, are in the public artifact.
+\normalsize
+
 \subsection{Scope, balance, bounds, and design extensions}\label{app:bounds}
 
 Table~\ref{tab:s-sensitivity} collects every RQ3 robustness check in one place,
@@ -436,7 +513,9 @@ few to model, which is the RQ1 scarcity result restated at the outcome stage.
 
 \paragraph{Measured balance and overlap.} Because the four reply windows agree,
 each pre-trigger control shows the 48-hour standardized mean difference and the
-range the four windows cover; no absolute value exceeds 0.16. The overlap rows
+range the four windows cover; no absolute value exceeds 0.16. The usual
+acceptance cut is 0.25, with 0.10 taken as strict, so this sample clears the
+usual cut on every control and misses the strict one on some of them. The overlap rows
 give the propensity-score distribution of the exact-edge and
 non-exact-discussion PRs, which share most of their range, though the edge group
 extends further into high scores. Balance on measured variables describes this
@@ -522,7 +601,18 @@ texts, which disagree on ten rows, always in the conservative direction.
 Panels C and D stress-test the claim that a person, not a script, writes the
 edge, since that claim is an account-type label rather than a verified
 observation. Panel C scores the accounts that write the user-written edges on
-four pre-registered machine-likeness heuristics; Panel D re-estimates the
+four machine-likeness heuristics fixed before we looked. An account is
+flagged for repeated template text when at least half of its comments repeat
+text one of its own earlier comments already used, over at least ten
+comments; for regular timing when the coefficient of variation of its gaps
+between comments is at most 0.5, or at least a quarter of those gaps fall
+within ten per cent of its median gap, over at least twenty gaps; for
+round-the-clock posting when all 24 UTC hours are occupied and its quietest
+hour still holds at least half of what a uniform day would give, over at
+least 48 comments; and for volume when it sustains at least twenty comments
+per active day over at least fifty comments. An account is treated as
+machine-like when it trips two or more, because any single heuristic has a
+plausible human explanation and two at once does not. Panel D re-estimates the
 later-merge contrast after dropping the affected PRs, and it moves up rather
 than down, staying interval-positive even under the loosest drop rule. These are
 behavioural proxies over public traces: they cannot detect a person pasting
@@ -532,8 +622,10 @@ model output, only show that the actor label is not obviously wrong.
 
 \section{RQ4: task context across the boundary}\label{app:rq4}
 
-RQ4 asks whether a pre-trigger property of the change alters who answers a
-review point. Table~\ref{tab:s-task-context} carries every cell and every model,
+RQ4 asks whether an observed property of the change, a link to an issue, goes
+with who answers a review point. The link is normally written when the pull
+request is opened, but the release records no time for it, so we observe the link
+and not the moment it arrived. Table~\ref{tab:s-task-context} carries every cell and every model,
 including the three things the article states without their supporting rows: the
 specification with repository fixed effects alone ($+14.6$ points) beside the
 one with repository and month ($+13.3$), the unrestricted population, and the
@@ -547,7 +639,14 @@ outcome that is empty by construction rather than by observation. Second, the
 reply target names the first comment of a thread
 (Section~\ref{app:reply-target}), so a trigger sitting mid-thread cannot receive
 such a reply at all. That restriction is mild for cross-product triggers, at
-0.4 per cent, and severe for same-product triggers, at 46 per cent. Comparing
+0.4 per cent, and severe for same-product triggers, at 46 per cent. The counts
+behind the shares the article quotes are these. In the thread-position cohort 13
+of 3,526 cross-product inline triggers sit mid-thread. In the hour-48 cohort,
+which is a different population rather than a subset of that one, 3 of 1,067 do,
+and none of those 3 is exposed. Inside the 546 matched pairs, 1 of the 253
+cross-product inline triggers is blocked against 12 of the 253 same-product ones,
+and no cross-product trigger is blocked where its matched partner is not.
+Comparing
 the arms without restricting to thread-root triggers would set a possible
 outcome against an impossible one, so the primary population is thread-root
 triggers and the unrestricted version is reported beside it.

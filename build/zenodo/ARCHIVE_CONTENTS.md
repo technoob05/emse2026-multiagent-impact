@@ -1,7 +1,8 @@
 # What is in this archive, and what is not
 
 This is the reproducible analysis artifact for the paper *Participation Is Not
-Collaboration: Tracing Public Ownership After Cross-Product Agent Review*.
+Collaboration: An Empirical Study of Multi-Agent LLM Code Review on
+GitHub*.
 It was assembled by `scripts/release/build_zenodo_archive.py`, which also
 verified the exclusions below against the built zip.
 
