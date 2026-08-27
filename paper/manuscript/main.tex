@@ -83,9 +83,9 @@ go-between. Mining GitHub has long been known to reward this kind of care
 \citep{kalliamvakou2016perils}. If these cases are mixed together, a product count
 becomes a weak measure of teamwork.
 
-Field studies already tell us a lot. They count agent-authored PRs, measure how
-common AI review is, model reviewer order, and study how developers answer agent
-comments \citep{li2026aidev,selvanayagam2026a2a,zhong2026agenticreview,
+Field studies already tell us a lot. They count agent-authored PRs, measure how common AI review is, model reviewer
+order, trace how agent pull requests reference one another, and study how
+developers answer agent comments \citep{li2026aidev,selvanayagam2026a2a,zhong2026agenticreview,
 cynthia2026responses,khemissi2026references,duma2026reviews}. Several report that
 people still carry the review \citep{zhong2026synergy,chowdhury2026industry}.
 Designed systems show how known agents can pass messages, roles, files, or
@@ -208,12 +208,10 @@ That null is worth holding next to our result: we do not measure whether a
 review comment was good, only whether someone addressed it.
 
 \emph{Bots and review participation before agents.} The questions we ask are
-older than coding agents. Review bots change how a PR behaves
-\citep{wessel2022gatekeepers,wessel2023ghactions}. Participation, rather than
-presence, is what relates to review outcomes
-\citep{mcintosh2016mcr,thongtanunam2017participation}, and human factors decide
+older than coding agents. Review bots \citep{wessel2022gatekeepers} and workflow automation
+\citep{wessel2023ghactions} both change how a PR behaves. Coverage alone does not explain post-release quality, and participation adds to it \citep{mcintosh2016mcr,thongtanunam2017participation}, and human factors decide
 whether an invited reviewer engages at all \citep{ruangwan2019humanfactors}.
-First response time dominates how long a PR takes \citep{zhang2022latency},
+Among pull requests that draw comments at all, the reviewer's first response time is the largest factor in how long the request takes \citep{zhang2022latency},
 which is why we place our check point after it rather than before. Our
 contribution is to carry those questions across a product boundary that did not
 exist when they were asked.
@@ -233,9 +231,7 @@ Hirao et al.\ recover review links that the platform never stored and label them
 with classifiers reaching F1 between 0.71 and 0.79, which is the clearest
 demonstration that recovered edges buy real analytic power at a measurable error
 rate \citep{hirao2019linkage}. The code-review-automation datasets take the same
-route by assumption, pairing a comment with the next revision of the file it
-touched to build training triples at a scale no anchored rule could reach
-\citep{tufano2022pretrained,li2022codereviewer}. Industry does it explicitly.
+route by assumption, pairing a comment with the next revision of the method it annotated, or with the diff hunk, to build training triples at a scale no anchored rule could reach \citep{tufano2022pretrained,li2022codereviewer}. Industry does it explicitly.
 Google judges
 whether its own review comments were resolved by checking whether the commented
 lines changed before submission, then confirming a sample by hand
@@ -263,9 +259,7 @@ needed to erase it, we would rather miss connections than invent them.
 A separate literature asks a question we deliberately do not answer: was the
 comment any good? Low usefulness is older than coding agents. Bosu et al.\ find
 that much review feedback at Microsoft is not useful, that usefulness rises with
-reviewer tenure, and that it falls as changes grow \citep{bosu2015useful}; later
-work predicts usefulness from the text and the author's experience
-\citep{rahman2017usefulness,ahmed2025useful}. Wessel et al.\ name the failure
+reviewer tenure, and that it falls as changes grow \citep{bosu2015useful}; later work predicts usefulness from the comment text and the author's experience \citep{rahman2017usefulness}, and from the comment text alone \citep{ahmed2025useful}. Wessel et al.\ name the failure
 mode on the machine side, describing how automated contributions come to be read
 as noise that crowds out human conversation \citep{wessel2021noise}. That is our
 thesis in an earlier vocabulary: volume is not participation.
@@ -294,8 +288,8 @@ Role-based systems such as ChatDev and MetaGPT make communication part of the
 design \citep{qian2023chatdev,hong2023metagpt}. RepoReviewer divides review into
 repository, file, priority, and summary roles \citep{zhang2026reporeviewer}.
 Adversarial Review adds a critic that checks a review through structured
-disagreement \citep{qiu2026adversarial}. SWE-Review tests a known
-generate, review, revise loop \citep{wang2026swereview}. Controlled traces can
+disagreement \citep{qiu2026adversarial}. SWE-Review closes the generate, review, revise loop for issue resolution
+\citep{wang2026swereview}. Controlled traces can
 therefore reveal roles and messages directly.
 
 Public GitHub traces are weaker evidence, but they show real projects rather than
@@ -313,14 +307,22 @@ what the rest of the method is for.
 
 \subsection{Data and event anchor}
 
-We pin AIDev-7.6M at revision
-\nolinkurl{37bbe1533e26cc1e1374917dba1186d1c8a4dc81}. The release gathers roughly
-7.6 million agent-authored PRs \citep{li2026aidev}. From it we take the pull requests whose repository has more than 100 stars,
+We pin the AIDev release at revision
+\nolinkurl{37bbe1533e26cc1e1374917dba1186d1c8a4dc81}, which gathers roughly 7.6
+million agent-authored PRs from six products, with pull requests created through
+31 March 2026. The dataset paper describes an earlier release of 932,791 pull
+requests from five products \citep{li2026aidev}; the revision we pin is larger
+and adds Google Jules, so figures quoted here will not match that paper. From it we take the pull requests whose repository has more than 100 stars,
 which leaves 361,296. The release publishes a subset under this name; the count
 here is our own reconstruction of that rule on this revision, so a reader
 comparing against a published subset size should expect a different number.
-Online Resource~1 gives the filter and the per-product counts. Star thresholds of this kind are the usual way to separate engineered
-projects from scratch repositories \citep{munaiah2017curating}. Its event tables contain submitted
+Online Resource~1 gives the filter and the per-product counts. A star threshold is a blunt instrument for this. Munaiah et al.\ show that
+popularity filters do not measure whether a project is engineered, and build a
+classifier over community, continuous integration, documentation, history,
+issues, licensing and testing instead \citep{munaiah2017curating}. We use the
+star filter because it is the one the release itself applies, and we treat it as
+a coarse screen rather than as evidence that every repository here is a serious
+project. Its event tables contain submitted
 reviews, inline review comments, PR comments, and selected lifecycle events.
 PRs are created through 31 March 2026; we use 15 April 2026 at 00:00 UTC as the
 common observation boundary.
