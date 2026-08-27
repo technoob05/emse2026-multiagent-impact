@@ -765,10 +765,14 @@ is doing any work. Two placebo exposures answer that, and they do not answer it
 the way we hoped.
 
 The first keeps the reply and moves the anchor. Take the PRs where a reply landed
-somewhere else on the pull request, not on the trigger's thread. That is still
-somebody active in review, so some association is expected. It is 17.9 points, and
-the exact edge is 18.9 points, against PRs with no inline reply at all. The gap
-between them is one point, with an interval running from $-13$ to $+15$. The second is harsher. Hold the reply events fixed and shuffle which comment each
+somewhere else on the pull request, not on the trigger's thread. That is still somebody active in review, so some association is expected. To
+compare the two like for like we put both in one model, against the same
+reference group of pull requests with no inline reply at all. The off-target
+reply is 17.9 points and the exact edge 18.9, so the gap between them is one
+point, with an interval running from $-13$ to $+15$. Fitting each exposure
+separately on its own support, as Online Resource~1 also reports, gives 17.5 and
+17.3; the two framings agree that the anchoring buys nothing, and the joint model
+is the one that licenses subtracting them. The second is harsher. Hold the reply events fixed and shuffle which comment each
 one is anchored to. If the anchoring carried the signal, that should knock the
 estimate down. It does not move. We had pre-specified shuffling inside repository
 and month, but too few PRs can move under that rule for the result to be readable,
@@ -903,8 +907,9 @@ whole population by pooled logistic regression over daily risk periods with a
 baseline for each period and standard errors clustered on the repository, puts
 the odds of merging in the next period about 1.74 times higher while a reply is
 active. That figure barely moves as controls are added, from 1.73 with the
-baseline alone to 1.74 with the full pre-trigger set, across 3,940 pull requests
-in 893 repositories. Online Resource~1 carries the specification. The large
+baseline alone to 1.74 with the full pre-trigger set, across 3,940 of the 3,942 pull requests, in 893 repositories. Two contribute no
+risk period at all, because their follow-up time is zero, so the hazard model
+has nothing to fit on them; the cumulative curves keep all 3,942. Online Resource~1 carries the specification. The large
 hour-48 contrast is specific to that slower-moving cohort.
 
 The second asks who wrote the edge. We split the exposed PRs by whether the

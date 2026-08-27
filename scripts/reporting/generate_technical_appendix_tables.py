@@ -1327,7 +1327,10 @@ def rq3_robustness_table() -> str:
             tex("Randomisation, unconditional"),
             tex("48 h reply window (published)"),
             pp(primary_permutation["observed_estimate"]),
-            ci_pp(primary_permutation["permutation_quantile_025"], primary_permutation["permutation_quantile_975"]),
+            "null band " + ci_pp(
+                primary_permutation["permutation_quantile_025"],
+                primary_permutation["permutation_quantile_975"],
+            ),
             tex(
                 f"two-sided p = {number(primary_permutation['permutation_p_value_two_sided']):.3f} over "
                 f"{integer(primary_permutation['permutations'])} within-repository permutations across "
