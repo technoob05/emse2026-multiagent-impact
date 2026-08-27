@@ -40,7 +40,6 @@ $sourceFiles = @(
     "FigS1.pdf",
     "FigS2.pdf",
     "FigS3.pdf",
-    "FigS4.pdf",
     "README.md"
 )
 

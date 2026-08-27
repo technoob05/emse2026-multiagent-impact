@@ -158,6 +158,9 @@ FIGURE_WIDTH = TEXT_WIDTH_PT / POINTS_PER_INCH
 # Springer Nature asks for figure lettering of about 8 to 12 pt at final size.
 # These figures are placed 1:1, so the floor here is the floor on the page.
 MIN_TEXT_POINTS = 8.0
+# Lettering must also keep clear of the trim edge itself, not merely stay
+# inside the canvas rectangle by a rounding error.
+MIN_EDGE_POINTS = 1.0
 MINUS = "\u2212"
 
 
@@ -413,86 +416,123 @@ def swatch_key(
 # ---------------------------------------------------------------------------
 
 
+def lettering(fig: plt.Figure) -> list[Text]:
+    """Every text artist a reader will see, whatever kind of artist holds it.
+
+    Matplotlib scatters lettering across five different homes: free annotations
+    on an axes, the axes' own title and axis labels, the tick labels the
+    formatter creates, the offset text a scientific formatter parks at the end
+    of an axis, and the labels a legend keeps in its own child artists. A
+    typesetter measuring a page does not care which home a word lives in, so
+    neither does this. Anything omitted here is a hole in the gate: it is text
+    that may print below the size floor, walk off the canvas, or land on top of
+    another label without the build noticing.
+    """
+    found: list[Text] = [text for text in fig.texts]
+    for ax in fig.axes:
+        found.extend(ax.texts)
+        # ``ax.title`` is only the *centre* title. Every panel heading in this
+        # module is set with ``loc="left"``, which matplotlib keeps in a
+        # separate artist, so reading ax.title alone meant the gate never
+        # measured a single panel title: not its size, not its distance from
+        # the trim, not whether an annotation had landed on top of it.
+        found.extend(
+            title
+            for name in ("title", "_left_title", "_right_title")
+            if (title := getattr(ax, name, None)) is not None
+        )
+        found.extend((ax.xaxis.label, ax.yaxis.label))
+        if ax.axison:
+            for axis in (ax.xaxis, ax.yaxis):
+                low, high = sorted(axis.get_view_interval())
+                for minor in (False, True):
+                    locations = axis.get_ticklocs(minor=minor)
+                    labels = axis.get_ticklabels(minor=minor)
+                    for location, label in zip(locations, labels):
+                        # Ticks off the end of the axis keep their label artist
+                        # but are never drawn, so measuring them would judge
+                        # lettering that is not on the page.
+                        if low - 1e-9 <= location <= high + 1e-9:
+                            found.append(label)
+                found.append(axis.get_offset_text())
+        legend = ax.get_legend()
+        if legend is not None:
+            found.extend(legend.get_texts())
+            title = legend.get_title()
+            if title is not None:
+                found.append(title)
+    figure_legend = getattr(fig, "legends", [])
+    for legend in figure_legend:
+        found.extend(legend.get_texts())
+        title = legend.get_title()
+        if title is not None:
+            found.append(title)
+    return [
+        text
+        for text in found
+        if text.get_visible() and text.get_text().strip()
+    ]
+
+
 def assert_layout(fig: plt.Figure, stem: str) -> None:
     fig.canvas.draw()
     renderer = fig.canvas.get_renderer()
     canvas = fig.bbox
-    tolerance = 0.6
+    # No lettering may reach the trim edge. Springer trims to the declared page
+    # box, so a label sitting on the boundary is a label that may be shaved.
+    margin = MIN_EDGE_POINTS * fig.dpi / POINTS_PER_INCH
+    # A near miss prints as a collision. Two labels whose boxes clear each other
+    # by a third of a millimetre are read as one smudged word at 372 pt, so the
+    # gate demands a real gap rather than mere non-intersection. The horizontal
+    # figure is the wider of the two because a text box already carries its own
+    # leading above and below the glyphs, and none at its sides.
+    gap_x = 2.0 * fig.dpi / POINTS_PER_INCH
+    gap_y = 1.0 * fig.dpi / POINTS_PER_INCH
 
-    candidates: list[Text] = list(fig.texts)
-    for ax in fig.axes:
-        candidates.extend(ax.texts)
-        candidates.extend([ax.title, ax.xaxis.label, ax.yaxis.label])
-        if ax.axison:
-            candidates.extend(ax.get_xticklabels())
-            candidates.extend(ax.get_yticklabels())
-        # Legend entries are drawn text too, and a journal measuring lettering
-        # will not care that matplotlib keeps them in a separate artist.
-        legend = ax.get_legend()
-        if legend is not None:
-            candidates.extend(legend.get_texts())
-            if legend.get_title() is not None:
-                candidates.append(legend.get_title())
+    candidates = lettering(fig)
 
     for text in candidates:
         content = text.get_text()
-        if not content.strip() or not text.get_visible():
-            continue
         if text.get_fontsize() < MIN_TEXT_POINTS - 1e-6:
             raise AssertionError(
                 f"{stem}: '{content[:32]}' is {text.get_fontsize():.1f} pt, "
                 f"below the {MIN_TEXT_POINTS} pt print floor"
             )
         box = text.get_window_extent(renderer=renderer)
-        if (
-            box.x0 < canvas.x0 - tolerance
-            or box.x1 > canvas.x1 + tolerance
-            or box.y0 < canvas.y0 - tolerance
-            or box.y1 > canvas.y1 + tolerance
-        ):
+        clearance = min(
+            box.x0 - canvas.x0,
+            canvas.x1 - box.x1,
+            box.y0 - canvas.y0,
+            canvas.y1 - box.y1,
+        )
+        if clearance < margin:
             raise AssertionError(
-                f"{stem}: text '{content[:32]}' is clipped by the canvas edge"
+                f"{stem}: text '{content[:32]}' comes within "
+                f"{clearance / (fig.dpi / POINTS_PER_INCH):.2f} pt of the "
+                f"canvas edge, under the {MIN_EDGE_POINTS} pt standoff"
             )
 
-    def measure(artists: Iterable[Text]) -> list[tuple[str, object]]:
-        boxes = []
-        for text in artists:
-            if not text.get_text().strip() or not text.get_visible():
-                continue
-            boxes.append((text.get_text(), text.get_window_extent(renderer=renderer)))
-        return boxes
-
-    def collide(first: object, second: object) -> bool:
-        overlap_x = min(first.x1, second.x1) - max(first.x0, second.x0)
-        overlap_y = min(first.y1, second.y1) - max(first.y0, second.y0)
-        return overlap_x > 1.0 and overlap_y > 1.0
-
-    for ax in fig.axes:
-        boxes = measure(ax.texts)
-        for index, (first_label, first) in enumerate(boxes):
-            for second_label, second in boxes[index + 1 :]:
-                if collide(first, second):
-                    raise AssertionError(
-                        f"{stem}: annotations '{first_label[:24]}' and "
-                        f"'{second_label[:24]}' overlap"
-                    )
-
-    # A figure-level note lives outside every axes, so the per-axes sweep above
-    # never sees it. It is placed by hand into the band between panels, which is
-    # exactly where axis labels and panel titles also land, so check it against
-    # them rather than discovering the collision by eye in the PDF.
-    lettering: list[tuple[str, object]] = []
-    for ax in fig.axes:
-        lettering.extend(measure([ax.title, ax.xaxis.label, ax.yaxis.label]))
-        if ax.axison:
-            lettering.extend(measure(ax.get_xticklabels()))
-            lettering.extend(measure(ax.get_yticklabels()))
-    for note_label, note in measure(fig.texts):
-        for other_label, other in lettering:
-            if collide(note, other):
+    # One sweep over every pair in the figure, not one sweep per axes. A panel
+    # title colliding with the annotation of the panel above it, a tick label
+    # colliding with a hand-placed note, and a legend entry colliding with a
+    # data label are all the same defect, and all three used to pass.
+    boxes = [
+        (text.get_text(), text.get_window_extent(renderer=renderer))
+        for text in candidates
+    ]
+    for index, (first_label, first) in enumerate(boxes):
+        for second_label, second in boxes[index + 1 :]:
+            near_x = min(first.x1, second.x1) - max(first.x0, second.x0) > -gap_x
+            near_y = min(first.y1, second.y1) - max(first.y0, second.y0) > -gap_y
+            if near_x and near_y:
+                overlaps = (
+                    min(first.x1, second.x1) - max(first.x0, second.x0) > 0.0
+                    and min(first.y1, second.y1) - max(first.y0, second.y0) > 0.0
+                )
+                verb = "overlap" if overlaps else "sit too close to read apart"
                 raise AssertionError(
-                    f"{stem}: figure note '{note_label[:24]}' overlaps "
-                    f"'{other_label[:24]}'"
+                    f"{stem}: '{first_label[:24]}' and '{second_label[:24]}' "
+                    f"{verb}"
                 )
 
 
@@ -662,9 +702,9 @@ def figure_measurement_contract() -> None:
     author = example["author_product"].replace("_", " ")
     reviewer = example["reviewing_product"].replace("_", " ")
 
-    fig = new_figure(3.95)
-    layout = Layout(left=0.030, right=0.980, top=0.900, bottom=0.045, gap=0.115)
-    top_rect, bottom_rect = layout.rects((1.0, 0.72))
+    fig = new_figure(3.50)
+    layout = Layout(left=0.030, right=0.980, top=0.905, bottom=0.045, gap=0.115)
+    top_rect, bottom_rect = layout.rects((1.0, 0.46))
 
     ax = fig.add_axes(top_rect)
     ax.set_xlim(0, 100)
@@ -757,7 +797,7 @@ def figure_measurement_contract() -> None:
     ax.text(
         (centres[1] + centres[2]) / 2,
         TOP + HEIGHT + 0.40,
-        "the one connecting edge",
+        "the connecting edge",
         ha="center",
         va="bottom",
         fontsize=8.2,
@@ -788,15 +828,6 @@ def figure_measurement_contract() -> None:
             linestyle=(0, (2.4, 1.8)),
             zorder=3,
         )
-    )
-    ax.text(
-        centres[1] - 2.4,
-        BRANCH - 0.35,
-        f"also {reviewer}, not counted:",
-        ha="right",
-        va="center",
-        fontsize=8.0,
-        color=BRICK,
     )
     for index, label in enumerate(("same review batch", "inside the burst")):
         y = BRANCH + 0.30 - index * 1.30
@@ -848,44 +879,26 @@ def figure_measurement_contract() -> None:
     ax.axis("off")
     panel_title(ax, "B", "Four levels of proof, never treated as one")
 
+    # Order matters: each rung must ask more of the record than the one before
+    # it. "Somebody acted next" is weaker than "a reply names the comment", so
+    # it comes first. The article's ladder uses this order. What each rung
+    # *means* used to be printed inside its box; it is a definition, so it now
+    # lives in the caption and the box carries only the name being defined.
     levels = [
-        (
-            "1. Both present",
-            "two products act\non the same PR",
-            PALE_GOLD,
-            GOLD_INK,
-        ),
-        # Order matters: each rung must ask more of the record than the one
-        # before it. "Somebody acted next" is weaker than "a reply names the
-        # comment", so it comes first. The article's ladder uses this order.
-        (
-            "2. Acted on",
-            "somebody takes the\nnext visible step",
-            PALE_STEEL,
-            STEEL,
-        ),
-        (
-            "3. Answered",
-            "a reply names\nthe comment itself",
-            PALE_STEEL,
-            STEEL,
-        ),
-        (
-            "4. Accepted",
-            "merged, only\nafter hour 48",
-            GRID,
-            SLATE,
-        ),
+        ("1. Both present", PALE_GOLD, GOLD_INK),
+        ("2. Acted on", PALE_STEEL, STEEL),
+        ("3. Answered", PALE_STEEL, STEEL),
+        ("4. Accepted", GRID, SLATE),
     ]
     box_width = 22.0
     gap = (100.0 - len(levels) * box_width) / (len(levels) - 1)
-    for index, (name, rule, face, edge) in enumerate(levels):
+    for index, (name, face, edge) in enumerate(levels):
         x = index * (box_width + gap)
         ax.add_patch(
             FancyBboxPatch(
-                (x, 3.6),
+                (x, 5.15),
                 box_width,
-                5.6,
+                3.05,
                 boxstyle="round,pad=0.2,rounding_size=0.9",
                 facecolor=face,
                 edgecolor=edge,
@@ -894,7 +907,7 @@ def figure_measurement_contract() -> None:
         )
         ax.text(
             x + box_width / 2,
-            7.9,
+            6.68,
             name,
             ha="center",
             va="center",
@@ -902,20 +915,11 @@ def figure_measurement_contract() -> None:
             color=INK,
             fontweight="bold",
         )
-        ax.text(
-            x + box_width / 2,
-            5.3,
-            rule,
-            ha="center",
-            va="center",
-            fontsize=8.0,
-            color=INK,
-        )
         if index < len(levels) - 1:
             ax.add_patch(
                 FancyArrowPatch(
-                    (x + box_width + 0.5, 6.4),
-                    (x + box_width + gap - 0.5, 6.4),
+                    (x + box_width + 0.5, 6.68),
+                    (x + box_width + gap - 0.5, 6.68),
                     arrowstyle="-|>",
                     mutation_scale=6,
                     color=SLATE,
@@ -928,7 +932,7 @@ def figure_measurement_contract() -> None:
     swatch_key(
         ax,
         0.6,
-        1.35,
+        2.55,
         (
             ("rect", {"facecolor": PALE_GOLD, "edgecolor": GOLD_INK}, "participation"),
             ("rect", {"facecolor": PALE_STEEL, "edgecolor": STEEL}, "a connected edge"),
@@ -978,8 +982,8 @@ def figure_participation() -> None:
     shares = funnel.loc[stage_order, "share_of_trigger_cohort"].to_numpy() * 100
     counts = funnel.loc[stage_order, "prs"].astype(int).to_numpy()
 
-    fig = new_figure(5.85)
-    layout = Layout(left=0.215, right=0.775, top=0.945, bottom=0.070, gap=0.105)
+    fig = new_figure(6.05)
+    layout = Layout(left=0.215, right=0.750, top=0.948, bottom=0.068, gap=0.118)
     top_rect, bottom_rect, example_rect = layout.rects((1.0, 1.30, 0.62))
     # The example strip carries no row labels, so it does not need Panel A's
     # left-hand column and would waste a third of the page keeping it. It stays
@@ -1122,7 +1126,7 @@ def figure_participation() -> None:
     ax.text(
         0.02,
         0.035,
-        f"At 5 min: {remaining:,} PRs still have an action",
+        f"{remaining:,} PRs at 5 min",
         transform=ax.transAxes,
         ha="left",
         va="bottom",
@@ -1248,7 +1252,7 @@ def figure_participation() -> None:
     ax.text(
         0.25,
         1.28,
-        f"{reviewing} posts the review",
+        f"{reviewing}'s review",
         ha="left",
         va="center",
         fontsize=8.2,
@@ -1257,7 +1261,7 @@ def figure_participation() -> None:
     ax.text(
         tail_minutes - 0.5,
         1.28,
-        f"a user account acts, {tail_minutes:.1f} min",
+        f"user account, {tail_minutes:.1f} min",
         ha="right",
         va="center",
         fontsize=8.2,
@@ -1266,7 +1270,7 @@ def figure_participation() -> None:
     ax.text(
         0.25,
         -1.30,
-        f"{len(discarded)} {bursting} events in {span_seconds} s, set aside",
+        f"{len(discarded)} {bursting} events in {span_seconds} s",
         ha="left",
         va="center",
         fontsize=8.2,
@@ -1508,12 +1512,12 @@ def figure_boundary() -> None:
             (
                 "rect",
                 {"facecolor": BRICK, "edgecolor": SLATE, "linewidth": 0.8},
-                "interval clears no difference",
+                "clears zero",
             ),
             (
                 "rect",
                 {"facecolor": MID, "edgecolor": MID, "linewidth": 0.8},
-                "interval includes it",
+                "includes zero",
             ),
         ),
         swatch_height=2.6,
@@ -1521,8 +1525,8 @@ def figure_boundary() -> None:
     band.text(
         0.0,
         1.4,
-        f"{pairs:,} matched pairs in {repositories} repositories; "
-        f"*{int(narrow['pairs']):,} where a reply is possible on both sides",
+        f"{pairs:,} matched pairs \u00b7 {repositories} repositories"
+        f"    *{int(narrow['pairs']):,} pairs",
         ha="left",
         va="center",
         fontsize=8.0,
@@ -1628,7 +1632,8 @@ def figure_boundary() -> None:
     ax.text(
         50.0,
         8.82,
-        " · ".join(f"same {key}" for key in ("repository", "account", "product", "channel", "month")),
+        "same "
+        + " \u00b7 ".join(("repository", "account", "product", "channel", "month")),
         ha="center",
         va="center",
         fontsize=8.2,
@@ -1661,7 +1666,7 @@ def figure_boundary() -> None:
         )
         for offset, content, weight, size in (
             (6.60, heading, "bold", 8.4),
-            (5.35, f"reviewed by {reviewer}", "normal", 8.2),
+            (5.35, reviewer, "normal", 8.2),
             (4.10, outcome, "bold", 8.2),
         ):
             ax.text(
@@ -1756,7 +1761,7 @@ def figure_boundary() -> None:
     ax.text(
         50.0,
         0.35,
-        f"all {pairs} pairs, by which side alone had follow-up",
+        f"{pairs} pairs",
         ha="center",
         va="center",
         fontsize=8.2,
@@ -1852,7 +1857,7 @@ def figure_merge_curves() -> None:
     ax.text(
         0.015,
         0.955,
-        f"{int(summary['population_prs']):,} PRs across "
+        f"{int(summary['population_prs']):,} PRs \u00b7 "
         f"{int(summary['repositories']):,} repositories",
         transform=ax.transAxes,
         ha="left",
@@ -1894,7 +1899,7 @@ def figure_sensitivity() -> None:
     test = exactly_one(permutation, threshold_hours="48")
 
     fig = new_figure(3.35)
-    layout = Layout(left=0.135, right=0.985, top=0.900, bottom=0.150, gap=0.0)
+    layout = Layout(left=0.135, right=0.955, top=0.900, bottom=0.150, gap=0.0)
     (rect,) = layout.rects((1.0,))
     ax = fig.add_axes(rect)
 
@@ -1909,17 +1914,15 @@ def figure_sensitivity() -> None:
     ax.set_xlim(-2, 60)
     ax.set_ylim(0, 100)
     ax.set_yticks([0, 25, 50, 75, 100])
-    ax.set_xlabel("How much more common the hidden cause is among answered PRs (pp)")
-    ax.set_ylabel("Its own effect on\nlater merge (pp)")
+    ax.set_xlabel("How much more common among answered PRs (pp)")
+    ax.set_ylabel("Its effect on\nlater merge (pp)")
     panel_title(ax, "", "A hidden cause would have to be large and lopsided")
     clean_axis(ax, "y")
     ax.text(
         0.985,
         0.955,
-        f"E-value {float(primary['e_value_point']):.2f}, "
-        f"{float(primary['e_value_limit']):.2f} at the interval\n"
-        f"shuffle test inside {int(test['repositories'])} repositories: "
-        f"p = {float(test['permutation_p_value_two_sided']):.3f}",
+        f"E-value {float(primary['e_value_point']):.2f}"
+        f"\u2003{float(primary['e_value_limit']):.2f} at the interval",
         transform=ax.transAxes,
         ha="right",
         va="top",
@@ -1977,7 +1980,7 @@ def figure_sensitivity() -> None:
                     "markeredgecolor": WHITE,
                     "markeredgewidth": 0.6,
                 },
-                f"the {len(measured)} factors we did measure",
+                f"the {len(measured)} measured factors",
             ),
         ),
         swatch_width=2.6,
@@ -1992,6 +1995,25 @@ def figure_sensitivity() -> None:
 
 
 def figure_task_context() -> None:
+    """RQ4 as two panels: the interaction, then the subtraction it implies.
+
+    The earlier version of this figure carried a counterfactual line and a
+    shaded region. Both were misread. The region was drawn between the observed
+    cross-product line and a derived one, so it *was* the raw contrast, but a
+    shaded band under a line is read as an uncertainty band everywhere else in
+    this paper and so it was read as one here. The counterfactual line, being
+    derived rather than measured, needed a caption paragraph before it meant
+    anything at all.
+
+    Both are gone. Panel A now shows only the four measured rates. The raw
+    contrast is no longer a region there: it is Panel B, where the two changes
+    the link actually produced are drawn as two marks on one percentage-point
+    ruler, and the distance between them is the raw 17.1. The adjusted estimate
+    lies underneath on the same ruler, so the shrinkage from 17.1 to 13.3 is a
+    distance the reader can see rather than a discrepancy to explain away, and
+    the only shaded thing left in the figure is a confidence interval, which is
+    what shading means everywhere else in the paper.
+    """
     cells = read_csv(
         CONTEXT / "answer_rate_cells.csv",
         (
@@ -2008,20 +2030,10 @@ def figure_task_context() -> None:
         CONTEXT / "interaction_models.csv",
         ("specification", "estimate", "ci_low", "ci_high"),
     )
-    loo = read_csv(
-        CONTEXT / "leave_one_repository_out.csv", ("estimate",)
-    )
-    shuffle = read_csv(
-        CONTEXT / "label_shuffle_test.csv", ("p_value_two_sided",)
-    ).iloc[0]
+    loo = read_csv(CONTEXT / "leave_one_repository_out.csv", ("estimate",))
     primary = exactly_one(
         models, specification="Thread-root triggers, repository and month FE"
     )
-
-    fig = new_figure(4.15)
-    layout = Layout(left=0.165, right=0.745, top=0.910, bottom=0.150, gap=0.150)
-    top_rect, bottom_rect = layout.rects((1.0, 0.30))
-    ax = fig.add_axes(top_rect)
 
     rates, counts = {}, {}
     for relation in ("cross_product", "same_product"):
@@ -2035,56 +2047,31 @@ def figure_task_context() -> None:
 
     cross = rates["cross_product"]
     same = rates["same_product"]
-    # Where the cross-product line would have landed had the link moved it by
-    # exactly as much as it moved the same-product line. This point is derived,
-    # not measured, and the figure says so. The distance from it up to the
-    # observed cross-product rate is the raw difference in differences, so the
-    # reader measures that quantity instead of subtracting two labels.
-    ghost = cross[0] + (same[1] - same[0])
-    raw = cross[1] - ghost
+    change_cross = cross[1] - cross[0]
+    change_same = same[1] - same[0]
+    raw = change_cross - change_same
 
-    # The contrast is the region between what happened and what the
-    # same-product change predicts, so it is drawn as that region. Its lower
-    # boundary is the counterfactual line and its upper boundary is the
-    # observed one, so the two series that define it also frame it.
-    ax.fill_between(
-        [0, 1],
-        [cross[0], ghost],
-        [cross[0], cross[1]],
-        color=PALE_STEEL,
-        linewidth=0.0,
-        zorder=1,
-    )
-    ax.plot(
-        [0, 1],
-        [cross[0], ghost],
-        color=MID,
-        linewidth=1.6,
-        linestyle=(0, (1, 2)),
-        zorder=2,
-        clip_on=False,
-    )
-    ax.plot(
-        [1],
-        [ghost],
-        marker="o",
-        markersize=5.0,
-        markerfacecolor=WHITE,
-        markeredgecolor=MID,
-        markeredgewidth=1.3,
-        zorder=3,
-        clip_on=False,
-    )
+    estimates = loo["estimate"].to_numpy() * 100
+    point = float(primary["estimate"]) * 100
+    low = float(primary["ci_low"]) * 100
+    high = float(primary["ci_high"]) * 100
+
+    fig = new_figure(3.80)
+    layout = Layout(left=0.150, right=0.700, top=0.925, bottom=0.150, gap=0.160)
+    top_rect, bottom_rect = layout.rects((1.0, 0.50))
+
+    # --- Panel A: four measured rates, nothing else --------------------------
+    ax = fig.add_axes(top_rect)
     ax.plot(
         [0, 1],
         cross,
         color=STEEL,
-        linewidth=2.2,
+        linewidth=2.4,
         marker="o",
-        markersize=6.0,
+        markersize=6.4,
         markerfacecolor=STEEL,
         markeredgecolor=WHITE,
-        markeredgewidth=0.6,
+        markeredgewidth=0.7,
         clip_on=False,
         zorder=4,
     )
@@ -2098,152 +2085,144 @@ def figure_task_context() -> None:
         markersize=6.0,
         markerfacecolor=SLATE,
         markeredgecolor=WHITE,
-        markeredgewidth=0.6,
+        markeredgewidth=0.7,
         clip_on=False,
         zorder=4,
     )
 
-    # Every point now says one thing: its rate and the count behind it. Which
-    # series a point belongs to is the key's job, not a second line of text
-    # pinned to the mark.
-    for relation, value, colour, offset in (
-        ("cross_product", cross[0], STEEL, -1.2),
-        ("same_product", same[0], SLATE, 1.2),
-    ):
-        ax.text(
-            0.03,
-            value + offset,
-            f"{value:.1f}%  of {counts[relation][0]:,} PRs",
-            ha="left",
-            va="top" if offset < 0 else "bottom",
-            fontsize=8.2,
-            fontweight="bold",
-            color=colour,
-        )
-
-    for value, count, colour in (
-        (cross[1], counts["cross_product"][1], STEEL),
-        (same[1], counts["same_product"][1], SLATE),
-    ):
-        ax.text(
-            1.035,
-            value,
-            f"{value:.1f}%  of {count:,} PRs",
-            ha="left",
-            va="center",
-            fontsize=8.2,
-            fontweight="bold",
-            color=colour,
-        )
+    # The left column is labelled beside its marker and the right column beyond
+    # the axes, where the series name can ride along with the rate. Naming the
+    # series at the end of its own line is what lets this figure carry no key.
     ax.text(
-        1.035,
-        ghost,
-        f"{ghost:.1f}%  not observed",
+        0.035,
+        cross[0] - 1.1,
+        f"{cross[0]:.1f}%   n = {counts['cross_product'][0]:,}",
+        ha="left",
+        va="top",
+        fontsize=8.4,
+        color=STEEL,
+    )
+    ax.text(
+        0.035,
+        same[0] + 1.1,
+        f"{same[0]:.1f}%   n = {counts['same_product'][0]:,}",
+        ha="left",
+        va="bottom",
+        fontsize=8.4,
+        color=SLATE,
+    )
+    ax.text(
+        1.045,
+        cross[1],
+        f"{cross[1]:.1f}%   n = {counts['cross_product'][1]:,}\na different product",
         ha="left",
         va="center",
-        fontsize=8.0,
+        fontsize=8.4,
+        color=STEEL,
+    )
+    ax.text(
+        1.045,
+        same[1],
+        f"{same[1]:.1f}%   n = {counts['same_product'][1]:,}\nthe same product",
+        ha="left",
+        va="center",
+        fontsize=8.4,
         color=SLATE,
     )
 
-    # The label names the shaded region, so it sits inside it, low enough to
-    # clear the same-product line that crosses the panel and far enough left of
-    # the right-hand column that it cannot reach the counterfactual's label.
-    ax.text(
-        0.575,
-        ghost + (cross[1] - ghost) * 0.28,
-        minus(f"{raw:+.1f}") + " pp raw gap",
-        ha="center",
-        va="center",
-        fontsize=8.4,
-        fontweight="bold",
-        color=INK,
-        zorder=5,
-    )
-
-    # The key is measured in data coordinates, so the axis limits have to be
-    # final before it is laid out.
-    ax.set_xlim(-0.12, 1.12)
-    ax.set_ylim(0, 38)
-
-    # Four things are drawn here and only one of them, the shaded region, is
-    # named on the plot. The other three are named in a key, in the caption's
-    # own words, in the empty band under the two lines.
-    swatch_key(
-        ax,
-        -0.105,
-        5.0,
-        (
-            (
-                "line",
-                {"color": STEEL, "linewidth": 2.2},
-                "a different product reviews",
-            ),
-            (
-                "line",
-                {"color": SLATE, "linewidth": 2.0, "linestyle": (0, (4, 2))},
-                "the same product reviews",
-            ),
-        ),
-        line_length=0.075,
-        label_pad=0.020,
-        gap=0.055,
-    )
-    swatch_key(
-        ax,
-        -0.105,
-        1.7,
-        (
-            (
-                "line",
-                {"color": MID, "linewidth": 1.6, "linestyle": (0, (1, 2))},
-                "if the link had moved it like the same product",
-            ),
-        ),
-        line_length=0.075,
-        label_pad=0.020,
-    )
-
-    ax.set_xlim(-0.12, 1.12)
-    ax.set_ylim(0, 38)
+    ax.set_xlim(-0.10, 1.13)
+    ax.set_ylim(0, 33)
     ax.set_xticks([0, 1], ["No issue link", "PR body links an issue"])
+    # The zero of the rate axis and the first category label are neighbours in
+    # the corner, so the category row is dropped clear of it.
+    ax.tick_params(axis="x", pad=7)
     ax.set_ylabel("Review points answered\nwithin 48 hours (%)")
-    panel_title(ax, "A", "The same context helps only across the boundary")
+    panel_title(ax, "A", "Flat within a product, rising across one")
     clean_axis(ax, "y")
 
-    # --- the quantity the paper actually claims, with its uncertainty -------
+    # --- Panel B: the two changes, their gap, and the adjusted estimate ------
     ax = fig.add_axes(bottom_rect)
-    estimates = loo["estimate"].to_numpy() * 100
-    point = float(primary["estimate"]) * 100
-    low = float(primary["ci_low"]) * 100
-    high = float(primary["ci_high"]) * 100
+    ax.axvline(0.0, color=INK, linewidth=1.0, zorder=4)
 
-    # The interval is a solid bar rather than a rule, so it carries the same
-    # weight as the shaded region above it, and the leave-one-repository-out
-    # range sits inside it as a darker band: a spread within a spread.
+    ax.plot(
+        [change_same, change_cross],
+        [0.70, 0.70],
+        color=MID,
+        linewidth=1.3,
+        zorder=2,
+    )
+    ax.plot(
+        [change_same],
+        [0.70],
+        marker="s",
+        markersize=6.0,
+        markerfacecolor=SLATE,
+        markeredgecolor=WHITE,
+        markeredgewidth=0.7,
+        zorder=5,
+    )
+    ax.plot(
+        [change_cross],
+        [0.70],
+        marker="o",
+        markersize=6.4,
+        markerfacecolor=STEEL,
+        markeredgecolor=WHITE,
+        markeredgewidth=0.7,
+        zorder=5,
+    )
+    ax.text(
+        change_same - 0.7,
+        0.70,
+        minus(f"{change_same:+.1f}"),
+        ha="right",
+        va="center",
+        fontsize=8.4,
+        color=SLATE,
+    )
+    ax.text(
+        change_cross + 0.7,
+        0.70,
+        minus(f"{change_cross:+.1f}"),
+        ha="left",
+        va="center",
+        fontsize=8.4,
+        color=STEEL,
+    )
+    ax.text(
+        (change_same + change_cross) / 2,
+        0.88,
+        minus(f"{raw:+.1f}") + " raw",
+        ha="center",
+        va="bottom",
+        fontsize=8.6,
+        fontweight="bold",
+        color=INK,
+    )
+
     ax.barh(
-        [0],
+        [-0.70],
         [high - low],
         left=low,
-        height=0.42,
+        height=0.30,
         color=PALE_STEEL,
         edgecolor=STEEL,
         linewidth=0.9,
         zorder=2,
     )
     ax.barh(
-        [0],
+        [-0.70],
         [estimates.max() - estimates.min()],
         left=estimates.min(),
-        height=0.18,
+        height=0.13,
         color=STEEL,
         alpha=0.45,
         linewidth=0.0,
         zorder=3,
     )
-    ax.axvline(0.0, color=INK, linewidth=1.0, zorder=4)
     ax.plot(
         [point],
-        [0],
+        [-0.70],
         marker="D",
         markersize=6.6,
         markerfacecolor=STEEL,
@@ -2251,51 +2230,21 @@ def figure_task_context() -> None:
         markeredgewidth=0.9,
         zorder=5,
     )
-    # Panel A's shaded region measures the raw contrast, which is larger than
-    # the estimate we report. Mark it here too, or the reader carries 17.1 down
-    # from Panel A and finds the arithmetic does not come out.
-    ax.plot(
-        [raw],
-        [0],
-        marker="o",
-        markersize=5.6,
-        markerfacecolor=WHITE,
-        markeredgecolor=SLATE,
-        markeredgewidth=1.2,
-        zorder=5,
-    )
     ax.text(
         point,
-        0.42,
-        minus(f"{point:+.1f} pp adjusted"),
+        -0.50,
+        minus(f"{point:+.1f}") + " adjusted",
         ha="center",
         va="bottom",
-        fontsize=8.4,
+        fontsize=8.6,
         fontweight="bold",
         color=STEEL,
     )
-    ax.text(
-        raw,
-        -0.44,
-        minus(f"{raw:+.1f}") + " raw",
-        ha="center",
-        va="top",
-        fontsize=8.0,
-        color=SLATE,
-    )
-    ax.text(
-        0.0,
-        -0.44,
-        "no difference",
-        ha="center",
-        va="top",
-        fontsize=8.0,
-        color=SLATE,
-    )
-    ax.set_xlim(-4.0, 26.0)
-    ax.set_ylim(-1.05, 1.05)
+
+    ax.set_xlim(-7.0, 25.5)
+    ax.set_ylim(-1.45, 1.55)
     ax.set_yticks([])
-    ax.set_xlabel("How much more the link helps across the boundary (pp)")
+    ax.set_xlabel("Change in the answered rate (pp)")
     panel_title(ax, "B", "One change minus the other")
     clean_axis(ax, "x")
     ax.spines["left"].set_visible(False)

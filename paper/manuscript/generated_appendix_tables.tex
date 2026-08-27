@@ -152,7 +152,7 @@ Mapped different-product exact reply & 74 & Inline-eligible & 1.5 \\
 \setlength{\tabcolsep}{2pt}
 \setlength{\LTpre}{4pt}\setlength{\LTpost}{4pt}
 \renewcommand{\arraystretch}{0.95}
-\begin{longtable}{@{}L{0.16\textwidth}L{0.141\textwidth}L{0.123\textwidth}L{0.226\textwidth}L{0.302\textwidth}@{}}
+\begin{longtable}{@{}L{0.280\textwidth}L{0.130\textwidth}L{0.090\textwidth}L{0.190\textwidth}L{0.260\textwidth}@{}}
 \caption{Named estimation specifications and the resampling settings behind every reported interval.}\label{tab:s-specifications}\\
 \endfirsthead
 \caption*{Named estimation specifications and the resampling settings behind every reported interval. (continued)}\\
@@ -160,18 +160,21 @@ Mapped different-product exact reply & 74 & Inline-eligible & 1.5 \\
 \toprule
 \multicolumn{5}{@{}l}{\textbf{Panel A. Named estimation specifications}} \\
 \midrule
-Analysis & Outcome & Exposure term & PRs / repos & Adjustment \\
+Analysis & \multicolumn{2}{L{0.220\textwidth}}{Exposure term} & PRs / repos & Adjustment \\
 \midrule
-Exact edge, pre-trigger adjusted (primary) & later merge, hour 48 to day 30 & exact reply within 48 h & 1,067 / 469 & exposure plus the pre-trigger control set \\
-Exact edge, route decomposition (secondary) & later merge, hour 48 to day 30 & exact reply within 48 h & 1,067 / 469 & exposure plus the pre-trigger control set, 48-hour ownership route (reference: no observed action) \\
-Specificity: edge vs non-exact discussion & later merge, hour 48 to day 30 & exact edge within 48 h, against other visible discussion & 615 / 300 & exposure plus the pre-trigger control set \\
-Specificity: edge vs any other visible activity & later merge, hour 48 to day 30 & exact edge within 48 h, against other visible discussion & 641 / 309 & exposure plus the pre-trigger control set \\
-Specificity: user edge vs non-exact user discussion & later merge, hour 48 to day 30 & exact user-written edge within 48 h, against other user discussion & 369 / 215 & exposure plus the pre-trigger control set \\
-Four-state response gradient & later merge, hour 48 to day 30 & 48-hour response state & 1,067 / 469 & exposure plus the pre-trigger control set \\
-Ownership route, base controls & later merge, hour 48 to day 30 & 48-hour ownership route (reference: automation, no user event) & 1,733 / 641 & exposure plus author product, reviewer product, trigger channel, calendar month \\
-Ownership route, pre-trigger adjusted & later merge, hour 48 to day 30 & 48-hour ownership route (reference: automation, no user event) & 1,733 / 641 & exposure plus the pre-trigger control set, trigger channel \\
-Prior history: first user bridge & prior review in this repository on another PR & the bridge is not the PR author & 3,603 / 834 & exposure only; no adjustment \\
-Prior history: all 48-hour responders & prior review in this repository on another PR & first responder in the window & 4,814 / 834 & exposure plus the responder is the PR author \\
+\multicolumn{5}{@{}l}{\textbf{Outcome: later merge, hour 48 to day 30}} \\
+Exact edge, pre-trigger adjusted (primary) & \multicolumn{2}{L{0.220\textwidth}}{exact reply within 48 h} & 1,067 / 469 & exposure plus the pre-trigger control set \\
+Exact edge, route decomposition (secondary) & \multicolumn{2}{L{0.220\textwidth}}{exact reply within 48 h} & 1,067 / 469 & exposure plus the pre-trigger control set, 48-hour ownership route (reference: no observed action) \\
+Specificity: edge vs non-exact discussion & \multicolumn{2}{L{0.220\textwidth}}{exact edge within 48 h, against other visible discussion} & 615 / 300 & exposure plus the pre-trigger control set \\
+Specificity: edge vs any other visible activity & \multicolumn{2}{L{0.220\textwidth}}{exact edge within 48 h, against other visible discussion} & 641 / 309 & exposure plus the pre-trigger control set \\
+Specificity: user edge vs non-exact user discussion & \multicolumn{2}{L{0.220\textwidth}}{exact user-written edge within 48 h, against other user discussion} & 369 / 215 & exposure plus the pre-trigger control set \\
+Four-state response gradient & \multicolumn{2}{L{0.220\textwidth}}{48-hour response state} & 1,067 / 469 & exposure plus the pre-trigger control set \\
+Ownership route, base controls & \multicolumn{2}{L{0.220\textwidth}}{48-hour ownership route (reference: automation, no user event)} & 1,733 / 641 & exposure plus author product, reviewer product, trigger channel, calendar month \\
+Ownership route, pre-trigger adjusted & \multicolumn{2}{L{0.220\textwidth}}{48-hour ownership route (reference: automation, no user event)} & 1,733 / 641 & exposure plus the pre-trigger control set, trigger channel \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Outcome: prior review in this repository on another PR}} \\
+Prior history: first user bridge & \multicolumn{2}{L{0.220\textwidth}}{the bridge is not the PR author} & 3,603 / 834 & exposure only; no adjustment \\
+Prior history: all 48-hour responders & \multicolumn{2}{L{0.220\textwidth}}{first responder in the window} & 4,814 / 834 & exposure plus the responder is the PR author \\
 \midrule
 \multicolumn{5}{@{}l}{\textbf{Panel B. Resampling settings behind every reported interval}} \\
 \midrule
@@ -202,15 +205,15 @@ All outcome regressions & None & no resampling & n/a & Cluster-robust normal app
 \setlength{\tabcolsep}{2pt}
 \setlength{\LTpre}{4pt}\setlength{\LTpost}{4pt}
 \renewcommand{\arraystretch}{0.95}
-\begin{longtable}{@{}L{0.124\textwidth}L{0.295\textwidth}L{0.076\textwidth}L{0.086\textwidth}L{0.152\textwidth}L{0.209\textwidth}@{}}
-\caption{RQ1: first public state after each burst threshold, the burst-window convention, ordering diagnostics, and order placebos.}\label{tab:s-burst}\\
+\begin{longtable}{@{}L{0.075\textwidth}L{0.344\textwidth}L{0.076\textwidth}L{0.086\textwidth}L{0.152\textwidth}L{0.209\textwidth}@{}}
+\caption{RQ1: first public state after each burst threshold, the follow-up window, ordering diagnostics, and order placebos.}\label{tab:s-burst}\\
 \endfirsthead
-\caption*{RQ1: first public state after each burst threshold, the burst-window convention, ordering diagnostics, and order placebos. (continued)}\\
+\caption*{RQ1: first public state after each burst threshold, the follow-up window, ordering diagnostics, and order placebos. (continued)}\\
 \endhead
 \toprule
 \multicolumn{6}{@{}l}{\textbf{Panel A. First public state after each rapid-burst threshold}} \\
 \midrule
-Burst (min) & First state & PRs & Share (\%) & Cluster 95\% interval & Median min \\
+Burst min & First state & PRs & Share (\%) & Cluster 95\% interval & Median min \\
 \midrule
 0 & User account & 2,381 & 27.7 & [23.6, 32.5] & 26.8 \\
 0 & Mapped product & 1,305 & 15.2 & [12.7, 17.8] & 4.5 \\
@@ -237,6 +240,15 @@ Burst (min) & First state & PRs & Share (\%) & Cluster 95\% interval & Median mi
 30 & Other bot & 377 & 4.4 & [3.5, 5.4] & 45.7 \\
 30 & Branch movement or untyped & 483 & 5.6 & [4.3, 7.1] & 117.8 \\
 30 & No later action in 7 days & 4,930 & 57.3 & [53.2, 61.1] & n/a \\
+\midrule
+\multicolumn{6}{@{}l}{\textbf{Panel B. Follow-up window sweep, burst held at five minutes}} \\
+\midrule
+\multicolumn{2}{@{}L{0.419\textwidth}}{Follow-up window} & PRs & Acting (\%) & User minus mapped (pp) & Cluster 95\% interval \\
+\midrule
+\multicolumn{2}{@{}L{0.419\textwidth}}{1 day} & 8,621 & 50.5 & +15.7 & [+11.4, +20.4] \\
+\multicolumn{2}{@{}L{0.419\textwidth}}{3 days} & 8,617 & 53.5 & +17.4 & [+13.1, +22.5] \\
+\multicolumn{2}{@{}L{0.419\textwidth}}{\textbf{7 days} (published)} & 8,608 & 55.4 & +18.6 & [+14.3, +23.9] \\
+\multicolumn{2}{@{}L{0.419\textwidth}}{14 days} & 8,581 & 56.7 & +18.9 & [+14.6, +24.3] \\
 \midrule
 \multicolumn{6}{@{}l}{\textbf{Panel C. Ordering diagnostics and leave-one-out checks}} \\
 \midrule
@@ -275,7 +287,7 @@ Ownership persistence & Visible next action: Same ownership layer continues & 3,
 Ownership persistence & Visible next action: Cross-layer handoff (bounce between user and product) & 3,237 start PRs & user 31.9; product 33.0 & -1.1 & [-7.6, +5.7] \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} The denominator in Panel A is 8,608 PRs at every threshold. In Panel B the log gap density has a single dominant mode at 4.25 minutes with no interior antimode below 60 minutes, and the antimode rule finds a burst-region cut in only 16.8\% of repository bootstrap replicates; the change-point rule always returns a value, 0.90 minutes globally, but it marks where responses start arriving rather than where a machine burst ends. State agreement with the five-minute convention ranges from 79.8\% to 91.2\%. In Panel C the two gates checked in every exclusion are that the user-account share stays above the mapped-product share and that no later action within seven days stays the largest state. Because both hold everywhere, the four non-published thresholds are collapsed to their range. The share-range rows report each state at the five-minute threshold, first for repository exclusions and then for product-pair exclusions. These checks show that the ordering is not carried by one repository or one product pair; they do not remove selection into the cohort. In Panel D the deep-transition shares use 924 mapped-first PRs; the same-product placebo uses 495 PRs with a later mapped-product event and preserves each PR's future product composition. Escalation rows compare the observed user-next share with a within-PR order permutation. Ownership rows condition on a visible next action, and their difference column is user-first minus mapped-first.
+\noindent\footnotesize \textit{Note:} The denominator in Panel A is 8,608 PRs at every threshold. Panel B moves the follow-up window while holding the burst at five minutes; its share is over all pull requests in that window's cohort, so pull requests with no action after the wait sit in the denominator, and the published seven days is the conservative end of the sweep rather than its peak. Neither convention is discoverable from the data: the log gap density has a single dominant mode at 4.25 minutes with no interior antimode below 60 minutes, and the antimode rule finds a burst-region cut in only 16.8\% of repository bootstrap replicates; the change-point rule always returns a value, 0.90 minutes globally, but it marks where responses start arriving rather than where a machine burst ends. State agreement with the five-minute convention ranges from 79.8\% to 91.2\%. In Panel C the two gates checked in every exclusion are that the user-account share stays above the mapped-product share and that no later action within seven days stays the largest state. Because both hold everywhere, the four non-published thresholds are collapsed to their range. The share-range rows report each state at the five-minute threshold, first for repository exclusions and then for product-pair exclusions. These checks show that the ordering is not carried by one repository or one product pair; they do not remove selection into the cohort. In Panel D the deep-transition shares use 924 mapped-first PRs; the same-product placebo uses 495 PRs with a later mapped-product event and preserves each PR's future product composition. Escalation rows compare the observed user-next share with a within-PR order permutation. Ownership rows condition on a visible next action, and their difference column is user-first minus mapped-first.
 \endgroup
 
 
@@ -353,44 +365,51 @@ Repository age in days at the first trigger & 70.47 & 71.09 & -0.62 & [-127.63, 
 \setlength{\tabcolsep}{2pt}
 \setlength{\LTpre}{4pt}\setlength{\LTpost}{4pt}
 \renewcommand{\arraystretch}{0.95}
-\begin{longtable}{@{}L{0.108\textwidth}L{0.231\textwidth}L{0.107\textwidth}L{0.146\textwidth}L{0.136\textwidth}L{0.214\textwidth}@{}}
+\begin{longtable}{@{}L{0.335\textwidth}L{0.105\textwidth}L{0.150\textwidth}L{0.136\textwidth}L{0.224\textwidth}@{}}
 \caption{RQ3: the exact-parent addressed edge, specificity controls, the four-state gradient, and the 48-hour ownership routes.}\label{tab:s-addressed-edge}\\
 \endfirsthead
 \caption*{RQ3: the exact-parent addressed edge, specificity controls, the four-state gradient, and the 48-hour ownership routes. (continued)}\\
 \endhead
 \toprule
-\multicolumn{6}{@{}l}{\textbf{Panel A. Addressed edge, specificity controls, and the four-state gradient}} \\
+\multicolumn{5}{@{}l}{\textbf{Panel A. Addressed edge, specificity controls, and the four-state gradient}} \\
 \midrule
-Reply window & Specification or contrast & Compared PRs & Raw merge: compared / reference (\%) & Adjusted difference (pp) & 95\% interval \\
+Specification or contrast & Compared PRs & Raw merge: compared / reference (\%) & Adjusted difference (pp) & 95\% interval \\
 \midrule
-1 h & Pre-trigger adjusted & 62 & 58.1 / 38.5 & +18.0 & [+5.7, +30.4] \\
-1 h & Route decomposition & 62 & 58.1 / 38.5 & +13.0 & [+0.6, +25.5] \\
-6 h & Pre-trigger adjusted & 86 & 57.0 / 38.1 & +18.5 & [+7.4, +29.5] \\
-6 h & Route decomposition & 86 & 57.0 / 38.1 & +12.9 & [+1.4, +24.3] \\
-24 h & Pre-trigger adjusted & 104 & 55.8 / 37.9 & +18.6 & [+8.4, +28.7] \\
-24 h & Route decomposition & 104 & 55.8 / 37.9 & +13.1 & [+2.4, +23.7] \\
-48 h & Pre-trigger adjusted & 109 & 55.0 / 37.9 & +17.3 & [+7.3, +27.4] \\
-48 h & Route decomposition & 109 & 55.0 / 37.9 & +11.6 & [+0.9, +22.3] \\
-48 h & Repository fixed effects & 109 & 55.0 / 37.9 & +18.6 & [+3.7, +33.5] \\
-48 h & Leave one ordered product pair out & at least 70 & n/a & +14.7 to +21.8 & lower bounds +4.1 to +9.9 \\
-48 h & Specificity: exact edge vs non-exact discussion & 109 of 615 & 55.0 / 41.7 & +12.5 & [+1.4, +23.5] \\
-48 h & Specificity: overlap weighting & 109 of 615 & n/a & +11.5 & [+0.3, +22.8] \\
-48 h & Specificity: repository fixed effects & 109 of 615 & n/a & +15.6 & [-4.4, +35.6]; 37 varying repos \\
-48 h & Gradient: exact edge vs no visible activity & 109 vs 426 & 55.0 / 31.0 & +24.2 & [+13.5, +34.9] \\
-48 h & Gradient: non-exact discussion vs no visible activity & 506 vs 426 & 41.7 / 31.0 & +10.0 & [+2.8, +17.3] \\
-48 h & Gradient: movement only vs no visible activity & 26 vs 426 & 76.9 / 31.0 & +38.8 & [+19.8, +57.7] \\
-48 h & Gradient: exact edge vs non-exact discussion & 109 vs 506 & 55.0 / 41.7 & +14.2 & [+3.7, +24.6] \\
+\multicolumn{5}{@{}l}{\textbf{1 h reply window}} \\
+Pre-trigger adjusted & 62 & 58.1 / 38.5 & +18.0 & [+5.7, +30.4] \\
+Route decomposition & 62 & 58.1 / 38.5 & +13.0 & [+0.6, +25.5] \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{6 h reply window}} \\
+Pre-trigger adjusted & 86 & 57.0 / 38.1 & +18.5 & [+7.4, +29.5] \\
+Route decomposition & 86 & 57.0 / 38.1 & +12.9 & [+1.4, +24.3] \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{24 h reply window}} \\
+Pre-trigger adjusted & 104 & 55.8 / 37.9 & +18.6 & [+8.4, +28.7] \\
+Route decomposition & 104 & 55.8 / 37.9 & +13.1 & [+2.4, +23.7] \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{48 h reply window}} \\
+Pre-trigger adjusted & 109 & 55.0 / 37.9 & +17.3 & [+7.3, +27.4] \\
+Route decomposition & 109 & 55.0 / 37.9 & +11.6 & [+0.9, +22.3] \\
+Repository fixed effects & 109 & 55.0 / 37.9 & +18.6 & [+3.7, +33.5] \\
+Leave one ordered product pair out & at least 70 & n/a & +14.7 to +21.8 & lower bounds +4.1 to +9.9 \\
+Specificity: exact edge vs non-exact discussion & 109 of 615 & 55.0 / 41.7 & +12.5 & [+1.4, +23.5] \\
+Specificity: overlap weighting & 109 of 615 & n/a & +11.5 & [+0.3, +22.8] \\
+Specificity: repository fixed effects & 109 of 615 & n/a & +15.6 & [-4.4, +35.6]; 37 varying repos \\
+Gradient: exact edge vs no visible activity & 109 vs 426 & 55.0 / 31.0 & +24.2 & [+13.5, +34.9] \\
+Gradient: non-exact discussion vs no visible activity & 506 vs 426 & 41.7 / 31.0 & +10.0 & [+2.8, +17.3] \\
+Gradient: movement only vs no visible activity & 26 vs 426 & 76.9 / 31.0 & +38.8 & [+19.8, +57.7] \\
+Gradient: exact edge vs non-exact discussion & 109 vs 506 & 55.0 / 41.7 & +14.2 & [+3.7, +24.6] \\
 \midrule
-\multicolumn{6}{@{}l}{\textbf{Panel B. Forty-eight-hour ownership routes and later integration}} \\
+\multicolumn{5}{@{}l}{\textbf{Panel B. Forty-eight-hour ownership routes and later integration}} \\
 \midrule
-Landmark & Route & PRs & Later merge (\%) / median first action (h) & Adjusted difference (pp) & Repository-cluster 95\% interval \\
+Route & PRs & Later merge (\%) / median first action (h) & Adjusted difference (pp) & Repository-cluster 95\% interval \\
 \midrule
-48 h & Automation, no later user event & 314 & 40.1 / 0.09 & Reference & n/a \\
-48 h & Automation then user & 162 & 54.9 / 0.06 & +12.9 & [+3.0, +22.7] \\
-48 h & User first & 467 & 50.1 / 0.51 & +6.1 & [-1.7, +13.9] \\
-48 h & Movement only & 55 & 58.2 / 2.00 & +11.6 & [-6.7, +30.0] \\
-48 h & Other activity & 76 & 39.5 / 0.06 & -1.5 & [-14.5, +11.6] \\
-48 h & No observed action & 659 & 32.2 / n/a & -9.2 & [-15.9, -2.5] \\
+Automation, no later user event & 314 & 40.1 / 0.09 & Reference & n/a \\
+Automation then user & 162 & 54.9 / 0.06 & +12.9 & [+3.0, +22.7] \\
+User first & 467 & 50.1 / 0.51 & +6.1 & [-1.7, +13.9] \\
+Movement only & 55 & 58.2 / 2.00 & +11.6 & [-6.7, +30.0] \\
+Other activity & 76 & 39.5 / 0.06 & -1.5 & [-14.5, +11.6] \\
+No observed action & 659 & 32.2 / n/a & -9.2 & [-15.9, -2.5] \\
 \bottomrule
 \end{longtable}
 \noindent\footnotesize \textit{Note:} The Panel A models use 1,067 inline-trigger PRs in 469 repositories open at hour 48 with a complete 30-day horizon. Specificity rows compare 109 exact-edge PRs with 506 PRs that had public discussion but no exact edge; the gradient rows are one model over the full cohort against the no-visible-activity reference, and its movement-only group holds 26 PRs, so that interval is wide and its point estimate is not a ranking. The discussion control is a structural falsification check, not a causal or semantic-resolution estimate. Panel B is the second pre-landmark signal, on its own wider cohort. The reference is automation with no later user event. Adjustment uses only pre-trigger activity and trigger context. Routes are observed markers, not assigned treatments.
@@ -403,65 +422,97 @@ Landmark & Route & PRs & Later merge (\%) / median first action (h) & Adjusted d
 \setlength{\tabcolsep}{2pt}
 \setlength{\LTpre}{4pt}\setlength{\LTpost}{4pt}
 \renewcommand{\arraystretch}{0.95}
-\begin{longtable}{@{}L{0.094\textwidth}L{0.245\textwidth}L{0.075\textwidth}L{0.123\textwidth}L{0.415\textwidth}@{}}
-\caption{RQ3 robustness: cohort scope, exposure composition, measured balance, sensitivity bounds, and design extensions.}\label{tab:s-sensitivity}\\
+\begin{longtable}{@{}L{0.305\textwidth}L{0.075\textwidth}L{0.123\textwidth}L{0.449\textwidth}@{}}
+\caption{RQ3 robustness: design constants, cohort scope, exposure composition, measured balance, sensitivity bounds, and design extensions.}\label{tab:s-sensitivity}\\
 \toprule
-Check & Item & Estimate & 95\% interval or band & Size and detail \\
+Item & Estimate & 95\% interval or band & Size and detail \\
 \midrule
 \endfirsthead
-\caption*{RQ3 robustness: cohort scope, exposure composition, measured balance, sensitivity bounds, and design extensions. (continued)}\\
+\caption*{RQ3 robustness: design constants, cohort scope, exposure composition, measured balance, sensitivity bounds, and design extensions. (continued)}\\
 \toprule
-Check & Item & Estimate & 95\% interval or band & Size and detail \\
+Item & Estimate & 95\% interval or band & Size and detail \\
 \midrule
 \endhead
-Cohort restriction & Cross-product inline triggers with a 30-day horizon & n/a & n/a & 3,942 PRs, 100.0\% of cross-product inline triggers \\
-Cohort restriction & Closed at or before hour 48 & n/a & n/a & 2,875 PRs, 72.9\% of cross-product inline triggers \\
-Cohort restriction & Merged at or before hour 48 & n/a & n/a & 2,528 PRs, 64.1\% of cross-product inline triggers \\
-Cohort restriction & Still open at hour 48 & n/a & n/a & 1,067 PRs, 27.1\% of cross-product inline triggers \\
-Who writes the edge & PR author's own user account & n/a & n/a & 76 events, 59.4\% of exposure events, on 74 PRs \\
-Who writes the edge & Another user account & n/a & n/a & 29 events, 22.7\% of exposure events, on 26 PRs \\
-Who writes the edge & The triggering product itself & n/a & n/a & 13 events, 10.2\% of exposure events, on 13 PRs \\
-Who writes the edge & An unmapped bot & n/a & n/a & 7 events, 5.5\% of exposure events, on 3 PRs \\
-Who writes the edge & The PR author's product & n/a & n/a & 2 events, 1.6\% of exposure events, on 2 PRs \\
-Who writes the edge & A different mapped product & n/a & n/a & 1 event, 0.8\% of exposure events, on 1 PR \\
-Exposure definition & Any exact parent reply (primary) & +17.3 & [+7.3, +27.4] & 109 exposed PRs, raw later merge 55.0\% \\
-Exposure definition & Exact reply, excluding the triggering product's own reply & +15.9 & [+5.4, +26.3] & 99 exposed PRs, raw later merge 55.6\% \\
-Exposure definition & Exact reply written by a user account & +17.0 & [+6.4, +27.6] & 97 exposed PRs, raw later merge 56.7\% \\
-Exposure definition & Exact reply written by a different mapped product & n/a & n/a & 3 exposed PRs; not modelled: too few \\
-Pre-trigger balance & Log trigger age (h) & -0.066 & -0.118 to -0.059 over 4 windows & at 48 h: edge mean 1.110; no-edge mean 1.234 \\
-Pre-trigger balance & Log pre-trigger events & +0.070 & +0.032 to +0.158 over 4 windows & at 48 h: edge mean 0.970; no-edge mean 0.912 \\
-Pre-trigger balance & Pre-trigger user events & -0.030 & -0.035 to +0.096 over 4 windows & at 48 h: edge mean 0.780; no-edge mean 0.851 \\
-Pre-trigger balance & Pre-trigger bot events & -0.066 & -0.078 to -0.018 over 4 windows & at 48 h: edge mean 1.963; no-edge mean 2.306 \\
-Pre-trigger balance & Pre-trigger decisive reviews & -0.059 & -0.119 to -0.051 over 4 windows & at 48 h: edge mean 0.046; no-edge mean 0.067 \\
-Pre-trigger balance & Pre-trigger branch movements & +0.015 & -0.045 to +0.015 over 4 windows & at 48 h: edge mean 0.229; no-edge mean 0.214 \\
-Propensity overlap & Exact-edge PRs: 0, 5, 25, 50, 75, 95, 100 percentiles (48 h) & n/a & n/a & 0.040; 0.083; 0.155; 0.218; 0.299; 0.690; 0.737 \\
-Propensity overlap & Non-exact-discussion PRs: 0, 5, 25, 50, 75, 95, 100 percentiles (48 h) & n/a & n/a & 0.000; 0.040; 0.089; 0.142; 0.215; 0.307; 0.759 \\
-E-value & 1 h reply window & +18.0 & [+5.7, +30.4] & 62 exposed PRs; risk ratio 1.47; E-value 2.30, limit 1.56 \\
-E-value & 6 h reply window & +18.5 & [+7.4, +29.5] & 86 exposed PRs; risk ratio 1.48; E-value 2.33, limit 1.68 \\
-E-value & 24 h reply window & +18.6 & [+8.4, +28.7] & 104 exposed PRs; risk ratio 1.49; E-value 2.34, limit 1.74 \\
-E-value & 48 h reply window & +17.3 & [+7.3, +27.4] & 109 exposed PRs; risk ratio 1.46; E-value 2.27, limit 1.67 \\
-Tipping point & One binary factor 20 pp more common among edge PRs, 48 h & n/a & n/a & must itself carry 86.7 pp of later merge to remove the point estimate, and 36.3 pp to remove the interval \\
-Tipping point & One binary factor 40 pp more common among edge PRs, 48 h & n/a & n/a & must itself carry 43.4 pp of later merge to remove the point estimate, and 18.1 pp to remove the interval \\
-Negative control & Pre-trigger decisive review, 4 reply windows & -0.0 to -0.0 & [-0.1, +0.1] & 1,067 PRs; every interval covers the null \\
-Negative control & Pre-trigger branch movement, 4 reply windows & +0.0 to +0.0 & [-0.1, +0.1] & 1,067 PRs; every interval covers the null \\
-Negative control & Pre-trigger user event (1 h) & +16.7 & [+4.9, +28.4] & 1,067 PRs; interval excludes the null: residual pre-trigger confounding \\
-Negative control & Pre-trigger user event (6 h) & +5.8 & [-3.9, +15.4] & 1,067 PRs; interval covers the null \\
-Negative control & Pre-trigger user event (24 h) & +8.3 & [-0.7, +17.3] & 1,067 PRs; interval covers the null \\
-Negative control & Pre-trigger user event (48 h) & +7.0 & [-1.7, +15.7] & 1,067 PRs; interval covers the null \\
-Randomisation, unconditional & 48 h reply window (published) & +17.3 & null band [+2.8, +14.4] & two-sided p = 0.001 over 2,000 within-repository permutations across 46 repositories \\
-Randomisation, unconditional & The other three reply windows & n/a & n/a & two-sided p = 0.001 to 0.010 across 32 to 46 re-randomisable repositories \\
-Randomisation, conditional & Re-randomisable repos, repository fixed effects & +16.4 & n/a & 321 PRs in 46 repos; reference mean -0.1 pp over 2,000 permutations; two-sided p = 0.007 \\
-Whole-population discrete-time hazard (odds ratio) & Time only; products and month; full controls & 1.73 to 1.74 & [1.38, 2.18] & odds ratio for merging in the next interval, over 3 control sets; 3,940 PRs, 13,719 periods; p at most 2.5e-06 \\
-Who wrote the edge & Edge written by a prior reviewer of this repository & +31.3 & [+20.0, +42.5] & 64 PRs, raw later merge 71.9\%, against the no-edge reference \\
-Who wrote the edge & Edge written by an account new to this repository & -9.5 & [-26.1, +7.1] & 32 PRs, raw later merge 28.1\%, against the no-edge reference \\
-Who wrote the edge & Edge written by automation & +16.0 & [-12.4, +44.3] & 13 PRs, raw later merge 38.5\%, against the no-edge reference \\
-Who wrote the edge & Prior reviewer minus newcomer: primary & +40.7 & [+22.4, +59.1] & pre-trigger adjusted \\
-Who wrote the edge & Prior reviewer minus newcomer: repository fixed effects & +8.7 & [-16.8, +34.2] & within-repository comparison only \\
-Who wrote the edge & Prior reviewer minus newcomer: leave one ordered product pair out & +40.7 & [+37.1, +42.8] & 21 refits \\
-Who wrote the edge & Prior reviewer minus newcomer: leave one exposed repository out & +40.4 & [+38.1, +43.3] & 76 refits \\
+\multicolumn{4}{@{}l}{\textbf{Landmark sweep, outcome horizon held at 30 days}} \\
+24 hours & +16.7 & [+7.4, +26.0] & 1,264 PRs, 124 exposed, exposed raw later merge 60.5\% \\
+\textbf{48 hours} (published) & +17.3 & [+7.3, +27.4] & 1,067 PRs, 109 exposed, exposed raw later merge 55.0\% \\
+72 hours & +14.3 & [+3.6, +25.0] & 945 PRs, 93 exposed, exposed raw later merge 47.3\% \\
+96 hours & +11.3 & [-0.2, +22.8] & 857 PRs, 83 exposed, exposed raw later merge 41.0\% \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Outcome-horizon sweep, landmark held at 48 hours}} \\
+14 days & +11.2 & [+2.5, +20.0] & 1,294 PRs, 155 exposed, exposed raw later merge 43.9\% \\
+\textbf{30 days} (published) & +17.3 & [+7.3, +27.4] & 1,067 PRs, 109 exposed, exposed raw later merge 55.0\% \\
+60 days & +13.0 & [-2.2, +28.3] & 693 PRs, 46 exposed, exposed raw later merge 56.5\% \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Cohort restriction}} \\
+Cross-product inline triggers with a 30-day horizon & n/a & n/a & 3,942 PRs, 100.0\% of cross-product inline triggers \\
+Closed at or before hour 48 & n/a & n/a & 2,875 PRs, 72.9\% of cross-product inline triggers \\
+Merged at or before hour 48 & n/a & n/a & 2,528 PRs, 64.1\% of cross-product inline triggers \\
+Still open at hour 48 & n/a & n/a & 1,067 PRs, 27.1\% of cross-product inline triggers \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Who writes the exposure reply}} \\
+PR author's own user account & n/a & n/a & 76 events, 59.4\% of exposure events, on 74 PRs \\
+Another user account & n/a & n/a & 29 events, 22.7\% of exposure events, on 26 PRs \\
+The triggering product itself & n/a & n/a & 13 events, 10.2\% of exposure events, on 13 PRs \\
+An unmapped bot & n/a & n/a & 7 events, 5.5\% of exposure events, on 3 PRs \\
+The PR author's product & n/a & n/a & 2 events, 1.6\% of exposure events, on 2 PRs \\
+A different mapped product & n/a & n/a & 1 event, 0.8\% of exposure events, on 1 PR \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Exposure definition}} \\
+Any exact parent reply (primary) & +17.3 & [+7.3, +27.4] & 109 exposed PRs, raw later merge 55.0\% \\
+Exact reply, excluding the triggering product's own reply & +15.9 & [+5.4, +26.3] & 99 exposed PRs, raw later merge 55.6\% \\
+Exact reply written by a user account & +17.0 & [+6.4, +27.6] & 97 exposed PRs, raw later merge 56.7\% \\
+Exact reply written by a different mapped product & n/a & n/a & 3 exposed PRs; not modelled: too few \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Pre-trigger balance}} \\
+Log trigger age (h) & -0.066 & -0.118 to -0.059 over 4 windows & at 48 h: edge mean 1.110; no-edge mean 1.234 \\
+Log pre-trigger events & +0.070 & +0.032 to +0.158 over 4 windows & at 48 h: edge mean 0.970; no-edge mean 0.912 \\
+Pre-trigger user events & -0.030 & -0.035 to +0.096 over 4 windows & at 48 h: edge mean 0.780; no-edge mean 0.851 \\
+Pre-trigger bot events & -0.066 & -0.078 to -0.018 over 4 windows & at 48 h: edge mean 1.963; no-edge mean 2.306 \\
+Pre-trigger decisive reviews & -0.059 & -0.119 to -0.051 over 4 windows & at 48 h: edge mean 0.046; no-edge mean 0.067 \\
+Pre-trigger branch movements & +0.015 & -0.045 to +0.015 over 4 windows & at 48 h: edge mean 0.229; no-edge mean 0.214 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Propensity overlap}} \\
+Exact-edge PRs: 0, 5, 25, 50, 75, 95, 100 percentiles (48 h) & n/a & n/a & 0.040; 0.083; 0.155; 0.218; 0.299; 0.690; 0.737 \\
+Non-exact-discussion PRs: 0, 5, 25, 50, 75, 95, 100 percentiles (48 h) & n/a & n/a & 0.000; 0.040; 0.089; 0.142; 0.215; 0.307; 0.759 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{E-value}} \\
+1 h reply window & +18.0 & [+5.7, +30.4] & 62 exposed PRs; risk ratio 1.47; E-value 2.30, limit 1.56 \\
+6 h reply window & +18.5 & [+7.4, +29.5] & 86 exposed PRs; risk ratio 1.48; E-value 2.33, limit 1.68 \\
+24 h reply window & +18.6 & [+8.4, +28.7] & 104 exposed PRs; risk ratio 1.49; E-value 2.34, limit 1.74 \\
+48 h reply window & +17.3 & [+7.3, +27.4] & 109 exposed PRs; risk ratio 1.46; E-value 2.27, limit 1.67 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Tipping point}} \\
+One binary factor 20 pp more common among edge PRs, 48 h & n/a & n/a & must itself carry 86.7 pp of later merge to remove the point estimate, and 36.3 pp to remove the interval \\
+One binary factor 40 pp more common among edge PRs, 48 h & n/a & n/a & must itself carry 43.4 pp of later merge to remove the point estimate, and 18.1 pp to remove the interval \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Negative control}} \\
+Pre-trigger decisive review, 4 reply windows & -0.0 to -0.0 & [-0.1, +0.1] & 1,067 PRs; every interval covers the null \\
+Pre-trigger branch movement, 4 reply windows & +0.0 to +0.0 & [-0.1, +0.1] & 1,067 PRs; every interval covers the null \\
+Pre-trigger user event (1 h) & +16.7 & [+4.9, +28.4] & 1,067 PRs; interval excludes the null: residual pre-trigger confounding \\
+Pre-trigger user event (6 h) & +5.8 & [-3.9, +15.4] & 1,067 PRs; interval covers the null \\
+Pre-trigger user event (24 h) & +8.3 & [-0.7, +17.3] & 1,067 PRs; interval covers the null \\
+Pre-trigger user event (48 h) & +7.0 & [-1.7, +15.7] & 1,067 PRs; interval covers the null \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Randomisation inference}} \\
+Unconditional, 48 h reply window (published) & +17.3 & null band [+2.8, +14.4] & two-sided p = 0.001 over 2,000 within-repository permutations across 46 repositories \\
+Unconditional, the other three reply windows & n/a & n/a & two-sided p = 0.001 to 0.010 across 32 to 46 re-randomisable repositories \\
+Conditional: re-randomisable repos, repository fixed effects & +16.4 & n/a & 321 PRs in 46 repos; reference mean -0.1 pp over 2,000 permutations; two-sided p = 0.007 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Whole-population discrete-time hazard (odds ratio)}} \\
+Time only; products and month; full controls & 1.73 to 1.74 & [1.38, 2.18] & odds ratio for merging in the next interval, over 3 control sets; 3,940 PRs, 13,719 periods; p at most 2.5e-06 \\
+\addlinespace
+\multicolumn{4}{@{}l}{\textbf{Who wrote the edge: prior reviewer versus newcomer}} \\
+Edge written by a prior reviewer of this repository & +31.3 & [+20.0, +42.5] & 64 PRs, raw later merge 71.9\%, against the no-edge reference \\
+Edge written by an account new to this repository & -9.5 & [-26.1, +7.1] & 32 PRs, raw later merge 28.1\%, against the no-edge reference \\
+Edge written by automation & +16.0 & [-12.4, +44.3] & 13 PRs, raw later merge 38.5\%, against the no-edge reference \\
+Prior reviewer minus newcomer: primary & +40.7 & [+22.4, +59.1] & pre-trigger adjusted \\
+Prior reviewer minus newcomer: repository fixed effects & +8.7 & [-16.8, +34.2] & within-repository comparison only \\
+Prior reviewer minus newcomer: leave one ordered product pair out & +40.7 & [+37.1, +42.8] & 21 refits \\
+Prior reviewer minus newcomer: leave one exposed repository out & +40.4 & [+38.1, +43.3] & 76 refits \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} Unless a row says otherwise, every check uses the 1,067-PR inline-trigger landmark cohort and the pre-trigger adjusted specification. A standardized mean difference is the group difference divided by the pooled standard deviation. E-values are computed on an approximate risk-ratio scale from the adjusted risk difference and the unexposed later-merge rate, and state the minimum association an unmeasured factor would need with both the exact edge and later merge, beyond the measured controls. The bracketed pair on the unconditional randomisation row is the 2.5th to 97.5th percentile of the permuted reference distribution, not a confidence interval, and that distribution is not centred on zero because 423 of 469 repositories contain no exposure variation; the conditional row, which is the one quoted in the article, uses only repositories containing both exposed and unexposed PRs and adds repository fixed effects, so its reference is centred. The whole-population row is an odds ratio from a pooled logistic model with interval indicators and repository-clustered standard errors, on follow-up split into eleven intervals with the edge entering as a time-varying covariate. Among the edge-class rows the fixed-effect row is the decisive one: the gap between a prior reviewer and a newcomer is largely a difference between repositories, not within them, so those rows describe where the signal sits and do not identify a mechanism. None of these checks identifies a causal effect.
+\noindent\footnotesize \textit{Note:} The two sweep blocks move one design constant at a time and hold the others at their published values, re-deriving the primary setting through the same code path each time. The estimate is interval-positive at 24, 48 and 72 hours and at 14 and 30 days, and its interval crosses zero at 96 hours and at 60 days, in both cases on a much smaller cohort, so those are weak evidence of a null rather than evidence of one. The published setting is the maximum of both sweeps, which we state rather than leave to be discovered: the choice was fixed before the sweep was run, but it is the most favourable of the values tried. The equivalent sweep for the RQ1 follow-up window is in the RQ1 table, Panel B, and is the opposite case, where the published value is the conservative end. The bootstrap draw-count sweep behind Figure 4 in the article is in the public artifact. Unless a row says otherwise, every check uses the 1,067-PR inline-trigger landmark cohort and the pre-trigger adjusted specification. A standardized mean difference is the group difference divided by the pooled standard deviation. E-values are computed on an approximate risk-ratio scale from the adjusted risk difference and the unexposed later-merge rate, and state the minimum association an unmeasured factor would need with both the exact edge and later merge, beyond the measured controls. The bracketed pair on the unconditional randomisation row is the 2.5th to 97.5th percentile of the permuted reference distribution, not a confidence interval, and that distribution is not centred on zero because 423 of 469 repositories contain no exposure variation; the conditional row, which is the one quoted in the article, uses only repositories containing both exposed and unexposed PRs and adds repository fixed effects, so its reference is centred. The whole-population row is an odds ratio from a pooled logistic model with interval indicators and repository-clustered standard errors, on follow-up split into eleven intervals with the edge entering as a time-varying covariate. Among the edge-class rows the fixed-effect row is the decisive one: the gap between a prior reviewer and a newcomer is largely a difference between repositories, not within them, so those rows describe where the signal sits and do not identify a mechanism. None of these checks identifies a causal effect.
 \endgroup
 
 
@@ -530,30 +581,35 @@ dropping PRs whose edge was written by an account tripping any heuristic & 1,058
 \setlength{\tabcolsep}{2pt}
 \setlength{\LTpre}{4pt}\setlength{\LTpost}{4pt}
 \renewcommand{\arraystretch}{0.95}
-\begin{longtable}{@{}L{0.236\textwidth}L{0.285\textwidth}L{0.128\textwidth}L{0.314\textwidth}@{}}
+\begin{longtable}{@{}L{0.400\textwidth}L{0.148\textwidth}L{0.404\textwidth}@{}}
 \caption{Issue links and whether a review point is answered, by reviewer relation.}\label{tab:s-task-context}\\
 \toprule
-Group & Condition & Answered & Detail \\
+Condition & Answered & Detail \\
 \midrule
 \endfirsthead
 \caption*{Issue links and whether a review point is answered, by reviewer relation. (continued)}\\
 \toprule
-Group & Condition & Answered & Detail \\
+Condition & Answered & Detail \\
 \midrule
 \endhead
-Reviewer is the same product & No issue link & 1,690 of 7,935 & 21.3\% over 1,533 repositories \\
-Reviewer is the same product & PR body links an issue & 210 of 1,060 & 19.8\% over 310 repositories \\
-Reviewer is a different product & No issue link & 400 of 3,149 & 12.7\% over 837 repositories \\
-Reviewer is a different product & PR body links an issue & 103 of 364 & 28.3\% over 167 repositories \\
-Difference in differences & Thread-root triggers, repository FE & +14.6 pp & [+5.2, +23.9] on 12,508 PRs \\
-Difference in differences & Thread-root triggers, repository and month FE & +13.3 pp & [+4.4, +22.2] on 12,508 PRs \\
-Difference in differences & All inline triggers, repository FE & +15.9 pp & [+6.8, +24.9] on 20,241 PRs \\
-Difference in differences & All inline triggers, repository and month FE & +12.1 pp & [+3.9, +20.4] on 20,241 PRs \\
-Difference in differences & Leave one repository out, 15 refits & +11.4 to +16.1 pp & each drop removes one of the most influential repositories \\
-Difference in differences & Issue-link label shuffled inside each repository & +1.1 pp & null spread 2.7 pp over 1,000 draws; observed +14.6 pp, two-sided p = 0.001 \\
+\multicolumn{3}{@{}l}{\textbf{Reviewer is the same product}} \\
+No issue link & 1,690 of 7,935 & 21.3\% over 1,533 repositories \\
+PR body links an issue & 210 of 1,060 & 19.8\% over 310 repositories \\
+\addlinespace
+\multicolumn{3}{@{}l}{\textbf{Reviewer is a different product}} \\
+No issue link & 400 of 3,149 & 12.7\% over 837 repositories \\
+PR body links an issue & 103 of 364 & 28.3\% over 167 repositories \\
+\addlinespace
+\multicolumn{3}{@{}l}{\textbf{Difference in differences}} \\
+Thread-root triggers, repository FE & +14.6 pp & [+5.2, +23.9] on 12,508 PRs \\
+Thread-root triggers, repository and month FE & +13.3 pp & [+4.4, +22.2] on 12,508 PRs \\
+All inline triggers, repository FE & +15.9 pp & [+6.8, +24.9] on 20,241 PRs \\
+All inline triggers, repository and month FE & +12.1 pp & [+3.9, +20.4] on 20,241 PRs \\
+Leave one repository out, 15 refits & +11.4 to +16.1 pp & each drop removes one of the most influential repositories \\
+Issue-link label shuffled inside each repository & +1.1 pp & null spread 2.7 pp over 1,000 draws; observed +14.6 pp, two-sided p = 0.001 \\
 \bottomrule
 \end{longtable}
-\noindent\footnotesize \textit{Note:} The exposure is a pre-trigger property of the change: the pull request body references an issue. The outcome is a later inline comment whose reply target is the trigger comment, strictly after it and within 48 hours, rebuilt from the raw comment table so that both reviewer relations are measured the same way. The primary population is triggers that open their own thread, with the unrestricted rows reported beside them. Nothing here identifies a causal effect.
+\noindent\footnotesize \textit{Note:} The exposure is an observed property of the change: the pull request body references an issue. The release stores no time for that reference, so it is assumed rather than shown to precede the trigger. The outcome is a later inline comment whose reply target is the trigger comment, strictly after it and within 48 hours, rebuilt from the raw comment table so that both reviewer relations are measured the same way. The primary population is triggers that open their own thread, with the unrestricted rows reported beside them. Nothing here identifies a causal effect.
 \endgroup
 
 
@@ -590,28 +646,33 @@ Difference in differences & Issue-link label shuffled inside each repository & +
 \midrule
 \multicolumn{5}{@{}l}{\textbf{Panel B. External evidence screening}} \\
 \midrule
-Block & Item & Unit or count & Observed & Role or meaning \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{Item} & Unit or count & Observed & Role or meaning \\
 \midrule
-Evidence ladder & GH Archive plus GitHub REST enrichment & One public GitHub event; enriched review comment or PR record & exact edge: YES after REST & Future disjoint time-window replication after REST enrichment; not used in the present estimates \\
-Evidence ladder & SWE-Review-Chat & One PR with ordered general discussion, reviews, inline comments and nested thread replies & exact edge: PARTIAL & Full-corpus topology audit; no independent exact-edge cohort survived overlap exclusion \\
-Evidence ladder & AI-to-AI Code Reviews closed-loop cohorts & One PR-reviewer-product pair & exact edge: NO & Product-pair attribution and trigger-time sensitivity on overlapping public PRs \\
-Evidence ladder & SWE-PRBench & One merged PR plus selected human-written initiating comments; synthetic comment IDs are scoped only within task & exact edge: NO & Semantic codebook and initiating-feedback audit only; reply topology is not preserved \\
-Evidence ladder & SWE-Review-Traj & One decision-correct agentic reviewer trajectory over a generated candidate PR & exact edge: NO & Controlled contrast over generate, review, and revise only; not a field replication \\
-Evidence ladder & GitHub Agentic PR Dataset & One PR, commit, or changed file depending on table & exact edge: NO & Excluded: adds PRs and diffs but no review-response graph \\
-Evidence ladder & Trace Commons Agent Traces & One voluntarily donated coding-agent session & exact edge: NO & Excluded: opt-in private sessions with no stable public PR edge or outcome \\
-SWE-Review-Chat replication gate & Public PR rows scanned & 1,082,529 & n/a & Available corpus \\
-SWE-Review-Chat replication gate & PRs whose author maps by the frozen exact alias list & 5,250 & n/a & Product-aware author support \\
-SWE-Review-Chat replication gate & PRs with a cross-product inline parent & 38 & n/a & Candidate trigger support \\
-SWE-Review-Chat replication gate & PRs where such a parent has a nested reply & 7 & n/a & Seven candidate PRs before overlap removal \\
-SWE-Review-Chat replication gate & Nested children before overlap removal & 18 / 1 / 0 & n/a & Unmapped user / same product / different product \\
-SWE-Review-Chat replication gate & Candidate PRs outside the AIDev full corpus & 0 & n/a & No independent cohort remains \\
-SWE-Review-Chat replication gate & REST-validated 48-hour landmark PRs & 0 & n/a & Replication gate fails \\
-CodAGE attribution concordance & PR overlap & 123 & 11.5\% of landmark cohort & Coverage only \\
-CodAGE attribution concordance & Exact pair of author and reviewer agrees & 119 & 96.7\% of overlapping PRs & Supports product attribution \\
-CodAGE attribution concordance & Trigger time agrees within five minutes & 104 & 99.0\% & Supports event anchoring \\
-CodAGE attribution concordance & Exact-edge exposed PRs & 9 & 7.6\% of exact-pair overlap & Too few for replication \\
-CodAGE attribution concordance & Raw later-merge difference & 119 & +14.6 pp & 95\% interval [-18.6, +47.9] \\
-CodAGE attribution concordance & Pre-trigger-adjusted difference & 119 & +11.1 pp & 95\% interval [-23.9, +46.1] \\
+\multicolumn{5}{@{}l}{\textbf{Evidence ladder}} \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{GH Archive plus GitHub REST enrichment} & One public GitHub event; enriched review comment or PR record & exact edge: YES after REST & Future disjoint time-window replication after REST enrichment; not used in the present estimates \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{SWE-Review-Chat} & One PR with ordered general discussion, reviews, inline comments and nested thread replies & exact edge: PARTIAL & Full-corpus topology audit; no independent exact-edge cohort survived overlap exclusion \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{AI-to-AI Code Reviews closed-loop cohorts} & One PR-reviewer-product pair & exact edge: NO & Product-pair attribution and trigger-time sensitivity on overlapping public PRs \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{SWE-PRBench} & One merged PR plus selected human-written initiating comments; synthetic comment IDs are scoped only within task & exact edge: NO & Semantic codebook and initiating-feedback audit only; reply topology is not preserved \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{SWE-Review-Traj} & One decision-correct agentic reviewer trajectory over a generated candidate PR & exact edge: NO & Controlled contrast over generate, review, and revise only; not a field replication \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{GitHub Agentic PR Dataset} & One PR, commit, or changed file depending on table & exact edge: NO & Excluded: adds PRs and diffs but no review-response graph \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{Trace Commons Agent Traces} & One voluntarily donated coding-agent session & exact edge: NO & Excluded: opt-in private sessions with no stable public PR edge or outcome \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{SWE-Review-Chat replication gate}} \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{Public PR rows scanned} & 1,082,529 & n/a & Available corpus \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{PRs whose author maps by the frozen exact alias list} & 5,250 & n/a & Product-aware author support \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{PRs with a cross-product inline parent} & 38 & n/a & Candidate trigger support \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{PRs where such a parent has a nested reply} & 7 & n/a & Seven candidate PRs before overlap removal \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{Nested children before overlap removal} & 18 / 1 / 0 & n/a & Unmapped user / same product / different product \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{Candidate PRs outside the AIDev full corpus} & 0 & n/a & No independent cohort remains \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{REST-validated 48-hour landmark PRs} & 0 & n/a & Replication gate fails \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{CodAGE attribution concordance}} \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{PR overlap} & 123 & 11.5\% of landmark cohort & Coverage only \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{Exact pair of author and reviewer agrees} & 119 & 96.7\% of overlapping PRs & Supports product attribution \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{Trigger time agrees within five minutes} & 104 & 99.0\% & Supports event anchoring \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{Exact-edge exposed PRs} & 9 & 7.6\% of exact-pair overlap & Too few for replication \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{Raw later-merge difference} & 119 & +14.6 pp & 95\% interval [-18.6, +47.9] \\
+\multicolumn{2}{@{}L{0.367\textwidth}}{Pre-trigger-adjusted difference} & 119 & +11.1 pp & 95\% interval [-23.9, +46.1] \\
 \bottomrule
 \end{longtable}
 \noindent\footnotesize \textit{Note:} Panel A reports structural same-locus review overlap and the frozen semantic gates. Structural co-location and timing do not establish semantic duplication, contradiction, correctness, repair, or coordination. The product-pair generality gate fails because the largest pair exceeds 50 percent. Panel B is the external evidence ladder, the failed replication gate, and the independent attribution concordance. The registry contains 15 screened candidates. Sources are not pooled merely to add rows: a source must preserve the PR, event time, actor, review batch, exact reply parent, and later-state horizon before it can reproduce the declared topology. In the replication-gate block all seven pre-exclusion candidate PRs already occur in the AIDev full corpus, and no GitHub comment or PR body was exported; zero disjoint support is a failed replication gate, not evidence that exact public connections never occur. The concordance block uses an external cohort that was released independently but observes overlapping public GitHub PRs; its 119-PR exact-pair overlap contains only nine exposed PRs, so the merge rows are an appendix sensitivity, not an independent outcome replication or a causal estimate.

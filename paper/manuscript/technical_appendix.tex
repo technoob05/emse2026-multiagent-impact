@@ -27,7 +27,10 @@
 % section order and already maps every claim to its table and page, so a second
 % listing would be the same map twice.
 \raggedbottom
-\setlength{\bibsep}{0.25em}
+% The reference list is a short pointer list, not a second bibliography, so it is
+% set tight: at \small with 0.25em separation it spilled two lines onto a page of
+% its own.
+\setlength{\bibsep}{0em}
 
 \begin{document}
 
@@ -86,14 +89,14 @@ Participation funnel, the load-bearing validation gates, and the column-level le
 Every named estimation specification, its adjustment set, and every resampling setting & \ref{tab:s-specifications} & \pageref{tab:s-specifications} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ1: is there a handoff?}} \\
-First public owner after each burst window, the owner split under nine burst schemes, the tie rule and every leave-one-out exclusion, and the order placebos & \ref{tab:s-burst} & \pageref{tab:s-burst} \\
+First public owner after each burst window, the follow-up-window sweep, the tie rule and every leave-one-out exclusion, and the order placebos & \ref{tab:s-burst} & \pageref{tab:s-burst} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ2: who bridges the boundary?}} \\
 The 13.4-point matched gap, where it lives, prior history of the first user bridges, and the descriptors behind the familiar-replier split & \ref{tab:s-rq2} & \pageref{tab:s-rq2} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ3: who writes the connection, and does it mark a later state?}} \\
 The 17.3-point addressed-edge contrast, reply windows, repository fixed effects, specificity controls, the four-state gradient, and the ownership routes & \ref{tab:s-addressed-edge} & \pageref{tab:s-addressed-edge} \\
-Landmark selection, who writes the edge, stricter edge rules, balance, the E-value of 2.27, tipping grid, negative controls, the conditional shuffle test at $p=0.007$, and the whole-population hazard & \ref{tab:s-sensitivity} & \pageref{tab:s-sensitivity} \\
+The landmark and outcome-horizon sweeps, who writes the edge, stricter edge rules, balance, the E-value of 2.27, tipping grid, negative controls, the conditional shuffle test at $p=0.007$, and the whole-population hazard & \ref{tab:s-sensitivity} & \pageref{tab:s-sensitivity} \\
 Placebo exposures, what the reply text says, and whether a person or a script wrote it & \ref{tab:s-specificity} & \pageref{tab:s-specificity} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{RQ4: what makes someone answer across the boundary?}} \\
@@ -182,7 +185,7 @@ their submitted-review identifier; row order is never a join key.}
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=\linewidth]{FigS3.pdf}
+\includegraphics[width=\linewidth]{FigS2.pdf}
 \caption{Where the addressed edge can reach, and where it cannot. GitHub
 records review in three places and only inline comments store a reply target,
 so only they can produce an addressed edge. Panel A shows the split twice: by
@@ -292,22 +295,30 @@ permutation.
 
 Table~\ref{tab:s-burst} carries the whole RQ1 record in four panels.
 
-\subsection{Thresholds and the burst-window convention}\label{app:ordering}
+\subsection{Thresholds and the window conventions}\label{app:ordering}
 
 Panel A repeats the first-owner classification after excluding events in the
 first 0, 1, 5, 10, or 30 minutes, with repository-cluster intervals. Actor
 states are mutually exclusive: user account, mapped product, other bot, branch
 movement or untyped activity, and no later action.
 
-Panel B settles a question the article raises and does not have room to answer:
-whether the five-minute window is discoverable from the data. It is not, so the
-window stays a declared convention and the owner split is re-run under nine
-schemes, including the cuts a change-point rule selects on its own and
-per-product cuts. Measured over the whole cohort, so that pull requests with no action after the
-wait sit in the denominator, the user-minus-mapped gap moves between 12.5 and
-18.6 points; measured only over pull requests that do act, which is the
-denominator the article and Figure~S4 use, it moves between 19.4 and 41.1; its sign and its repository-clustered
-interval never change.
+Two windows are declared conventions rather than discovered cuts, and neither
+changes the answer. The first is the five-minute burst. It is not discoverable
+from the data, as the note to Table~\ref{tab:s-burst} and
+Figure~\ref{fig:s-burst-window} together show, so the owner split is re-run
+under nine schemes, including the cuts a change-point rule selects on its own
+and per-product cuts. Measured over the whole cohort, so that pull requests with
+no action after the wait sit in the denominator, the user-minus-mapped gap moves
+between 12.5 and 18.6 points; measured only over pull requests that do act,
+which is the denominator the article and Figure~\ref{fig:s-burst-window} use, it
+moves between 19.4 and 41.1; its sign and its repository-clustered interval
+never change.
+
+The second is the seven-day follow-up window, and Panel B moves it to 1, 3, 7,
+and 14 days with the burst held at five minutes. The user-minus-mapped gap runs
+from 15.7 to 18.9 points and never reaches zero. Unlike the RQ3 constants, the
+published value here is the conservative end of the sweep: a wider window would
+strengthen the result rather than weaken it.
 
 Panel C reports the tie rule and the leave-one-out evidence. The priority order
 is user account, then mapped product, then other bot, then branch movement or
@@ -341,7 +352,7 @@ third conditions on a visible next action and asks whether ownership persists.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=\linewidth]{FigS4.pdf}
+\includegraphics[width=\linewidth]{FigS3.pdf}
 \caption{The burst window is a convention, and the result survives all of
 them. Panel A gives the lead of user accounts over mapped products among first
 post-burst owners, under all nine schemes: the five fixed windows, two global
@@ -377,8 +388,7 @@ One outcome in Panel A needs a smaller denominator than the rest, and the
 article states the conclusion without the counts. Whether the review point itself
 is answered can only be observed when the trigger opens its own inline thread,
 because only a thread root can be named by a reply target
-(Section~
-ef{app:reply-target}). Across the 546 matched pairs the split is: 293
+(Section~\ref{app:reply-target}). Across the 546 matched pairs the split is: 293
 pairs where neither trigger is an inline comment at all, so the outcome is
 impossible on both sides; 1 pair where both triggers sit mid-thread, likewise
 impossible on both sides; 11 pairs where the cross-product trigger opens a thread
@@ -434,67 +444,20 @@ PRs, on a very wide interval. That is one reason the active-discussion subset
 rather than the four-state model remains the primary specificity contrast, and
 the gradient is not an ordering of response types.
 
-\subsection{Where the design constants came from}\label{app:constants}
-
-Three constants decide who is in the RQ3 cohort and when its outcome is read.
-None of them is discoverable from the data, so each was swept. The article gives
-the verdicts; these are the rows behind them. Every sweep re-derives the primary
-setting through the same code path and stops if it fails to reproduce the
-published estimate.
-
-\begin{table}[!ht]
-\caption{Sensitivity of the RQ3 later-merge estimate to the landmark and to the
-outcome horizon, and of the RQ1 owner split to the follow-up window. Each block
-moves one constant and holds the others at their published values. The published
-setting is in bold.}
-\label{tab:s-constants}
-\small
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrl@{}}
-\toprule
-Setting & Cohort & Exposed & Estimate & 95\% interval \\
-\midrule
-\multicolumn{5}{@{}l}{\textit{Landmark, horizon held at 30 days (RQ3)}} \\
-24 hours & 1,264 & 124 & $+16.7$ & $[+7.4, +26.0]$ \\
-\textbf{48 hours} & \textbf{1,067} & \textbf{109} & $\mathbf{+17.3}$ & $\mathbf{[+7.3, +27.4]}$ \\
-72 hours & 945 & 93 & $+14.3$ & $[+3.6, +25.0]$ \\
-96 hours & 857 & 83 & $+11.3$ & $[-0.2, +22.8]$ \\
-\addlinespace
-\multicolumn{5}{@{}l}{\textit{Outcome horizon, landmark held at 48 hours (RQ3)}} \\
-14 days & 1,294 & 155 & $+11.2$ & $[+2.5, +20.0]$ \\
-\textbf{30 days} & \textbf{1,067} & \textbf{109} & $\mathbf{+17.3}$ & $\mathbf{[+7.3, +27.4]}$ \\
-60 days & 693 & 46 & $+13.0$ & $[-2.2, +28.3]$ \\
-\addlinespace
-\multicolumn{5}{@{}l}{\textit{Follow-up window, burst held at five minutes (RQ1)}} \\
-1 day & 8,621 & --- & $+15.7$ & $[+11.4, +20.4]$ \\
-3 days & 8,617 & --- & $+17.4$ & $[+13.1, +22.5]$ \\
-\textbf{7 days} & \textbf{8,608} & --- & $\mathbf{+18.6}$ & $\mathbf{[+14.3, +23.9]}$ \\
-14 days & 8,581 & --- & $+18.9$ & $[+14.6, +24.3]$ \\
-\bottomrule
-\end{tabular*}
-\end{table}
-\FloatBarrier
-
-\noindent\footnotesize \textit{Note:} The RQ3 blocks report the adjusted
-later-merge contrast in percentage points from the primary pre-trigger
-specification. The RQ1 block reports the user-account minus mapped-product share
-of the first post-burst owner among pull requests that have an action left, so
-its cohort column is the trigger cohort rather than an exposed subset and no
-exposed count applies. Two things a reader should take from this table. The RQ3
-estimate is significant at 24, 48 and 72 hours and at 14 and 30 days, and its
-interval crosses zero at 96 hours and at 60 days, in both cases on a much smaller
-cohort, so those are weak evidence of a null rather than evidence of one. And the
-published setting is the maximum of both RQ3 sweeps, which we state rather than
-leave to be discovered: the choice was fixed before the sweep was run, but it is
-the most favourable of the values tried. The RQ1 window is the opposite case,
-where the published seven days is the conservative end and a wider window would
-strengthen the result. Full rows, including the bootstrap draw-count sweep behind
-Figure~4 in the article, are in the public artifact.
-\normalsize
-
 \subsection{Scope, balance, bounds, and design extensions}\label{app:bounds}
 
-Table~\ref{tab:s-sensitivity} collects every RQ3 robustness check in one place,
-with a leading column naming which check each row is.
+Three constants decide who is in the RQ3 cohort and when its outcome is read:
+the landmark, the outcome horizon, and the reply window. None of them is
+discoverable from the data, so each was swept, and the sweeps are the first two
+blocks of Table~\ref{tab:s-sensitivity} rather than a table of their own,
+because moving a design constant is a robustness check on the same estimate as
+every other row there. The article gives the verdicts; those blocks are the rows
+behind them, and the note states plainly that the published setting is the
+maximum of both sweeps. The equivalent RQ1 sweep, over the follow-up window, is
+in Table~\ref{tab:s-burst}, Panel~B.
+
+Table~\ref{tab:s-sensitivity} collects every RQ3 robustness check in one place.
+A bold heading opens each block and names the check its rows belong to.
 
 \paragraph{Cohort and exposure composition.} The cohort rows show that the
 1,067-PR cohort is the 27\% of cross-product inline-trigger PRs still open at

@@ -894,9 +894,12 @@ first reply arrives, so no time before a reply is credited to it, and the shaded
 areas are 95\% intervals from resampling repositories. For the first two and a
 half days the no-reply group sits highest, because a pull request still being
 replied to has not merged yet. The two replied groups are read on the same grid
-of 73 time points, finer over the first two days and coarser afterwards, and
-they overlap at every one, which is the visual form of the result that where a
-reply is anchored does not separate them.}
+of 73 time points, finer over the first two days and coarser afterwards. Their
+lines are not identical: the off-target group runs above the on-target one at 68
+of the 73 points, by 4.3 points on average and 7.2 at the widest. What matters is
+that their intervals overlap at every single point, so the trace cannot tell the
+two apart. That is the visual form of the result: where a reply is anchored does
+not separate them.}
 \label{fig:relay}
 \end{figure}
 
@@ -1157,18 +1160,16 @@ estimate; the adjusted figure below is a difference of 13.3 points.
 \centering
 \includegraphics[width=\linewidth]{Fig6.pdf}
 \caption{Whether naming an issue helps depends on who is reviewing. Panel A
-follows pull requests reviewed by the product that wrote them and those reviewed
-by a different one, with the count behind each point. Within a product the line
-is flat; across a boundary it climbs. The dotted line is not data: it marks where
-the cross-product group would have landed had the link moved it as much as it
-moved the same-product group. The shaded region between that line and the
-observed one is therefore the raw contrast, 17.1 points, and not an uncertainty
-band. Panel B reports the same contrast after comparing inside the same
-repository and month, giving 13.3 points; the bar is its 95\% interval, the
-diamond the adjusted estimate, the hollow mark the raw 17.1, and the darker inner
-band the range left when any one repository is dropped. Both panels keep only
-triggers that open their own thread. These are links in observed data, not
-causes.}
+follows review points on pull requests reviewed by the product that wrote them
+and by a different one, with the count behind each of the four rates. Within a
+product the line is flat, 21.3\% to 19.8\%; across a product boundary it climbs,
+12.7\% to 28.3\%. Panel B puts those two changes, $-1.5$ and $+15.6$ points, on
+one ruler, so the distance between them is the raw contrast of 17.1 points. The
+diamond below is that same contrast after comparing inside the same repository
+and the same month, 13.3 points, with its 95\% interval and, darker inside it,
+the range left when any one of the fifteen most exposed repositories is dropped.
+Both panels keep only triggers that open their own thread. These are links in
+observed data, not causes.}
 \label{fig:context}
 \end{figure}
 

@@ -264,7 +264,7 @@ def draw_schema(ax: plt.Axes, panel: str = "") -> None:
     add_box(ax, 2, top_y, 19, top_h, "all_user", ("400k users",),
             PALE_STEEL_FILL, STEEL)
     add_box(ax, 33, top_y, 30, top_h, "all_pull_request",
-            ("7.69M PRs", "agent, state, time"), PALE_STEEL_FILL, STEEL)
+            ("7.69M PRs",), PALE_STEEL_FILL, STEEL)
     add_box(ax, 75, top_y, 23, top_h, "all_repository", ("957k repos",),
             PALE_STEEL_FILL, STEEL)
 
@@ -296,20 +296,16 @@ def draw_schema(ax: plt.Axes, panel: str = "") -> None:
     ax.text(50, hub_top - (BOX_TITLE_PT * 1.32 + BODY_PT * 0.65) * unit,
             "361k PRs", ha="center", va="center", fontsize=BODY_PT,
             color=SLATE, zorder=4)
-    ax.text(50, hub_top - (BOX_TITLE_PT * 1.32 + BODY_PT * 1.95) * unit,
-            "rich-table hub", ha="center", va="center", fontsize=BODY_PT,
-            color=SLATE, zorder=4)
-
     add_box(ax, left_x, rows[0][0], left_w, 13, "pr_timeline",
-            ("lifecycle events",), PALE_GREY_FILL, SLATE)
+            (), PALE_GREY_FILL, SLATE)
     add_box(ax, left_x, rows[1][0], left_w, 13, "discussion tables",
             ("pr_comments", "pr_reviews"), PALE_GOLD_FILL, GOLD_INK,
             BOX_TITLE_SMALL_PT)
     add_box(ax, left_x, rows[2][0], left_w, 13, "pr_review_comments",
-            ("inline threads",), PALE_GOLD_FILL, GOLD_INK, BOX_TITLE_SMALL_PT)
+            (), PALE_GOLD_FILL, GOLD_INK, BOX_TITLE_SMALL_PT)
 
     add_box(ax, right_x, rows[0][0], right_w, 13, "repository",
-            ("project context",), PALE_GREY_FILL, SLATE)
+            (), PALE_GREY_FILL, SLATE)
     add_box(ax, right_x, rows[1][0], right_w, 13, "code-change tables",
             ("pr_commits", "pr_commit_details"), PALE_GREY_FILL, SLATE,
             BOX_TITLE_SMALL_PT)
@@ -449,14 +445,14 @@ def draw_coverage(ax: plt.Axes, coverage: pd.DataFrame, panel: str = "") -> None
 
 
 def _texts(fig: plt.Figure) -> list[Text]:
-    found: list[Text] = [t for t in fig.texts]
-    for ax in fig.axes:
-        found.extend(ax.texts)
-        found.append(ax.title)
-        if ax.axison:
-            found.extend(ax.get_xticklabels())
-            found.extend(ax.get_yticklabels())
-    return [t for t in found if t.get_visible() and t.get_text().strip()]
+    """Delegate to the house sweep, so both gates see the same set of artists.
+
+    This used to gather its own list and forgot two homes matplotlib keeps
+    lettering in: the axis labels and anything inside a legend. A figure could
+    therefore print an axis label on top of a note, or a legend entry below the
+    size floor, and the build would pass.
+    """
+    return house.lettering(fig)
 
 
 def assert_layout(fig: plt.Figure, stem: str) -> None:
@@ -464,6 +460,7 @@ def assert_layout(fig: plt.Figure, stem: str) -> None:
     renderer = fig.canvas.get_renderer()
     px = fig.dpi / POINTS_PER_INCH
     canvas = fig.bbox
+    margin = house.MIN_EDGE_POINTS * px
 
     texts = _texts(fig)
     boxes = []
@@ -474,20 +471,26 @@ def assert_layout(fig: plt.Figure, stem: str) -> None:
                 f"below the {MIN_TEXT_POINTS} pt print floor"
             )
         box = text.get_window_extent(renderer=renderer)
-        if (box.x0 < canvas.x0 - 0.6 or box.x1 > canvas.x1 + 0.6
-                or box.y0 < canvas.y0 - 0.6 or box.y1 > canvas.y1 + 0.6):
+        clearance = min(box.x0 - canvas.x0, canvas.x1 - box.x1,
+                        box.y0 - canvas.y0, canvas.y1 - box.y1)
+        if clearance < margin:
             raise AssertionError(
-                f"{stem}: text '{text.get_text()[:32]}' is clipped by the canvas"
+                f"{stem}: text '{text.get_text()[:32]}' comes within "
+                f"{clearance / px:.2f} pt of the canvas edge"
             )
         boxes.append((text.get_text(), box))
 
+    # A near miss prints as a collision, so the gate asks for a real gap and
+    # not merely for non-intersection. Same margins as the house gate.
+    gap_x = 2.0 * px
+    gap_y = 1.0 * px
     for index, (first_label, first) in enumerate(boxes):
         for second_label, second in boxes[index + 1:]:
-            if (min(first.x1, second.x1) - max(first.x0, second.x0) > 1.0
-                    and min(first.y1, second.y1) - max(first.y0, second.y0) > 1.0):
+            if (min(first.x1, second.x1) - max(first.x0, second.x0) > -gap_x
+                    and min(first.y1, second.y1) - max(first.y0, second.y0) > -gap_y):
                 raise AssertionError(
                     f"{stem}: texts '{first_label[:24]}' and "
-                    f"'{second_label[:24]}' overlap"
+                    f"'{second_label[:24]}' overlap or sit too close to read apart"
                 )
 
     pad = 1.6 * px
@@ -722,8 +725,11 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
         "triggers": int(triggers["trigger_prs"].sum()),
     }
 
-    fig = house.new_figure(4.20)
-    layout = house.Layout(left=0.205, right=0.972, top=0.925, bottom=0.175, gap=0.130)
+    fig = house.new_figure(4.35)
+    # Panel A's axis label and Panel B's heading share the band between the
+    # panels; at gap 0.130 they were touching. The gate could not see it while
+    # left-aligned panel titles were invisible to it.
+    layout = house.Layout(left=0.205, right=0.972, top=0.928, bottom=0.170, gap=0.175)
     top_rect, bottom_rect = layout.rects((1.0, 0.34))
 
     ax = fig.add_axes(top_rect)
@@ -873,16 +879,11 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
     key_axes.set_xlim(0, 100)
     key_axes.set_ylim(0, 10)
     key_axes.axis("off")
-    heading = key_axes.text(0.0, 5.0, "Review channel:", ha="left", va="center",
-                            fontsize=8.0, color=house.SLATE)
-    key_axes.figure.canvas.draw()
-    start = key_axes.transData.inverted().transform(
-        (heading.get_window_extent(
-            renderer=key_axes.figure.canvas.get_renderer()).x1, 0.0)
-    )[0] + 2.4
+    # The three names are the key; a heading saying they are channels only
+    # repeats the axis labels, which already say what is being counted.
     house.swatch_key(
         key_axes,
-        start,
+        0.0,
         5.0,
         tuple(
             (
@@ -1040,16 +1041,6 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     ax.axvspan(0.0, nearest, color=house.PALE_STEEL, alpha=0.45, zorder=0, linewidth=0)
     bounds = (min(y_positions) - 1.05, max(y_positions) + 1.35)
     ax.text(
-        0.9,
-        bounds[0] + 0.06,
-        "no interval reaches zero",
-        ha="left",
-        va="bottom",
-        fontsize=8.0,
-        color=house.SLATE,
-        zorder=4,
-    )
-    ax.text(
         CUT_COLUMN,
         max(y_positions) + 0.80,
         "cut (min)",
@@ -1067,8 +1058,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     ax.set_xlim(-24.0, max(highs) + 4.0)
     ax.set_xticks([0, 10, 20, 30, 40, 50])
     ax.set_xlabel(
-        "User account " + house.MINUS + " mapped product, share of PRs\n"
-        "with a post-burst action (pp, 95% cluster CI)"
+        "User account " + house.MINUS + " mapped product (pp, 95% cluster CI)"
     )
     house.panel_title(ax, "A", "The same owner leads under every window")
     house.category_axis(ax)
@@ -1113,10 +1103,13 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
         color=house.STEEL,
         zorder=4,
     )
+    # Lifted clear of the density curve, of the window rules below it and of
+    # the antimode rule it names: at 16% of the panel height it was reading as
+    # a label glued to all three.
     ax.text(
-        antimode / 1.25,
-        top * 0.16,
-        f"only valley: {antimode / 60.0:.1f} h, overnight",
+        antimode / 1.35,
+        top * 0.36,
+        f"only valley, {antimode / 60.0:.1f} h",
         ha="right",
         va="bottom",
         fontsize=8.0,
@@ -1128,12 +1121,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     ax.set_xticks([0.1, 1, 10, 100, 1000, 10000])
     ax.set_xticklabels(["0.1", "1", "10", "100", "1,000", "10,000"])
     ax.set_yticks([])
-    ax.set_xlabel(
-        "Minutes to the next public event (log scale)\n"
-        f"median {float(shape['quantile_50_minutes']):.1f} min, "
-        f"{float(shape['share_of_prs_with_gap_at_or_below_5_minutes']) * 100:.1f}% "
-        "within 5 min"
-    )
+    ax.set_xlabel("Minutes to the next public event (log scale)")
     ax.set_ylabel("Density per\nlog" + "₁₀" + " minute")
     house.panel_title(ax, "B", "No cut is privileged by the data")
     house.clean_axis(ax, "y")
@@ -1244,7 +1232,7 @@ def main() -> None:
     save(schema_fig, args.output_dir, "dataset_schema_and_joins")
 
     coverage_fig = plt.figure(figsize=(FIGURE_WIDTH, 3.20))
-    coverage_ax = coverage_fig.add_axes([0.185, 0.105, 0.795, 0.760])
+    coverage_ax = coverage_fig.add_axes([0.185, 0.105, 0.795, 0.730])
     draw_coverage(coverage_ax, coverage)
     save(coverage_fig, args.output_dir, "dataset_feature_coverage")
 

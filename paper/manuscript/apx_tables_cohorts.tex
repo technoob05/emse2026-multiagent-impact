@@ -63,7 +63,7 @@ Mapped different-product exact reply & 74 & Inline-eligible & 1.5 \\
 \setlength{\tabcolsep}{2pt}
 \setlength{\LTpre}{4pt}\setlength{\LTpost}{4pt}
 \renewcommand{\arraystretch}{0.95}
-\begin{longtable}{@{}L{0.16\textwidth}L{0.141\textwidth}L{0.123\textwidth}L{0.226\textwidth}L{0.302\textwidth}@{}}
+\begin{longtable}{@{}L{0.280\textwidth}L{0.130\textwidth}L{0.090\textwidth}L{0.190\textwidth}L{0.260\textwidth}@{}}
 \caption{Named estimation specifications and the resampling settings behind every reported interval.}\label{tab:s-specifications}\\
 \endfirsthead
 \caption*{Named estimation specifications and the resampling settings behind every reported interval. (continued)}\\
@@ -71,18 +71,21 @@ Mapped different-product exact reply & 74 & Inline-eligible & 1.5 \\
 \toprule
 \multicolumn{5}{@{}l}{\textbf{Panel A. Named estimation specifications}} \\
 \midrule
-Analysis & Outcome & Exposure term & PRs / repos & Adjustment \\
+Analysis & \multicolumn{2}{L{0.220\textwidth}}{Exposure term} & PRs / repos & Adjustment \\
 \midrule
-Exact edge, pre-trigger adjusted (primary) & later merge, hour 48 to day 30 & exact reply within 48 h & 1,067 / 469 & exposure plus the pre-trigger control set \\
-Exact edge, route decomposition (secondary) & later merge, hour 48 to day 30 & exact reply within 48 h & 1,067 / 469 & exposure plus the pre-trigger control set, 48-hour ownership route (reference: no observed action) \\
-Specificity: edge vs non-exact discussion & later merge, hour 48 to day 30 & exact edge within 48 h, against other visible discussion & 615 / 300 & exposure plus the pre-trigger control set \\
-Specificity: edge vs any other visible activity & later merge, hour 48 to day 30 & exact edge within 48 h, against other visible discussion & 641 / 309 & exposure plus the pre-trigger control set \\
-Specificity: user edge vs non-exact user discussion & later merge, hour 48 to day 30 & exact user-written edge within 48 h, against other user discussion & 369 / 215 & exposure plus the pre-trigger control set \\
-Four-state response gradient & later merge, hour 48 to day 30 & 48-hour response state & 1,067 / 469 & exposure plus the pre-trigger control set \\
-Ownership route, base controls & later merge, hour 48 to day 30 & 48-hour ownership route (reference: automation, no user event) & 1,733 / 641 & exposure plus author product, reviewer product, trigger channel, calendar month \\
-Ownership route, pre-trigger adjusted & later merge, hour 48 to day 30 & 48-hour ownership route (reference: automation, no user event) & 1,733 / 641 & exposure plus the pre-trigger control set, trigger channel \\
-Prior history: first user bridge & prior review in this repository on another PR & the bridge is not the PR author & 3,603 / 834 & exposure only; no adjustment \\
-Prior history: all 48-hour responders & prior review in this repository on another PR & first responder in the window & 4,814 / 834 & exposure plus the responder is the PR author \\
+\multicolumn{5}{@{}l}{\textbf{Outcome: later merge, hour 48 to day 30}} \\
+Exact edge, pre-trigger adjusted (primary) & \multicolumn{2}{L{0.220\textwidth}}{exact reply within 48 h} & 1,067 / 469 & exposure plus the pre-trigger control set \\
+Exact edge, route decomposition (secondary) & \multicolumn{2}{L{0.220\textwidth}}{exact reply within 48 h} & 1,067 / 469 & exposure plus the pre-trigger control set, 48-hour ownership route (reference: no observed action) \\
+Specificity: edge vs non-exact discussion & \multicolumn{2}{L{0.220\textwidth}}{exact edge within 48 h, against other visible discussion} & 615 / 300 & exposure plus the pre-trigger control set \\
+Specificity: edge vs any other visible activity & \multicolumn{2}{L{0.220\textwidth}}{exact edge within 48 h, against other visible discussion} & 641 / 309 & exposure plus the pre-trigger control set \\
+Specificity: user edge vs non-exact user discussion & \multicolumn{2}{L{0.220\textwidth}}{exact user-written edge within 48 h, against other user discussion} & 369 / 215 & exposure plus the pre-trigger control set \\
+Four-state response gradient & \multicolumn{2}{L{0.220\textwidth}}{48-hour response state} & 1,067 / 469 & exposure plus the pre-trigger control set \\
+Ownership route, base controls & \multicolumn{2}{L{0.220\textwidth}}{48-hour ownership route (reference: automation, no user event)} & 1,733 / 641 & exposure plus author product, reviewer product, trigger channel, calendar month \\
+Ownership route, pre-trigger adjusted & \multicolumn{2}{L{0.220\textwidth}}{48-hour ownership route (reference: automation, no user event)} & 1,733 / 641 & exposure plus the pre-trigger control set, trigger channel \\
+\addlinespace
+\multicolumn{5}{@{}l}{\textbf{Outcome: prior review in this repository on another PR}} \\
+Prior history: first user bridge & \multicolumn{2}{L{0.220\textwidth}}{the bridge is not the PR author} & 3,603 / 834 & exposure only; no adjustment \\
+Prior history: all 48-hour responders & \multicolumn{2}{L{0.220\textwidth}}{first responder in the window} & 4,814 / 834 & exposure plus the responder is the PR author \\
 \midrule
 \multicolumn{5}{@{}l}{\textbf{Panel B. Resampling settings behind every reported interval}} \\
 \midrule

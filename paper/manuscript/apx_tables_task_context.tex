@@ -6,27 +6,32 @@
 \setlength{\tabcolsep}{2pt}
 \setlength{\LTpre}{4pt}\setlength{\LTpost}{4pt}
 \renewcommand{\arraystretch}{0.95}
-\begin{longtable}{@{}L{0.236\textwidth}L{0.285\textwidth}L{0.128\textwidth}L{0.314\textwidth}@{}}
+\begin{longtable}{@{}L{0.400\textwidth}L{0.148\textwidth}L{0.404\textwidth}@{}}
 \caption{Issue links and whether a review point is answered, by reviewer relation.}\label{tab:s-task-context}\\
 \toprule
-Group & Condition & Answered & Detail \\
+Condition & Answered & Detail \\
 \midrule
 \endfirsthead
 \caption*{Issue links and whether a review point is answered, by reviewer relation. (continued)}\\
 \toprule
-Group & Condition & Answered & Detail \\
+Condition & Answered & Detail \\
 \midrule
 \endhead
-Reviewer is the same product & No issue link & 1,690 of 7,935 & 21.3\% over 1,533 repositories \\
-Reviewer is the same product & PR body links an issue & 210 of 1,060 & 19.8\% over 310 repositories \\
-Reviewer is a different product & No issue link & 400 of 3,149 & 12.7\% over 837 repositories \\
-Reviewer is a different product & PR body links an issue & 103 of 364 & 28.3\% over 167 repositories \\
-Difference in differences & Thread-root triggers, repository FE & +14.6 pp & [+5.2, +23.9] on 12,508 PRs \\
-Difference in differences & Thread-root triggers, repository and month FE & +13.3 pp & [+4.4, +22.2] on 12,508 PRs \\
-Difference in differences & All inline triggers, repository FE & +15.9 pp & [+6.8, +24.9] on 20,241 PRs \\
-Difference in differences & All inline triggers, repository and month FE & +12.1 pp & [+3.9, +20.4] on 20,241 PRs \\
-Difference in differences & Leave one repository out, 15 refits & +11.4 to +16.1 pp & each drop removes one of the most influential repositories \\
-Difference in differences & Issue-link label shuffled inside each repository & +1.1 pp & null spread 2.7 pp over 1,000 draws; observed +14.6 pp, two-sided p = 0.001 \\
+\multicolumn{3}{@{}l}{\textbf{Reviewer is the same product}} \\
+No issue link & 1,690 of 7,935 & 21.3\% over 1,533 repositories \\
+PR body links an issue & 210 of 1,060 & 19.8\% over 310 repositories \\
+\addlinespace
+\multicolumn{3}{@{}l}{\textbf{Reviewer is a different product}} \\
+No issue link & 400 of 3,149 & 12.7\% over 837 repositories \\
+PR body links an issue & 103 of 364 & 28.3\% over 167 repositories \\
+\addlinespace
+\multicolumn{3}{@{}l}{\textbf{Difference in differences}} \\
+Thread-root triggers, repository FE & +14.6 pp & [+5.2, +23.9] on 12,508 PRs \\
+Thread-root triggers, repository and month FE & +13.3 pp & [+4.4, +22.2] on 12,508 PRs \\
+All inline triggers, repository FE & +15.9 pp & [+6.8, +24.9] on 20,241 PRs \\
+All inline triggers, repository and month FE & +12.1 pp & [+3.9, +20.4] on 20,241 PRs \\
+Leave one repository out, 15 refits & +11.4 to +16.1 pp & each drop removes one of the most influential repositories \\
+Issue-link label shuffled inside each repository & +1.1 pp & null spread 2.7 pp over 1,000 draws; observed +14.6 pp, two-sided p = 0.001 \\
 \bottomrule
 \end{longtable}
 \noindent\footnotesize \textit{Note:} The exposure is an observed property of the change: the pull request body references an issue. The release stores no time for that reference, so it is assumed rather than shown to precede the trigger. The outcome is a later inline comment whose reply target is the trigger comment, strictly after it and within 48 hours, rebuilt from the raw comment table so that both reviewer relations are measured the same way. The primary population is triggers that open their own thread, with the unrestricted rows reported beside them. Nothing here identifies a causal effect.

@@ -170,6 +170,40 @@ def panel_heading(columns: int, title: str) -> str:
     return rf"\multicolumn{{{columns}}}{{@{{}}l}}{{\textbf{{{tex(title)}}}}} \\"
 
 
+def group_heading(columns: int, title: str) -> str:
+    """A bold full-width heading row that stands in for a leading label column.
+
+    The title has already been escaped by the caller, so it is not escaped again.
+    """
+    return rf"\multicolumn{{{columns}}}{{@{{}}l}}{{\textbf{{{title}}}}} \\"
+
+
+def collapse_label_column(
+    labelled: Sequence[Sequence[object]],
+    columns: int,
+) -> list[object]:
+    """Turn a leading label column that repeats down runs of rows into headings.
+
+    A label repeated on every row of a run tells the reader nothing that a
+    heading above the run does not, and at appendix column widths those labels
+    wrap to three or four lines each while the row beside them needs one. That
+    is what makes these tables long, so the column is dropped and its width goes
+    to the columns that carry content. Rows keep their original order, so the
+    reading order of the table is unchanged.
+    """
+    out: list[object] = []
+    current: str | None = None
+    for values in labelled:
+        label = str(values[0])
+        if label != current:
+            if current is not None:
+                out.append(r"\addlinespace")
+            out.append(group_heading(columns, label))
+            current = label
+        out.append(tuple(values[1:]))
+    return out
+
+
 def span(count: int, width: str, content: object, first: bool = False, last: bool = False) -> str:
     """A cell that spans `count` adjacent fixed-width columns of a paneled table."""
     prefix = "@{}" if first else ""
@@ -410,6 +444,54 @@ STATE_LABELS = {
 }
 
 
+FOLLOW_UP_LABEL_WIDTH = r"0.419\textwidth"
+
+
+def follow_up_window_rows() -> list[tuple[str, ...]]:
+    """The RQ1 follow-up-window sweep, previously typed by hand in the appendix.
+
+    It lives here rather than in its own table because a reader who wants to know
+    whether the seven-day window carries the owner split is already reading the
+    RQ1 table, and the sweep is one more way of moving one RQ1 design constant.
+    """
+    sweep = read_csv(
+        "outputs/constant_sensitivity/response_window_sweep.csv",
+        (
+            "response_window_days",
+            "prs",
+            "post_burst_action_prs",
+            "user_minus_mapped_percentage_points_all_prs",
+            "user_minus_mapped_ci_low_pp_all_prs",
+            "user_minus_mapped_ci_high_pp_all_prs",
+            "is_primary",
+        ),
+    )
+    # This product already stores the gap in percentage points, so it is
+    # formatted directly rather than through the fraction-scaling helpers.
+    def points(value: object) -> str:
+        return f"{number(value):+.1f}"
+
+    rows: list[tuple[str, ...]] = []
+    for item in sorted(sweep, key=lambda entry: number(entry["response_window_days"])):
+        days = int(number(item["response_window_days"]))
+        primary = str(item["is_primary"]).strip().lower() == "true"
+        label = plural(days, "day")
+        acting = number(item["post_burst_action_prs"]) / number(item["prs"])
+        if primary:
+            label = rf"\textbf{{{label}}} (published)"
+        rows.append(
+            (
+                span(2, FOLLOW_UP_LABEL_WIDTH, label, first=True),
+                integer(item["prs"]),
+                percent(acting),
+                points(item["user_minus_mapped_percentage_points_all_prs"]),
+                f"[{points(item['user_minus_mapped_ci_low_pp_all_prs'])}, "
+                f"{points(item['user_minus_mapped_ci_high_pp_all_prs'])}]",
+            )
+        )
+    return rows
+
+
 def burst_table() -> str:
     data = read_csv(
         "outputs/burst_topology/burst_topology_summary.csv",
@@ -467,7 +549,7 @@ def burst_table() -> str:
     hazard = burst["global_data_driven_cuts"]["log_hazard_change_point"]
     shape = burst["gap_distribution"]
     note = (
-        "The denominator in Panel A is 8,608 PRs at every threshold. In Panel B the log gap density has a single dominant mode at "
+        "The denominator in Panel A is 8,608 PRs at every threshold. Panel B moves the follow-up window while holding the burst at five minutes; its share is over all pull requests in that window's cohort, so pull requests with no action after the wait sit in the denominator, and the published seven days is the conservative end of the sweep rather than its peak. Neither convention is discoverable from the data: the log gap density has a single dominant mode at "
         f"{compact_number(shape['kde_mode_minutes'][0], 2)} minutes with no interior antimode below "
         f"{compact_number(shape['burst_region_max_minutes'])} minutes, and the antimode rule finds a burst-region cut in only "
         f"{percent(antimode['share_of_replicates_with_a_cut'])}% of repository bootstrap replicates; the change-point rule always returns a value, "
@@ -478,15 +560,26 @@ def burst_table() -> str:
         + PLACEBO_NOTE
     )
     return paneled_longtable(
-        "RQ1: first public state after each burst threshold, the burst-window convention, ordering diagnostics, and order placebos.",
+        "RQ1: first public state after each burst threshold, the follow-up window, ordering diagnostics, and order placebos.",
         "tab:s-burst",
-        r"L{0.124\textwidth}L{0.295\textwidth}L{0.076\textwidth}L{0.086\textwidth}L{0.152\textwidth}L{0.209\textwidth}",
+        r"L{0.075\textwidth}L{0.344\textwidth}L{0.076\textwidth}L{0.086\textwidth}L{0.152\textwidth}L{0.209\textwidth}",
         6,
         (
             (
                 "Panel A. First public state after each rapid-burst threshold",
-                ("Burst (min)", "First state", "PRs", "Share (\\%)", "Cluster 95\\% interval", "Median min"),
+                ("Burst min", "First state", "PRs", "Share (\\%)", "Cluster 95\\% interval", "Median min"),
                 rows,
+            ),
+            (
+                "Panel B. Follow-up window sweep, burst held at five minutes",
+                (
+                    span(2, FOLLOW_UP_LABEL_WIDTH, "Follow-up window", first=True),
+                    "PRs",
+                    "Acting (\\%)",
+                    "User minus mapped (pp)",
+                    "Cluster 95\\% interval",
+                ),
+                follow_up_window_rows(),
             ),
             (
                 "Panel C. Ordering diagnostics and leave-one-out checks",
@@ -972,32 +1065,39 @@ def addressed_edge_table() -> str:
                 ci_pp(item["ci_low"], item["ci_high"]),
             )
         )
+    # Panel A's leading column is the reply window, and seventeen of its
+    # twenty-five rows say "48 h". It becomes a heading over each window's run.
+    # Panel B's leading column said "48 h" on every row, which the panel title
+    # already says, so it is dropped outright. Both panels then need five
+    # columns rather than six, and the width goes to the label column.
     routes = [
-        ("48 h", route, prs, f"{merge} / {median}", difference, interval)
+        (route, prs, f"{merge} / {median}", difference, interval)
         for route, prs, merge, median, difference, interval in landmark_route_rows()
     ]
+    windowed = collapse_label_column(
+        [(f"{window} reply window", *rest) for window, *rest in rows],
+        5,
+    )
     return paneled_longtable(
         "RQ3: the exact-parent addressed edge, specificity controls, the four-state gradient, and the 48-hour ownership routes.",
         "tab:s-addressed-edge",
-        r"L{0.108\textwidth}L{0.231\textwidth}L{0.107\textwidth}L{0.146\textwidth}L{0.136\textwidth}L{0.214\textwidth}",
-        6,
+        r"L{0.335\textwidth}L{0.105\textwidth}L{0.150\textwidth}L{0.136\textwidth}L{0.224\textwidth}",
+        5,
         (
             (
                 "Panel A. Addressed edge, specificity controls, and the four-state gradient",
                 (
-                    "Reply window",
                     "Specification or contrast",
                     "Compared PRs",
                     "Raw merge: compared / reference (\\%)",
                     "Adjusted difference (pp)",
                     "95\\% interval",
                 ),
-                rows,
+                windowed,
             ),
             (
                 "Panel B. Forty-eight-hour ownership routes and later integration",
                 (
-                    "Landmark",
                     "Route",
                     "PRs",
                     "Later merge (\\%) / median first action (h)",
@@ -1010,6 +1110,62 @@ def addressed_edge_table() -> str:
         "The Panel A models use 1,067 inline-trigger PRs in 469 repositories open at hour 48 with a complete 30-day horizon. Specificity rows compare 109 exact-edge PRs with 506 PRs that had public discussion but no exact edge; the gradient rows are one model over the full cohort against the no-visible-activity reference, and its movement-only group holds 26 PRs, so that interval is wide and its point estimate is not a ranking. The discussion control is a structural falsification check, not a causal or semantic-resolution estimate. Panel B is the second pre-landmark signal, on its own wider cohort. "
         + ROUTE_NOTE,
     )
+
+
+def design_constant_rows() -> list[tuple[str, ...]]:
+    """The RQ3 landmark and outcome-horizon sweeps, previously typed by hand.
+
+    These moved out of a table of their own and into the RQ3 robustness table,
+    because moving the landmark is a robustness check on the same estimate as
+    every other row here, and a reader checking whether the estimate survives
+    should not have to find a second table eight pages earlier.
+    """
+    rows: list[tuple[str, ...]] = []
+    for relative, group, moving in (
+        (
+            "outputs/constant_sensitivity/landmark_sweep.csv",
+            "Landmark sweep, outcome horizon held at 30 days",
+            "landmark_hours",
+        ),
+        (
+            "outputs/constant_sensitivity/horizon_sweep.csv",
+            "Outcome-horizon sweep, landmark held at 48 hours",
+            "horizon_days",
+        ),
+    ):
+        sweep = read_csv(
+            relative,
+            (
+                "estimate",
+                "ci_low",
+                "ci_high",
+                "n_prs",
+                "exposed_prs",
+                "exposed_raw_later_merge_rate",
+                "is_primary",
+                "landmark_hours",
+                "horizon_days",
+            ),
+        )
+        for item in sorted(sweep, key=lambda entry: number(entry[moving])):
+            primary = str(item["is_primary"]).strip().lower() == "true"
+            value = int(number(item[moving]))
+            label = plural(value, "hour" if moving == "landmark_hours" else "day")
+            if primary:
+                label = rf"\textbf{{{label}}} (published)"
+            rows.append(
+                (
+                    group,
+                    label,
+                    pp(item["estimate"]),
+                    ci_pp(item["ci_low"], item["ci_high"]),
+                    tex(
+                        f"{integer(item['n_prs'])} PRs, {integer(item['exposed_prs'])} exposed, "
+                        f"exposed raw later merge {percent(item['exposed_raw_later_merge_rate'])}%"
+                    ),
+                )
+            )
+    return rows
 
 
 def rq3_robustness_table() -> str:
@@ -1145,7 +1301,7 @@ def rq3_robustness_table() -> str:
         "edge_by_automation": "Edge written by automation",
     }
 
-    rows: list[tuple[str, ...]] = []
+    rows: list[tuple[str, ...]] = list(design_constant_rows())
 
     for item in selection:
         rows.append(
@@ -1162,7 +1318,7 @@ def rq3_robustness_table() -> str:
         label = role_labels.get(item["response_actor_role"], str(item["response_actor_role"]))
         rows.append(
             (
-                tex("Who writes the edge"),
+                tex("Who writes the exposure reply"),
                 tex(label),
                 NOT_APPLICABLE,
                 NOT_APPLICABLE,
@@ -1324,8 +1480,8 @@ def rq3_robustness_table() -> str:
     ]
     rows.append(
         (
-            tex("Randomisation, unconditional"),
-            tex("48 h reply window (published)"),
+            tex("Randomisation inference"),
+            tex("Unconditional, 48 h reply window (published)"),
             pp(primary_permutation["observed_estimate"]),
             "null band " + ci_pp(
                 primary_permutation["permutation_quantile_025"],
@@ -1340,8 +1496,8 @@ def rq3_robustness_table() -> str:
     )
     rows.append(
         (
-            tex("Randomisation, unconditional"),
-            tex("The other three reply windows"),
+            tex("Randomisation inference"),
+            tex("Unconditional, the other three reply windows"),
             NOT_APPLICABLE,
             NOT_APPLICABLE,
             tex(
@@ -1354,8 +1510,8 @@ def rq3_robustness_table() -> str:
     test = conditional[0]
     rows.append(
         (
-            tex("Randomisation, conditional"),
-            tex("Re-randomisable repos, repository fixed effects"),
+            tex("Randomisation inference"),
+            tex("Conditional: re-randomisable repos, repository fixed effects"),
             pp(test["observed_estimate"]),
             NOT_APPLICABLE,
             tex(
@@ -1391,7 +1547,7 @@ def rq3_robustness_table() -> str:
         item = one(classes, edge_class=key)
         rows.append(
             (
-                tex("Who wrote the edge"),
+                tex("Who wrote the edge: prior reviewer versus newcomer"),
                 tex(label),
                 pp(item["estimate"]),
                 ci_pp(item["ci_low"], item["ci_high"]),
@@ -1405,7 +1561,7 @@ def rq3_robustness_table() -> str:
     for item in history_robustness:
         rows.append(
             (
-                tex("Who wrote the edge"),
+                tex("Who wrote the edge: prior reviewer versus newcomer"),
                 tex(f"Prior reviewer minus newcomer: {item['check'].lower()}"),
                 pp(item["estimate"]),
                 ci_pp(item["ci_low"], item["ci_high"]),
@@ -1414,18 +1570,17 @@ def rq3_robustness_table() -> str:
         )
 
     return longtable(
-        "RQ3 robustness: cohort scope, exposure composition, measured balance, sensitivity bounds, and design extensions.",
+        "RQ3 robustness: design constants, cohort scope, exposure composition, measured balance, sensitivity bounds, and design extensions.",
         "tab:s-sensitivity",
-        r"L{0.094\textwidth}L{0.245\textwidth}L{0.075\textwidth}L{0.123\textwidth}L{0.415\textwidth}",
+        r"L{0.305\textwidth}L{0.075\textwidth}L{0.123\textwidth}L{0.449\textwidth}",
         (
-            "Check",
             "Item",
             "Estimate",
             "95\\% interval or band",
             "Size and detail",
         ),
-        rows,
-        "Unless a row says otherwise, every check uses the 1,067-PR inline-trigger landmark cohort and the pre-trigger adjusted specification. A standardized mean difference is the group difference divided by the pooled standard deviation. E-values are computed on an approximate risk-ratio scale from the adjusted risk difference and the unexposed later-merge rate, and state the minimum association an unmeasured factor would need with both the exact edge and later merge, beyond the measured controls. The bracketed pair on the unconditional randomisation row is the 2.5th to 97.5th percentile of the permuted reference distribution, not a confidence interval, and that distribution is not centred on zero because 423 of 469 repositories contain no exposure variation; the conditional row, which is the one quoted in the article, uses only repositories containing both exposed and unexposed PRs and adds repository fixed effects, so its reference is centred. The whole-population row is an odds ratio from a pooled logistic model with interval indicators and repository-clustered standard errors, on follow-up split into eleven intervals with the edge entering as a time-varying covariate. Among the edge-class rows the fixed-effect row is the decisive one: the gap between a prior reviewer and a newcomer is largely a difference between repositories, not within them, so those rows describe where the signal sits and do not identify a mechanism. None of these checks identifies a causal effect.",
+        collapse_label_column(rows, 4),
+        "The two sweep blocks move one design constant at a time and hold the others at their published values, re-deriving the primary setting through the same code path each time. The estimate is interval-positive at 24, 48 and 72 hours and at 14 and 30 days, and its interval crosses zero at 96 hours and at 60 days, in both cases on a much smaller cohort, so those are weak evidence of a null rather than evidence of one. The published setting is the maximum of both sweeps, which we state rather than leave to be discovered: the choice was fixed before the sweep was run, but it is the most favourable of the values tried. The equivalent sweep for the RQ1 follow-up window is in the RQ1 table, Panel B, and is the opposite case, where the published value is the conservative end. The bootstrap draw-count sweep behind Figure 4 in the article is in the public artifact. Unless a row says otherwise, every check uses the 1,067-PR inline-trigger landmark cohort and the pre-trigger adjusted specification. A standardized mean difference is the group difference divided by the pooled standard deviation. E-values are computed on an approximate risk-ratio scale from the adjusted risk difference and the unexposed later-merge rate, and state the minimum association an unmeasured factor would need with both the exact edge and later merge, beyond the measured controls. The bracketed pair on the unconditional randomisation row is the 2.5th to 97.5th percentile of the permuted reference distribution, not a confidence interval, and that distribution is not centred on zero because 423 of 469 repositories contain no exposure variation; the conditional row, which is the one quoted in the article, uses only repositories containing both exposed and unexposed PRs and adds repository fixed effects, so its reference is centred. The whole-population row is an odds ratio from a pooled logistic model with interval indicators and repository-clustered standard errors, on follow-up split into eleven intervals with the edge entering as a time-varying covariate. Among the edge-class rows the fixed-effect row is the decisive one: the gap between a prior reviewer and a newcomer is largely a difference between repositories, not within them, so those rows describe where the signal sits and do not identify a mechanism. None of these checks identifies a causal effect.",
     )
 
 
@@ -1610,10 +1765,10 @@ def task_context_table() -> str:
     return longtable(
         "Issue links and whether a review point is answered, by reviewer relation.",
         "tab:s-task-context",
-        r"L{0.236\textwidth}L{0.285\textwidth}L{0.128\textwidth}L{0.314\textwidth}",
-        ("Group", "Condition", "Answered", "Detail"),
-        rows,
-        "The exposure is a pre-trigger property of the change: the pull request body references an issue. The outcome is a later inline comment whose reply target is the trigger comment, strictly after it and within 48 hours, rebuilt from the raw comment table so that both reviewer relations are measured the same way. The primary population is triggers that open their own thread, with the unrestricted rows reported beside them. Nothing here identifies a causal effect.",
+        r"L{0.400\textwidth}L{0.148\textwidth}L{0.404\textwidth}",
+        ("Condition", "Answered", "Detail"),
+        collapse_label_column(rows, 3),
+        "The exposure is an observed property of the change: the pull request body references an issue. The release stores no time for that reference, so it is assumed rather than shown to precede the trigger. The outcome is a later inline comment whose reply target is the trigger comment, strictly after it and within 48 hours, rebuilt from the raw comment table so that both reviewer relations are measured the same way. The primary population is triggers that open their own thread, with the unrestricted rows reported beside them. Nothing here identifies a causal effect.",
     )
 
 
@@ -1798,6 +1953,23 @@ def external_table() -> str:
         "Observed",
         span(2, tail, "Interpretation or status", last=True),
     )
+    # The screening rows arrive with a leading block name that repeats down each
+    # run of seven, six, or seven rows. It becomes a heading, and the item field
+    # takes the two columns the block name used to sit in.
+    item_width = r"0.367\textwidth"
+    screen_body = collapse_label_column(
+        [
+            (block, span(2, item_width, item, first=True), unit, observed, role)
+            for block, item, unit, observed, role in screen_rows
+        ],
+        5,
+    )
+    screen_header = (
+        span(2, item_width, "Item", first=True),
+        "Unit or count",
+        "Observed",
+        "Role or meaning",
+    )
     return paneled_longtable(
         "Structural overlap gates and external evidence screening.",
         "tab:s-external",
@@ -1811,8 +1983,8 @@ def external_table() -> str:
             ),
             (
                 "Panel B. External evidence screening",
-                ("Block", "Item", "Unit or count", "Observed", "Role or meaning"),
-                screen_rows,
+                screen_header,
+                screen_body,
             ),
         ),
         "Panel A reports structural same-locus review overlap and the frozen semantic gates. "
@@ -2202,16 +2374,34 @@ def specifications_table() -> str:
             )
         )
 
+    # Eight of the ten specifications share one outcome and the last two share
+    # another, so the outcome becomes a heading over each run rather than a
+    # narrow column that repeats the same phrase eight times and wraps to three
+    # lines while doing it. Dropping it lets the analysis name and the exposure
+    # term nearly double in width, which is where the rows were losing lines.
+    exposure_width = r"0.220\textwidth"
+    grouped = collapse_label_column(
+        [
+            (f"Outcome: {outcome}", analysis, span(2, exposure_width, exposure), size, adjustment)
+            for analysis, outcome, exposure, size, adjustment in rows
+        ],
+        5,
+    )
     return paneled_longtable(
         "Named estimation specifications and the resampling settings behind every reported interval.",
         "tab:s-specifications",
-        r"L{0.16\textwidth}L{0.141\textwidth}L{0.123\textwidth}L{0.226\textwidth}L{0.302\textwidth}",
+        r"L{0.280\textwidth}L{0.130\textwidth}L{0.090\textwidth}L{0.190\textwidth}L{0.260\textwidth}",
         5,
         (
             (
                 "Panel A. Named estimation specifications",
-                ("Analysis", "Outcome", "Exposure term", "PRs / repos", "Adjustment"),
-                rows,
+                (
+                    "Analysis",
+                    span(2, exposure_width, "Exposure term"),
+                    "PRs / repos",
+                    "Adjustment",
+                ),
+                grouped,
             ),
             (
                 "Panel B. Resampling settings behind every reported interval",
