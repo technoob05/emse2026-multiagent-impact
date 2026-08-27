@@ -800,8 +800,11 @@ half alone reproduces the headline.
 
 Putting the two together changes what we think we measured. The addressed edge is
 not a record that a review point was resolved, and it is not a special kind of
-connection. It marks a person who came back to the pull request within 48 hours
-and put real attention into it. Where that attention landed on the page turns out
+connection. It marks activity from an account we classify as a user account, returning to the
+pull request within 48 hours with something substantive. Our account-level
+screening finds almost all of these accounts behave like people rather than
+scripts, but the account is what we observe and the person is what we infer from
+it. Where that attention landed on the page turns out
 not to matter. That is a smaller claim than the one we set out to make, and it is
 the one the data support.
 
@@ -895,10 +898,14 @@ from its review comment, counting a PR as unexposed until its own reply arrives.
 Two things are visible there that a single contrast hides. The curves cross
 early, because a PR that is still being replied to has not merged yet. And most
 of these PRs merge either way, so by day 30 the gap is a few points rather than
-the seventeen the hour-48 group shows. The direction survives, and the odds of
-merging in the next stretch of time stay about $1.7$ times higher while an edge
-is active, whichever controls we add. The large contrast is real, and it is a
-statement about slower PRs.
+the seventeen the hour-48 group shows. The direction survives. A separate discrete-time hazard model, fitted on the
+whole population by pooled logistic regression over daily risk periods with a
+baseline for each period and standard errors clustered on the repository, puts
+the odds of merging in the next period about 1.74 times higher while a reply is
+active. That figure barely moves as controls are added, from 1.73 with the
+baseline alone to 1.74 with the full pre-trigger set, across 3,940 pull requests
+in 893 repositories. Online Resource~1 carries the specification. The large
+hour-48 contrast is specific to that slower-moving cohort.
 
 The second asks who wrote the edge. We split the exposed PRs by whether the
 replier had already reviewed in that repository before the trigger. Almost all of
@@ -994,9 +1001,10 @@ can close without that work. Across the boundary somebody has to reconstruct why
 the change exists, and a link to the issue is the cheapest way we can observe of
 handing them that.
 
-\noindent\textbf{Answer to RQ4.} Pre-existing task context is what precedes an
-answer across the product boundary, and only across it. We cannot say the link
-causes the answer. PR bodies can be edited, and the release carries no timestamp
+\noindent\textbf{Answer to RQ4.} An issue link observed in the pull request body goes with more answered review
+points across a product boundary, and with none within one product. What we
+observe is the link as the data record it, not proof that it was context the
+reviewer had beforehand, and we cannot say the link causes the answer. PR bodies can be edited, and the release carries no timestamp
 for the link, so we cannot prove every link was present before the trigger.
 
 \section{Discussion}\label{sec:discussion}
@@ -1099,9 +1107,10 @@ those four fields are missing or ambiguous, and a timestamp alone cannot
 separate a burst of parallel events from a handoff. This is a small schema
 change with a large effect on what anyone can later measure.
 
-\textbf{Agents should hand over context, not just output.} The one thing under a
-vendor's control that predicts a crossed boundary is whether the pull request
-says what it is for. Writing the issue reference into the body is close to free
+\textbf{Agents should hand over context, not just output.} The clearest observed correlate of a crossed-boundary response in our data is
+whether the pull request says what it is for. Neither vendor nor maintainer
+wholly controls that, since a description can be written by either and edited
+afterwards, and the association is observational. Writing the issue reference into the body is close to free
 and it is the only lever in this study that survived every check we could think
 of.
 
@@ -1254,8 +1263,10 @@ so consent to participate does not apply. We report accounts by role rather than
 by login throughout, and the worked example in Figure~\ref{fig:contract} names
 no individual.
 
-\noindent\textbf{Consent for publication.} Not applicable. This article
-contains no data from any identifiable individual.
+\noindent\textbf{Consent for publication.} Not applicable. No individual-level
+identifying information is reproduced in this article. The analyses use public
+GitHub repository records, and accounts are reported by role and in aggregate
+rather than by login.
 
 \noindent\textbf{Data availability.} The source data are the public
 AIDev-7.6M release at the pinned revision reported in

@@ -1,5 +1,10 @@
 # Cross-dataset compatibility audit (2026-08-26)
 
+> **Historical record.** This document was written when the study had three
+> research questions. RQ4, on issue linkage across the product boundary, was
+> added later. Read it as a record of a decision at the time, not as a
+> description of the current paper.
+
 ## Decision
 
 The completed acquisition pass downloaded the full pinned SWE-Review-Chat

@@ -4,7 +4,7 @@ Last checked: 2026-08-26.
 
 ## Verdict
 
-The three-RQ artifact is technically ready for author review. The complete analysis, test, notebook, LaTeX, figure, and packaging pipeline passes. The manuscript remains blocked from journal upload only by author-supplied metadata, declarations, and a permanent artifact URL/DOI.
+The four-RQ artifact is technically ready for author review. The complete analysis, test, notebook, LaTeX, figure, and packaging pipeline passes. The manuscript remains blocked from journal upload only by author-supplied metadata, declarations, and a permanent artifact URL/DOI.
 
 The paper does not depend on semantic same-locus labels or exact-file task-continuity claims. Those exploratory branches remain outside the core story unless their separate human-validation gates are completed.
 
@@ -34,7 +34,7 @@ The paper does not depend on semantic same-locus labels or exact-file task-conti
 - Eleven local acquisitions have frozen revision, license, size, integrity, and release-boundary records.
 - The complete SWE-Review-Chat scan covers 1,082,529 public PR rows. Seven exact-edge candidate PRs were found before overlap removal, but all seven already occur in AIDev; zero disjoint landmark rows remain. The independent replication gate is therefore rejected rather than reported as a null result.
 - The independently packaged AI-to-AI cohort agrees on product pair and trigger timing for nearly all overlapping PRs, but only nine exposed PRs remain. It is used for attribution sensitivity, not outcome replication.
-- SWE-PRBench and AIReviewAction inform semantic measurement only. Their row topology or label provenance is not compatible with the paper's three RQs.
+- SWE-PRBench and AIReviewAction inform semantic measurement only. Their row topology or label provenance is not compatible with the paper's four RQs.
 - No third-party raw data enters the manuscript source archive.
 
 ## Reproducibility and production checks
@@ -42,7 +42,7 @@ The paper does not depend on semantic same-locus labels or exact-file task-conti
 - Automated tests: 37 passed; one non-failing sortedness warning.
 - The executable notebook completed successfully.
 - Both LaTeX logs contain no errors, overfull boxes, undefined citations/references, or rerun warnings.
-- Manuscript: 11 A4 pages. Supplementary Information: 19 A4 pages.
+- Manuscript: 31 A4 pages. Supplementary Information: 32 A4 pages. Both counts are read from the built PDFs on the date of this report; re-measure rather than trusting them after any edit.
 - Page-complete visual QA inspected all 30 pages after the final build. No clipping, unreadable figure text, float-order error, duplicate caption, or blank page remains.
 - All PDF fonts are embedded and no Type 3 font is present.
 - PDF text and packaged source contain no local drive, user-profile, cache, or external-raw-data path.

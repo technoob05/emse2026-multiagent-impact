@@ -1,5 +1,10 @@
 # Frontier gap matrix: multi-agent code review and response ownership
 
+> **Historical record.** This document was written when the study had three
+> research questions. RQ4, on issue linkage across the product boundary, was
+> added later. Read it as a record of a decision at the time, not as a
+> description of the current paper.
+
 **Scan date:** 2026-08-26 (Asia/Bangkok)  
 **Scope:** targeted frontier scan, not an exhaustive systematic review. I checked
 primary paper/preprint pages and the official MSR 2026, AIware 2026, and EMSE

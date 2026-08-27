@@ -1,5 +1,10 @@
 # Insight and novelty decision
 
+> **Historical record.** This document was written when the study had three
+> research questions. RQ4, on issue linkage across the product boundary, was
+> added later. Read it as a record of a decision at the time, not as a
+> description of the current paper.
+
 Date: 2026-08-26  
 Target: EMSE Special Issue, “Agentic Software Engineering: The Rise of AI Teammates”  
 Decision: build the current paper around **public coordination topology**, not a product ranking or a causal merge claim.

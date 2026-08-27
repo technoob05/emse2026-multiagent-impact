@@ -1,5 +1,10 @@
 # Manuscript pivot plan: direct artifact succession
 
+> **Historical record.** This document was written when the study had three
+> research questions. RQ4, on issue linkage across the product boundary, was
+> added later. Read it as a record of a decision at the time, not as a
+> description of the current paper.
+
 ## Proposed title
 
 **Co-Presence Is Not Coordination: Artifact-Level Handoff Scarcity in Multi-Agent Software Repositories**

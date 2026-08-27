@@ -1,5 +1,10 @@
 # External dataset survey for the multi-agent review study
 
+> **Historical record.** This document was written when the study had three
+> research questions. RQ4, on issue linkage across the product boundary, was
+> added later. Read it as a record of a decision at the time, not as a
+> description of the current paper.
+
 **Audit date:** 26 August 2026  
 **Scope:** public datasets that may strengthen the event-level study of cross-product code review, exact public reply edges, later public ownership, user-account bridges, and later merge.  
 **Decision rule:** value for the three current RQs matters more than row count.
