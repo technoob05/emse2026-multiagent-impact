@@ -1006,33 +1006,6 @@ def figure_boundary() -> None:
         population="all_distinct_48h_user_responders",
     )
 
-    # The band between the panels now carries two stacked x-axis labels and the
-    # two-line note, so it is wider than it was for a single-column Panel A.
-    fig = new_figure(5.05)
-    layout = Layout(left=0.360, right=0.855, top=0.930, bottom=0.115, gap=0.225)
-    top_rect, bottom_rect = layout.rects((1.0, 0.52))
-
-    # --- Panel A: how often it happened, and the gap, against zero ----------
-    # A dumbbell alone draws the point estimate as a length, so the longest bar
-    # was "Someone comments", whose interval still crosses zero, while the one
-    # outcome that did move drew a shorter bar. The second column therefore
-    # draws the interval itself against zero, which is the quantity the claim
-    # rests on. The two columns share the row-label column and together occupy
-    # exactly the axes rectangle Panel B spans, so all three line up.
-    LEFT_COLUMN = 0.245
-    COLUMN_GAP = 0.035
-    right_column = top_rect[2] - LEFT_COLUMN - COLUMN_GAP
-    levels_ax = fig.add_axes((top_rect[0], top_rect[1], LEFT_COLUMN, top_rect[3]))
-    gap_ax = fig.add_axes(
-        (
-            top_rect[0] + LEFT_COLUMN + COLUMN_GAP,
-            top_rect[1],
-            right_column,
-            top_rect[3],
-        )
-    )
-    rows = list(OUTCOMES)
-
     def restricted_row(key: str):
         return exactly_one(
             restricted,
@@ -1046,139 +1019,102 @@ def figure_boundary() -> None:
             return restricted_row(key)
         return exactly_one(primary, outcome=key)
 
-    # Rows are placed with a gap between the group that moved and the group
-    # that did not, so the split is visible before any number is read.
-    GROUP_GAP = 0.9
-    positions, moved = [], []
-    cursor = float(len(rows)) + GROUP_GAP
-    for key, _ in rows:
-        row = contrast_row(key)
-        low = float(row["repository_cluster_bootstrap_ci_low"])
-        high = float(row["repository_cluster_bootstrap_ci_high"])
-        separated = low > 0 or high < 0
-        if moved and separated != moved[-1]:
-            cursor -= GROUP_GAP
-        positions.append(cursor)
-        moved.append(separated)
-        cursor -= 1.0
+    # The band between the panels carries Panel A's axis label and the two-line
+    # note, so it is wider than a plain label row would need.
+    fig = new_figure(4.55)
+    layout = Layout(left=0.315, right=0.755, top=0.925, bottom=0.120, gap=0.250)
+    top_rect, bottom_rect = layout.rects((1.0, 0.58))
 
+    # --- Panel A: the difference itself, measured from zero -----------------
+    # A dumbbell drew the point estimate as the distance between two rates, so
+    # the longest mark belonged to an outcome whose interval still crossed
+    # zero. The quantity the claim rests on is the difference against zero, so
+    # that is what gets the length here: one bar per outcome, its interval laid
+    # along it, and the accent reserved for the single interval that clears the
+    # zero line. The rates the difference came from are printed in a right-hand
+    # column instead of being drawn, so they can never land on a bar or on a
+    # whisker however long the interval runs.
+    ax = fig.add_axes(top_rect)
+    positions = np.arange(len(OUTCOMES), dtype=float)[::-1]
+
+    gaps, lows, highs, moved, rates = [], [], [], [], []
     pairs = repositories = 0
-    for position, (key, _label), separated in zip(positions, rows, moved, strict=True):
+    for key, _label in OUTCOMES:
         row = contrast_row(key)
-        cross = float(row["cross_rate"]) * 100
-        same = float(row["same_rate"]) * 100
-        difference = float(row["paired_difference"]) * 100
         low = float(row["repository_cluster_bootstrap_ci_low"]) * 100
         high = float(row["repository_cluster_bootstrap_ci_high"]) * 100
-        pairs = int(row["pairs"])
-        repositories = int(row["repositories"])
+        gaps.append(float(row["paired_difference"]) * 100)
+        lows.append(low)
+        highs.append(high)
+        moved.append(low > 0.0 or high < 0.0)
+        rates.append((float(row["cross_rate"]) * 100, float(row["same_rate"]) * 100))
+        if key != RESTRICTED_OUTCOME:
+            pairs = int(row["pairs"])
+            repositories = int(row["repositories"])
 
-        levels_ax.plot(
-            [cross, same],
-            [position, position],
-            color=SLATE if separated else MID,
-            linewidth=1.7 if separated else 1.1,
-            solid_capstyle="round",
-            zorder=1,
-        )
-        levels_ax.plot(
-            [cross],
-            [position],
-            marker="o",
-            markersize=5.2 if separated else 4.4,
-            markerfacecolor=ORANGE,
-            markeredgecolor=ORANGE,
-            zorder=3,
-        )
-        levels_ax.plot(
-            [same],
-            [position],
-            marker="o",
-            markersize=5.2 if separated else 4.4,
-            markerfacecolor="white",
-            markeredgecolor=BLUE,
-            markeredgewidth=1.3,
-            zorder=3,
-        )
+    gaps = np.asarray(gaps)
+    lows = np.asarray(lows)
+    highs = np.asarray(highs)
 
-        colour = ORANGE if separated else SLATE
-        gap_ax.plot(
-            [low, high],
-            [position, position],
-            color=colour,
-            linewidth=1.8 if separated else 1.1,
-            zorder=3,
-        )
-        for edge in (low, high):
-            gap_ax.plot(
-                [edge, edge],
-                [position - 0.16, position + 0.16],
-                color=colour,
-                linewidth=1.1,
-                zorder=3,
-            )
-        gap_ax.plot(
-            [difference],
-            [position],
-            marker="o",
-            markersize=5.8 if separated else 4.2,
-            markerfacecolor=colour,
-            markeredgecolor=WHITE,
-            markeredgewidth=0.7,
-            zorder=4,
-        )
-        gap_ax.text(
-            20.5,
+    ax.barh(
+        positions,
+        gaps,
+        height=0.62,
+        color=[ORANGE if separated else MID for separated in moved],
+        edgecolor=[SLATE if separated else MID for separated in moved],
+        linewidth=0.8,
+        zorder=2,
+    )
+    ax.errorbar(
+        gaps,
+        positions,
+        xerr=np.vstack((gaps - lows, highs - gaps)),
+        fmt="none",
+        ecolor=SLATE,
+        elinewidth=1.0,
+        capsize=2.4,
+        capthick=1.0,
+        zorder=3,
+    )
+    ax.axvline(0.0, color=INK, linewidth=1.0, zorder=4)
+
+    ax.set_xlim(-36.0, 16.0)
+    ax.set_xticks([-30, -15, 0, 15])
+    ax.set_ylim(-0.62, len(OUTCOMES) - 0.38)
+    ax.set_yticks(positions)
+    ax.set_yticklabels([label for _, label in OUTCOMES], fontsize=8.2)
+    for tick, separated in zip(ax.get_yticklabels(), moved, strict=True):
+        tick.set_color(INK if separated else SLATE)
+    ax.set_xlabel(
+        "Cross-product " + MINUS + " same-product (pp, 95% CI)"
+    )
+    panel_title(ax, "A", "One outcome changes. Five do not.")
+    category_axis(ax)
+
+    # The rate column sits just past the right-hand end of the data range, so
+    # it reads as a table column rather than as a point on the scale.
+    RATE_COLUMN = 17.6
+    for position, (cross, same), separated in zip(
+        positions, rates, moved, strict=True
+    ):
+        ax.text(
+            RATE_COLUMN,
             position,
-            minus(f"{difference:+.1f}"),
+            f"{cross:.0f}% vs {same:.0f}%",
             ha="left",
             va="center",
-            fontsize=8.1,
+            fontsize=8.0,
             color=INK if separated else SLATE,
             fontweight="bold" if separated else "normal",
+            clip_on=False,
         )
 
-    bounds = (min(positions) - 0.7, max(positions) + 0.6)
-
-    levels_ax.set_yticks(positions)
-    levels_ax.set_yticklabels([label for _, label in rows], fontsize=8.2)
-    for tick, separated in zip(levels_ax.get_yticklabels(), moved, strict=True):
-        tick.set_color(INK if separated else SLATE)
-    levels_ax.set_xlim(0, 100)
-    levels_ax.set_xticks([0, 50, 100])
-    levels_ax.set_ylim(*bounds)
-    levels_ax.set_xlabel("Happened (%)")
-    # The title is anchored to the left column but is a title for the pair, so
-    # it runs across both. The right column therefore carries no title of its
-    # own and names itself in its axis label instead.
-    panel_title(levels_ax, "A", "One outcome changes. Five do not.")
-    clean_axis(levels_ax, "x")
-
-    gap_ax.axvline(0.0, color=INK, linewidth=1.0, zorder=1)
-    gap_ax.set_yticks(positions, ["" for _ in positions])
-    gap_ax.set_xlim(-36, 18)
-    gap_ax.set_xticks([-30, -15, 0, 15])
-    gap_ax.set_ylim(*bounds)
-    # Two lines, or this label and "Happened (%)" run together into one phrase.
-    gap_ax.set_xlabel("Cross " + MINUS + " same" + chr(10) + "(pp, 95% CI)")
-    clean_axis(gap_ax, "x")
-    gap_ax.spines["left"].set_visible(False)
-    gap_ax.tick_params(axis="y", length=0)
-
-    first_null = moved.index(False) if False in moved else None
-    if first_null is not None:
-        divider = (positions[first_null - 1] + positions[first_null]) / 2.0
-        for axis in (levels_ax, gap_ax):
-            axis.axhline(
-                divider, color=MID, linewidth=0.7, linestyle=(0, (3, 3)), zorder=0
-            )
-
-    # The note belongs to Panel A but is wider than either of its columns, so it
-    # sits in the band between the panels rather than inside one of them.
+    # The note belongs to Panel A but is wider than its axes, so it sits in the
+    # band between the panels rather than inside one of them.
     narrow = restricted_row(RESTRICTED_OUTCOME)
     fig.text(
         top_rect[0],
-        top_rect[1] - 0.135,
+        top_rect[1] - 0.140,
         f"{pairs:,} matched pairs in {repositories} repositories"
         + chr(10)
         + f"*{int(narrow['pairs']):,} pairs where a reply is possible on both sides",
@@ -1224,7 +1160,9 @@ def figure_boundary() -> None:
     ax.set_ylim(-0.6, len(bars) - 0.4)
     ax.set_xlabel("Had reviewed in this repository before (%)")
     panel_title(ax, "B", "Whoever steps in has been here before")
-    clean_axis(ax, "x")
+    # Same category styling as Panel A, so the two row-label columns read as
+    # one column down the page.
+    category_axis(ax)
 
     save(fig, "Fig3_v2")
 
@@ -1491,6 +1429,18 @@ def figure_task_context() -> None:
     ghost = cross[0] + (same[1] - same[0])
     raw = cross[1] - ghost
 
+    # The contrast is the region between what happened and what the
+    # same-product change predicts, so it is drawn as that region. Its lower
+    # boundary is the counterfactual line and its upper boundary is the
+    # observed one, so the two series that define it also frame it.
+    ax.fill_between(
+        [0, 1],
+        [cross[0], ghost],
+        [cross[0], cross[1]],
+        color=PALE_TEAL,
+        linewidth=0.0,
+        zorder=1,
+    )
     ax.plot(
         [0, 1],
         [cross[0], ghost],
@@ -1604,26 +1554,19 @@ def figure_task_context() -> None:
         color=SLATE,
     )
 
-    ax.annotate(
-        "",
-        xy=(0.90, cross[1]),
-        xytext=(0.90, ghost),
-        arrowprops={
-            "arrowstyle": "<|-|>",
-            "color": ORANGE,
-            "linewidth": 1.4,
-            "mutation_scale": 8,
-        },
-    )
+    # The label names the shaded region, so it sits inside it, low enough to
+    # clear the same-product line that crosses the panel and far enough left of
+    # the right-hand column that it cannot reach the counterfactual's label.
     ax.text(
-        0.865,
-        ghost + (cross[1] - ghost) * 0.25,
+        0.575,
+        ghost + (cross[1] - ghost) * 0.28,
         minus(f"{raw:+.1f}") + " pp raw gap",
-        ha="right",
+        ha="center",
         va="center",
         fontsize=8.4,
         fontweight="bold",
-        color=ORANGE,
+        color=INK,
+        zorder=5,
     )
 
     ax.set_xlim(-0.12, 1.12)
@@ -1640,32 +1583,57 @@ def figure_task_context() -> None:
     low = float(primary["ci_low"]) * 100
     high = float(primary["ci_high"]) * 100
 
-    ax.axvline(0.0, color=SLATE, linewidth=0.9, zorder=1)
-    ax.plot(
-        [estimates.min(), estimates.max()],
-        [0, 0],
+    # The interval is a solid bar rather than a rule, so it carries the same
+    # weight as the shaded region above it, and the leave-one-repository-out
+    # range sits inside it as a darker band: a spread within a spread.
+    ax.barh(
+        [0],
+        [high - low],
+        left=low,
+        height=0.42,
         color=PALE_TEAL,
-        linewidth=7.0,
-        solid_capstyle="butt",
+        edgecolor=TEAL,
+        linewidth=0.9,
         zorder=2,
     )
-    ax.plot([low, high], [0, 0], color=TEAL, linewidth=1.8, zorder=3)
-    for edge in (low, high):
-        ax.plot([edge, edge], [-0.16, 0.16], color=TEAL, linewidth=1.3, zorder=3)
+    ax.barh(
+        [0],
+        [estimates.max() - estimates.min()],
+        left=estimates.min(),
+        height=0.18,
+        color=TEAL,
+        alpha=0.45,
+        linewidth=0.0,
+        zorder=3,
+    )
+    ax.axvline(0.0, color=INK, linewidth=1.0, zorder=4)
     ax.plot(
         [point],
         [0],
-        marker="o",
-        markersize=6.2,
+        marker="D",
+        markersize=6.6,
         markerfacecolor=TEAL,
         markeredgecolor=WHITE,
-        markeredgewidth=0.7,
-        zorder=4,
+        markeredgewidth=0.9,
+        zorder=5,
+    )
+    # Panel A's shaded region measures the raw contrast, which is larger than
+    # the estimate we report. Mark it here too, or the reader carries 17.1 down
+    # from Panel A and finds the arithmetic does not come out.
+    ax.plot(
+        [raw],
+        [0],
+        marker="o",
+        markersize=5.6,
+        markerfacecolor=WHITE,
+        markeredgecolor=SLATE,
+        markeredgewidth=1.2,
+        zorder=5,
     )
     ax.text(
         point,
         0.42,
-        minus(f"{point:+.1f} pp"),
+        minus(f"{point:+.1f} pp adjusted"),
         ha="center",
         va="bottom",
         fontsize=8.4,
@@ -1673,38 +1641,25 @@ def figure_task_context() -> None:
         color=TEAL,
     )
     ax.text(
-        0.0,
-        -0.52,
-        "no difference",
-        ha="center",
-        va="top",
-        fontsize=8.0,
-        color=SLATE,
-    )
-    # The arrow in Panel A measures the raw contrast, which is larger than the
-    # estimate we report. Mark it here too, or the reader carries 17.1 down from
-    # Panel A and finds the arithmetic does not come out.
-    ax.plot(
-        [raw],
-        [0],
-        marker="o",
-        markersize=5.4,
-        markerfacecolor="white",
-        markeredgecolor=TEAL,
-        markeredgewidth=1.2,
-        zorder=4,
-    )
-    ax.text(
         raw,
-        -0.42,
+        -0.44,
         minus(f"{raw:+.1f}") + " raw",
         ha="center",
         va="top",
         fontsize=8.0,
         color=SLATE,
     )
+    ax.text(
+        0.0,
+        -0.44,
+        "no difference",
+        ha="center",
+        va="top",
+        fontsize=8.0,
+        color=SLATE,
+    )
     ax.set_xlim(-4.0, 26.0)
-    ax.set_ylim(-1.0, 1.0)
+    ax.set_ylim(-1.05, 1.05)
     ax.set_yticks([])
     ax.set_xlabel("How much more the link helps across the boundary (pp)")
     panel_title(ax, "B", "One change minus the other")
