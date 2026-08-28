@@ -149,6 +149,36 @@ def build_source_archive(destination: pathlib.Path) -> list[str]:
     return names
 
 
+def build_upload_archive(destination: pathlib.Path, submit: pathlib.Path) -> list[str]:
+    """One archive carrying every file that is attached in the portal.
+
+    Editorial Manager's Attach Files page takes a single file at a time, but it
+    expands a zip on arrival, so one upload lands the whole set. That is why
+    this exists as a separate archive from the LaTeX source one: the source
+    archive answers the journal's "supply your editable source" requirement and
+    goes in as a deposit, while this one is purely a transport for the upload
+    itself.
+
+    Flat, with no directory entries, because the portal lists whatever it finds
+    by basename and a folder here would produce files it will not match to an
+    item type. The cover letter and the metadata form are deliberately absent:
+    they are pasted into portal boxes, not attached, so including them would
+    invite uploading a duplicate of something already typed in.
+    """
+    attached = ["0_title_page.pdf", "1_manuscript.pdf", "ESM_1.pdf"]
+    missing = [name for name in attached if not (submit / name).is_file()]
+    if missing:
+        raise SystemExit(f"Cannot build the upload archive; missing: {missing}")
+
+    source_names = list(SOURCE_FILES) + figure_files()
+    with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED) as archive:
+        for name in attached:
+            archive.write(submit / name, arcname=name)
+        for name in source_names:
+            archive.write(MANUSCRIPT / name, arcname=name)
+    return attached + source_names
+
+
 def main() -> None:
     problems = staleness_report()
     if problems:
@@ -172,6 +202,7 @@ def main() -> None:
     # so the local filename is the one readers get. Ship it already named.
     shutil.copy2(MANUSCRIPT / "technical_appendix.pdf", SUBMIT / "ESM_1.pdf")
     archived = build_source_archive(SUBMIT / "3_manuscript_source.zip")
+    uploaded = build_upload_archive(SUBMIT / "UPLOAD_THIS.zip", SUBMIT)
 
     documents = (
         (ROOT / "paper" / "COVER_LETTER.md", "4_cover_letter.md"),
@@ -219,12 +250,19 @@ containing ALL Author Contact Info. / Manuscript / Figure / Table /
 Supplementary Material / Authorship change form. There is no "LaTeX supporting
 file" entry, so source files go under Supplementary Material.
 
+**Upload `UPLOAD_THIS.zip` and nothing else.** The Attach Files page takes one
+file per upload but expands a zip on arrival, so that single upload lands all
+{len(uploaded)} attached files. Then set the item types below and press *Change
+Now* once for the whole LaTeX set.
+
 | File | What it is | Item Type to choose |
 |---|---|---|
+| `UPLOAD_THIS.zip` | Everything in the three rows below plus the LaTeX source, flat | Upload it; the portal expands it and the rows arrive individually |
 | `0_title_page.pdf` | Title, all five authors with affiliations, ORCIDs and the corresponding email, and the declarations | **Title Page containing ALL Author Contact Info.** Required: the portal will not build a submission PDF without it. |
 | `1_manuscript.pdf` | The article | **Manuscript** |
 | `ESM_1.pdf` | Supplementary Information | **Supplementary Material**. Online Resource 1. Springer's own naming convention; upload it under exactly this name. |
-| `3_manuscript_source.zip` | Flat LaTeX source for the article: {", ".join(f"`{name}`" for name in archived)} | Upload the zip; the portal expands it. Set the main `.tex` to **Manuscript** only if you want the portal to typeset for you, otherwise leave every expanded file as **Supplementary Material** so the reviewed PDF is the one verified here. |
+| the {len(archived)} LaTeX source files | {", ".join(f"`{name}`" for name in archived)} | **Supplementary Material**, all of them. Use *Change Item Type of all [Choose] files* to set them in one press. Do not mark `main.tex` as Manuscript: that asks the portal to typeset the article itself, and then reviewers read its build rather than the PDF verified here. |
+| `3_manuscript_source.zip` | The same source files as a standalone deposit, for anywhere that asks for source as one file | Not uploaded. Its contents already travel inside `UPLOAD_THIS.zip`, so uploading this too would duplicate all {len(archived)}. |
 | `4_cover_letter.md` | Cover letter | Read this one. |
 | `4_cover_letter.txt` | Cover letter | Paste this one: the portal's box is rich text, so Markdown markers would appear literally. |
 | `5_metadata_form.md` | Title, author records with affiliations and ORCIDs, declarations, and CRediT roles. It carries no abstract and no keywords; both are in the manuscript | Typed into the portal |
@@ -232,9 +270,20 @@ file" entry, so source files go under Supplementary Material.
 | `7_venue_checklist.md` | The venue's stated requirements | Not uploaded |
 | `CHECKSUMS.sha256` | Integrity record; verify with `sha256sum -c` | Not uploaded |
 
-Before uploading, fill in every placeholder the deposit guide lists in
-`docs/guides/ARTIFACT_DEPOSIT.md`: author affiliations, ORCIDs, the
-corresponding email, and the reserved artifact DOI.
+## Not attached, but still needed
+
+Three things are typed or pasted into the portal rather than uploaded, so they
+are easy to forget: the cover letter goes in its rich-text box from
+`4_cover_letter.txt`, the author records come from `5_metadata_form.md`, and the
+artifact DOI `https://doi.org/10.5281/zenodo.22140821` goes in under the
+*Link(s) to supporting data* option rather than as a file.
+
+## Before pressing Approve
+
+Editorial Manager builds its own PDF from what you attached, and that build is
+what reviewers read. Open it and check three things the upload cannot guarantee:
+the bibliography resolves rather than printing `[?]`, all six figures render,
+and Online Resource 1 is listed.
 """
     (SUBMIT / "README.md").write_text(readme, encoding="utf-8", newline="\n")
 
