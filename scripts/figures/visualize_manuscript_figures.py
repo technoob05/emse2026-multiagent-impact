@@ -2005,13 +2005,23 @@ def figure_boundary() -> None:
     # whoever acts inside 48 hours -- so the panel is green: Figure 1's hue for
     # the person the whole chain runs through. It was steel, which named
     # nothing a reader could look up.
-    for position, (label, row, count_key) in zip(positions, bars, strict=True):
+    #
+    # The three rows are three ways of choosing WHICH people, not three
+    # different kinds of actor, so they vary by depth within the one hue rather
+    # than by hue. Giving them purple, blue and orange would say "product,
+    # different product, branch" -- three meanings this paper has already spent
+    # elsewhere -- and would tell the reader these rows are unlike each other
+    # when the whole point of the panel is that they agree.
+    fills = (PALE_GREEN, "#A9D8C0", "#7FC5A3")
+    for position, (label, row, count_key), fill in zip(
+        positions, bars, fills, strict=True
+    ):
         share = float(row["prior_reviewer_share"]) * 100
         ax.barh(
             position,
             share,
             height=0.52,
-            color=PALE_GREEN,
+            color=fill,
             edgecolor=GREEN,
             linewidth=1.2,
             zorder=2,
