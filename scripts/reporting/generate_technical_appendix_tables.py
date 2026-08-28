@@ -175,6 +175,21 @@ def row(cells: Sequence[object]) -> str:
     return " & ".join(str(cell) for cell in cells) + r" \\"
 
 
+# Page breaks inside these tables are longtable's to choose, and it does not
+# take suggestions. Measured, not assumed: marking all 412 body rows `\\*`,
+# which is longtable's documented way to forbid a break after a row, left the
+# built PDF byte-for-byte the same length and moved no break at all. Hand-drawn
+# rules wrapped in infinite penalties did nothing either. So there is no
+# no-break machinery here, because none of it worked and dead scaffolding that
+# looks like it is protecting something is worse than none.
+#
+# What did work was deleting the `\needspace` that used to precede every table.
+# It was meant to stop a table starting with too little room; instead it made
+# longtable set a head, break, and then set a second continuation head above the
+# real one, so seven tables printed an empty header block. Removing it fixed all
+# seven and took a page off the document.
+
+
 def panel_heading(columns: int, title: str) -> str:
     return rf"\multicolumn{{{columns}}}{{@{{}}l}}{{\textbf{{{tex(title)}}}}} \\"
 
@@ -236,8 +251,13 @@ def longtable(
     # table to the top of a page and leave half-empty pages behind it. The
     # continuation caption is unnumbered so no second hyperlink anchor is emitted
     # for the same table.
-    return f"""\\needspace{{4\\baselineskip}}
-\\begingroup
+    #
+    # 14 baselines, not 4. The head alone is a two-line caption, two rules and a
+    # two-line column header, so 4 left room for the head and nothing else, and
+    # longtable responded by setting the head, breaking immediately, and setting
+    # a second continuation head on the next page above the real one. Table 8
+    # printed an empty header block that way.
+    return f"""\\begingroup
 \\footnotesize\\linespread{{0.92}}\\selectfont
 \\setlength{{\\tabcolsep}}{{2pt}}
 \\setlength{{\\LTpre}}{{4pt}}\\setlength{{\\LTpost}}{{4pt}}
@@ -290,8 +310,7 @@ def paneled_longtable(
     # continuation page; only the unnumbered continuation caption is emitted. No
     # float barrier here: the appendix places its own, and one per table would
     # push every table to the top of a page and leave half-empty pages behind it.
-    return f"""\\needspace{{4\\baselineskip}}
-\\begingroup
+    return f"""\\begingroup
 \\footnotesize\\linespread{{0.92}}\\selectfont
 \\setlength{{\\tabcolsep}}{{2pt}}
 \\setlength{{\\LTpre}}{{4pt}}\\setlength{{\\LTpost}}{{4pt}}

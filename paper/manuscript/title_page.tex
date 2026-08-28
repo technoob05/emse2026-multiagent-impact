@@ -1,0 +1,133 @@
+% Standalone title page for the Editorial Manager item type
+% "Title Page containing ALL Author Contact Info."
+%
+% Springer asks for this as a separate file even where review is single-blind,
+% because the production system indexes author contact details from it rather
+% than from the article. It therefore repeats what the article's title block
+% already carries, plus the full contact details and the ORCIDs, which the
+% article does not print.
+%
+% Deliberately plain: no class file, no figures, no bibliography, so it builds
+% anywhere and cannot fail for a reason the article would not.
+\documentclass[11pt,a4paper]{article}
+% Latin Modern is the Type 1 companion to T1 encoding. Without it this file
+% pulls bitmap (Type 3) fonts, which publisher toolchains reject.
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+\usepackage[hidelinks]{hyperref}
+% The declarations carry two long DOI and repository URLs. TeX will not break a
+% URL at an arbitrary point, so without this it sets one 67pt past the margin.
+\usepackage{url}
+\Urlmuskip=0mu plus 1mu
+\def\UrlBreaks{\do\/\do\.\do\-\do\_\do\:}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Participation Is Not Collaboration:\\[2pt]
+When One LLM Coding Agent Reviews Another on GitHub, a Person Answers\par}
+\end{center}
+
+\vspace{1em}
+
+\textbf{Journal.} Empirical Software Engineering\\
+\textbf{Article type.} Research Papers\\
+\textbf{Special issue.} Agentic Software Engineering: The Rise of AI Teammates
+
+\vspace{1.5em}
+
+\textbf{\large Authors}
+
+\textbf{Duy Minh Dao Sy} \quad ORCID 0009-0002-4501-2788\\
+Faculty of Information Technology, Ho Chi Minh City University of Science
+(HCMUS), Ho Chi Minh City, Vietnam\\
+Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City,
+Vietnam\\
+\href{mailto:23122041@student.hcmus.edu.vn}{23122041@student.hcmus.edu.vn}\\
+\emph{Corresponding author. Joint first author.}
+
+\textbf{Trung Kiet Huynh} \quad ORCID 0009-0000-5463-754X\\
+Faculty of Information Technology, Ho Chi Minh City University of Science
+(HCMUS), Ho Chi Minh City, Vietnam\\
+Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City,
+Vietnam\\
+\emph{Joint first author.}
+
+\textbf{Chi Nguyen Tran} \quad ORCID 0009-0007-6716-7269\\
+Faculty of Information Technology, Ho Chi Minh City University of Science
+(HCMUS), Ho Chi Minh City, Vietnam\\
+Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City,
+Vietnam
+
+\textbf{Phu Hoa Pham} \quad ORCID 0009-0001-5471-2578\\
+Faculty of Information Technology, Ho Chi Minh City University of Science
+(HCMUS), Ho Chi Minh City, Vietnam\\
+Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City,
+Vietnam
+
+\textbf{Lam Phu Quy Nguyen} \quad ORCID 0009-0002-9694-8105\\
+Faculty of Information Technology, Ho Chi Minh City University of Science
+(HCMUS), Ho Chi Minh City, Vietnam\\
+Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City,
+Vietnam
+
+\vspace{1em}
+
+Duy Minh Dao Sy and Trung Kiet Huynh contributed equally to this work.
+
+\vspace{1.5em}
+
+\textbf{\large Statements and Declarations}
+
+\textbf{Funding.} The authors received no funding for this work.
+
+\textbf{Competing interests.} The authors declare no competing interests. None
+of the authors is affiliated with, employed by, or funded by any of the
+coding-agent vendors whose products this study measures.
+
+\textbf{Ethics approval and consent to participate.} Ethics approval was not
+required. This study analyses pull-request records that GitHub already
+publishes, collected through a public research dataset, and involves no
+intervention and no interaction with any person. No participants were recruited,
+so consent to participate does not apply. We report accounts by role rather than
+by login throughout, and no figure or table in this article or in Online
+Resource~1 names an individual.
+
+\textbf{Consent for publication.} Not applicable. No individual-level
+identifying information is reproduced in this article. The analyses use public
+GitHub repository records, and accounts are reported by role and in aggregate
+rather than by login.
+
+\textbf{Data availability.} The source data are the public AIDev-7.6M release at
+the pinned revision reported in the article's method section. The derived
+cohorts needed to reproduce every result are archived at
+\url{https://doi.org/10.5281/zenodo.22140821}.
+
+\textbf{Materials availability.} Not applicable. This study uses no physical
+materials.
+
+\textbf{Code availability.} The analysis and figure code that produces every
+table and figure in this article and in Online Resource~1 is archived with the
+derived cohorts at
+\url{https://doi.org/10.5281/zenodo.22140821}
+and is also available at
+\url{https://github.com/technoob05/emse2026-multiagent-impact}.
+
+% Word for word as the article's own declarations section states them, so the
+% two documents an editor reads side by side cannot disagree. The metadata form
+% carries the same roles again in CRediT taxonomy spelling, which is what the
+% portal's structured contribution fields expect; it says so itself.
+\textbf{Author contributions.} Duy Minh Dao Sy and Trung Kiet Huynh contributed
+equally and are joint first authors. Duy Minh Dao Sy: conceptualisation,
+methodology, formal analysis, software, visualisation, writing of the original
+draft. Trung Kiet Huynh: conceptualisation, methodology, data curation,
+software, validation, writing through review and editing. Chi Nguyen Tran:
+investigation, data curation, validation. Phu Hoa Pham: investigation, software,
+validation. Lam Phu Quy Nguyen: investigation, validation, writing through
+review and editing. All authors read and approved the final manuscript.
+
+\end{document}

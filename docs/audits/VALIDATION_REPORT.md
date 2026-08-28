@@ -42,7 +42,7 @@ The paper does not depend on semantic same-locus labels or exact-file task-conti
 - Automated tests: 48 passed; one non-failing sortedness warning.
 - The executable notebook completed successfully.
 - Both LaTeX logs contain no errors, overfull boxes, undefined citations/references, or rerun warnings.
-- Manuscript: 37 A4 pages. Supplementary Information: 37 A4 pages. Both counts are read from the built PDFs on the date of this report; re-measure rather than trusting them after any edit.
+- Manuscript: 37 A4 pages. Supplementary Information: 36 A4 pages. Both counts are read from the built PDFs on the date of this report; re-measure rather than trusting them after any edit.
 - Page-complete visual QA inspected all 36 manuscript pages and all 33 Supplementary Information pages of the 2026-08-28 build. No clipping, unreadable figure text, float-order error, duplicate caption, or blank page was found. The article is now 37 pages and the Supplementary Information 37, after the hour-48 landmark-selection probe was wired into the appendix; both recompile with no error, no overfull box and no undefined reference, and the new table was inspected, but a page-by-page re-read is still outstanding.
 - All PDF fonts are embedded, and `pdffonts` reports no Type 3 font in either document. This is worth re-running rather than trusting: an intermediate build on 2026-08-28 did carry one Type 3 font in the manuscript, and the current build does not. The six manuscript figures have never carried one; every glyph in them is a CID TrueType face.
 - PDF text and packaged source contain no local drive, user-profile, cache, or external-raw-data path.

@@ -118,6 +118,10 @@ def staleness_report() -> list[str]:
             MANUSCRIPT / "technical_appendix.pdf",
             [path for path in appendix_inputs if path.exists()],
         ),
+        # Editorial Manager will not build a submission PDF for this article
+        # type without a separate file of the item type "Title Page containing
+        # ALL Author Contact Info.", so it is a required artefact, not a nicety.
+        (MANUSCRIPT / "title_page.pdf", [MANUSCRIPT / "title_page.tex"]),
     )
 
     for pdf, inputs in checks:
@@ -161,6 +165,7 @@ def main() -> None:
         shutil.rmtree(SUBMIT)
     SUBMIT.mkdir()
 
+    shutil.copy2(MANUSCRIPT / "title_page.pdf", SUBMIT / "0_title_page.pdf")
     shutil.copy2(MANUSCRIPT / "main.pdf", SUBMIT / "1_manuscript.pdf")
     # Springer names supplementary files ESM_1.pdf, ESM_2.pdf, and publishes
     # them "as received ... without any conversion, editing, or reformatting",
@@ -208,11 +213,18 @@ Built from the compiled PDFs in `paper/manuscript/`. This folder is regenerated,
 never edited by hand, and the builder refuses to run if a PDF is older than a
 source file it is built from.
 
-| File | What it is | Where it goes in Editorial Manager |
+The right-hand column is the exact string to pick in Editorial Manager's *Item
+Type* dropdown. The dropdown for this article type offers only: Title Page
+containing ALL Author Contact Info. / Manuscript / Figure / Table /
+Supplementary Material / Authorship change form. There is no "LaTeX supporting
+file" entry, so source files go under Supplementary Material.
+
+| File | What it is | Item Type to choose |
 |---|---|---|
-| `1_manuscript.pdf` | The article | Manuscript |
-| `ESM_1.pdf` | Supplementary Information | Online Resource 1. Springer's own naming convention; upload it under exactly this name. |
-| `3_manuscript_source.zip` | Flat LaTeX source for the article: {", ".join(f"`{name}`" for name in archived)} | Source files |
+| `0_title_page.pdf` | Title, all five authors with affiliations, ORCIDs and the corresponding email, and the declarations | **Title Page containing ALL Author Contact Info.** Required: the portal will not build a submission PDF without it. |
+| `1_manuscript.pdf` | The article | **Manuscript** |
+| `ESM_1.pdf` | Supplementary Information | **Supplementary Material**. Online Resource 1. Springer's own naming convention; upload it under exactly this name. |
+| `3_manuscript_source.zip` | Flat LaTeX source for the article: {", ".join(f"`{name}`" for name in archived)} | Upload the zip; the portal expands it. Set the main `.tex` to **Manuscript** only if you want the portal to typeset for you, otherwise leave every expanded file as **Supplementary Material** so the reviewed PDF is the one verified here. |
 | `4_cover_letter.md` | Cover letter | Read this one. |
 | `4_cover_letter.txt` | Cover letter | Paste this one: the portal's box is rich text, so Markdown markers would appear literally. |
 | `5_metadata_form.md` | Title, author records with affiliations and ORCIDs, declarations, and CRediT roles. It carries no abstract and no keywords; both are in the manuscript | Typed into the portal |

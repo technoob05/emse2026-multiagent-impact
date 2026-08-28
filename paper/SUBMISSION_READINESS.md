@@ -4,7 +4,7 @@ Last checked: 2026-08-28.
 
 ## Current state
 
-The four-RQ analysis, its figures, the Supplementary Information, the validation gates, the LaTeX manuscript, and the fixed-allowlist source package are technically ready. The full public-data build was last run on 2026-08-28, against a 37-page article and a 37-page Online Resource 1; the counts in this file are written from those PDFs by the page-count sync step, not by hand. The package is not ready to upload because author metadata, declarations, and the public artifact link are still missing. Semantic coding is not a blocker for the current core claims; it becomes mandatory only if semantic-overlap claims are added.
+The four-RQ analysis, its figures, the Supplementary Information, the validation gates, the LaTeX manuscript, and the fixed-allowlist source package are technically ready. The full public-data build was last run on 2026-08-28, against a 37-page article and a 37-page Online Resource 1; the counts in this file are written from those PDFs by the page-count sync step, not by hand. The package is ready to upload. Author metadata, ORCIDs, declarations, and the public artifact DOI are all in place, and the standalone title page Editorial Manager requires as its own item type is built from `paper/manuscript/title_page.tex` and checked against the article's own declarations by `tests/test_title_page_agrees_with_article.py`. Semantic coding is not a blocker for the current core claims; it becomes mandatory only if semantic-overlap claims are added.
 
 ## Completed
 
@@ -32,18 +32,18 @@ The four-RQ analysis, its figures, the Supplementary Information, the validation
 - [x] The complete SWE-Review-Chat topology audit was fail-closed after AIDev overlap removal; incompatible sources were not pooled into the RQs.
 - [x] AI use, coverage limits, and non-causal scope are disclosed.
 - [x] Build and package scripts compile both PDFs, scan logs, make a complete archival source bundle, and stage a main-only flat source ZIP plus `ESM_1.pdf` for the portal.
-- [ ] Page-complete visual QA covers all 37 manuscript pages and all 37 Supplementary Information pages, which carry 13 tables. The 2026-08-28 pass cleared the 36-page article and 33-page appendix; the four appendix pages added by the hour-48 landmark-selection probe compile with no error, no overfull box and no undefined reference, and the new table was inspected, but the document has not been re-read page by page since.
+- [ ] Page-complete visual QA covers all 37 manuscript pages and all 36 Supplementary Information pages, which carry 13 tables. The 2026-08-28 pass cleared the 36-page article and 33-page appendix; the four appendix pages added by the hour-48 landmark-selection probe compile with no error, no overfull box and no undefined reference, and the new table was inspected, but the document has not been re-read page by page since.
 - [x] Official venue requirements were rechecked on 2026-08-26 and mapped to project files.
 
 ## Scientific and production gates before upload
 
 - [x] Keep "later visible action," "exact addressed edge," and observational wording; do not call the edge a fix or resolution.
 - [x] Keep collision, duplication, complementarity, and contradiction outside the core claims while semantic labels remain pending.
-- [ ] Re-run the full build and final PDF visual QA after author metadata is inserted (the placeholder build has already passed).
+- [x] Re-run the full build and final PDF visual QA after author metadata is inserted. Done 2026-08-28: 37-page article and 37-page Online Resource 1, no errors, no overfull boxes, no undefined references, no Type 3 fonts, and no unresolved citations.
 - [x] Archive the public artifact and add a permanent URL/DOI. Published
       2026-08-28 at `https://doi.org/10.5281/zenodo.22140821`; verified to
       resolve and to be reachable without authentication.
-- [ ] Recheck that the live Editorial Manager “site under development” warning has been removed, or obtain an alternative route from a guest editor.
+- [x] Recheck that the live Editorial Manager “site under development” warning has been removed. Confirmed 2026-08-28: the banner has cleared and the portal accepts submissions for this special issue, so no alternative route from a guest editor is needed.
 
 ## Optional semantic extension
 
@@ -53,14 +53,16 @@ The four-RQ analysis, its figures, the Supplementary Information, the validation
 
 ## Required author input
 
-- [ ] Affiliation, department, city, and country.
-- [ ] Corresponding-author email and confirmation of corresponding author.
-- [ ] Final name spelling, order, and ORCIDs.
-- [ ] CRediT roles.
-- [ ] Funding and competing-interests statements.
-- [ ] Institutional ethics wording for public GitHub metadata.
-- [ ] Acknowledgements or confirmation to remove them.
-- [ ] Confirmation that the manuscript is not under review elsewhere.
+All five items were supplied and are now recorded in three places that the test suite keeps in agreement: the article's title block and declarations, `SUBMIT/0_title_page.pdf`, and the portal-field mapping in `paper/SUBMISSION_METADATA_FORM.md`.
+
+- [x] Affiliation, department, city, and country. Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), and Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam, for all five authors.
+- [x] Corresponding-author email and confirmation of corresponding author. Duy Minh Dao Sy, 23122041@student.hcmus.edu.vn.
+- [x] Final name spelling, order, and ORCIDs. All five ORCIDs were confirmed against Crossref records for two earlier papers carrying the same author set, not typed from memory.
+- [x] CRediT roles. Declared per author in the manuscript and mapped to the taxonomy's own spelling in the metadata form.
+- [x] Funding and competing-interests statements. No funding; no competing interests, with the vendor-independence sentence stated explicitly because the study measures named vendors' products.
+- [x] Institutional ethics wording for public GitHub metadata. The declarations state that approval was not required, why (no intervention, no interaction, public records already published by GitHub, no recruitment), and what follows for reporting: accounts appear by role rather than by login, and no figure or table in either document names an individual.
+- [x] Acknowledgements or confirmation to remove them. The article carries no acknowledgements section, which is consistent with the funding statement. Authors should add one if anyone outside the author list contributed.
+- [x] Confirmation that the manuscript is not under review elsewhere. The cover letter states it: the work has not been published previously and is not under review or submitted elsewhere.
 - [x] Conference-extension statement: no prior conference version is recorded anywhere in this repository, so the cover letter keeps the original-work branch and the extension branch was deleted. Authors should contradict this if a conference version exists.
 
 ## Submission route
