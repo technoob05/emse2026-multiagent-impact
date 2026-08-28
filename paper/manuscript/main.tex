@@ -602,7 +602,9 @@ reader the task context. We read it as context the reviewer had, which is how
 such links are normally written, but that reading is an assumption and not
 something we can check. The release records no timestamp for the
 description, and descriptions can be edited, so what we observe is a link present
-when the data were collected. Section~\ref{sec:threats} says what that costs. An issue is a numbered task in the project's own
+when the data were collected, and the RQ4 result below is read as an association
+with an observed property rather than with something we know preceded the
+trigger. An issue is a numbered task in the project's own
 tracker saying what the change is for. The outcome is whether the review point gets answered
 within 48 hours.
 
@@ -795,9 +797,9 @@ The next step is even more selective. Among PRs that are still mapped-product
 first after five minutes, only about one in twenty move next to a different
 mapped product after a second waiting period. That second wait is again a
 convention, so we ran the same count after waiting nothing at all, five minutes,
-thirty, and an hour. The relay share falls from 6.3\% to 3.8\% as the wait
-lengthens and never rises, so five minutes is the generous end of the range
-rather than the choice that flatters the result.
+thirty, and an hour. The relay share falls from 6.3\% at no wait to 4.7\% at five minutes and 3.8\%
+at an hour, never rising, so the published setting sits inside the range rather
+than at the end of it that would flatter the result.
 
 The same product carrying on is far more common, and it is tempting to read
 that as an agent staying with the task. It is not. We shuffled the order of
@@ -814,13 +816,14 @@ special product-persistence mechanism.
 \centering
 \includegraphics[width=\linewidth]{Fig3.pdf}
 \caption{A quieter boundary, and a history common on both sides of it. Panel A
-gives, for each of six outcomes measured on 546 matched pairs, how much more
-often it happened after a cross-product review than after its matched
-same-product partner, with a 95\% interval from resampling repositories. Only
+gives, for each of six outcomes, how much more often it happened after a
+cross-product review than after its matched same-product partner. Five are
+measured on all 546 matched pairs, with a 95\% interval from resampling repositories. Only
 the top bar's interval clears the line at no difference, and it is the only one
 drawn in colour; the rate pair behind each bar is printed on the right. The
-starred row uses the 241 pairs where a reply is reachable on both sides, because
-on the rest the trigger sits on a channel that records no reply. Panel B asks how
+starred row uses the 241 pairs where a reply is reachable on both sides; on 293
+of the rest the trigger sits on a channel that records no reply at all, and on 12
+more it sits mid-thread, where the platform stores no reply target. Panel B asks how
 often whoever steps in had reviewed in that repository before, under three ways
 of choosing whom to count. Panel C shows what one matched pair looks like: two
 reviews of the same author's work in the same repository half a minute apart,
@@ -949,8 +952,11 @@ genuinely precedes the exposure, leaves too little to work with: only 17 of the
 1,067 pull requests open at hour 48 receive an exact reply between hours 48 and
 96, and only 16 among the 958 that were still unanswered at the landmark.
 Widening that exposure to any reply from a user account, on those 958, gives 160
-exposed and an estimate of 0.7 points on an interval from $-9.3$ to $+10.7$,
-which is a null on a slower and different subgroup rather than a refutation.
+exposed and an estimate of 0.7 points on an interval from $-9.3$ to $+10.7$. That
+figure is not comparable with the other two: to keep the landmark ahead of the
+exposure the outcome window also has to move, so it reads merges after hour 96
+rather than after hour 48. It is a null on a slower and differently measured
+subgroup, not a refutation.
 
 We therefore read the effect as positive and somewhere below 17.3 points, with
 11.2 as the landmark-free reading, and we do not claim the landmark estimate is
@@ -1059,8 +1065,8 @@ explain the result away only if it were both far more common among answered pull
 requests, on the horizontal axis, and shifted later merging a long way on its
 own, on the vertical axis. The shaded corner is where it would have to sit; the
 dashed line marks the weaker feat of widening the interval past zero. The four
-dots are the strongest factors we did measure, so the reader can see how far
-short of the corner a real measured factor falls. This is
+dots are the measured factors, all of them, so the reader can see how far short
+of the corner a real one falls. This is
 bias arithmetic, not proof that no such factor exists.}
 \label{fig:sensitivity}
 \end{figure}
@@ -1283,10 +1289,12 @@ still open at hour 48. Everything in between is real activity that never becomes
 reviews, the comments, the branch movement.
 
 Once you insist on a connection, the multi-agent story turns into a human one.
-The reply on an agent's review point is written by a person four times in five.
+The reply on an agent's review point comes from a user account four times in
+five.
 That person is usually not new to the project. Some of the time, though, what the
-person writes is a hand-off to yet another machine, and those are the replies
-that do not go with a later merge. This is the part a product count
+person writes is a hand-off to yet another machine, and on the fifteen pull
+requests where that happens we cannot tell whether those replies behave like the
+rest. This is the part a product count
 cannot see, and it is the part that goes together with the change landing.
 
 \subsection{What we could not show, and why it matters}
