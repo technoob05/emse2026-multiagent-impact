@@ -149,34 +149,86 @@ def build_source_archive(destination: pathlib.Path) -> list[str]:
     return names
 
 
-def build_upload_archive(destination: pathlib.Path, submit: pathlib.Path) -> list[str]:
-    """One archive carrying every file that is attached in the portal.
+# Item types, and the order the files go up in, both taken from the journal's
+# own LaTeX submission rules rather than from what looks tidy:
+#
+#   - all files on one folder level, no sub folders
+#   - the main TeX file must be the first item
+#   - declare the main TeX file as "Manuscript"
+#   - upload image files (EPS, PNG, TIFF and so on) as figures
+#   - declare TeX supporting files and journal style files as
+#     "LaTeX Supporting File(s)"
+#   - upload a PDF of the article as supplementary material for reference
+#
+# Those rules put the portal in its LaTeX flow: it compiles main.tex and the
+# PDF it builds is what reviewers read, which is why the earlier plan here --
+# our own PDF as the Manuscript, everything else as Supplementary Material --
+# was wrong. It is also why the compiled `main.bbl` matters, and why the build
+# must be clean from these files alone.
+MANUSCRIPT_ITEM = "Manuscript"
+FIGURE_ITEM = "Figure"
+SUPPORTING_ITEM = "LaTeX Supporting File(s)"
+SUPPLEMENTARY_ITEM = "Supplementary Material"
+TITLE_PAGE_ITEM = "Title Page containing ALL Author Contact Info."
 
-    Editorial Manager's Attach Files page takes a single file at a time, but it
-    expands a zip on arrival, so one upload lands the whole set. That is why
-    this exists as a separate archive from the LaTeX source one: the source
-    archive answers the journal's "supply your editable source" requirement and
-    goes in as a deposit, while this one is purely a transport for the upload
-    itself.
+IMAGE_SUFFIXES = {".pdf", ".png", ".eps", ".tif", ".tiff", ".jpg", ".jpeg"}
 
-    Flat, with no directory entries, because the portal lists whatever it finds
-    by basename and a folder here would produce files it will not match to an
-    item type. The cover letter and the metadata form are deliberately absent:
-    they are pasted into portal boxes, not attached, so including them would
-    invite uploading a duplicate of something already typed in.
+
+def upload_plan(submit: pathlib.Path) -> list[tuple[str, pathlib.Path, str]]:
+    """Every attached file as `(name, source path, item type)`, in upload order.
+
+    Derived rather than listed by hand, so a figure added to main.tex cannot be
+    left out of the plan or given the wrong type.
     """
-    attached = ["0_title_page.pdf", "1_manuscript.pdf", "ESM_1.pdf"]
-    missing = [name for name in attached if not (submit / name).is_file()]
+    source_names = list(SOURCE_FILES) + figure_files()
+    if source_names[0] != "main.tex":
+        raise SystemExit("the main TeX file must be first; SOURCE_FILES changed")
+
+    plan: list[tuple[str, pathlib.Path, str]] = [
+        ("main.tex", MANUSCRIPT / "main.tex", MANUSCRIPT_ITEM)
+    ]
+    rest = source_names[1:]
+    # Images first, then the TeX and style files, matching the order the rules
+    # list them in so the Order column reads the way the journal describes it.
+    for name in rest:
+        if pathlib.Path(name).suffix.lower() in IMAGE_SUFFIXES:
+            plan.append((name, MANUSCRIPT / name, FIGURE_ITEM))
+    for name in rest:
+        if pathlib.Path(name).suffix.lower() not in IMAGE_SUFFIXES:
+            plan.append((name, MANUSCRIPT / name, SUPPORTING_ITEM))
+
+    plan.append(
+        ("0_title_page.pdf", submit / "0_title_page.pdf", TITLE_PAGE_ITEM)
+    )
+    # The PDF of the article rides along "for reference" exactly as the rules
+    # say, not as the Manuscript: in this flow the portal builds that itself.
+    plan.append(("1_manuscript.pdf", submit / "1_manuscript.pdf", SUPPLEMENTARY_ITEM))
+    plan.append(("ESM_1.pdf", submit / "ESM_1.pdf", SUPPLEMENTARY_ITEM))
+
+    missing = [name for name, path, _ in plan if not path.is_file()]
     if missing:
         raise SystemExit(f"Cannot build the upload archive; missing: {missing}")
+    return plan
 
-    source_names = list(SOURCE_FILES) + figure_files()
+
+def build_upload_archive(
+    destination: pathlib.Path, plan: list[tuple[str, pathlib.Path, str]]
+) -> None:
+    """One archive carrying every attached file, in the order they go up.
+
+    Editorial Manager's Attach Files page takes a single file at a time, but it
+    expands a zip on arrival, so one upload lands the whole set. Members are
+    written in plan order because the portal numbers what it finds in the order
+    it finds it, which is the cheapest way to satisfy "the main TeX file must be
+    the first item" without dragging rows around by hand afterwards.
+
+    Flat, with no directory entries, because the rules forbid sub folders. The
+    cover letter and the metadata form are deliberately absent: they are pasted
+    into portal boxes, not attached.
+    """
     with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED) as archive:
-        for name in attached:
-            archive.write(submit / name, arcname=name)
-        for name in source_names:
-            archive.write(MANUSCRIPT / name, arcname=name)
-    return attached + source_names
+        for name, path, _ in plan:
+            archive.write(path, arcname=name)
 
 
 def main() -> None:
@@ -202,7 +254,55 @@ def main() -> None:
     # so the local filename is the one readers get. Ship it already named.
     shutil.copy2(MANUSCRIPT / "technical_appendix.pdf", SUBMIT / "ESM_1.pdf")
     archived = build_source_archive(SUBMIT / "3_manuscript_source.zip")
-    uploaded = build_upload_archive(SUBMIT / "UPLOAD_THIS.zip", SUBMIT)
+    plan = upload_plan(SUBMIT)
+    build_upload_archive(SUBMIT / "UPLOAD_THIS.zip", plan)
+
+    order = "\n".join(
+        f"| {position} | `{name}` | {item} |"
+        for position, (name, _, item) in enumerate(plan, 1)
+    )
+    (SUBMIT / "UPLOAD_ORDER.md").write_text(
+        f"""# Attach Files: what to set on every row
+
+Upload `UPLOAD_THIS.zip`. The portal expands it into these {len(plan)} rows, in
+this order. Set the Item Type column to match, then press *Update File Order*
+if any row has moved.
+
+These assignments come from the journal's LaTeX submission rules, not from
+preference. The consequence worth understanding: because `main.tex` is the
+Manuscript, the portal compiles it, and the PDF reviewers read is the portal's
+build rather than the one verified here. `1_manuscript.pdf` rides along as
+supplementary material for reference, which is what the rules ask for.
+
+| Order | File | Item Type |
+|---|---|---|
+{order}
+
+Fastest route through the dropdowns: set the {len(plan) - sum(1 for _, _, item in plan if item == FIGURE_ITEM)} non-figure rows
+first, one at a time, then use *Change Item Type of all [Choose] files* to sweep
+the {sum(1 for _, _, item in plan if item == FIGURE_ITEM)} that are left to
+Figure. Doing it the other way round means the sweep also hits the rows you
+already set correctly.
+
+## Not attached
+
+The cover letter is pasted from `4_cover_letter.txt`, the author records are
+typed from `5_metadata_form.md`, and the artifact DOI
+`https://doi.org/10.5281/zenodo.22140821` goes in under *Link(s) to supporting
+data*. `3_manuscript_source.zip` is not uploaded: its contents already travel
+inside `UPLOAD_THIS.zip` as individual rows.
+
+## Before pressing Approve
+
+The portal compiles `main.tex` itself, so its build is the thing to check, not
+ours. Open the PDF it generates and confirm: no LaTeX error text printed in the
+PDF, the bibliography resolves rather than showing `[?]`, all six figures
+render, and the page count is 37. If any of that is wrong, the fix is in the
+source, not in the upload.
+""",
+        encoding="utf-8",
+        newline="\n",
+    )
 
     documents = (
         (ROOT / "paper" / "COVER_LETTER.md", "4_cover_letter.md"),
@@ -244,24 +344,18 @@ Built from the compiled PDFs in `paper/manuscript/`. This folder is regenerated,
 never edited by hand, and the builder refuses to run if a PDF is older than a
 source file it is built from.
 
-The right-hand column is the exact string to pick in Editorial Manager's *Item
-Type* dropdown. The dropdown for this article type offers only: Title Page
-containing ALL Author Contact Info. / Manuscript / Figure / Table /
-Supplementary Material / Authorship change form. There is no "LaTeX supporting
-file" entry, so source files go under Supplementary Material.
+**Upload `UPLOAD_THIS.zip` and nothing else**, then set the Item Type on every
+row it expands into. `UPLOAD_ORDER.md` is that list, row by row, generated from
+the same plan the archive is built from so the two cannot disagree.
 
-**Upload `UPLOAD_THIS.zip` and nothing else.** The Attach Files page takes one
-file per upload but expands a zip on arrival, so that single upload lands all
-{len(uploaded)} attached files. Then set the item types below and press *Change
-Now* once for the whole LaTeX set.
-
-| File | What it is | Item Type to choose |
+| File | What it is | Where it goes |
 |---|---|---|
-| `UPLOAD_THIS.zip` | Everything in the three rows below plus the LaTeX source, flat | Upload it; the portal expands it and the rows arrive individually |
-| `0_title_page.pdf` | Title, all five authors with affiliations, ORCIDs and the corresponding email, and the declarations | **Title Page containing ALL Author Contact Info.** Required: the portal will not build a submission PDF without it. |
-| `1_manuscript.pdf` | The article | **Manuscript** |
-| `ESM_1.pdf` | Supplementary Information | **Supplementary Material**. Online Resource 1. Springer's own naming convention; upload it under exactly this name. |
-| the {len(archived)} LaTeX source files | {", ".join(f"`{name}`" for name in archived)} | **Supplementary Material**, all of them. Use *Change Item Type of all [Choose] files* to set them in one press. Do not mark `main.tex` as Manuscript: that asks the portal to typeset the article itself, and then reviewers read its build rather than the PDF verified here. |
+| `UPLOAD_THIS.zip` | All {len(plan)} attached files, flat, in upload order | The one upload. The portal expands it. |
+| `UPLOAD_ORDER.md` | Item Type for each expanded row | Read while clicking. Not uploaded. |
+| `0_title_page.pdf` | Title, all five authors with affiliations, ORCIDs and the corresponding email, and the declarations | Inside the archive. Required: the portal will not build a submission PDF without it. |
+| `1_manuscript.pdf` | The article as compiled here | Inside the archive, as supplementary material for reference. The portal builds its own from `main.tex`. |
+| `ESM_1.pdf` | Supplementary Information | Inside the archive. Online Resource 1; Springer's own naming convention, so keep the name. |
+| the {len(archived)} LaTeX source files | {", ".join(f"`{name}`" for name in archived)} | Inside the archive, split between Figure and LaTeX Supporting File(s) by `UPLOAD_ORDER.md`. |
 | `3_manuscript_source.zip` | The same source files as a standalone deposit, for anywhere that asks for source as one file | Not uploaded. Its contents already travel inside `UPLOAD_THIS.zip`, so uploading this too would duplicate all {len(archived)}. |
 | `4_cover_letter.md` | Cover letter | Read this one. |
 | `4_cover_letter.txt` | Cover letter | Paste this one: the portal's box is rich text, so Markdown markers would appear literally. |
