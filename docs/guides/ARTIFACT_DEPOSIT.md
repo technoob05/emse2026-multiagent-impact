@@ -48,7 +48,8 @@ Check the archive and metadata first. This needs no token and touches no
 network:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scriptselease\create_zenodo_draft.ps1 `
+powershell -ExecutionPolicy Bypass -File scripts
+elease\create_zenodo_draft.ps1 `
   -Archive build\zenodo\emse2026-multiagent-impact-artifact.zip `
   -Metadata .zenodo.json -ValidateOnly
 ```
@@ -61,7 +62,8 @@ shell history or a log. Use a freshly issued token, and revoke it afterwards:
 $env:ZENODO_ACCESS_TOKEN = Read-Host -AsSecureString |
   ConvertFrom-SecureString -AsPlainText
 
-powershell -ExecutionPolicy Bypass -File scriptselease\create_zenodo_draft.ps1 `
+powershell -ExecutionPolicy Bypass -File scripts
+elease\create_zenodo_draft.ps1 `
   -Archive build\zenodo\emse2026-multiagent-impact-artifact.zip `
   -Metadata .zenodo.json -Production
 ```
@@ -114,8 +116,8 @@ The manuscript is not edited by this guide's author. Hand the DOI to whoever
 owns the LaTeX. There are exactly two markers, both in
 `paper/manuscript/main.tex`:
 
-- line ~1225, data-availability sentence: `[ARTIFACT DOI PENDING]`
-- line ~1232, code-availability sentence: `[ARTIFACT DOI PENDING]`
+- line ~1225, data-availability sentence: `https://doi.org/10.5281/zenodo.22140821`
+- line ~1232, code-availability sentence: `https://doi.org/10.5281/zenodo.22140821`
 
 `paper/COVER_LETTER.md` carries the same DOI in its data-availability
 paragraph if that file is used.
@@ -162,7 +164,7 @@ automatically.
       limits of that licence travel with it.
 - [ ] `REPRODUCE.md` is inside the zip; it is the entry point for anyone who
       downloads the record and has nothing else.
-- [ ] The manuscript no longer says `[ARTIFACT DOI PENDING]`.
+- [ ] The manuscript no longer says `https://doi.org/10.5281/zenodo.22140821`.
 
 Publishing is irreversible: the files on a published Zenodo record cannot be
 withdrawn, only superseded by a new version.

@@ -99,7 +99,7 @@ một dòng vào `REPRODUCTION_STEPS` trong
 Bài đã reproducible và compile sạch. Còn mở:
 
 - Metadata tác giả (affiliation, email, ORCID, CRediT), declarations, ethics.
-- Artifact DOI — hiện là `[ARTIFACT DOI PENDING]`.
+- Artifact DOI — `10.5281/zenodo.22140821`, reserved on a Zenodo draft, not yet published.
 - Editorial Manager từng hiện cảnh báo "site under development" (26/08/2026),
   cần kiểm tra lại.
 - Semantic coding của 167 locus vẫn pending — chỉ bắt buộc nếu thêm claim về

@@ -105,8 +105,8 @@ keywords:
 license: MIT
 repository-code: 'https://github.com/technoob05/emse2026-multiagent-impact'
 version: v1.0.0
-# date-released: 2026-01-01   <- uncomment and set to the deposit date, YYYY-MM-DD
-# doi: DOI-PENDING            <- uncomment and set to the reserved Zenodo DOI
+date-released: 2026-08-28
+doi: 10.5281/zenodo.22140821
 references:
   - type: data
     title: 'AIDev: Studying AI Coding Agents on GitHub'
