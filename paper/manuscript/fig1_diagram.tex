@@ -41,16 +41,16 @@
 % emphasis; the claim about the step through the person is carried by the green
 % sentence set under that step, which is where the emphasis belongs. Panel B's
 % three arrows share that geometry and each takes the HUE of the rung it points
-% into -- ocean, indigo, violet -- so the three of them step up the ramp with the
-% eye and none of them is slate. They are not the rung's exact fill any more.
-% Once the ramp was lightened, rung 2's own strip measures 1.71 to 1 against the
-% page and rung 3's 2.30, so an arrow painted in it would be a pale smear on
-% white rather than a stroke. Each arrow therefore sits about 22 L* below its
-% rung at the same hue angle, which is the smallest offset that clears 3 to 1 on
-% the lightest of the three: measured against white the shafts read 3.40, 4.65
-% and 6.50. Hue still names the target and the three still darken in order; what
-% was given up is the byte-exact match to the strip, and it was given up on
-% purpose. The time axis is heavier still, 1.6 pt, because it is a spine rather
+% into -- blue, green, orange -- so the three of them step along the ramp with
+% the eye and none of them is slate. They are not the rung's exact fill: rung 2's
+% own strip measures 2.98 to 1 against the page, rung 3's 2.62 and rung 4's 2.34,
+% so an arrow painted in the strip colour would be a pale smear rather than a
+% stroke. Each arrow sits 14 L* below its rung at the same hue and the same
+% chroma, which is the smallest offset that clears 3 to 1 on the weakest of the
+% three: measured against white the shafts read 4.83, 4.21 and 3.70. Hue still
+% names the target and the three still lighten in the ramp's own order; what was
+% given up is the byte-exact match to the strip, and it was given up on purpose.
+% The time axis is heavier still, 1.6 pt, because it is a spine rather
 % than a link. Heads are as wide as
 % they are long and the shafts are short, so an arrow reads as a push rather
 % than as a needle. The small arrows inside the rung cards are left alone.
@@ -58,44 +58,59 @@
 % COLOUR. Panel A is categorical and the icons carry the palette: purple for the
 % product that writes the change, blue for the product that reviews it, green for
 % the person, orange for the merge, brick for what the rules exclude. Panel B is
-% ORDINAL, so it may not borrow those four hues -- purple would mean "wrote the
-% change" on one half of the page and "rung 1" on the other, and four categorical
-% hues would say "four kinds" where the figure means "four strengths". What makes
-% Panel B's four colours a scale rather than a set is therefore not that they
-% share a hue but that they are MONOTONE IN LIGHTNESS: teal, ocean, indigo and
-% violet, at L* 90, 80, 70 and 60, ten points apart all the way down, so the
-% ladder survives a greyscale print in the right order and no reader can mistake
-% a rung for a card. The hue still swings 107 degrees across the four, from 198
-% to 306, so they read as a progression and not as one colour fading.
+% ORDINAL and now runs on a RAINBOW, sampled from the gradient arrow that serves
+% as its legend. A rainbow is the standard wrong answer for ordinal data, because
+% the usual rainbow is not monotone in lightness and so leaves hue as the only
+% carrier of order, which greyscale and colour-blind readers cannot recover. This
+% particular gradient escapes the worst of that: its lightness rises along its
+% length, monotonically, from the indigo tail to the orange head. It escapes it
+% only partly, though, and the partial part is written down here rather than
+% smoothed over.
 %
-% The ramp is LIGHT, and that is a trade made once and held. A dark ramp was the
-% price of reversing white type out of the strips: 4.5 to 1 against white forces
-% L* under about 45, which is why the earlier version ran 42 down to 17 and read
-% as four bands of night. Lightening it means the strips can no longer carry white
-% type, so the strip labels and the rung numerals are set in FigOneInk instead --
-% one ink, all four rungs. A scale that started dark-on-light and finished
-% light-on-dark would read as a mistake before it read as a scale, so there is no
-% crossover: the darkest rung is held at L* 60 precisely because that is where ink
-% still clears 4.5 to 1 with room to spare, and the ramp is built downward from
-% L* 90 to meet it.
+% As sampled, the four stops are monotone in greyscale but grossly uneven: 102,
+% 108, 158 and 170 out of 255, steps of 6, 49 and 12. Rungs 1 and 2 would be
+% twins on a monochrome printer and so would rungs 3 and 4; the ladder would read
+% as two pairs, not four rungs. The 4.5-to-1 rule then forced the tail up (see
+% the ramp definition), and lifting the two stops that could not carry type is
+% what re-spaces the ladder: the printed rungs measure 139, 149, 160 and 170,
+% steps of 10, 10 and 10, strictly increasing. Ten levels is a real step but it
+% is thin: the previous teal-to-violet ramp had 27. A greyscale reader can still
+% put the four in order, but must look, where before it was immediate.
+%
+% Order is therefore carried three times over and colour is the weakest of the
+% three: by the NUMERALS 1 to 4 in the strips, by LEFT-TO-RIGHT position, and by
+% the ramp. Colour here is redundant encoding, not the only encoding, which is
+% why a rainbow is affordable at all. What a greyscale reader loses is the
+% at-a-glance read of relative strength -- whether rung 3 is much stronger than
+% rung 2 or only a little -- not the order itself.
+%
+% The ramp runs LIGHT because ink, not white, sets the type. 4.5 to 1 against ink
+% needs L* at or above 57, so the darkest rung is held at 58.0 and the ramp is
+% built upward from there. There is no crossover: one ink, all four rungs, and
+% the pill's two words in the same ink on the page. A scale that started
+% dark-on-light and finished light-on-dark would read as a mistake before it read
+% as a scale.
 % Sampled from the 400 dpi render of the typeset page: white on Panel A's four
 % strips measures 9.02, 6.29, 6.14 and 5.84 to 1; INK on the four ramp strips
-% 12.22, 9.34, 6.95 and 5.01; ink on the pill's four quarters the same four
-% readings, so the pill's label is ink too and its arrow with it; ink on every
-% tint better than 13.5, slate on the tints better than 7.7, green on white 6.14,
-% brick on white 6.42. The worst reading in the figure is 5.01 to 1, ink on rung
-% 4, which is now the binding constraint the way white-on-orange used to be. In
-% greyscale the four rungs print at 225, 198, 171 and 144 out of 255, strictly
-% decreasing in steps of 27, 27 and 27. Chroma runs 18 to 22, well under Panel
-% A's 42 to 70, so nothing here can be read as a fifth category.
+% 4.66, 5.30, 6.02 and 6.76; ink on every tint better than 13.4, slate on the
+% tints better than 7.2, ink on white 15.9 for the pill's two words, green on
+% white 6.14, brick on white 6.42. The worst reading in the figure is 4.66 to 1,
+% ink on rung 1, which is now the binding constraint.
 %
-% What the lightening costs: the strip-to-tint break inside rung 1 is now only
-% about 6 L*, where it used to be the whole depth of the card. The tints cannot
-% follow the strips upward -- they are already within 4 points of paper -- so the
-% two-channel encoding is at its thinnest at the top of the ladder. It survives
-% because the strip carries 18 chroma against the tint's 5, so the break is a
-% saturation edge as much as a lightness edge, but it is the one place in the
-% figure where light-on-light is doing real work.
+% DIRECTION. The gradient's tail is dark and its head is light, and rung 1 is the
+% tail, so this ladder gets LIGHTER as it gets stronger. That is the reverse of
+% the usual sequential convention, where more is darker, and it is the reverse of
+% the ramp this figure used before. It is not an accident: the pill is the source
+% image and the rungs are read off it left to right, so the direction is the
+% gradient's, not a choice made here. The numerals and the left-to-right order
+% are what keep it unambiguous.
+%
+% The strip-to-tint break inside each rung is 38, 34, 29 and 24 L*, wide the
+% whole way along; the old ramp's rung 1 had only 6 and had to lean on chroma.
+% That problem is gone, and the card borders improved with it: drawn in the strip
+% colour, they now read 3.39, 2.98, 2.62 and 2.34 to 1 against the page where the
+% old ramp's read 1.30, 1.71, 2.30 and 3.18, so the weakest card outline in
+% Panel B went from 1.30 to 2.34.
 %
 % TYPE. Lato, asked for by family so the article's own type is untouched.
 % Three sizes only: 9 pt bold for panel titles and card names, 8 pt for body
@@ -120,32 +135,51 @@
 \definecolor{FigOneOrangeTint}{HTML}{FDF4EC}
 \definecolor{FigOneBrickTint}{HTML}{FBF0EC}
 \definecolor{FigOneHair}{HTML}{C8CED7}
-% Panel B's ordinal ramp: four steps, light to less light, travelling teal ->
-% ocean -> indigo -> violet. The four hue angles are the ones the darker ramp
-% used, 198.5, 250.3, 287.4 and 305.0, so the progression is unchanged; only the
-% lightness band moved. L* is 89.9, 79.9, 70.0 and 59.9, ten points apart, and
-% the greyscale ladder is 225, 198, 171 and 144 out of 255, strictly decreasing.
-% Chroma is 17.9, 17.9, 20.3 and 22.2 -- lower than the old ramp's 22-28, which
-% is what lightening a colour costs, and far under Panel A's 42-70, so no rung
-% can be mistaken for a card even though rung 3 and rung 4 sit near the blue's
-% and the purple's hue.
-\definecolor{FigOneRampA}{HTML}{B6ECED}
-\definecolor{FigOneRampB}{HTML}{A7CBE5}
-\definecolor{FigOneRampC}{HTML}{A4A9CE}
-\definecolor{FigOneRampD}{HTML}{988AB0}
-% The tints keep the strips' hues and stay monotone with them, at L* 96.5, 95.6,
-% 94.4 and 93.5. Above rung 1 they cannot go much further -- paper is L* 100 --
-% so the strip-to-tint break at the top of the ladder is carried as much by
-% chroma (18 against 5) as by lightness.
-\definecolor{FigOneRampATint}{HTML}{E9F8F8}
-\definecolor{FigOneRampBTint}{HTML}{E8F4FD}
-\definecolor{FigOneRampCTint}{HTML}{EDEEFC}
-\definecolor{FigOneRampDTint}{HTML}{F0EAF9}
-% The ladder's arrows: the rung's hue at about 22 L* below it, which is what it
-% takes for a 1.5 pt shaft to clear 3 to 1 on white. See the ARROWS note.
-\definecolor{FigOneRampBArrow}{HTML}{5E91B2}
-\definecolor{FigOneRampCArrow}{HTML}{6A729E}
-\definecolor{FigOneRampDArrow}{HTML}{655781}
+% Panel B's ordinal ramp is SAMPLED, not invented. Four points evenly spaced
+% along the bar of fig1-arrow-gradient-rainbow.png -- skipping the rounded cap
+% and the arrowhead, so only the bar is read -- give #4350F1, #0069D6, #38B53A
+% and #F79101, at L* 43.2 / 45.7 / 65.0 / 69.5, chroma 94.7 / 64.9 / 76.7 / 81.2
+% and hue 300.1 / 285.3 / 138.7 / 67.4. Those four HUE ANGLES are carried through
+% here byte-exactly; what moved is lightness and chroma, and only where a rule
+% forced it.
+%
+% LIGHTNESS. Ink at 4.5 to 1 needs L* at or above 57, so the gradient's tail --
+% the indigo and the blue, at L* 43.2 and 45.7 -- cannot carry type as sampled.
+% Both were lifted to the contrast floor: rung 1 by +14.8 L* and rung 2 by
+% +16.1. Rungs 3 and 4 were left where the gradient put them, +0.7 and -0.1,
+% which is rounding. Raising the two stops that could not hold text happens to
+% even the ramp out: L* is 58.0, 61.8, 65.8, 69.4, steps of 3.8, 3.9 and 3.6.
+%
+% CHROMA is held flat at 61-65 (the gamut allows 75.6, 61.6, 88.5, 81.5 at these
+% lightnesses, so three of the four are capped and rung 2 is at the gamut wall).
+% Flat chroma is deliberate: with saturation constant, the only two things that
+% change along the ladder are lightness and hue, which is what makes it a scale.
+%
+% THE COST, stated plainly. The old ramp ran at chroma 18-22, far under Panel
+% A's 42-70, and that gap was what stopped a rung being read as a category. This
+% ramp runs at 61-65, inside Panel A's band, and its four hues land near Panel
+% A's four: rung 1's 300.1 against purple's 309.8, rung 2's 285.2 against blue's
+% 282.7, rung 3's 138.8 against green's 152.0, rung 4's 67.4 against orange's
+% 53.8. Panel B therefore no longer separates itself from Panel A by saturation,
+% and a reader may briefly read rung 2's blue as "the product that reviews".
+% What still separates them is lightness: Panel A's strips sit at L* 31-43 and
+% carry white type, Panel B's at 58-69 and carry ink. This is a trade made at
+% the author's request for a bright rainbow, not an oversight.
+\definecolor{FigOneRampA}{HTML}{897CEF}
+\definecolor{FigOneRampB}{HTML}{5F92FF}
+\definecolor{FigOneRampC}{HTML}{53B44E}
+\definecolor{FigOneRampD}{HTML}{EC9638}
+% The tints keep the strips' hues at chroma 7-9 and L* 96.1, 95.4, 94.6, 93.8.
+% Because the strips are darker than the old ramp, the strip-to-tint break is now
+% 38, 34, 29 and 24 L* -- far wider than the 6 L* the old rung 1 had.
+\definecolor{FigOneRampATint}{HTML}{F6F2FF}
+\definecolor{FigOneRampBTint}{HTML}{EFF1FF}
+\definecolor{FigOneRampCTint}{HTML}{E7F3E4}
+\definecolor{FigOneRampDTint}{HTML}{FBEADD}
+% The ladder's arrows: the rung's hue at 14 L* below it. See the ARROWS note.
+\definecolor{FigOneRampBArrow}{HTML}{186FDC}
+\definecolor{FigOneRampCArrow}{HTML}{278E2A}
+\definecolor{FigOneRampDArrow}{HTML}{C1720E}
 
 % The face is asked for by family, not by switching \sfdefault, so nothing
 % outside this group changes.
@@ -203,11 +237,16 @@
 \newcommand{\FigOneInlineArrow}{%
   \tikz[baseline]{\draw[-{Triangle[length=1.7mm, width=1.7mm]}, line width=0.8pt,
     color=FigOneSlate] (0,0) -- (3.0mm,0);}}
-% The arrow inside the WEAKER-to-STRONGER pill: the figure's own arrow, drawn in
-% the same ink as the pill's label and lifted onto the x-height.
-\newcommand{\FigOnePillArrow}{%
-  \tikz[baseline]{\draw[-{Triangle[length=1.5mm, width=1.5mm]}, line width=0.7pt,
-    color=FigOneInk] (0,0.65mm) -- (2.8mm,0.65mm);}}
+% The gradient arrow that IS the pill. It is placed at 42 mm wide, which puts the
+% 554 px file at 335 dpi on the page -- comfortably past 300, so the rainbow is a
+% photographic object at print resolution and not a stretched thumbnail. Its
+% aspect ratio is 554:106, so 42 mm wide is 8.04 mm tall, of which 5.69 mm is ink
+% and the rest is the file's own transparent padding. It is centred on the
+% baseline and then lifted 0.65 mm, half the x-height of 7 pt Lato, so the bar's
+% axis and the two words' optical centres sit on one line.
+\newcommand{\FigOneRainbowBar}{%
+  \raisebox{0.65mm}{\raisebox{-0.5\height}{%
+    \includegraphics[width=42mm]{fig1-arrow-gradient-rainbow.png}}}}
 \newcommand{\FigOneGap}{\hspace{0.7mm}}
 \newcommand{\FigOneWide}{\hspace{1.4mm}}
 
@@ -336,36 +375,21 @@
 \node[anchor=north west, text width=84mm, align=left, text=FigOneInk,
       font=\FigOneTitleFont] at (7.4,-88.2)
   {The evidence ladder: four rungs the paper never treats as one.};
-% The pill is the ladder's legend, so it carries the ladder's four colours in
-% the ladder's order, left to right, inside the pill's own rounded outline. The
-% four are drawn as hard quarters rather than as a smooth shading: the ladder is
-% four rungs and not a continuum, a smooth blend would say the scale has values
-% between rung 2 and rung 3, and a quarter of the pill is a large enough patch
-% for a reader to match against a rung strip by eye. The segments are painted by
-% a path picture, which is clipped to the node's own shape, so the pill keeps its
-% 2.7 mm radius and the fill needs no second set of coordinates. The label is the
-% rungs' ink, checked against the LIGHTEST quarter, which is the one that binds:
-% ink on rung 1's teal is 12.22 to 1 and on rung 4's violet 5.01, so one ink runs
-% the whole pill, and the pill's arrow with it. The node's own fill is rung 1's
-% colour so the rounded ends antialias into the light end of the ramp.
-\node[anchor=east, rounded corners=2.7mm, fill=FigOneRampA, inner xsep=4.0mm,
-      inner ysep=1.7mm, text=FigOneInk, font=\FigOneSmallFont,
-      path picture={%
-        \path (path picture bounding box.south west)
-           -- (path picture bounding box.south east)
-              coordinate[pos=0.25] (pillq)
-              coordinate[pos=0.50] (pillh)
-              coordinate[pos=0.75] (pillt);
-        \fill[sharp corners, FigOneRampA] (path picture bounding box.south west)
-          rectangle (pillq |- path picture bounding box.north east);
-        \fill[sharp corners, FigOneRampB] (pillq |- path picture bounding box.south west)
-          rectangle (pillh |- path picture bounding box.north east);
-        \fill[sharp corners, FigOneRampC] (pillh |- path picture bounding box.south west)
-          rectangle (pillt |- path picture bounding box.north east);
-        \fill[sharp corners, FigOneRampD] (pillt |- path picture bounding box.south west)
-          rectangle (path picture bounding box.north east);}]
-  at (130,-90.8)
-  {WEAKER\FigOneGap\FigOnePillArrow\FigOneGap STRONGER};
+% The pill is the gradient itself. Earlier versions painted the ladder's four
+% colours into a rounded lozenge and set the two words inside it; this one places
+% the source image instead, so the reader is shown the exact ramp the four rungs
+% were sampled out of and the legend is the thing rather than a copy of it. The
+% two words sit BESIDE the bar, on paper, not over it: over the bar no single
+% text colour would work, because ink clears only 2.75 and 3.01 to 1 on the
+% gradient's own tail while white clears only 2.69 and 2.33 on its head, and a
+% label that changed colour halfway along would be exactly the crossover this
+% figure refuses everywhere else. On white, ink reads 15.9 to 1.
+% The assembly is right-aligned to the canvas edge and runs about 66.7 mm wide,
+% which leaves roughly 10 mm of clear paper between it and the last word of the
+% panel title. It sits 1.5 mm below Panel A's container and 2.0 mm above Panel
+% B's, and it adds no height to the picture: the bounding box is unchanged.
+\node[anchor=east, text=FigOneInk, font=\FigOneSmallFont] at (130,-91.0)
+  {WEAKER\FigOneGap\FigOneRainbowBar\FigOneGap STRONGER};
 
 \draw[panel] (0,-97.0) rectangle (130,-133.0);
 
