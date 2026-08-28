@@ -1,10 +1,4 @@
-> **>>> BEFORE SENDING, REPLACE EVERY `[[ ... ]]` MARKER IN THIS LETTER. <<<**
-> There are two, and the letter is not sendable while either remains: the
-> submission date below, and the artifact DOI in the penultimate paragraph.
-> Search this file for `[[` to find them. Everything else the manuscript
-> settles is already filled in.
-
-[[SUBMISSION DATE]]
+28 August 2026
 
 Dear Guest Editors of the Special Issue on "Agentic Software Engineering: The Rise of AI Teammates,"
 
