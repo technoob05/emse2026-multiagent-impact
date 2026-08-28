@@ -40,7 +40,9 @@ The four-RQ analysis, its figures, the Supplementary Information, the validation
 - [x] Keep "later visible action," "exact addressed edge," and observational wording; do not call the edge a fix or resolution.
 - [x] Keep collision, duplication, complementarity, and contradiction outside the core claims while semantic labels remain pending.
 - [ ] Re-run the full build and final PDF visual QA after author metadata is inserted (the placeholder build has already passed).
-- [ ] Archive the public artifact and add a permanent URL/DOI.
+- [x] Archive the public artifact and add a permanent URL/DOI. Published
+      2026-08-28 at `https://doi.org/10.5281/zenodo.22140821`; verified to
+      resolve and to be reachable without authentication.
 - [ ] Recheck that the live Editorial Manager “site under development” warning has been removed, or obtain an alternative route from a guest editor.
 
 ## Optional semantic extension

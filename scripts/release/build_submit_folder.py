@@ -156,9 +156,10 @@ def main() -> None:
     SUBMIT.mkdir()
 
     shutil.copy2(MANUSCRIPT / "main.pdf", SUBMIT / "1_manuscript.pdf")
-    shutil.copy2(
-        MANUSCRIPT / "technical_appendix.pdf", SUBMIT / "2_online_resource_1.pdf"
-    )
+    # Springer names supplementary files ESM_1.pdf, ESM_2.pdf, and publishes
+    # them "as received ... without any conversion, editing, or reformatting",
+    # so the local filename is the one readers get. Ship it already named.
+    shutil.copy2(MANUSCRIPT / "technical_appendix.pdf", SUBMIT / "ESM_1.pdf")
     archived = build_source_archive(SUBMIT / "3_manuscript_source.zip")
 
     documents = (
@@ -173,6 +174,17 @@ def main() -> None:
             shutil.copy2(source, SUBMIT / name)
         else:
             missing.append(str(source.relative_to(ROOT)))
+
+    # Editorial Manager's cover-letter box is rich text, not Markdown, so the
+    # emphasis markers paste in literally. A plain-text twin is what actually
+    # gets pasted; the Markdown stays for reading.
+    letter = SUBMIT / "4_cover_letter.md"
+    if letter.is_file():
+        plain = letter.read_text(encoding="utf-8")
+        plain = re.sub(r"\*\*(.+?)\*\*", r"\1", plain)
+        plain = re.sub(r"(?<!\w)\*(.+?)\*(?!\w)", r"\1", plain)
+        plain = re.sub(r"`(.+?)`", r"\1", plain)
+        (SUBMIT / "4_cover_letter.txt").write_text(plain, encoding="utf-8", newline="\n")
 
     # Written with explicit newlines so `sha256sum -c` works on every platform;
     # the default on Windows produced CRLF, which sha256sum rejects.
@@ -193,9 +205,10 @@ source file it is built from.
 | File | What it is | Where it goes in Editorial Manager |
 |---|---|---|
 | `1_manuscript.pdf` | The article | Manuscript |
-| `2_online_resource_1.pdf` | Supplementary Information | Online Resource 1 |
+| `ESM_1.pdf` | Supplementary Information | Online Resource 1. Springer's own naming convention; upload it under exactly this name. |
 | `3_manuscript_source.zip` | Flat LaTeX source for the article: {", ".join(f"`{name}`" for name in archived)} | Source files |
-| `4_cover_letter.md` | Cover letter | Cover letter |
+| `4_cover_letter.md` | Cover letter | Read this one. |
+| `4_cover_letter.txt` | Cover letter | Paste this one: the portal's box is rich text, so Markdown markers would appear literally. |
 | `5_metadata_form.md` | Title, author records with affiliations and ORCIDs, declarations, and CRediT roles. It carries no abstract and no keywords; both are in the manuscript | Typed into the portal |
 | `6_readiness_checklist.md` | What is done and what is still open | Not uploaded |
 | `7_venue_checklist.md` | The venue's stated requirements | Not uploaded |

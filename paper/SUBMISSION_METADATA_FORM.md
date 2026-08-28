@@ -69,9 +69,10 @@ Replace each bracket with author-approved wording.
 - Consent for publication: Not applicable. No individual-level identifying
   information is reproduced; accounts are reported by role and in aggregate.
 - Data availability: Source data is the public AIDev-7.6M release at the
-  pinned revision given in the Method. Derived cohorts are archived at the
-  artifact DOI. **Still needed: reserve the Zenodo DOI and replace
-  `https://doi.org/10.5281/zenodo.22140821` in main.tex and COVER_LETTER.md.**
+  pinned revision given in the Method. Derived cohorts are archived at
+  `https://doi.org/10.5281/zenodo.22140821`, which is published, open and
+  resolving. Paste that DOI verbatim into the portal's data-availability field
+  rather than the GitHub URL.
 - Code availability: https://github.com/technoob05/emse2026-multiagent-impact,
   archived with the derived cohorts at the same artifact DOI.
 - Acknowledgements: None; the manuscript has no acknowledgements section.
