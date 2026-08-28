@@ -16,7 +16,15 @@ The paper fits the special issue's themes of human-agent collaboration, mining a
 
 The reproducibility bundle pins data and time boundaries, stores PR-grain cohorts, uses repository-aware uncertainty, runs leave-product-pair and fixed-effect sensitivities, quantifies how much unmeasured structure would be needed to remove the headline result, and records rejected claims as falsification results. Online Resource 1 contains the full data contracts, joins, estimates, robustness checks, structural-overlap gate, and experiment disposition ledger. The public artifact will be available at https://doi.org/10.5281/zenodo.22140821.
 
-This manuscript is original and is not an extension of a conference paper.
+This manuscript is original and is not an extension of a conference paper. We
+mention one adjacent paper of our own so that you meet it here rather than
+find it: a five-page MSR 2026 paper, https://doi.org/10.1145/3793302.3793609,
+which predicts from a pull request's shape at creation time how much review
+effort it will draw. It uses the same public third-party AIDev dataset and
+shares nothing else with this work: different question, different cohorts,
+different methods, no common result, and no analysis of interaction between two
+products. We cite it in the related work, and the submission questionnaire sets
+the relationship out in full.
 
 All authors have read and approved the manuscript and Online Resource 1. The work has not been published previously, and it is not under review or submitted elsewhere.
 
