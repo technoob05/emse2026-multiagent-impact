@@ -29,6 +29,12 @@ SUBMIT = ROOT / "SUBMIT"
 SOURCE_FILES = (
     "main.tex",
     "references.bib",
+    # Ship the compiled bibliography as well as the .bib. Editorial Manager
+    # auto-compiles the source it is given, and if its run does not invoke
+    # BibTeX every citation renders as [?] in the PDF the author is asked to
+    # approve. Springer accepts either; sending both means the bibliography in
+    # the built PDF is the one that was proofread here.
+    "main.bbl",
     "sn-jnl.cls",
     "sn-basic.bst",
 )
