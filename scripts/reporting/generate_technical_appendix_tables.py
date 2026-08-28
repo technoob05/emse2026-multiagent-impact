@@ -2710,6 +2710,7 @@ REPRODUCTION_STEPS: dict[str, tuple[str, str]] = {
     "run_task_context_interaction.py": ("RQ4 issue-link interaction across the boundary", "outputs/task_context_interaction/answer_rate_cells.csv"),
     "run_rq3_extensions.py": ("Whole-population hazard; the edge split by who wrote it", "outputs/rq3_extensions/edge_class_contrasts.csv"),
     "run_rq3_landmark_selection_probe.py": ("Whether the hour-48 landmark is post-exposure: ordered selection probe, landmark-free hazards, sequential landmark", "outputs/rq3_landmark_selection/sequential_landmark_estimates.csv"),
+    "run_reply_depth_and_match_balance.py": ("Post-matching balance for the RQ2 pairs, and the release-wide check that no inline reply names another reply", "outputs/reply_depth_and_match_balance/summary.json"),
     "run_merge_curves.py": ("Cumulative merge curves for the exact-edge contrast", "outputs/merge_curves/cumulative_merge.csv"),
     "run_anchorability_coverage.py": ("Which channels carry a reply anchor; triggers in scope", "outputs/anchorability_coverage/trigger_channel_composition.csv"),
     "run_burst_threshold_selection.py": ("Data-driven and per-product burst cuts; owner split, 9 schemes", "outputs/burst_threshold_selection/owner_split_sensitivity.csv"),

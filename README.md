@@ -59,6 +59,7 @@ uv sync
 .\.venv\Scripts\python.exe scripts\analysis\run_addressed_edge_scope_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_rq3_extensions.py
 .\.venv\Scripts\python.exe scripts\analysis\run_rq3_landmark_selection_probe.py
+.\.venv\Scripts\python.exe scripts\analysis\run_reply_depth_and_match_balance.py
 .\.venv\Scripts\python.exe scripts\analysis\run_task_context_interaction.py
 .\.venv\Scripts\python.exe scripts\analysis\run_merge_curves.py
 .\.venv\Scripts\python.exe scripts\analysis\run_anchorability_coverage.py

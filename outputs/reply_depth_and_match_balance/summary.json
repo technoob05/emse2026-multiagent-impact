@@ -1,0 +1,31 @@
+{
+  "matched_pair_balance": {
+    "pairs": 546,
+    "repositories": 149,
+    "exact_keys": [
+      "repository",
+      "pull request author account",
+      "product that wrote the change",
+      "channel the trigger arrived on",
+      "calendar month"
+    ],
+    "all_exact_keys_identical_in_every_pair": true,
+    "trigger_gap_hours": {
+      "median": 55.75694444444444,
+      "q1": 13.63548611111111,
+      "q3": 143.82673611111113,
+      "max": 646.2211111111111,
+      "share_within_24h": 0.3076923076923077
+    },
+    "note": "This is a post-matching balance report, not a covariate adjustment. Five keys are matched exactly, so a standardised mean difference on them is zero by construction and is not reported as though it were a finding. The gap between the two triggers is the only dimension the design approximates rather than fixes."
+  },
+  "reply_depth": {
+    "inline_comment_rows": 289780,
+    "inline_replies": 88907,
+    "replies_whose_parent_is_itself_a_reply": 0,
+    "replies_whose_parent_is_absent_from_the_release": 29,
+    "replies_with_a_resolvable_parent": 88878,
+    "reply_graph_is_depth_one": true,
+    "note": "Checked over every inline review comment in the release, not only the study cohorts. The absent parents are comments the release does not carry, so depth is verified on the resolvable remainder; none of them can make the graph deeper than one level unless the missing comment is itself a reply, which the release cannot tell us."
+  }
+}

@@ -70,6 +70,7 @@ Substitute `.\.venv\Scripts\python.exe` for `.venv/bin/python` on Windows.
 .venv/bin/python scripts/analysis/run_addressed_edge_scope_audit.py
 .venv/bin/python scripts/analysis/run_rq3_extensions.py
 .venv/bin/python scripts/analysis/run_rq3_landmark_selection_probe.py
+.venv/bin/python scripts/analysis/run_reply_depth_and_match_balance.py
 .venv/bin/python scripts/analysis/run_task_context_interaction.py
 .venv/bin/python scripts/analysis/run_merge_curves.py
 .venv/bin/python scripts/analysis/run_anchorability_coverage.py

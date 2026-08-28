@@ -421,8 +421,12 @@ We checked what that identifier actually points at, because the paper rests on
 it. Replies to an inline comment are grouped under it in what GitHub calls a
 \emph{thread}: the original comment, then everything written in answer to it,
 shown together beside the line of code. GitHub sets the reply target to the
-\emph{first} comment of that thread, not to whichever comment came just before. The release agrees: across all 88,907 inline replies it contains, not one names
-a comment that is itself a reply, so reply threads are one level deep. An addressed edge is therefore \emph{a reply in the
+\emph{first} comment of that thread, not to whichever comment came just before. The release agrees: across all 88,907 inline replies it
+contains, not one names a comment that is itself a reply, so reply threads are
+one level deep. 29 of
+those replies name a parent the release does not carry, so the check is exact on
+the remaining 88,878 and cannot speak for
+those few. An addressed edge is therefore \emph{a reply in the
 thread that the trigger opened}. Section~\ref{sec:threats} reports what that costs us, which turns out to be very
 little in this cohort. Figure~\ref{fig:contract} lays out the whole design: where the anchor sits, what
 is excluded from counting as an answer, and the four evidence levels the rest of
@@ -677,8 +681,12 @@ shuffle the label of interest inside the repository and refit. Intervals use bet
 resampled draws depending on the analysis, and permutation tests 500, 1,000 or
 2,000;
 the exact count and seed for each are in Online Resource~1, which also
-carries the full covariate list, the matching rule, and the pre-trigger balance
-after matching. We vary the reply window from one to 48 hours, add repository
+carries the full covariate list and the matching rule. Balance after matching is
+worth one sentence rather than a table: five of the six matching dimensions are
+fixed exactly, so they are identical in all 546 pairs by construction, and the
+sixth, the gap in time between the two triggers, has a median of
+56 hours with 31\% of pairs
+inside a day. We vary the reply window from one to 48 hours, add repository
 indicators, and remove each ordered product pair in turn.
 
 The later-state comparison comes from watching, not from an experiment, so a

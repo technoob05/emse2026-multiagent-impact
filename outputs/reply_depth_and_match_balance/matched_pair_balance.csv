@@ -1,0 +1,7 @@
+covariate,how_it_is_handled,pairs_identical,pairs,share_identical,detail
+repository,matched exactly,546,546,1.0,"balance holds by construction, not by chance"
+pull request author account,matched exactly,546,546,1.0,"balance holds by construction, not by chance"
+product that wrote the change,matched exactly,546,546,1.0,"balance holds by construction, not by chance"
+channel the trigger arrived on,matched exactly,546,546,1.0,"balance holds by construction, not by chance"
+calendar month,matched exactly,546,546,1.0,"balance holds by construction, not by chance"
+hours between the two triggers,"nearest in time, without replacement",,546,,median 55.8 h; quartiles 13.6 and 143.8 h; 30.8 per cent within a day; largest 646.2 h
