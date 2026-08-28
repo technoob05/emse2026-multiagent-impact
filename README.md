@@ -158,10 +158,11 @@ cd SUBMIT; sha256sum -c CHECKSUMS.sha256
 
 The `outputs/` tree also holds results from an earlier version of this study,
 including files that reuse the names RQ1, RQ2, and RQ3 for different questions.
-None of it feeds the paper. See `outputs/_superseded/README.md` for the list, and
-`docs/decisions/NOVELTY_POSITION_20260826.md` for the novelty position of the submitted
-manuscript.
+None of it feeds the paper. See `outputs/_superseded/README.md` for the list.
+Neither that tree nor the internal design notes under `docs/notes/` and
+`docs/decisions/` are part of the published artifact; they are working records
+of this repository, and several of them are superseded by the manuscript.
 
 ## Submission gates
 
-The analytical draft is reproducible, but live upload still needs author affiliation, corresponding email, declarations, ethics/consent wording, and an artifact URL/DOI. The official Editorial Manager page also displayed a temporary “site under development” warning on 2026-08-26 and must be rechecked. Semantic coding is required only if the authors later add duplication, complementarity, or contradiction claims; the present core paper does not make them. See `paper/SUBMISSION_READINESS.md` and `docs/decisions/VENUE_SIGNOFF_20260826.md`.
+Affiliations, corresponding email, declarations, ethics and consent wording, the five ORCIDs and the artifact DOI (`10.5281/zenodo.22140821`) are all filled in. Two things still need a person: the submission date, and publishing the Zenodo draft, which is irreversible. The official Editorial Manager page displayed a temporary “site under development” warning and must be rechecked before upload. Semantic coding is required only if the authors later add duplication, complementarity, or contradiction claims; the present paper does not make them. See `paper/SUBMISSION_READINESS.md`.

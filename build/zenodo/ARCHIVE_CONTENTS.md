@@ -14,7 +14,7 @@ verified the exclusions below against the built zip.
 | `scripts/` | Analysis, figure, reporting, validation, and release code |
 | `tests/` | The pytest suite |
 | `protocol/` | Reproduction contract: experiment disposition ledger, label schemas, acquisition manifests |
-| `docs/` | Guides, decisions, and audits |
+| `docs/` | The reproduction guides and protocols, and the validation and data-provenance audits. Internal design notes and venue decisions are not deposited. |
 | `outputs/` | The derived analysis products the manuscript tables and figures are built from |
 | `REPRODUCE.md` | Standalone instructions: get the data, install, run, and read the outputs |
 | `README.md` | Study summary, headline findings, and run order |

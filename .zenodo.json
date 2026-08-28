@@ -6,23 +6,28 @@
   "creators": [
     {
       "name": "Dao Sy, Duy Minh",
-      "affiliation": "Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam"
+      "affiliation": "Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam",
+      "orcid": "0009-0002-4501-2788"
     },
     {
       "name": "Huynh, Trung Kiet",
-      "affiliation": "Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam"
+      "affiliation": "Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam",
+      "orcid": "0009-0000-5463-754X"
     },
     {
       "name": "Tran, Chi Nguyen",
-      "affiliation": "Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam"
+      "affiliation": "Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam",
+      "orcid": "0009-0007-6716-7269"
     },
     {
       "name": "Pham, Phu Hoa",
-      "affiliation": "Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam"
+      "affiliation": "Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam",
+      "orcid": "0009-0001-5471-2578"
     },
     {
       "name": "Nguyen, Lam Phu Quy",
-      "affiliation": "Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam"
+      "affiliation": "Faculty of Information Technology, Ho Chi Minh City University of Science (HCMUS), Ho Chi Minh City, Vietnam; Vietnam National University Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam",
+      "orcid": "0009-0002-9694-8105"
     }
   ],
   "license": "mit",

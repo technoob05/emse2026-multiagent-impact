@@ -84,6 +84,29 @@ NOT_DEPOSITED = (
     "scripts/_superseded/",
     "scripts/_exploration/",   # figure/analysis scratch; the mirror of outputs/_exploration/
     "scripts/__pycache__/",
+    # Exploration that ended up in scripts/analysis/ by name rather than by
+    # folder. Nothing in the paper reads their outputs.
+    "scripts/analysis/run_exploration.py",
+    "scripts/analysis/run_cross_agent_review_exploration.py",
+    # Our own deliberation, which is not artifact material. These record which
+    # paper to write and where to send it: unfinished story candidates, the
+    # history of directions tried and dropped, competitive novelty positioning,
+    # and venue strategy. Several are superseded and now contradict the
+    # manuscript, so publishing them would teach a reader something false.
+    # What a reproducer actually needs is kept: docs/guides/ carries the human
+    # coding protocols and the dataset guide, and docs/audits/ carries the
+    # validation report and the provenance of every external dataset, which is
+    # where the third-party licence position lives.
+    "docs/notes/",
+    "docs/decisions/",
+    # Same category, sitting in other folders. The novelty audit is
+    # positioning about other people's papers; RESEARCH_BRIEF still carries an
+    # abandoned working title, so it contradicts the manuscript; the packaging
+    # smoke test certifies a build from two weeks ago.
+    "docs/audits/FRONTIER_NOVELTY_AUDIT_*.md",
+    "docs/audits/CLEAN_BUNDLE_SMOKE_TEST_*.md",
+    "docs/guides/RESEARCH_BRIEF.md",
+    "docs/guides/ARTIFACT_DEPOSIT.md",
 )
 
 
@@ -232,7 +255,7 @@ verified the exclusions below against the built zip.
 | `scripts/` | Analysis, figure, reporting, validation, and release code |
 | `tests/` | The pytest suite |
 | `protocol/` | Reproduction contract: experiment disposition ledger, label schemas, acquisition manifests |
-| `docs/` | Guides, decisions, and audits |
+| `docs/` | The reproduction guides and protocols, and the validation and data-provenance audits. Internal design notes and venue decisions are not deposited. |
 | `outputs/` | The derived analysis products the manuscript tables and figures are built from |
 | `REPRODUCE.md` | Standalone instructions: get the data, install, run, and read the outputs |
 | `README.md` | Study summary, headline findings, and run order |

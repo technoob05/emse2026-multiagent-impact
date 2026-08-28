@@ -18,18 +18,24 @@ roles from web profiles. Every author should approve the final entry.
 
 | Order | Name exactly as it should appear | Given name (portal field) | Family name (portal field) | Department | Institution | City | Country | ORCID | Corresponding? | Email if corresponding |
 |---:|---|---|---|---|---|---|---|---|---|---|
-| 1 | Duy Minh Dao Sy | Duy Minh | Dao Sy | Faculty of Information Technology | Ho Chi Minh City University of Science (HCMUS), and Vietnam National University Ho Chi Minh City (VNU-HCM) | Ho Chi Minh City | Vietnam | [supply or leave blank] | yes | 23122041@student.hcmus.edu.vn |
-| 2 | Trung Kiet Huynh | Trung Kiet | Huynh | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | [supply or leave blank] | no | --- |
-| 3 | Chi Nguyen Tran | Chi Nguyen | Tran | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | [supply or leave blank] | no | --- |
-| 4 | Phu Hoa Pham | Phu Hoa | Pham | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | [supply or leave blank] | no | --- |
-| 5 | Lam Phu Quy Nguyen | Lam Phu Quy | Nguyen | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | [supply or leave blank] | no | --- |
+| 1 | Duy Minh Dao Sy | Duy Minh | Dao Sy | Faculty of Information Technology | Ho Chi Minh City University of Science (HCMUS), and Vietnam National University Ho Chi Minh City (VNU-HCM) | Ho Chi Minh City | Vietnam | 0009-0002-4501-2788 | yes | 23122041@student.hcmus.edu.vn |
+| 2 | Trung Kiet Huynh | Trung Kiet | Huynh | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | 0009-0000-5463-754X | no | --- |
+| 3 | Chi Nguyen Tran | Chi Nguyen | Tran | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | 0009-0007-6716-7269 | no | --- |
+| 4 | Phu Hoa Pham | Phu Hoa | Pham | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | 0009-0001-5471-2578 | no | --- |
+| 5 | Lam Phu Quy Nguyen | Lam Phu Quy | Nguyen | Faculty of Information Technology | HCMUS, and VNU-HCM | Ho Chi Minh City | Vietnam | 0009-0002-9694-8105 | no | --- |
 
 Both affiliations apply to all five authors: affiliation 1 is the Faculty of
 Information Technology at HCMUS, affiliation 2 is VNU-HCM. This matches
 `\affil` in main.tex and technical_appendix.tex.
 
-ORCID is the one field nobody can fill for you. Leave it blank rather than
-guessing: an ORCID matched by name search can belong to someone else.
+The five ORCIDs are filled in. They were not matched by name, which for
+Vietnamese family names would be worthless: they come from the Crossref
+records of two published papers, 10.1145/3793302.3793609 (MSR 2026) and
+10.1145/3803437.3808242 (FSE 2026), which carry this exact five-person
+author set at this faculty with ORCIDs deposited by the publisher. Each was
+then cross-checked against the ORCID record's own HCMUS or VNU-HCM
+affiliation. Confirm them anyway before submitting: they are the authors'
+to own.
 
 All five authors carry both affiliations, so no per-author mapping is needed.
 
