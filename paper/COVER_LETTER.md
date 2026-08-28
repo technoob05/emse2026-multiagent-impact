@@ -18,7 +18,7 @@ The reproducibility bundle pins data and time boundaries, stores PR-grain cohort
 
 This manuscript is original and is not an extension of a conference paper.
 
-[AUTHOR CONFIRMATION REQUIRED: All authors have approved the manuscript and Online Resource 1. The work has not been published and is not under review or submitted elsewhere.]
+All authors have read and approved the manuscript and Online Resource 1. The work has not been published previously, and it is not under review or submitted elsewhere.
 
 Thank you for your consideration.
 
