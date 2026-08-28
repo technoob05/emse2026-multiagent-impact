@@ -40,9 +40,11 @@
 % second colour inside it would read as an inconsistency before it read as
 % emphasis; the claim about the step through the person is carried by the green
 % sentence set under that step, which is where the emphasis belongs. Panel B's
-% three arrows share that geometry but each takes the fill of the rung it points
-% into, so the arrows climb the ramp with the eye. The time axis is heavier
-% still, 1.6 pt, because it is a spine rather than a link. Heads are as wide as
+% three arrows share that geometry but each takes the exact fill of the rung it
+% points into -- ocean, indigo, near-black violet -- so the three of them step up
+% the ramp with the eye and none of them is slate. Sampled from the render, an
+% arrow's shaft matches its target rung's strip to the byte. The time axis is
+% heavier still, 1.6 pt, because it is a spine rather than a link. Heads are as wide as
 % they are long and the shafts are short, so an arrow reads as a push rather
 % than as a needle. The small arrows inside the rung cards are left alone.
 %
@@ -51,16 +53,22 @@
 % the person, orange for the merge, brick for what the rules exclude. Panel B is
 % ORDINAL, so it may not borrow those four hues -- purple would mean "wrote the
 % change" on one half of the page and "rung 1" on the other, and four categorical
-% hues would say "four kinds" where the figure means "four strengths". The rungs
-% therefore run on one desaturated blue-grey ramp, light at rung 1 and dark at
-% rung 4, at a saturation no Panel A accent comes near, so it reads as structure
-% rather than as a fifth category. The WEAKER-to-STRONGER pill is filled with the
-% dark end of that same ramp and sits at the strong end of the ladder.
+% hues would say "four kinds" where the figure means "four strengths". What makes
+% Panel B's four colours a scale rather than a set is therefore not that they
+% share a hue but that they are MONOTONE IN LIGHTNESS: teal, ocean, indigo and a
+% near-black violet, each step about 19 grey levels darker than the one before it,
+% so the ladder survives a greyscale print in the right order and no reader can
+% mistake a rung for a card. Light means weak and dark means strong, the ordinary
+% reading of a sequential ramp, and it puts the dark end under the pill that says
+% STRONGER. Direction of travel is the only thing the hue does not carry; that is
+% deliberate, because hue is not ordered and lightness is.
 % Sampled from the 400 dpi render of the typeset page: white on Panel A's four
 % strips measures 9.02, 6.29, 6.14 and 5.84 to 1, white on the four ramp strips
-% 5.94, 7.98, 10.74 and 14.44, ink on every tint better than 11.7, slate on the
-% tints better than 6.3, green on white 6.14, brick on white 6.30. The worst
-% reading in the figure is 5.84 to 1, white on Panel A's orange strip.
+% 5.91, 7.97, 10.69 and 14.44, white on the pill's four quarters the same four
+% readings, ink on every tint better than 11.7, slate on the tints better than
+% 6.3, green on white 6.14, brick on white 6.30. The worst reading in the figure
+% is 5.84 to 1, white on Panel A's orange strip. In greyscale the four rungs
+% print at 100, 81, 62 and 42 out of 255, strictly decreasing.
 %
 % TYPE. Lato, asked for by family so the article's own type is untouched.
 % Three sizes only: 9 pt bold for panel titles and card names, 8 pt for body
@@ -85,16 +93,25 @@
 \definecolor{FigOneOrangeTint}{HTML}{FDF4EC}
 \definecolor{FigOneBrickTint}{HTML}{FBF0EC}
 \definecolor{FigOneHair}{HTML}{C8CED7}
-% Panel B's ordinal ramp: one desaturated blue-grey hue, four steps. Rung 1 is
-% as light as white type allows -- 5.94 to 1 -- which is what sets the light end.
-\definecolor{FigOneRampA}{HTML}{566579}
-\definecolor{FigOneRampB}{HTML}{415268}
-\definecolor{FigOneRampC}{HTML}{2C3F57}
-\definecolor{FigOneRampD}{HTML}{182B3E}
-\definecolor{FigOneRampATint}{HTML}{F2F5F9}
-\definecolor{FigOneRampBTint}{HTML}{E9EEF5}
-\definecolor{FigOneRampCTint}{HTML}{DFE7F1}
-\definecolor{FigOneRampDTint}{HTML}{D5DFEC}
+% Panel B's ordinal ramp: four steps, light to dark, travelling teal -> ocean ->
+% indigo -> near-black violet. The hue moves about 106 degrees of CIELAB hue
+% angle across the ladder, so the four read as a progression rather than as one
+% colour darkening; the lightness is what carries the order. L* is 42.3, 34.3,
+% 26.1 and 16.8 -- the same four values the earlier single-hue ramp used, so the
+% greyscale ladder is unchanged at 100, 81, 62 and 42 out of 255 and white type
+% still measures 5.91, 7.97, 10.69 and 14.44 to 1. Chroma stays near 22-28,
+% roughly half of Panel A's 42-70, and no rung sits at a Panel A hue at anything
+% like a Panel A lightness: rung 3 is 15 L* below the blue and 22 chroma under
+% it, rung 4 is 14 L* below the purple and 45 chroma under it, and both read as
+% dark structure rather than as a fifth and sixth category.
+\definecolor{FigOneRampA}{HTML}{296E6F}
+\definecolor{FigOneRampB}{HTML}{1E5673}
+\definecolor{FigOneRampC}{HTML}{303C66}
+\definecolor{FigOneRampD}{HTML}{2E2445}
+\definecolor{FigOneRampATint}{HTML}{EAF7F7}
+\definecolor{FigOneRampBTint}{HTML}{E3EFF8}
+\definecolor{FigOneRampCTint}{HTML}{E4E5F5}
+\definecolor{FigOneRampDTint}{HTML}{E2DBEC}
 
 % The face is asked for by family, not by switching \sfdefault, so nothing
 % outside this group changes.
@@ -285,11 +302,33 @@
 \node[anchor=north west, text width=84mm, align=left, text=FigOneInk,
       font=\FigOneTitleFont] at (7.4,-88.2)
   {The evidence ladder: four rungs the paper never treats as one.};
-% The pill is drawn rather than placed, so it can take the dark end of the rung
-% ramp and name that end of the scale in the scale's own colour. It sits at the
-% right, the end where rung 4 is.
+% The pill is the ladder's legend, so it carries the ladder's four colours in
+% the ladder's order, left to right, inside the pill's own rounded outline. The
+% four are drawn as hard quarters rather than as a smooth shading: the ladder is
+% four rungs and not a continuum, a smooth blend would say the scale has values
+% between rung 2 and rung 3, and a quarter of the pill is a large enough patch
+% for a reader to match against a rung strip by eye. The segments are painted by
+% a path picture, which is clipped to the node's own shape, so the pill keeps its
+% 2.7 mm radius and the fill needs no second set of coordinates. White type
+% clears 4.5 to 1 on all four quarters, so the label runs white across the whole
+% pill exactly as it did on the single fill.
 \node[anchor=east, rounded corners=2.7mm, fill=FigOneRampD, inner xsep=4.0mm,
-      inner ysep=1.7mm, text=white, font=\FigOneSmallFont] at (130,-90.8)
+      inner ysep=1.7mm, text=white, font=\FigOneSmallFont,
+      path picture={%
+        \path (path picture bounding box.south west)
+           -- (path picture bounding box.south east)
+              coordinate[pos=0.25] (pillq)
+              coordinate[pos=0.50] (pillh)
+              coordinate[pos=0.75] (pillt);
+        \fill[sharp corners, FigOneRampA] (path picture bounding box.south west)
+          rectangle (pillq |- path picture bounding box.north east);
+        \fill[sharp corners, FigOneRampB] (pillq |- path picture bounding box.south west)
+          rectangle (pillh |- path picture bounding box.north east);
+        \fill[sharp corners, FigOneRampC] (pillh |- path picture bounding box.south west)
+          rectangle (pillt |- path picture bounding box.north east);
+        \fill[sharp corners, FigOneRampD] (pillt |- path picture bounding box.south west)
+          rectangle (path picture bounding box.north east);}]
+  at (130,-90.8)
   {WEAKER\FigOneGap\FigOnePillArrow\FigOneGap STRONGER};
 
 \draw[panel] (0,-97.0) rectangle (130,-133.0);
