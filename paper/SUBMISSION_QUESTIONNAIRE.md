@@ -89,6 +89,15 @@ is a third-party dataset by other authors and is cited as such. We use it at a
 pinned revision. The cohorts, the constructs, the design, the analyses and all
 findings above are new in this manuscript.
 
+We have one earlier five-page paper on the same public dataset, on the
+different question of predicting a single pull request's review effort from its
+shape at creation time (MSR 2026,
+https://doi.org/10.1145/3793302.3793609). This manuscript is not an extension
+of it: it shares no cohort, no construct, no method and no result, and the
+earlier paper does not study interaction between two products at all. It is
+cited in the related work here. The next answer sets the relationship out in
+detail.
+
 ---
 
 ## Q2. Reuse from previous publications
@@ -98,16 +107,52 @@ findings above are new in this manuscript.
 ---
 
 No text, algorithms, proofs, results or findings from any previous publication
-by the authors are reused in this manuscript. There is no prior conference
-version of this work, and it is not an extension of one. None of the authors'
-earlier papers is cited here, because none of them bears on this study.
+by the authors are reused in this manuscript. One dataset is shared with an
+earlier paper of ours, and we set that out in full below, because the question
+asks about datasets and the honest answer is not simply "none".
 
-One external resource is reused and is credited rather than claimed. The source
-data are the public AIDev dataset of AI-agent pull requests, published by Li,
-Zhang and Hassan (MSR 2026), which we use at a single pinned revision recorded
-in the manuscript. AIDev is not our dataset and we make no claim to it. Every
-cohort we analyse is derived from it by code written for this study, and both
-the derived cohorts and that code are archived at
+The shared dataset. Both this manuscript and our earlier short paper draw on
+AIDev, a public dataset of AI-agent pull requests on GitHub published by Li,
+Zhang and Hassan (MSR 2026). AIDev is not our dataset; it is a third-party
+resource, we make no claim to it, and it is cited as such in both papers. This
+manuscript uses it at a single pinned revision, recorded in the manuscript, and
+draws on the subset of repositories above one hundred stars.
+
+The earlier paper. Duy Minh Dao Sy, Trung Kiet Huynh, Lam Phu Quy Nguyen, Phu
+Hoa Pham, Chi Nguyen Tran, Ha Duong Nguyen Dinh and Bao Tran Truong,
+"Early-Stage Prediction of Review Effort in AI-Generated Pull Requests", MSR
+2026, pages 954 to 958, https://doi.org/10.1145/3793302.3793609. It is a
+five-page short paper. It is cited in the related work of this manuscript, in
+the paragraph on agent work in public repositories, and the manuscript states
+there that it shares the source dataset and nothing else.
+
+What is not shared. The two papers ask different questions, of different
+cohorts, by different methods, and report no finding in common.
+
+- Question. The earlier paper predicts, from a pull request's shape at creation
+  time, how much review effort it will draw, and characterises abandonment
+  after human feedback. This manuscript measures whether one coding-agent
+  product ever answers another product's review point on the public record, and
+  what follows when it does. Nothing in the earlier paper concerns interaction
+  between two products: it does not analyse review comments, replies to review
+  comments, or one agent reviewing another agent's work.
+- Cohort. The earlier paper analyses 33,707 agent-authored pull requests from
+  2,807 repositories. This manuscript works from a later and larger AIDev
+  revision, and its analysis cohorts are constructed for this study alone:
+  8,608 pull requests in which one product reviewed another product's change,
+  546 matched pairs, and a landmark cohort of 1,067.
+- Method. The earlier paper is a supervised classification study reporting area
+  under the ROC curve. This manuscript uses exact matching, a landmark design
+  with an explicit selection probe, linear probability models with
+  repository-clustered standard errors, and placebo exposures.
+- Results. No number, table, figure or finding from the earlier paper appears
+  in this manuscript, and none of this manuscript's results appeared there.
+
+This manuscript is therefore not an extension of that conference paper, and
+none of its content has been published before.
+
+Every cohort analysed here is derived from AIDev by code written for this
+study; the derived cohorts and that code are archived at
 https://doi.org/10.5281/zenodo.22140821.
 
 The manuscript also uses the Springer sn-jnl class and style files supplied by
@@ -126,11 +171,27 @@ the journal for formatting only.
 | Does this manuscript belong to a special issue? | **Yes** | Agentic Software Engineering: The Rise of AI Teammates. Select that issue when prompted. |
 | Publishing terms and conditions | **Tick to agree** | Required to submit. Covers Springer Nature's updated terms on AI usage in the licence to publish. |
 
-## One thing the authors must check, which this file cannot
+## How the Q2 answer was checked
 
-Q2 asks about reuse from *your* previous publications. The check behind the
-answer above is that no author of this manuscript appears in `references.bib`
-and that the manuscript makes no self-citation, which is verifiable from the
-repository. What the repository cannot see is unpublished or in-press work of
-the authors that overlaps this study. If any exists, say so in Q2 rather than
-pasting the text unchanged.
+The prior paper was read rather than recalled. What was compared:
+
+| | MSR 2026 short paper | This manuscript |
+|---|---|---|
+| Question | Predict a pull request's review effort from its shape at creation time; characterise abandonment after human feedback | Whether one product ever answers another product's review point, and what follows |
+| Dataset | AIDev v1.0 | AIDev at a later pinned revision |
+| Cohort | 33,707 agent-authored PRs, 2,807 repositories | 8,608 cross-product reviews, 546 matched pairs, 1,067 landmark cohort |
+| Method | LightGBM classification, area under the ROC curve | Exact matching, landmark design with a selection probe, linear probability models, placebo exposures |
+| Two-product interaction | Not studied. The text contains no occurrence of review comment, reply, cross-agent, or one agent reviewing another | The entire subject |
+| Shared results | None | None |
+
+So the dataset is shared and nothing else is. That is what the Q2 answer says.
+
+Two consequences were acted on rather than noted. The manuscript now cites the
+earlier paper in its related work, in the paragraph on agent work in public
+repositories, which already listed six other AIDev-based studies; leaving our
+own out of that list would have read as concealment, and review here is
+single-blind so it raises no anonymity question. And the Q1 answer names the
+earlier paper too, so a reader who meets it in Q2 has already been told.
+
+What this check still cannot see is unpublished or in-press work. If any exists
+that overlaps this study, add it to Q2 before pasting.
