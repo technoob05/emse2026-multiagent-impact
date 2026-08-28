@@ -28,6 +28,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
 from matplotlib.colors import to_rgb  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
+from matplotlib.offsetbox import AnnotationBbox, OffsetImage  # noqa: E402
 from matplotlib.patches import (  # noqa: E402
     FancyArrowPatch,
     FancyBboxPatch,
@@ -53,6 +54,7 @@ BURST_EXAMPLE = ROOT / "outputs" / "worked_example_burst"
 PAIR_EXAMPLE = ROOT / "outputs" / "worked_example_matched_pair"
 BENCHMARKS = ROOT / "outputs" / "confounder_benchmarks"
 THREAD_POSITION = ROOT / "outputs" / "matched_thread_position"
+ICONS = ROOT / "assets" / "icons"
 OUTPUT = ROOT / "build" / "figures"
 
 # Palette. A three-hue family in the idiom systematic reviews use for their
@@ -162,6 +164,22 @@ MIN_TEXT_POINTS = 8.0
 # inside the canvas rectangle by a rounding error.
 MIN_EDGE_POINTS = 1.0
 MINUS = "\u2212"
+
+# Pictograms. The two worked-example panels are drawings rather than charts, so
+# a glyph there can carry a noun that would otherwise cost a word of lettering.
+# The set in assets/icons is raster, 82 to 565 px on the long edge, so the only
+# question that matters is how much of the page one is asked to cover: an icon
+# printed larger than its own resolution allows is a soft patch on an otherwise
+# vector page. Every placement therefore states a millimetre height and is
+# rejected outright if the source cannot hold MIN_ICON_DPI at that size.
+MM_PER_INCH = 25.4
+MIN_ICON_DPI = 300.0
+# Matplotlib rasterises an embedded image to the dpi the file is written at,
+# not to the image's own resolution, so a PDF saved at the default 100 dpi
+# throws away nine tenths of every glyph before it reaches the page. The PDFs
+# are written at this instead, which is above the native density of every
+# placement below and therefore never the binding constraint.
+PDF_RASTER_DPI = 900.0
 
 
 def minus(value: str) -> str:
@@ -412,6 +430,143 @@ def swatch_key(
 
 
 # ---------------------------------------------------------------------------
+# Pictograms
+# ---------------------------------------------------------------------------
+
+_ICON_CACHE: dict[str, np.ndarray] = {}
+# Every glyph placed in this run, so the build can print what it actually put
+# on the page rather than what the code intended to.
+ICON_REPORT: list[dict[str, object]] = []
+
+
+def icon_image(name: str) -> np.ndarray:
+    if name not in _ICON_CACHE:
+        path = ICONS / f"{name}.png"
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        _ICON_CACHE[name] = plt.imread(path)
+    return _ICON_CACHE[name]
+
+
+def icon(
+    ax: plt.Axes,
+    name: str,
+    xy: tuple[float, float],
+    height_mm: float,
+    *,
+    box_alignment: tuple[float, float] = (0.5, 0.5),
+    zorder: float = 6.0,
+) -> AnnotationBbox:
+    """Place one pictogram at a stated printed height, in the axes' own units.
+
+    The zoom is derived from the millimetre height and the source's own pixel
+    count rather than from whatever resolution the file happens to carry, so
+    moving a glyph between two panels of different scales does not change how
+    big it prints. ``OffsetImage`` corrects for figure dpi itself, which means
+    one point of the returned extent is one point on the page.
+    """
+    array = icon_image(name)
+    pixels_high, pixels_wide = array.shape[0], array.shape[1]
+    height_in = height_mm / MM_PER_INCH
+    effective_dpi = pixels_high / height_in
+    if effective_dpi < MIN_ICON_DPI:
+        raise AssertionError(
+            f"'{name}' at {height_mm:.2f} mm prints at {effective_dpi:.0f} dpi, "
+            f"below the {MIN_ICON_DPI:.0f} dpi floor: the source is "
+            f"{pixels_high} px tall and cannot fill that much page"
+        )
+    width_mm = height_mm * pixels_wide / pixels_high
+    ICON_REPORT.append(
+        {
+            "icon": name,
+            "height_mm": round(height_mm, 2),
+            "width_mm": round(width_mm, 2),
+            "source_px": f"{pixels_wide}x{pixels_high}",
+            "effective_dpi": int(round(effective_dpi)),
+        }
+    )
+    box = AnnotationBbox(
+        OffsetImage(array, zoom=height_in * POINTS_PER_INCH / pixels_high),
+        xy,
+        xycoords="data",
+        frameon=False,
+        pad=0.0,
+        box_alignment=box_alignment,
+        annotation_clip=False,
+        zorder=zorder,
+    )
+    ax.add_artist(box)
+    return box
+
+
+def icon_extent(
+    ax: plt.Axes, name: str, height_mm: float
+) -> tuple[float, float]:
+    """How much of the axes one glyph will cover, in that axes' own units.
+
+    A row that mixes glyphs and words has to be centred as one object, and the
+    glyph half of it is specified in millimetres of page while the row is laid
+    out in data units. This is the conversion, taken from the axes' own
+    transform rather than from an assumption about the panel's scale.
+    """
+    array = icon_image(name)
+    height_in = height_mm / MM_PER_INCH
+    width_in = height_in * array.shape[1] / array.shape[0]
+    origin = ax.transData.transform((0.0, 0.0))
+    unit = ax.transData.transform((1.0, 1.0)) - origin
+    dpi = ax.figure.dpi
+    return width_in * dpi / abs(unit[0]), height_in * dpi / abs(unit[1])
+
+
+def assert_icons_placed(fig: plt.Figure, stem: str) -> None:
+    """A pictogram is not lettering, so ``assert_layout`` never sees it.
+
+    That gate walks text artists, which means an icon may run off the canvas or
+    sit on top of a label without the build noticing. This is the matching gate
+    for the other kind of artist: same trim standoff, same near-miss spacing
+    against every word on the page.
+    """
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    canvas = fig.bbox
+    margin = MIN_EDGE_POINTS * fig.dpi / POINTS_PER_INCH
+    gap = 1.0 * fig.dpi / POINTS_PER_INCH
+
+    placed = [
+        artist
+        for ax in fig.axes
+        for artist in ax.artists
+        if isinstance(artist, AnnotationBbox)
+    ]
+    words = [
+        (text.get_text(), text.get_window_extent(renderer=renderer))
+        for text in lettering(fig)
+    ]
+    for box in placed:
+        extent = box.get_window_extent(renderer)
+        clearance = min(
+            extent.x0 - canvas.x0,
+            canvas.x1 - extent.x1,
+            extent.y0 - canvas.y0,
+            canvas.y1 - extent.y1,
+        )
+        if clearance < margin:
+            raise AssertionError(
+                f"{stem}: an icon comes within "
+                f"{clearance / (fig.dpi / POINTS_PER_INCH):.2f} pt of the canvas "
+                f"edge, under the {MIN_EDGE_POINTS} pt standoff"
+            )
+        for label, word in words:
+            if (
+                min(extent.x1, word.x1) - max(extent.x0, word.x0) > -gap
+                and min(extent.y1, word.y1) - max(extent.y0, word.y0) > -gap
+            ):
+                raise AssertionError(
+                    f"{stem}: an icon and the label '{label[:24]}' collide"
+                )
+
+
+# ---------------------------------------------------------------------------
 # Export and geometry gate
 # ---------------------------------------------------------------------------
 
@@ -539,6 +694,7 @@ def assert_layout(fig: plt.Figure, stem: str) -> None:
 def save(fig: plt.Figure, stem: str) -> None:
     try:
         assert_layout(fig, stem)
+        assert_icons_placed(fig, stem)
     except AssertionError:
         debug = ROOT / "build" / "qa" / "figure_qa_debug"
         debug.mkdir(parents=True, exist_ok=True)
@@ -551,7 +707,11 @@ def save(fig: plt.Figure, stem: str) -> None:
         "Subject": "Public coordination topology after cross-product agent review",
         "Creator": "Matplotlib",
     }
-    fig.savefig(OUTPUT / f"{stem}.pdf", metadata=metadata)
+    # The dpi argument changes nothing about a vector artist: the page geometry
+    # is stated in inches and every line and letter is written as an outline. It
+    # decides one thing only, the resolution any embedded raster is resampled to
+    # on its way into the file.
+    fig.savefig(OUTPUT / f"{stem}.pdf", metadata=metadata, dpi=PDF_RASTER_DPI)
     fig.savefig(OUTPUT / f"{stem}.png", dpi=400)
     plt.close(fig)
 
@@ -1249,27 +1409,45 @@ def figure_participation() -> None:
         str(product).replace("_", " ") for product in example["burst_products"]
     )
     span_seconds = int(round(float(example["burst_span_minutes"]) * 60.0))
+
+    # Two glyphs, each paying for the words it replaces. The trigger is an
+    # inline comment written on one line of the change, so the document-with-a-
+    # comment says "review" and the label keeps only the product's name. The
+    # first action after the burst comes from a person rather than a product, so
+    # the developer at a laptop says "user account" and the label keeps only the
+    # elapsed time. The human glyph is the one that sits next to the steel mark,
+    # and it is the one that agrees with it: steel means user account here.
+    ROW = 1.24
+    icon(ax, "file-comment", (-0.25, ROW), 4.8)
     ax.text(
-        0.25,
-        1.28,
-        f"{reviewing}'s review",
+        0.42,
+        ROW,
+        reviewing,
         ha="left",
         va="center",
         fontsize=8.2,
         color=GOLD_INK,
     )
+    icon(ax, "developer-github-laptop", (tail_minutes, ROW), 4.8)
     ax.text(
-        tail_minutes - 0.5,
-        1.28,
-        f"user account, {tail_minutes:.1f} min",
+        tail_minutes - 0.68,
+        ROW,
+        f"{tail_minutes:.1f} min",
         ha="right",
         va="center",
         fontsize=8.2,
         color=STEEL,
     )
+    # The burst keeps its words and gets no glyph. The obvious candidate is the
+    # dashed group of speech bubbles, which is exactly a run of comments
+    # bracketed together, but every bubble in it is blue, and blue on this
+    # figure is the user account: Panel B labels a steel line "User account" and
+    # the guards above this panel refuse to draw the example unless no user
+    # account acts inside the burst. A blue glyph naming the burst would state
+    # the one thing the burst is defined not to contain.
     ax.text(
         0.25,
-        -1.30,
+        -ROW,
         f"{len(discarded)} {bursting} events in {span_seconds} s",
         ha="left",
         va="center",
@@ -1645,11 +1823,58 @@ def figure_boundary() -> None:
     # card names its arm in words, and the tally bar below places each arm's
     # segment directly under the card it belongs to, so the pairing survives a
     # greyscale print through position rather than through hue.
+    # One glyph per follow-up event, so the count is drawn instead of written:
+    # the card that used to read "2 × a new review round" now shows two cards
+    # and the words "new review round". The glyph is chosen by the channel the
+    # event arrived on rather than by which side of the pair it sits on, so the
+    # drawing survives a change of example: a reply is a reply arrow, a review
+    # round and a comment are the two kinds of comment card, and a rewritten
+    # branch is the branch glyph. The side that records nothing shows nothing,
+    # which is the panel's whole point and needs no mark of its own.
+    CHANNEL_GLYPHS = {
+        "a reply on the trigger's thread": "reply-arrow-green",
+        "a new review round": "comment-card-bubble",
+        "a pull request comment": "comment-card",
+        "the branch is rewritten": "git-branch-orange-tall",
+    }
+    OUTCOME_ROW = 4.30
+    GLYPH_MM = 4.6
+    GLYPH_GAP = 0.7
+    GLYPH_TO_WORDS = 1.6
+
+    def followup_row(side: dict) -> tuple[list[str], str]:
+        """The glyphs and the words the outcome row should carry.
+
+        Falls back to spelling the counts out whenever the events cannot be
+        drawn honestly: more than one channel, or more of them than fit across
+        half a card. A wrong drawing is worse than a long label.
+        """
+        events = {
+            channel: int(count)
+            for channel, count in side["followup_events"].items()
+            if count
+        }
+        if not events:
+            return [], "nothing follows"
+        if len(events) == 1:
+            (channel, count), = events.items()
+            glyph = CHANNEL_GLYPHS.get(channel)
+            if glyph is not None and 1 <= count <= 3:
+                words = channel
+                for article in ("a ", "an ", "the "):
+                    if words.startswith(article):
+                        words = words[len(article) :]
+                        break
+                return [glyph] * count, words
+        return [], ", ".join(
+            f"{count} × {channel}" for channel, count in events.items()
+        )
+
     def card(
         x: float,
         heading: str,
         reviewer: str,
-        outcome: str,
+        side: dict,
         face: str,
         edge: str,
     ) -> None:
@@ -1665,9 +1890,8 @@ def figure_boundary() -> None:
             )
         )
         for offset, content, weight, size in (
-            (6.60, heading, "bold", 8.4),
-            (5.35, reviewer, "normal", 8.2),
-            (4.10, outcome, "bold", 8.2),
+            (6.75, heading, "bold", 8.4),
+            (5.68, reviewer, "normal", 8.2),
         ):
             ax.text(
                 x + 22.5,
@@ -1680,21 +1904,43 @@ def figure_boundary() -> None:
                 color=INK,
             )
 
-    def followup_label(side: dict) -> str:
-        events = {
-            channel: count
-            for channel, count in side["followup_events"].items()
-            if count
-        }
-        if not events:
-            return "nothing follows"
-        return ", ".join(f"{count} × {channel}" for channel, count in events.items())
+        glyphs, words = followup_row(side)
+        # The row is one object and has to be centred as one, so the words are
+        # drawn first, measured, and only then slid into place beside the
+        # glyphs. Width is typographic and cannot be predicted from a count of
+        # characters.
+        label = ax.text(
+            x + 22.5,
+            OUTCOME_ROW,
+            words,
+            ha="left",
+            va="center",
+            fontsize=8.2,
+            fontweight="bold",
+            color=INK,
+        )
+        if not glyphs:
+            label.set_horizontalalignment("center")
+            return
+        widths = [icon_extent(ax, name, GLYPH_MM)[0] for name in glyphs]
+        fig.canvas.draw()
+        box = label.get_window_extent(renderer=fig.canvas.get_renderer())
+        corners = ax.transData.inverted().transform(
+            ((box.x0, box.y0), (box.x1, box.y0))
+        )
+        words_width = corners[1][0] - corners[0][0]
+        row = sum(widths) + GLYPH_GAP * (len(glyphs) - 1) + GLYPH_TO_WORDS
+        cursor = x + 22.5 - (row + words_width) / 2.0
+        for name, width in zip(glyphs, widths, strict=True):
+            icon(ax, name, (cursor + width / 2.0, OUTCOME_ROW), GLYPH_MM)
+            cursor += width + GLYPH_GAP
+        label.set_x(cursor - GLYPH_GAP + GLYPH_TO_WORDS)
 
     card(
         2.0,
         "cross-product",
         str(cross_side["reviewing_product"]).replace("_", " "),
-        followup_label(cross_side),
+        cross_side,
         PALE_BRICK,
         BRICK,
     )
@@ -1702,7 +1948,7 @@ def figure_boundary() -> None:
         53.0,
         "same-product",
         str(same_side["reviewing_product"]).replace("_", " "),
-        followup_label(same_side),
+        same_side,
         PALE_GOLD,
         GOLD_INK,
     )
@@ -2271,6 +2517,10 @@ def main() -> None:
                     (ROOT / "build" / "qa" / "colour").relative_to(ROOT)
                 ),
                 "proof_files": proofs,
+                # What the glyphs actually cost the page, printed so a reader
+                # of the build log can see it without opening a PDF.
+                "pdf_raster_dpi": PDF_RASTER_DPI,
+                "icons": ICON_REPORT,
             },
             indent=2,
         )
