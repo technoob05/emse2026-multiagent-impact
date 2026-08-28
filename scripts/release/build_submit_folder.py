@@ -309,6 +309,7 @@ source, not in the upload.
         (ROOT / "paper" / "SUBMISSION_METADATA_FORM.md", "5_metadata_form.md"),
         (ROOT / "paper" / "SUBMISSION_READINESS.md", "6_readiness_checklist.md"),
         (ROOT / "paper" / "VENUE_CHECKLIST.md", "7_venue_checklist.md"),
+        (ROOT / "paper" / "SUBMISSION_QUESTIONNAIRE.md", "8_questionnaire.md"),
     )
     missing = []
     for source, name in documents:
@@ -327,6 +328,23 @@ source, not in the upload.
         plain = re.sub(r"(?<!\w)\*(.+?)\*(?!\w)", r"\1", plain)
         plain = re.sub(r"`(.+?)`", r"\1", plain)
         (SUBMIT / "4_cover_letter.txt").write_text(plain, encoding="utf-8", newline="\n")
+
+    # The questionnaire's two long answers go into plain-text boxes with a
+    # 20,000 character limit, so they are also emitted on their own, stripped of
+    # the surrounding instructions, for pasting without editing. The boxes are
+    # not Markdown: any marker left in would appear literally.
+    questionnaire = SUBMIT / "8_questionnaire.md"
+    if questionnaire.is_file():
+        blocks = questionnaire.read_text(encoding="utf-8").split("\n---\n")
+        # Sections run: preamble, Q1 heading, Q1 answer, Q2 heading, Q2 answer.
+        answers = {"8_answer_q1_novelty.txt": 2, "8_answer_q2_reuse.txt": 4}
+        for name, position in answers.items():
+            if position >= len(blocks):
+                raise SystemExit(f"questionnaire has no block {position} for {name}")
+            text = blocks[position].strip() + "\n"
+            if len(text) > 20_000:
+                raise SystemExit(f"{name} is {len(text)} characters; the box takes 20,000")
+            (SUBMIT / name).write_text(text, encoding="utf-8", newline="\n")
 
     # Written with explicit newlines so `sha256sum -c` works on every platform;
     # the default on Windows produced CRLF, which sha256sum rejects.
