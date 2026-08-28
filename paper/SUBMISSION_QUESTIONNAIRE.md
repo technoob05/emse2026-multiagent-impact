@@ -149,7 +149,9 @@ cohorts, by different methods, and report no finding in common.
   in this manuscript, and none of this manuscript's results appeared there.
 
 This manuscript is therefore not an extension of that conference paper, and
-none of its content has been published before.
+none of its content has been published before. That paper is our only prior
+publication bearing on this work, and we have no unpublished or in-press work
+that overlaps it.
 
 Every cohort analysed here is derived from AIDev by code written for this
 study; the derived cohorts and that code are archived at
@@ -193,5 +195,6 @@ own out of that list would have read as concealment, and review here is
 single-blind so it raises no anonymity question. And the Q1 answer names the
 earlier paper too, so a reader who meets it in Q2 has already been told.
 
-What this check still cannot see is unpublished or in-press work. If any exists
-that overlaps this study, add it to Q2 before pasting.
+The one thing the repository cannot see is unpublished or in-press work. The
+authors confirmed on 28 August 2026 that none exists that overlaps this study,
+so the Q2 answer is complete as written and can be pasted unchanged.
