@@ -900,26 +900,6 @@ routing.
 \FloatBarrier
 \subsection{RQ3: a person writes the edge that marks a later state}
 
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=\linewidth]{Fig4.pdf}
-\caption{What a reply is worth, and what its anchoring is not. Three groups of
-pull requests are followed from the review comment onwards: those whose reply
-names the trigger, those whose reply lands somewhere else on the page, and those
-with no inline reply at all. A pull request counts as unreplied until its own
-first reply arrives, so no time before a reply is credited to it, and the shaded
-areas are 95\% intervals from resampling repositories. For the first two and a
-half days the no-reply group sits highest, because a pull request still being
-replied to has not merged yet. The two replied groups are read on the same grid
-of 73 time points, finer over the first two days and coarser afterwards. Their
-lines are not identical: the off-target group runs above the on-target one at 68
-of the 73 points, by 4.3 points on average and 7.2 at the widest. What matters is
-that their intervals overlap at every single point, so the trace cannot tell the
-two apart. That is the visual form of the result: where a reply is anchored does
-not separate them.}
-\label{fig:relay}
-\end{figure}
-
 Among the slower PRs that are still open at hour 48, one signal stands out as a
 marker of later merge: somebody replies. Four times in five that somebody is a
 person. What we did not expect, and report below, is that the precise part of our rule adds nothing to the prediction. That part is the
@@ -1067,6 +1047,12 @@ that the pattern survives where the strict rule cannot reach.
 
 \begin{figure}[!htbp]
 \centering
+% NOTE: the file names no longer track the figure numbers here. Springer
+% requires figures to be cited in ascending order, and the merge-curve float
+% was moved down to sit beside the paragraph that discusses it, which swapped
+% these two numbers. Fig5.pdf is Figure 4 and Fig4.pdf is Figure 5. The
+% content is correct in both; only the file names are out of step, and they
+% are never shown to a reader.
 \includegraphics[width=\linewidth]{Fig5.pdf}
 \caption{What a hidden cause would have to be. A factor we never measured could
 explain the result away only if it were both far more common among answered pull
@@ -1125,6 +1111,26 @@ all three.
 
 Two further checks matter more than any of the bounds above, because they attack
 the design rather than the arithmetic.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{Fig4.pdf}
+\caption{What a reply is worth, and what its anchoring is not. Three groups of
+pull requests are followed from the review comment onwards: those whose reply
+names the trigger, those whose reply lands somewhere else on the page, and those
+with no inline reply at all. A pull request counts as unreplied until its own
+first reply arrives, so no time before a reply is credited to it, and the shaded
+areas are 95\% intervals from resampling repositories. For the first two and a
+half days the no-reply group sits highest, because a pull request still being
+replied to has not merged yet. The two replied groups are read on the same grid
+of 73 time points, finer over the first two days and coarser afterwards. Their
+lines are not identical: the off-target group runs above the on-target one at 68
+of the 73 points, by 4.3 points on average and 7.2 at the widest. What matters is
+that their intervals overlap at every single point, so the trace cannot tell the
+two apart. That is the visual form of the result: where a reply is anchored does
+not separate them.}
+\label{fig:relay}
+\end{figure}
 
 The first drops the hour-48 rule and asks what the whole population looks like
 over time. Figure~\ref{fig:relay} follows every cross-product inline-trigger PR

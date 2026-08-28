@@ -1,27 +1,11 @@
 # Citation File Format 1.2.0 — https://citation-file-format.github.io
 #
 # ---------------------------------------------------------------------------
-# STATUS: author metadata is confirmed. Two things are still unknown, and both
-# need a human, so both are left COMMENTED OUT rather than filled with a
-# literal placeholder. The `orcid`, `doi`, and `date-released` keys are
-# pattern-constrained by the CFF 1.2.0 schema, so a placeholder string in them
-# would make this file fail validation. The file as it stands is schema-valid
-# and honest about what it does not yet know.
-#
-#   ORCID-PENDING  -> each author's real ORCID iD, as a full URL, e.g.
-#                     https://orcid.org/0000-0000-0000-0000. Uncomment the
-#                     author's `orcid:` line as you fill it in. If an author
-#                     has no ORCID, delete their commented line rather than
-#                     inventing a value.
-#   DOI-PENDING    -> the reserved Zenodo DOI (see
-#                     docs/guides/ARTIFACT_DEPOSIT.md, step 1). Uncomment the
-#                     top-level `doi:` line and set `date-released` to the
-#                     deposit date at the same time.
-#
-# Nothing else here is pending. Author order, joint first authorship, the two
-# affiliations, the corresponding email, the licence, and the pinned source
-# data revision are all final and match the manuscript title page in
-# paper/manuscript/main.tex.
+# STATUS: complete. Author order, joint first authorship, the two affiliations,
+# the corresponding email, the licence, the pinned source-data revision, all
+# five ORCID iDs, and the artifact DOI are final and match the manuscript
+# title page in paper/manuscript/main.tex. The record is published at
+# https://doi.org/10.5281/zenodo.22140821.
 #
 # Duy Minh Dao Sy and Trung Kiet Huynh contributed equally to this work and are
 # joint first authors. CFF 1.2.0 has no field for that, so it is stated here,

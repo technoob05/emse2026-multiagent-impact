@@ -119,8 +119,13 @@ Build the figures, paper PDF, and flat source bundle:
 - `build/figures/Fig1_v2.pdf`: measurement contract, exclusion rules, and evidence levels.
 - `build/figures/Fig2_v2.pdf`: RQ1 participation-to-edge and post-burst ownership figure.
 - `build/figures/Fig3_v2.pdf`: RQ2 boundary visibility and prior-history figure.
-- `build/figures/Fig4_v2.pdf`: RQ3 cumulative-merge curves for on-target, off-target, and no-reply pull requests — the anchoring placebo, showing the two replied groups' intervals overlap everywhere.
-- `build/figures/Fig5_v2.pdf`: RQ3 E-value tipping grid — how prevalent and how strong an unmeasured factor would have to be, with the four strongest measured factors plotted for scale. No placebo outcomes appear in this figure.
+These two carry file names that no longer match their printed numbers: the
+merge-curve float was moved down to sit beside the paragraph discussing it,
+so that Springer's rule about citing figures in ascending order is met, and
+the two numbers swapped as a result.
+
+- `build/figures/Fig4_v2.pdf` (prints as **Figure 5**): RQ3 cumulative-merge curves for on-target, off-target, and no-reply pull requests — the anchoring placebo, showing the two replied groups' intervals overlap everywhere.
+- `build/figures/Fig5_v2.pdf` (prints as **Figure 4**): RQ3 E-value tipping grid — how prevalent and how strong an unmeasured factor would have to be, with the four strongest measured factors plotted for scale. No placebo outcomes appear in this figure.
 - `build/figures/Fig6_v2.pdf`: RQ4 issue-link figure — answer rates within and across the product boundary, and the raw contrast beside its within-repository, within-month estimate.
 - `outputs/figures/dataset_schema_and_joins.pdf`: appendix map of both release layers and identifier joins.
 - `outputs/figures/dataset_feature_coverage.pdf`: appendix view of feature availability and valid denominators.
