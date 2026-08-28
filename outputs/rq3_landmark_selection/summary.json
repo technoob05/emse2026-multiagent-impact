@@ -1,0 +1,271 @@
+{
+  "published_reference": {
+    "estimate_points": 17.34652360493301,
+    "ci_points": [
+      7.255437972242951,
+      27.43760923762307
+    ],
+    "prs": 1067,
+    "exposed_prs": 109
+  },
+  "part1_sequential_landmark": {
+    "cohort_prs": 1067,
+    "cohort_is_the_published_landmark_cohort": true,
+    "closed_between_hour_48_and_96": 210,
+    "merged_after_hour_96_within_30d": 267,
+    "published_outcome_positives_48h_to_30d": 423,
+    "published_outcome_positives_that_merge_by_hour_96": 156,
+    "exposed_exact_parent_reply_48_96h": 17,
+    "exposed_any_reply_48_96h": 232,
+    "exposed_human_reply_48_96h": 198,
+    "exposed_published_exact_reply_by_48h": 109,
+    "unexposed_at_hour_48_subgroup": 958
+  },
+  "part1_best_powered_selection_free": {
+    "sample": "unexposed_at_48h",
+    "exposure": "human_reply_48_96h",
+    "exposed_prs": 160,
+    "estimate_points": 0.703250091593044,
+    "ci_points": [
+      -9.296291890357317,
+      10.702792073543405
+    ],
+    "p_value": 0.8903662395443437,
+    "permutation_p": 0.8590704647676162
+  },
+  "part2_whole_population": [
+    {
+      "analysis": "whole_population_merge_hazard",
+      "exposure": "edge_active",
+      "outcome": "merged_in_bin",
+      "hazard_odds_ratio": 1.7353087271731105,
+      "or_ci_low": 1.3803962328953605,
+      "or_ci_high": 2.1814724691670677,
+      "p_value": 2.343404358931242e-06,
+      "person_period_rows": 13719,
+      "prs": 3940,
+      "repositories": 893,
+      "exposed_person_period_rows": 940,
+      "note": "replicates run_rq3_extensions.py specification C; no conditioning"
+    },
+    {
+      "analysis": "whole_population_merge_hazard_human_reply",
+      "exposure": "human_reply_active",
+      "outcome": "merged_in_bin",
+      "hazard_odds_ratio": 2.1356487194591094,
+      "or_ci_low": 1.756484971234895,
+      "or_ci_high": 2.596660676077821,
+      "p_value": 2.7688733291874093e-14,
+      "person_period_rows": 13719,
+      "prs": 3940,
+      "repositories": 893,
+      "exposed_person_period_rows": 3299,
+      "note": "any human reply rather than the exact-parent edge"
+    },
+    {
+      "analysis": "post_hour_48_person_time_merge_hazard",
+      "exposure": "late_edge_active",
+      "outcome": "merged_in_bin",
+      "hazard_odds_ratio": 2.523384344324028,
+      "or_ci_low": 0.9138349370573906,
+      "or_ci_high": 6.967854139701945,
+      "p_value": 0.0740844119755644,
+      "person_period_rows": 5109,
+      "prs": 1067,
+      "repositories": 469,
+      "exposed_person_period_rows": 47,
+      "note": "person-time after hour 48 only, exposure counted only if the reply arrived after hour 48; the landmark-free form of Part 1"
+    },
+    {
+      "analysis": "whole_population_closure_hazard",
+      "exposure": "edge_active",
+      "outcome": "closed_in_bin",
+      "hazard_odds_ratio": 1.4610536970086976,
+      "or_ci_low": 1.1913598014846996,
+      "or_ci_high": 1.7917995074892563,
+      "p_value": 0.0002708371631492281,
+      "person_period_rows": 13719,
+      "prs": 3940,
+      "repositories": 893,
+      "exposed_person_period_rows": 940,
+      "note": "Part 3 companion: does the reply move the exit hazard at all"
+    }
+  ],
+  "part2_standardised": [
+    {
+      "exposure": "edge_active",
+      "standardised_30d_merge_risk_unexposed": 0.8045543046086019,
+      "standardised_30d_merge_risk_exposed": 0.9163881719094578,
+      "risk_difference_points": 11.183386730085587,
+      "prs": 3940,
+      "note": "standardised over the whole population under always-exposed against never-exposed; hypothetical, and not an identified causal contrast"
+    },
+    {
+      "exposure": "human_reply_active",
+      "standardised_30d_merge_risk_unexposed": 0.7633323963321428,
+      "standardised_30d_merge_risk_exposed": 0.9219658121577238,
+      "risk_difference_points": 15.8633415825581,
+      "prs": 3940,
+      "note": "standardised over the whole population under always-exposed against never-exposed; hypothetical, and not an identified causal contrast"
+    }
+  ],
+  "part3_raw_selection": [
+    {
+      "table": "raw_unordered",
+      "exposure": "exact_parent_reply",
+      "group": "replied_by_48h",
+      "prs": 503,
+      "closed_by_48h": 394,
+      "closed_by_48h_rate": 0.7833001988071571,
+      "still_open_at_48h_rate": 0.21669980119284293
+    },
+    {
+      "table": "raw_unordered",
+      "exposure": "exact_parent_reply",
+      "group": "no_reply_by_48h",
+      "prs": 3439,
+      "closed_by_48h": 2481,
+      "closed_by_48h_rate": 0.7214306484443153,
+      "still_open_at_48h_rate": 0.27856935155568474
+    },
+    {
+      "table": "raw_unordered",
+      "exposure": "any_human_reply",
+      "group": "replied_by_48h",
+      "prs": 1662,
+      "closed_by_48h": 1287,
+      "closed_by_48h_rate": 0.7743682310469314,
+      "still_open_at_48h_rate": 0.22563176895306858
+    },
+    {
+      "table": "raw_unordered",
+      "exposure": "any_human_reply",
+      "group": "no_reply_by_48h",
+      "prs": 2280,
+      "closed_by_48h": 1588,
+      "closed_by_48h_rate": 0.6964912280701754,
+      "still_open_at_48h_rate": 0.3035087719298246
+    },
+    {
+      "table": "exposure_prevalence_shift",
+      "exposure": "exact_parent_reply",
+      "group": "whole_population",
+      "prs": 3942,
+      "closed_by_48h": 503,
+      "closed_by_48h_rate": 0.1276002029426687,
+      "still_open_at_48h_rate": NaN
+    },
+    {
+      "table": "exposure_prevalence_shift",
+      "exposure": "exact_parent_reply",
+      "group": "survivors_to_hour_48",
+      "prs": 1067,
+      "closed_by_48h": 109,
+      "closed_by_48h_rate": 0.1021555763823805,
+      "still_open_at_48h_rate": NaN
+    }
+  ],
+  "part3_ordered_selection": [
+    {
+      "exposure_landmark_hours": 1,
+      "exposure": "exact_parent_reply",
+      "outcome": "closed_before_hour_48",
+      "prs_open_at_landmark": 2500,
+      "exposed_prs": 207,
+      "exposed_closed_rate": 0.7004830917874396,
+      "unexposed_closed_rate": 0.5617095508068033,
+      "raw_difference": 0.13877354098063632,
+      "estimate": 0.10661173842132662,
+      "ci_low": 0.0316640341706879,
+      "ci_high": 0.18155944267196533,
+      "p_value": 0.005303242905701282,
+      "n_prs": 2500,
+      "repositories": 728
+    },
+    {
+      "exposure_landmark_hours": 1,
+      "exposure": "any_human_reply",
+      "outcome": "closed_before_hour_48",
+      "prs_open_at_landmark": 2500,
+      "exposed_prs": 556,
+      "exposed_closed_rate": 0.6726618705035972,
+      "unexposed_closed_rate": 0.5447530864197531,
+      "raw_difference": 0.1279087840838441,
+      "estimate": 0.1186961325726869,
+      "ci_low": 0.053860818410192135,
+      "ci_high": 0.18353144673518165,
+      "p_value": 0.0003330068309865878,
+      "n_prs": 2500,
+      "repositories": 728
+    },
+    {
+      "exposure_landmark_hours": 6,
+      "exposure": "exact_parent_reply",
+      "outcome": "closed_before_hour_48",
+      "prs_open_at_landmark": 1806,
+      "exposed_prs": 168,
+      "exposed_closed_rate": 0.4880952380952381,
+      "unexposed_closed_rate": 0.4010989010989011,
+      "raw_difference": 0.08699633699633696,
+      "estimate": 0.06982151025010883,
+      "ci_low": -0.01549244373021326,
+      "ci_high": 0.1551354642304309,
+      "p_value": 0.10870355482692488,
+      "n_prs": 1806,
+      "repositories": 621
+    },
+    {
+      "exposure_landmark_hours": 6,
+      "exposure": "any_human_reply",
+      "outcome": "closed_before_hour_48",
+      "prs_open_at_landmark": 1806,
+      "exposed_prs": 511,
+      "exposed_closed_rate": 0.49510763209393344,
+      "unexposed_closed_rate": 0.3752895752895753,
+      "raw_difference": 0.11981805680435814,
+      "estimate": 0.11344223732186914,
+      "ci_low": 0.052164881053841476,
+      "ci_high": 0.1747195935898968,
+      "p_value": 0.0002851121687730528,
+      "n_prs": 1806,
+      "repositories": 621
+    },
+    {
+      "exposure_landmark_hours": 24,
+      "exposure": "exact_parent_reply",
+      "outcome": "closed_before_hour_48",
+      "prs_open_at_landmark": 1264,
+      "exposed_prs": 124,
+      "exposed_closed_rate": 0.16129032258064516,
+      "unexposed_closed_rate": 0.15526315789473685,
+      "raw_difference": 0.006027164685908304,
+      "estimate": -0.0015145836974436722,
+      "ci_low": -0.06598554734350416,
+      "ci_high": 0.06295637994861682,
+      "p_value": 0.9632748284479754,
+      "n_prs": 1264,
+      "repositories": 518
+    },
+    {
+      "exposure_landmark_hours": 24,
+      "exposure": "any_human_reply",
+      "outcome": "closed_before_hour_48",
+      "prs_open_at_landmark": 1264,
+      "exposed_prs": 425,
+      "exposed_closed_rate": 0.2023529411764706,
+      "unexposed_closed_rate": 0.13230035756853398,
+      "raw_difference": 0.07005258360793662,
+      "estimate": 0.07040869340955025,
+      "ci_low": 0.017599366391838463,
+      "ci_high": 0.12321802042726204,
+      "p_value": 0.00897128612149845,
+      "n_prs": 1264,
+      "repositories": 518
+    }
+  ],
+  "person_period_rows": 13719,
+  "prs_in_hazard_population": 3942,
+  "seed": 20260826,
+  "permutations": 2000,
+  "scope": "design probe for the RQ3 landmark; every estimate is observational and none identifies a causal effect"
+}

@@ -48,6 +48,7 @@ EXPECTED_LABELS = {
     "tab:s-rq2",
     "tab:s-addressed-edge",
     "tab:s-sensitivity",
+    "tab:s-landmark-selection",
     "tab:s-specificity",
     "tab:s-task-context",
     "tab:s-external",
@@ -143,6 +144,14 @@ def tex(value: object) -> str:
         "}": r"\}",
         "~": r"\textasciitilde{}",
         "^": r"\textasciicircum{}",
+        # Set in math mode on purpose. In the document's OT1 text encoding a
+        # bare "<" prints as an inverted exclamation mark, which is how
+        # "p < 0.001" reached the page as "p ¡ 0.001"; \textless would fix the
+        # glyph but pulls in a TS1 face this installation renders as a Type 3
+        # bitmap, which publisher toolchains reject. The math relation comes
+        # from cmmi/cmsy, which are Type 1 and already embedded.
+        "<": r"$<$",
+        ">": r"$>$",
     }
     return "".join(mapping.get(character, character) for character in str(value))
 
@@ -350,11 +359,10 @@ def release_table() -> str:
     )
     note = (
         "The rich layer contains repositories with more than 100 stars, and inventory row counts come from release metadata. In Panel B coverage means that a pull request has at least one linked row; inline comments resolve through their submitted-review identifier first. "
-        f"The channel split that used to sit here is now Figure 3 of this document, which counts reviewer-side interaction events on all "
+        f"The channel split that used to sit here is now Figure 2 of this document, which counts reviewer-side interaction events on all "
         f"{integer(anchor[COVERAGE_COHORT]['cohort_definition']['trigger_prs_in_this_cohort'])} cross-product trigger PRs, split by the channel that "
-        "carries them; only inline review comments store a machine-readable reply anchor, so only they can produce an exact addressed edge. Shares "
-        "in the first four rows are of reviewer-side events and of trigger PRs; the last row's share is of inline events, and it gives the anchoring "
-        "ceiling. A coarse unanchored proxy, any later comment by a different account inside the window, fires on "
+        "carries them; only inline review comments store a machine-readable reply anchor, so only they can produce an exact addressed edge. A coarse "
+        "unanchored proxy, any later comment by a different account inside the window, fires on "
         f"{percent(out_of_scope_proxy['coarse_proxy_rate'])}% of PR-level-comment triggers against {percent(inline_proxy['coarse_proxy_rate'])}% of "
         "inline triggers; it is reported to size the blind spot and is never used for estimation."
     )
@@ -1584,6 +1592,244 @@ def rq3_robustness_table() -> str:
     )
 
 
+LANDMARK_PROBE_EXPOSURE_LABELS = {
+    "exact_parent_reply": "Exact reply to the trigger",
+    "any_human_reply": "Any reply from a user account",
+}
+
+LANDMARK_PROBE_HAZARD_LABELS = {
+    "whole_population_merge_hazard": "Merge hazard, exact addressed edge",
+    "whole_population_merge_hazard_human_reply": "Merge hazard, any reply from a user account",
+    "post_hour_48_person_time_merge_hazard": "Merge hazard on post-hour-48 person-time, reply counted only if it arrives after hour 48",
+    "whole_population_closure_hazard": "Closure hazard, exact addressed edge",
+}
+
+LANDMARK_PROBE_RISK_LABELS = {
+    "edge_active": "Standardised 30-day merge risk difference, exact addressed edge",
+    "human_reply_active": "Standardised 30-day merge risk difference, any reply from a user account",
+}
+
+LANDMARK_PROBE_SEQUENCE_EXPOSURES = {
+    "exact_parent_reply_48_96h": "Exact reply in hours 48 to 96",
+    "any_reply_48_96h": "Any reply in hours 48 to 96",
+    "human_reply_48_96h": "User-account reply in hours 48 to 96",
+    "exact_parent_reply_by_48h": "Published exposure, exact reply by hour 48",
+}
+
+LANDMARK_PROBE_SEQUENCE_OUTCOMES = {
+    "merged_from_96h_to_30d": "merged after hour 96",
+    "merged_from_48h_to_30d": "merged after hour 48 (published outcome)",
+    "merged_from_48h_to_96h": "merged in hours 48 to 96",
+}
+
+LANDMARK_PROBE_SAMPLE_LABELS = {
+    "all_open_at_48h": "Sample: every PR open at hour 48 (published cohort)",
+    "unexposed_at_48h": "Sample: open and not yet replied to at hour 48",
+    "still_open_at_96h": "Secondary sample, not selection-free: open at hour 96",
+}
+
+
+def landmark_selection_rows() -> tuple[list[object], list[object], list[object]]:
+    ordered = read_csv(
+        "outputs/rq3_landmark_selection/selection_ordered_landmarks.csv",
+        (
+            "exposure_landmark_hours",
+            "exposure",
+            "prs_open_at_landmark",
+            "exposed_prs",
+            "exposed_closed_rate",
+            "unexposed_closed_rate",
+            "estimate",
+            "ci_low",
+            "ci_high",
+            "p_value",
+            "repositories",
+        ),
+    )
+    hazards = read_csv(
+        "outputs/rq3_landmark_selection/whole_population_hazards.csv",
+        (
+            "analysis",
+            "hazard_odds_ratio",
+            "or_ci_low",
+            "or_ci_high",
+            "p_value",
+            "person_period_rows",
+            "prs",
+            "repositories",
+            "exposed_person_period_rows",
+        ),
+    )
+    risks = read_csv(
+        "outputs/rq3_landmark_selection/standardised_risk_difference.csv",
+        (
+            "exposure",
+            "standardised_30d_merge_risk_unexposed",
+            "standardised_30d_merge_risk_exposed",
+            "risk_difference_points",
+            "prs",
+        ),
+    )
+    sequential = read_csv(
+        "outputs/rq3_landmark_selection/sequential_landmark_estimates.csv",
+        (
+            "sample",
+            "exposure",
+            "outcome",
+            "prs",
+            "exposed_prs",
+            "exposed_outcome_rate",
+            "unexposed_outcome_rate",
+            "selection_free",
+            "estimate",
+            "ci_low",
+            "ci_high",
+            "p_value",
+            "permutation_p",
+            "repositories",
+        ),
+    )
+
+    selection: list[object] = []
+    for item in ordered:
+        hours = int(number(item["exposure_landmark_hours"]))
+        label = LANDMARK_PROBE_EXPOSURE_LABELS.get(item["exposure"])
+        if label is None:
+            raise ValueError(f"Unlabelled selection-probe exposure: {item['exposure']!r}")
+        selection.append(
+            (
+                tex(f"{label}, measured by hour {hours}"),
+                pp(item["estimate"]),
+                ci_pp(item["ci_low"], item["ci_high"]),
+                tex(
+                    f"{integer(item['prs_open_at_landmark'])} PRs open at hour {hours}, "
+                    f"{integer(item['exposed_prs'])} exposed; closed by hour 48: "
+                    f"{percent(item['exposed_closed_rate'])}% against "
+                    f"{percent(item['unexposed_closed_rate'])}%; {p_text(item['p_value'])}"
+                ),
+            )
+        )
+
+    whole: list[object] = []
+    for item in hazards:
+        label = LANDMARK_PROBE_HAZARD_LABELS.get(item["analysis"])
+        if label is None:
+            raise ValueError(f"Unlabelled landmark-free analysis: {item['analysis']!r}")
+        whole.append(
+            (
+                tex(label),
+                f"{number(item['hazard_odds_ratio']):.2f}",
+                f"[{number(item['or_ci_low']):.2f}, {number(item['or_ci_high']):.2f}]",
+                tex(
+                    f"{integer(item['prs'])} PRs, {integer(item['person_period_rows'])} periods, "
+                    f"{integer(item['exposed_person_period_rows'])} exposed; {p_text(item['p_value'])}"
+                ),
+            )
+        )
+    for item in risks:
+        label = LANDMARK_PROBE_RISK_LABELS.get(item["exposure"])
+        if label is None:
+            raise ValueError(f"Unlabelled standardised contrast: {item['exposure']!r}")
+        whole.append(
+            (
+                tex(label),
+                pp_value(item["risk_difference_points"]),
+                NOT_APPLICABLE,
+                tex(
+                    f"{percent(item['standardised_30d_merge_risk_unexposed'])}% never-answered against "
+                    f"{percent(item['standardised_30d_merge_risk_exposed'])}% always-answered, over "
+                    f"{integer(item['prs'])} PRs; hypothetical, not identified"
+                ),
+            )
+        )
+
+    labelled: list[tuple[object, ...]] = []
+    for item in sequential:
+        sample = LANDMARK_PROBE_SAMPLE_LABELS.get(item["sample"])
+        exposure = LANDMARK_PROBE_SEQUENCE_EXPOSURES.get(item["exposure"])
+        outcome = LANDMARK_PROBE_SEQUENCE_OUTCOMES.get(item["outcome"])
+        if sample is None or exposure is None or outcome is None:
+            raise ValueError(
+                f"Unlabelled sequential-landmark row: {item['sample']!r}, {item['exposure']!r}, {item['outcome']!r}"
+            )
+        free = str(item["selection_free"]).strip().lower() == "true"
+        if free != (item["sample"] != "still_open_at_96h"):
+            raise ValueError("The selection-free flag no longer matches the sample it belongs to")
+        labelled.append(
+            (
+                tex(sample),
+                tex(f"{exposure}; {outcome}"),
+                pp(item["estimate"]),
+                ci_pp(item["ci_low"], item["ci_high"]),
+                tex(
+                    f"{integer(item['prs'])} PRs, {integer(item['exposed_prs'])} exposed; raw "
+                    f"{percent(item['exposed_outcome_rate'])}% against "
+                    f"{percent(item['unexposed_outcome_rate'])}%; {p_text(item['p_value'])}, "
+                    f"shuffle {p_text(item['permutation_p'])}"
+                ),
+            )
+        )
+    return selection, whole, collapse_label_column(labelled, 4)
+
+
+def landmark_selection_table() -> str:
+    summary = read_json("outputs/rq3_landmark_selection/summary.json")
+    published = summary["published_reference"]
+    best = summary["part1_best_powered_selection_free"]
+    part1 = summary["part1_sequential_landmark"]
+    landmark_free = one(
+        read_csv(
+            "outputs/rq3_landmark_selection/standardised_risk_difference.csv",
+            ("exposure", "risk_difference_points", "prs"),
+        ),
+        exposure="edge_active",
+    )
+    selection, whole, sequential = landmark_selection_rows()
+    return paneled_longtable(
+        "Is the hour-48 landmark itself post-exposure? An ordered selection probe, landmark-free whole-population estimates, and a sequential-landmark design.",
+        "tab:s-landmark-selection",
+        r"L{0.318\textwidth}L{0.070\textwidth}L{0.142\textwidth}L{0.390\textwidth}",
+        4,
+        (
+            (
+                "Panel A. Does an early reply move the hour-48 cohort gate?",
+                ("Exposure and the hour it is read by", "Estimate (pp)", "95\\% interval", "Size and detail"),
+                selection,
+            ),
+            (
+                "Panel B. No landmark: whole population, reply time-varying",
+                ("Analysis (odds ratio unless marked pp)", "Estimate", "95\\% interval", "Size and detail"),
+                whole,
+            ),
+            (
+                "Panel C. Sequential landmark: gate closes before exposure opens",
+                ("Exposure window and outcome window", "Estimate (pp)", "95\\% interval", "Size and detail"),
+                sequential,
+            ),
+        ),
+        "The published RQ3 estimate is "
+        + f"{number(published['estimate_points']):+.1f} points "
+        + f"[{number(published['ci_points'][0]):+.1f}, {number(published['ci_points'][1]):+.1f}] on "
+        + f"{integer(published['exposed_prs'])} exposed PRs of {integer(published['prs'])}; it reads the exposure inside the same 48 hours that decide cohort "
+        "membership, which makes still-open-at-hour-48 a possible collider. Nothing here replaces that estimate, and no panel identifies a causal effect. "
+        "Panel A puts the exposure strictly before the outcome, reading the reply at hour 1, 6 or 24 and asking whether the PR has closed by hour 48 under the "
+        "primary model's pre-trigger controls; a value away from zero is the selection the panel exists to measure. Panel B removes the landmark: every "
+        "cross-product inline-trigger PR with a complete 30-day horizon is followed from its trigger with the reply as a time-varying covariate, so no time "
+        "before a reply is credited to it, and the two standardised rows convert that fit into a 30-day risk difference under always-answered against "
+        "never-answered. Panel C fixes cohort membership at hour 48 and reads the exposure only in hours 48 to 96, so the exposure cannot have changed who is "
+        "in the cohort; its best-powered selection-free row is the user-account reply on "
+        + f"{integer(best['exposed_prs'])} exposed PRs at {number(best['estimate_points']):+.1f} points "
+        + f"[{number(best['ci_points'][0]):+.1f}, {number(best['ci_points'][1]):+.1f}], a null on a slower and smaller subgroup rather than a refutation. The "
+        "last group in Panel C conditions on survival past the exposure window and so re-introduces the structure being tested; it is reported for "
+        "completeness. Read the three together: the landmark estimate of "
+        + f"{number(published['estimate_points']):+.1f} points is an upper bound, the landmark-free reading is "
+        + f"{pp_value(landmark_free['risk_difference_points'])} points standardised over all "
+        + f"{integer(landmark_free['prs'])} PRs, and the sequential design is underpowered rather than a refutation: only "
+        + f"{integer(part1['exposed_exact_parent_reply_48_96h'])} of the {integer(part1['cohort_prs'])} PRs open at hour 48 receive an exact reply in hours 48 to 96. "
+        + "Shuffle p-values permute the exposure within repository over 2,000 draws from a fixed seed.",
+    )
+
+
 def landmark_route_rows() -> list[tuple[str, ...]]:
     speeds = read_csv(
         "outputs/coordination_topology/route_speed_summary.csv",
@@ -2445,9 +2691,11 @@ REPRODUCTION_STEPS: dict[str, tuple[str, str]] = {
     "run_addressed_edge_scope_audit.py": ("Exposure composition, stricter rules, conditional test", "outputs/addressed_edge_scope/exposure_event_composition.csv"),
     "run_task_context_interaction.py": ("RQ4 issue-link interaction across the boundary", "outputs/task_context_interaction/answer_rate_cells.csv"),
     "run_rq3_extensions.py": ("Whole-population hazard; the edge split by who wrote it", "outputs/rq3_extensions/edge_class_contrasts.csv"),
+    "run_rq3_landmark_selection_probe.py": ("Whether the hour-48 landmark is post-exposure: ordered selection probe, landmark-free hazards, sequential landmark", "outputs/rq3_landmark_selection/sequential_landmark_estimates.csv"),
     "run_merge_curves.py": ("Cumulative merge curves for the exact-edge contrast", "outputs/merge_curves/cumulative_merge.csv"),
     "run_anchorability_coverage.py": ("Which channels carry a reply anchor; triggers in scope", "outputs/anchorability_coverage/trigger_channel_composition.csv"),
     "run_burst_threshold_selection.py": ("Data-driven and per-product burst cuts; owner split, 9 schemes", "outputs/burst_threshold_selection/owner_split_sensitivity.csv"),
+    "run_constant_sensitivity_sweeps.py": ("Landmark, outcome-horizon, and follow-up-window sweeps", "outputs/constant_sensitivity/landmark_sweep.csv"),
     "run_pseudo_edge_negative_control.py": ("Off-target, permuted-anchor, time-shifted placebos", "outputs/pseudo_edge_control/contrasts.csv"),
     "run_user_account_automation_audit.py": ("Machine-likeness heuristics; the re-estimated contrast", "outputs/user_account_automation/heuristic_incidence.csv"),
     "run_addressed_edge_reply_content_audit.py": ("Reply-content classification; the contrast by category", "outputs/user_account_automation/reply_content_category_counts.csv"),
@@ -2455,9 +2703,12 @@ REPRODUCTION_STEPS: dict[str, tuple[str, str]] = {
     "run_matched_thread_position_audit.py": ("Whether a matched pair can produce a reply at all", "outputs/matched_thread_position/restricted_visibility_contrasts.csv"),
     "run_worked_example.py": ("One traced pull request, event by event", "outputs/worked_example/timeline.csv"),
     "run_confounder_benchmarks.py": ("Measured controls on the scale of a hidden cause", "outputs/confounder_benchmarks/measured_factor_positions.csv"),
+    "run_swe_review_chat_exact_edge_pilot.py": ("SWE-Review-Chat exact-edge funnel and AIDev overlap removal", "protocol/swe_review_chat_exact_edge_funnel_20260826.csv"),
+    "run_cross_corpus_attribution_sensitivity.py": ("Product attribution and timing against the independent AI-to-AI cohort", "outputs/external_validation/codage_attribution_sensitivity/attribution_coverage.csv"),
+    "run_external_actionability_transfer_probe.py": ("Fail-closed leave-one-source-out gate on a transferred actionability label", "outputs/external_validation/actionability_transfer_probe/leave_one_source_out.csv"),
     "prepare_review_collision_audit.py": ("Blinded structural same-locus coder packets", "outputs/review_collision/product_pair_concentration.csv"),
     "run_collision_descriptive_extension.py": ("Timing and concentration for the same-locus population", "outputs/novelty_collision_extension/timing_distribution.csv"),
-    "run_sample_flow.py": ("Closed accounting from 8,608 to 1,067, filter by filter", "outputs/sample_flow/sample_flow.csv"),
+    "run_sample_flow.py": ("Closed accounting from the 361,296-PR release layer to each cohort, filter by filter", "outputs/sample_flow/sample_flow.csv"),
     "generate_technical_appendix_tables.py": ("Every table in this appendix", ""),
     "validate_response_ownership_outputs.py": ("Re-checks the ownership products", ""),
     "validate_coordination_extension_outputs.py": ("Re-checks the topology and landmark products", ""),
@@ -2818,10 +3069,12 @@ def ci_pp_value(low: object, high: object, digits: int = 1) -> str:
 
 def comparison_math(value: object) -> str:
     """Escape for TeX, then set inequality and tolerance signs in math mode."""
+    # tex() has already set a bare inequality in math mode, so the composite
+    # relations are matched in their escaped form rather than their source form.
     return (
         tex(value)
-        .replace(">=", r"$\ge$")
-        .replace("<=", r"$\le$")
+        .replace("$>$=", r"$\ge$")
+        .replace("$<$=", r"$\le$")
         .replace("+/-", r"$\pm$")
     )
 
@@ -3503,7 +3756,7 @@ TABLE_GROUPS = (
     ("cohorts", (cohort_table, specifications_table)),
     ("rq1", (burst_table,)),
     ("rq2", (rq2_table,)),
-    ("rq3", (addressed_edge_table, rq3_robustness_table)),
+    ("rq3", (addressed_edge_table, rq3_robustness_table, landmark_selection_table)),
     ("specificity", (specificity_table,)),
     ("task_context", (task_context_table,)),
     ("external", (external_table,)),

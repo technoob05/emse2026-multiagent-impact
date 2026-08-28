@@ -69,10 +69,12 @@ Substitute `.\.venv\Scripts\python.exe` for `.venv/bin/python` on Windows.
 .venv/bin/python scripts/analysis/run_addressed_edge_confounding_sensitivity.py
 .venv/bin/python scripts/analysis/run_addressed_edge_scope_audit.py
 .venv/bin/python scripts/analysis/run_rq3_extensions.py
+.venv/bin/python scripts/analysis/run_rq3_landmark_selection_probe.py
 .venv/bin/python scripts/analysis/run_task_context_interaction.py
 .venv/bin/python scripts/analysis/run_merge_curves.py
 .venv/bin/python scripts/analysis/run_anchorability_coverage.py
 .venv/bin/python scripts/analysis/run_burst_threshold_selection.py
+.venv/bin/python scripts/analysis/run_constant_sensitivity_sweeps.py
 .venv/bin/python scripts/analysis/run_pseudo_edge_negative_control.py
 .venv/bin/python scripts/analysis/run_user_account_automation_audit.py
 .venv/bin/python scripts/analysis/run_addressed_edge_reply_content_audit.py
@@ -80,6 +82,9 @@ Substitute `.\.venv\Scripts\python.exe` for `.venv/bin/python` on Windows.
 .venv/bin/python scripts/analysis/run_worked_example.py
 .venv/bin/python scripts/analysis/run_confounder_benchmarks.py
 .venv/bin/python scripts/analysis/run_matched_thread_position_audit.py
+.venv/bin/python scripts/analysis/run_swe_review_chat_exact_edge_pilot.py
+.venv/bin/python scripts/analysis/run_cross_corpus_attribution_sensitivity.py
+.venv/bin/python scripts/analysis/run_external_actionability_transfer_probe.py
 .venv/bin/python scripts/audit/prepare_review_collision_audit.py
 .venv/bin/python scripts/analysis/run_collision_descriptive_extension.py
 .venv/bin/python scripts/analysis/run_sample_flow.py
@@ -90,16 +95,35 @@ Substitute `.\.venv\Scripts\python.exe` for `.venv/bin/python` on Windows.
 uv run --with pytest python -m pytest -q
 ```
 
+Three steps in that list read third-party corpora rather than AIDev:
+`run_swe_review_chat_exact_edge_pilot.py`,
+`run_cross_corpus_attribution_sensitivity.py`, and
+`run_external_actionability_transfer_probe.py`. They need the acquisitions under
+`external_data/`, which this archive does not redistribute (see section 5). Their
+frozen products are shipped, and the appendix reproduction contract and
+disposition ledger read them, so skip these three unless you have reacquired the
+sources; nothing else in the list depends on them.
+
 The two `validate_*` scripts are the gate: they re-read what was just written and
 fail loudly if a headline number moved. If they pass, you have reproduced the
-study. `run_sample_flow.py` is an accounting check that walks the five population
-sizes quoted in the paper and asserts each filter step; it reads only frozen
-artifacts, so it is a good last step.
+study. `run_sample_flow.py` is an accounting check that reads only frozen
+artifacts, so it is a good last step. It walks all twelve filter steps of the
+population, from the 361,296 pull requests in the release layer down through the
+trunk and its two branches, and asserts that within each branch the count
+before, minus what the filter removes, equals the count after. The branches are
+not one chain, so it also checks the terminal cohort sizes the paper quotes
+separately: 8,608 cross-product triggers, 4,824 inline triggers, 3,942 in the
+merge-curve cohort, 1,067 at the hour-48 landmark, 3,526 in the thread-position
+cohort, and the 109 exposed pull requests carrying 128 exposure reply events.
 
-**Roughly how long.** About **11 minutes** for the whole list, measured end to
-end on a Windows laptop with the parquet files on a local SSD, once the data is
-downloaded. Two steps dominate: `run_task_context_interaction.py` at roughly two
-minutes and `run_addressed_edge_landmark_analysis.py` at about the same. Most
+**Roughly how long.** About **11 minutes** for the AIDev-only steps, measured end
+to end on a Windows laptop with the parquet files on a local SSD, once the data
+is downloaded; that figure excludes the three external-corpus steps above and
+`run_constant_sensitivity_sweeps.py`, which refits the landmark model at four
+landmarks, three horizons, and four follow-up windows and so roughly doubles the
+total when you run it. Two steps dominate the rest:
+`run_task_context_interaction.py` at roughly two minutes and
+`run_addressed_edge_landmark_analysis.py` at about the same. Most
 other steps finish in under half a minute, because they read derived parquet
 rather than rescanning the release. Figures take about 25 seconds and the tests
 about 15. Allow 15 to 20 minutes on a slower disk. Downloading the 13 GB of data
@@ -132,9 +156,11 @@ can read the results before running anything, and diff yours against them after.
 | `confounder_benchmarks/` | The measured controls plotted on the same axes as the hypothetical hidden cause |
 | `task_context_interaction/` | RQ4: whether an issue link in the pull request body changes who answers |
 | `rq3_extensions/` | Whole-population time-varying edge model and the edge split by who wrote the reply |
+| `rq3_landmark_selection/` | Whether the hour-48 landmark is itself post-exposure: an ordered selection probe, landmark-free whole-population estimates, and a sequential-landmark design |
 | `merge_curves/` | Merge over a 30-day horizon, for the cohorts above |
 | `worked_example/` | One real pull request traced end to end, so the measurement rules are checkable |
-| `sample_flow/` | The closed accounting from 8,608 down to 1,067, one filter at a time |
+| `sample_flow/` | The closed accounting from the 361,296-PR release layer down to each question's cohort, one filter at a time |
+| `constant_sensitivity/` | Sweeps of the constants the paper asserts: the hour-48 landmark, the 30-day horizon, the seven-day follow-up window, and the bootstrap-draw count |
 | `review_collision/` | The frozen 167-locus blinded dual-coder packet. Semantic claims remain pending |
 | `external_validation/` | Cross-dataset attribution, overlap, and semantic-artifact audits |
 | `figures/`, `tables/` | Rendered appendix figures and the CSV tables the manuscript reads |

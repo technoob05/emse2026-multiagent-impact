@@ -41,6 +41,7 @@ cannot drift from what is here.
 - `review_collision/`
 - `review_request_context/`
 - `rq3_extensions/`
+- `rq3_landmark_selection/`
 - `tables/`
 - `task_context_interaction/`
 - `task_label_validation/`

@@ -16,6 +16,13 @@
 % \lato switch but leaves \familydefault and \sfdefault untouched, so the
 % article's own type is unchanged and only Figure 1 asks for the face.
 \usepackage{lato}
+% The itemize bullet is \textbullet, which lives in the text-companion
+% encoding; this installation has no Type 1 TS1 face, so TeX substituted a
+% bitmap (tcrm1000.pk) and the PDF embedded a Type 3 font. Publisher
+% toolchains reject Type 3. The math bullet comes from cmsy, which is Type 1
+% and already embedded, so the same mark costs nothing extra.
+\usepackage{enumitem}
+\setlist[itemize]{label=\textnormal{$\bullet$}}
 \raggedbottom
 \setlength{\bibsep}{0.25em}
 
@@ -41,7 +48,7 @@ LLM Coding Agent Reviews Another on GitHub, a Person Answers}
 \affil[2]{\orgname{Vietnam National University Ho Chi Minh City (VNU-HCM)},
   \orgaddress{\city{Ho Chi Minh City}, \country{Vietnam}}}
 
-\abstract{\textbf{Context:} Coding agents such as GitHub Copilot and Devin now open pull requests on their own; we call each a \emph{product}. Two products on one pull request is routinely reported as multi-agent collaboration, but sharing a page is not answering each other. \textbf{Objective:} We ask how often the public record can show one product answering another, and what follows when it does. \textbf{Method:} From AIDev we take 8,608 pull requests one product reviewed for another, 546 matched to a comparable within-product review, and 1,067 still open two days later. Later actions are tied to the review comment by GitHub's identifiers, not by timing, and every result is re-run with deliberately wrong anchors. \textbf{Results:} One product answers another's review point on 74 of the 8,608, fewer than one in a hundred. What connects the work is a person: user accounts write four in five of the replies GitHub records as answers. Review across a product boundary draws 13 percentage points less visible follow-up than its matched within-product twin, and an answered review point goes with 17 points more later merging. Yet a reply anchored anywhere else does as well, and shuffling the anchors barely moves the estimate: the exact link buys attribution, not prediction. Linking an issue roughly doubles the raw answer rate across the boundary and changes nothing inside one product. \textbf{Conclusions:} Counting products overstates multi-agent work by two orders of magnitude. Report a map of connections instead, and expect the strongest one to run through a person.}
+\abstract{\textbf{Context:} Coding agents such as GitHub Copilot and Devin now open pull requests on their own; we call each a \emph{product}. Two products on one pull request is routinely called collaboration, but sharing a page is not answering each other. \textbf{Objective:} We ask how often the public record can show one product answering another, and what follows when it does. \textbf{Method:} From AIDev we take 8,608 pull requests one product reviewed for another, 546 matched to a comparable within-product review, and 1,067 still open two days later. Later actions are tied to the comment by GitHub's identifiers, not by timing, and re-run with deliberately wrong anchors. \textbf{Results:} One product answers another's review point on 74 of the 8,608, fewer than one in a hundred. What connects the work is not another product: user accounts write four in five of the replies GitHub records as answers. Review across a product boundary draws 13 points less visible follow-up than its matched twin, and an answered review point goes with 11 to 17 points more later merging. Yet a reply anchored elsewhere does as well, and shuffling the anchors barely moves it: the exact link buys attribution, not prediction. Linking an issue roughly doubles the raw answer rate across the boundary and changes nothing inside one product. \textbf{Conclusions:} Counting products overstates multi-agent work by two orders of magnitude. Report a map of connections instead, and expect the strongest one to run through a person.}
 
 \keywords{coding agents, multi-agent software engineering, code review, human-agent collaboration, pull requests, mining software repositories}
 \maketitle
@@ -154,7 +161,7 @@ accepted later, and who writes it: another tool, or a person? A looser signal,
 an automated action followed by a person acting, covers pull requests where no
 reply exists to anchor, and we report it as a check on a wider group rather than
 as a second answer.
-\item[RQ4. What makes someone answer across the boundary?] A pull request
+\item[RQ4. What goes with a review point being answered across the boundary?] A pull request
 body often points at an issue, and that pointer gives a reader context the diff
 alone does not. It is normally written when the pull request is opened, but the
 release records no time for it, so we observe the link rather than its moment of
@@ -371,7 +378,8 @@ which leaves 361,296. The release publishes that subset under the name
 AIDev-pop, and we use that name for it too; the count
 here is our own reconstruction of that rule on this revision, so a reader
 comparing against a published subset size should expect a different number.
-Online Resource~1 gives the filter and the per-product counts. A star threshold is a blunt instrument for this. Munaiah et al.\ show that
+Online Resource~1 gives the filter and the account allowlist behind each
+product label. A star threshold is a blunt instrument for this. Munaiah et al.\ show that
 popularity filters do not measure whether a project is engineered, and build a
 classifier over community, continuous integration, documentation, history,
 issues, licensing and testing instead \citep{munaiah2017curating}. We use the
@@ -662,7 +670,8 @@ model: it is a paired difference over matched pairs.
 Uncertainty comes from resampling whole repositories with replacement, because
 pull requests inside one repository share people and policy. Permutation tests
 shuffle the label of interest inside the repository and refit. Intervals use between 1,000 and 10,000
-resampled draws depending on the analysis, and permutation tests 5,000 or 10,000;
+resampled draws depending on the analysis, and permutation tests 500, 1,000 or
+2,000;
 the exact count and seed for each are in Online Resource~1, which also
 carries the full covariate list, the matching rule, and the pre-trigger balance
 after matching. We vary the reply window from one to 48 hours, add repository
@@ -718,7 +727,7 @@ multi-agent workflow would leave behind.
 
 Panel C shows one of these bursts, because the word does no work until a reader
 has seen one. A product posts its review; the product that wrote the change
-answers with six events inside a minute and a half; and then nothing for twenty
+answers with six events inside 96 seconds; and then nothing for twenty
 minutes, when a user account acts. Counting the first of those six as the response
 would credit the wrong actor for the wrong reason, and that is the entire case for
 waiting.
@@ -778,8 +787,8 @@ the same two rules applied per product. In every one of them, user accounts are 
 common post-burst owner and stay ahead of the products, with an interval clear
 of zero. The
 size of the lead moves a good deal, from 19 to 41 points among pull requests that
-have any action after the wait, or 12 to 19 points if the denominator is every
-pull request, and the direction never does. So we report the window as a stated convention that the result survives,
+have any action after the wait, or 12.5 to 18.6 points if the denominator is
+every pull request, and the direction never does. So we report the window as a stated convention that the result survives,
 rather than as a discovered boundary.
 
 The next step is even more selective. Among PRs that are still mapped-product
@@ -939,7 +948,32 @@ interval: $7.3$ to $27.4$), on the 109 of these 1,067 pull requests that carry
 such a reply.
 It stays positive for reply windows from one to 48 hours, in a model that only
 compares PRs inside the same repository, and after removing each ordered product
-pair in turn. We also tested it against a harder comparison. Instead of an edge
+pair in turn.
+
+That number is an upper bound, and the reason is worth stating before the
+robustness checks rather than after them. The design keeps pull requests still
+open at hour 48 and lets the exposure happen during the same 48 hours, so the
+cohort is not independent of the exposure. We measured how much that matters. A
+reply inside the first hour makes a pull request about 10.7 points more likely
+to be closed by hour 48 (95\% interval: 3.2 to 18.2), and any reply from a user
+account, 11.9 points. So the surviving cohort is not a random slice of the
+population: replies push pull requests out of it.
+
+Two analyses free of that problem bracket the answer. Dropping the landmark
+entirely and putting the reply into a whole-population hazard model as a
+time-varying covariate keeps the direction and shrinks the size: standardised
+over the whole population, the 30-day merge risk is 11.2 points higher under
+always-answered than under never-answered, against the 17.3 the landmark
+cohort gives. Going the other way, and building a design where the landmark
+genuinely precedes the exposure, leaves too little to work with: only 17 of the
+958 pull requests unanswered at hour 48 receive an exact reply between hours 48
+and 96. Widening that exposure to any reply from a user account gives 160
+exposed and an estimate of 0.7 points on an interval from $-9.3$ to $+10.7$,
+which is a null on a slower and different subgroup rather than a refutation.
+
+We therefore read the effect as positive and somewhere below 17.3 points, with
+11.2 as the landmark-free reading, and we do not claim the landmark estimate is
+unbiased. Online Resource~1 carries all three analyses. We also tested it against a harder comparison. Instead of an edge
 versus silence, we compared an exact edge with PRs that already carry other
 public discussion. The result stays positive.
 
@@ -1101,7 +1135,7 @@ the seventeen the hour-48 group shows. The direction survives. We also fit a sep
 question: not whether a pull request eventually merges, but how fast. It cuts the
 follow-up into eleven periods and asks, in each one, whether a pull request that
 is still open merges during it. The periods are unequal on purpose, a quarter of
-a day at first and a week wide at the end, because most pull requests resolve
+a day at first and nine days wide at the end, because most pull requests resolve
 early and equal periods would spend most of their resolution where almost nothing
 happens. The fit is a pooled logistic regression with a baseline for each period
 and standard errors clustered on the repository. Its \emph{odds ratio} on the
@@ -1349,7 +1383,7 @@ belongs in auditing rather than in a score. Nothing here licenses treating it as
 a quality metric, and a real test would randomise an acknowledgement feature and
 watch what happens.
 
-\textbf{Researchers should stop reporting co-presence.} If a study counts
+\textbf{Co-presence should not be reported as collaboration.} If a study counts
 products on a pull request, it is measuring installation, not collaboration. The
 ladder in this paper is one way to be specific; any way is better than a count.
 This bears on a live argument. It has been proposed that agents can already meet

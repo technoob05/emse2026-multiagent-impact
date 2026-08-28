@@ -1,0 +1,7 @@
+table,exposure,group,prs,closed_by_48h,closed_by_48h_rate,still_open_at_48h_rate,caveat
+raw_unordered,exact_parent_reply,replied_by_48h,503,394,0.7833001988071571,0.21669980119284293,"unordered: a pull request that closed at hour 3 had little opportunity to receive a reply by hour 48, so this association runs in both directions"
+raw_unordered,exact_parent_reply,no_reply_by_48h,3439,2481,0.7214306484443153,0.27856935155568474,"unordered: a pull request that closed at hour 3 had little opportunity to receive a reply by hour 48, so this association runs in both directions"
+raw_unordered,any_human_reply,replied_by_48h,1662,1287,0.7743682310469314,0.22563176895306858,"unordered: a pull request that closed at hour 3 had little opportunity to receive a reply by hour 48, so this association runs in both directions"
+raw_unordered,any_human_reply,no_reply_by_48h,2280,1588,0.6964912280701754,0.3035087719298246,"unordered: a pull request that closed at hour 3 had little opportunity to receive a reply by hour 48, so this association runs in both directions"
+exposure_prevalence_shift,exact_parent_reply,whole_population,3942,503,0.1276002029426687,,closed_by_48h holds the exposed count and closed_by_48h_rate the exposure prevalence in this row
+exposure_prevalence_shift,exact_parent_reply,survivors_to_hour_48,1067,109,0.1021555763823805,,if the landmark gate were independent of the exposure these two prevalences would agree

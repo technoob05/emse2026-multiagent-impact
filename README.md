@@ -4,9 +4,10 @@ Reproducible artifact for an independent EMSE 2026 Special Issue draft based on 
 
 ## Research questions
 
-1. **Participation or handoff?** After review de-batching and rapid-burst collapse, how much cross-product activity forms a sequential public edge, and who appears next?
+1. **Is there a handoff?** After review de-batching and rapid-burst collapse, how much cross-product activity forms a sequential public edge, and who takes the next visible step?
 2. **Who bridges the boundary?** How visible is follow-up across a product boundary, and do first user-account mediators carry earlier public review history from the repository?
-3. **Does connection mark a later state?** Are an exact addressed edge and an automation-to-user relay linked to later merge after a fixed landmark?
+3. **Who writes the connection, and does the change get merged later?** Are an exact addressed edge and an automation-to-user relay linked to later merge after a fixed landmark, and is the edge written by another product or by a person?
+4. **What goes with a review point being answered across the boundary?** Does an issue link in the pull request body change whether a review point gets answered, and does that depend on whether the reviewer is a different product?
 
 ## Main insight
 
@@ -57,10 +58,12 @@ uv sync
 .\.venv\Scripts\python.exe scripts\analysis\run_addressed_edge_confounding_sensitivity.py
 .\.venv\Scripts\python.exe scripts\analysis\run_addressed_edge_scope_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_rq3_extensions.py
+.\.venv\Scripts\python.exe scripts\analysis\run_rq3_landmark_selection_probe.py
 .\.venv\Scripts\python.exe scripts\analysis\run_task_context_interaction.py
 .\.venv\Scripts\python.exe scripts\analysis\run_merge_curves.py
 .\.venv\Scripts\python.exe scripts\analysis\run_anchorability_coverage.py
 .\.venv\Scripts\python.exe scripts\analysis\run_burst_threshold_selection.py
+.\.venv\Scripts\python.exe scripts\analysis\run_constant_sensitivity_sweeps.py
 .\.venv\Scripts\python.exe scripts\analysis\run_pseudo_edge_negative_control.py
 .\.venv\Scripts\python.exe scripts\analysis\run_user_account_automation_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_addressed_edge_reply_content_audit.py
@@ -68,6 +71,9 @@ uv sync
 .\.venv\Scripts\python.exe scripts\analysis\run_worked_example.py
 .\.venv\Scripts\python.exe scripts\analysis\run_confounder_benchmarks.py
 .\.venv\Scripts\python.exe scripts\analysis\run_matched_thread_position_audit.py
+.\.venv\Scripts\python.exe scripts\analysis\run_swe_review_chat_exact_edge_pilot.py
+.\.venv\Scripts\python.exe scripts\analysis\run_cross_corpus_attribution_sensitivity.py
+.\.venv\Scripts\python.exe scripts\analysis\run_external_actionability_transfer_probe.py
 .\.venv\Scripts\python.exe scripts\audit\prepare_review_collision_audit.py
 .\.venv\Scripts\python.exe scripts\analysis\run_collision_descriptive_extension.py
 .\.venv\Scripts\python.exe scripts\analysis\run_sample_flow.py
@@ -77,6 +83,15 @@ uv sync
 .\.venv\Scripts\python.exe scripts\figures\visualize_manuscript_figures.py
 uv run --with pytest python -m pytest -q
 ```
+
+Three of those steps read third-party corpora rather than AIDev:
+`run_swe_review_chat_exact_edge_pilot.py`,
+`run_cross_corpus_attribution_sensitivity.py`, and
+`run_external_actionability_transfer_probe.py` all need the acquisitions under
+`external_data/`, which are not redistributed here. Their frozen products are
+shipped, and the appendix's reproduction contract and disposition ledger read
+them, so run them only if you have reacquired the sources listed in
+`docs/audits/EXTERNAL_DATA_PROVENANCE_20260826.md`.
 
 Build the figures, paper PDF, and flat source bundle:
 
@@ -96,25 +111,48 @@ Build the figures, paper PDF, and flat source bundle:
 - `outputs/addressed_edge_sensitivity/`: E-values, unmeasured-confounder tipping grid, negative-control outcomes, and repository-stratified randomisation inference.
 - `outputs/task_context_interaction/`: RQ4, whether an issue link in the PR body changes who answers a review point, split by whether the reviewer is a different product.
 - `outputs/rq3_extensions/`: whole-population time-varying edge model, and the edge split by who wrote the reply with its repository fixed-effect check.
+- `outputs/rq3_landmark_selection/`: whether the hour-48 landmark is itself post-exposure — an ordered selection probe, landmark-free whole-population estimates, and a sequential-landmark design where the cohort gate closes before the exposure window opens.
 - `outputs/addressed_edge_scope/`: who writes the addressed edge, the estimate under stricter edge definitions, what the hour-48 landmark excludes, and the conditional within-repository randomisation test.
+- `outputs/constant_sensitivity/`: sweeps of the load-bearing constants — the hour-48 landmark, the 30-day outcome horizon, the seven-day RQ1 follow-up window, and the bootstrap-draw count behind the Figure 4 bands.
 - `outputs/external_validation/`: aggregate cross-dataset attribution, overlap, topology, and semantic-artifact audits.
 - `outputs/review_collision/`: frozen 167-locus blinded dual-coder packet; semantic claims remain pending.
 - `build/figures/Fig1_v2.pdf`: measurement contract, exclusion rules, and evidence levels.
 - `build/figures/Fig2_v2.pdf`: RQ1 participation-to-edge and post-burst ownership figure.
 - `build/figures/Fig3_v2.pdf`: RQ2 boundary visibility and prior-history figure.
-- `build/figures/Fig4_v2.pdf`: RQ3 connected-signal and later-state figure.
-- `build/figures/Fig5_v2.pdf`: RQ3 unmeasured-confounding bounds and placebo outcomes.
-- `build/figures/Fig6_v2.pdf`: RQ3 without the hour-48 rule, and the edge split by who wrote it.
+- `build/figures/Fig4_v2.pdf`: RQ3 cumulative-merge curves for on-target, off-target, and no-reply pull requests — the anchoring placebo, showing the two replied groups' intervals overlap everywhere.
+- `build/figures/Fig5_v2.pdf`: RQ3 E-value tipping grid — how prevalent and how strong an unmeasured factor would have to be, with the four strongest measured factors plotted for scale. No placebo outcomes appear in this figure.
+- `build/figures/Fig6_v2.pdf`: RQ4 issue-link figure — answer rates within and across the product boundary, and the raw contrast beside its within-repository, within-month estimate.
 - `outputs/figures/dataset_schema_and_joins.pdf`: appendix map of both release layers and identifier joins.
 - `outputs/figures/dataset_feature_coverage.pdf`: appendix view of feature availability and valid denominators.
 - `paper/manuscript/main.tex`: EMSE manuscript source.
 - `paper/manuscript/technical_appendix.tex`: full supplementary methods, estimates, falsification tests, and decision ledger.
-- `build/pdf/emse_multiagent_submission_draft.pdf`: compiled author-review draft.
-- `build/pdf/emse_multiagent_technical_appendix.pdf`: compiled Supplementary Information.
-- `build/submission/emse_multiagent_coordination_draft_source.zip`: complete flat archival source bundle.
-- `build/submission/emse_portal_staging/manuscript_source.zip`: main-paper-only flat source archive for Editorial Manager.
-- `build/submission/emse_portal_staging/ESM_1.pdf`: separately staged Online Resource 1.
+- `paper/manuscript/main.pdf`: the compiled article, 37 pages.
+- `paper/manuscript/technical_appendix.pdf`: the compiled Online Resource 1, 37 pages.
 - `paper/SUBMISSION_METADATA_FORM.md`: author-approved metadata and declaration intake form.
+
+Anything under `build/` is scratch output from an older packaging step and is
+**not** the upload bundle. As of the last check `build/pdf/` still held a 22-page
+manuscript and a 46-page appendix from an earlier draft. Do not upload from it.
+
+## What to upload
+
+`SUBMIT/` is the upload bundle, and the only one. It is regenerated by
+
+```powershell
+.\.venv\Scripts\python.exe scripts\release\build_submit_folder.py
+```
+
+which refuses to run if a PDF is older than a source file it is built from, so it
+cannot quietly ship an old draft. It contains the article PDF, `ESM_1.pdf` for
+Online Resource 1, the flat LaTeX source archive for the article, the cover
+letter, the metadata form, the two checklists, and `CHECKSUMS.sha256`. Verify the
+bundle before uploading:
+
+```powershell
+cd SUBMIT; sha256sum -c CHECKSUMS.sha256
+```
+
+`SUBMIT/README.md` says which file goes into which Editorial Manager field.
 
 ## Superseded material
 

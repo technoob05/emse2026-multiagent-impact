@@ -1,14 +1,14 @@
 # EMSE submission readiness
 
-Last checked: 2026-08-26.
+Last checked: 2026-08-28.
 
 ## Current state
 
-The four-RQ analysis, its figures, the Supplementary Information, the validation gates, the LaTeX manuscript, and the fixed-allowlist source package are technically ready. The full public-data build and page-complete PDF review were last run on 2026-08-27. The package is not ready to upload because author metadata, declarations, and the public artifact link are still missing. Semantic coding is not a blocker for the current core claims; it becomes mandatory only if semantic-overlap claims are added.
+The four-RQ analysis, its figures, the Supplementary Information, the validation gates, the LaTeX manuscript, and the fixed-allowlist source package are technically ready. The full public-data build was last run on 2026-08-28, against a 37-page article and a 37-page Online Resource 1; the counts in this file are written from those PDFs by the page-count sync step, not by hand. The package is not ready to upload because author metadata, declarations, and the public artifact link are still missing. Semantic coding is not a blocker for the current core claims; it becomes mandatory only if semantic-overlap claims are added.
 
 ## Completed
 
-- [x] Paper has exactly three RQs and one connected ownership-topology story.
+- [x] Paper has exactly four RQs — handoff, who bridges, who writes the connection and whether it marks a later state, and what goes with an answer across the boundary — and one connected ownership-topology story.
 - [x] Five supplied authors are present in the requested order.
 - [x] Springer Nature `sn-jnl` template and author-year bibliography are used.
 - [x] Abstract is within the journal's 150 to 250 word range.
@@ -25,14 +25,14 @@ The four-RQ analysis, its figures, the Supplementary Information, the validation
 - [x] Hybrid route analysis is secondary triangulation rather than a second headline.
 - [x] Attractive persistence, escalation, one-way takeover, routing, memory-to-merge, task-breadth, and exact-file claims that failed stronger checks are rejected or moved to the appendix.
 - [x] Structural overlap covers the full 167-locus population and remains semantically unlabeled.
-- [x] 6 answer-first figures are exported at the journal's exact 372 pt text width, embed non-Type-3 fonts, and pass an automated geometry gate for clipping, overlap, and the 8 pt type floor Springer states. Each carries a different visual form; none is a forest plot. Colour-vision and greyscale proofs are regenerated with every build.
+- [x] 6 answer-first figures are exported at the journal's exact 372 pt text width, embed non-Type-3 fonts (verified 2026-08-28 with `pdffonts`: every face in Fig2 to Fig6 is a CID TrueType, and the compiled manuscript reports no Type 3 font either), and pass an automated geometry gate for clipping, overlap, and the 8 pt type floor Springer states. Each carries a different visual form; none is a forest plot. Colour-vision and greyscale proofs are regenerated with every build.
 - [x] 3 appendix figures explain dataset layers, joins, and feature-specific denominators.
 - [x] A separate generated appendix contains data contracts, joins, all estimates, robustness checks, falsification tests, quality gates, and experiment decisions.
 - [x] Fifteen external candidates were compatibility-screened; 11 acquisitions were pinned with revision, license, integrity, and release-boundary records.
 - [x] The complete SWE-Review-Chat topology audit was fail-closed after AIDev overlap removal; incompatible sources were not pooled into the RQs.
 - [x] AI use, coverage limits, and non-causal scope are disclosed.
 - [x] Build and package scripts compile both PDFs, scan logs, make a complete archival source bundle, and stage a main-only flat source ZIP plus `ESM_1.pdf` for the portal.
-- [x] Page-complete visual QA covers all 36 manuscript pages and all 33 Supplementary Information pages, which carry 12 tables.
+- [ ] Page-complete visual QA covers all 37 manuscript pages and all 37 Supplementary Information pages, which carry 13 tables. The 2026-08-28 pass cleared the 36-page article and 33-page appendix; the four appendix pages added by the hour-48 landmark-selection probe compile with no error, no overfull box and no undefined reference, and the new table was inspected, but the document has not been re-read page by page since.
 - [x] Official venue requirements were rechecked on 2026-08-26 and mapped to project files.
 
 ## Scientific and production gates before upload
@@ -59,7 +59,7 @@ The four-RQ analysis, its figures, the Supplementary Information, the validation
 - [ ] Institutional ethics wording for public GitHub metadata.
 - [ ] Acknowledgements or confirmation to remove them.
 - [ ] Confirmation that the manuscript is not under review elsewhere.
-- [ ] Choice and completion of the conference-extension statement in the cover letter.
+- [x] Conference-extension statement: no prior conference version is recorded anywhere in this repository, so the cover letter keeps the original-work branch and the extension branch was deleted. Authors should contradict this if a conference version exists.
 
 ## Submission route
 

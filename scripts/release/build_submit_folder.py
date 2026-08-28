@@ -196,7 +196,7 @@ source file it is built from.
 | `2_online_resource_1.pdf` | Supplementary Information | Online Resource 1 |
 | `3_manuscript_source.zip` | Flat LaTeX source for the article: {", ".join(f"`{name}`" for name in archived)} | Source files |
 | `4_cover_letter.md` | Cover letter | Cover letter |
-| `5_metadata_form.md` | Title, authors, abstract, keywords, declarations | Typed into the portal |
+| `5_metadata_form.md` | Title, author records with affiliations and ORCIDs, declarations, and CRediT roles. It carries no abstract and no keywords; both are in the manuscript | Typed into the portal |
 | `6_readiness_checklist.md` | What is done and what is still open | Not uploaded |
 | `7_venue_checklist.md` | The venue's stated requirements | Not uploaded |
 | `CHECKSUMS.sha256` | Integrity record; verify with `sha256sum -c` | Not uploaded |

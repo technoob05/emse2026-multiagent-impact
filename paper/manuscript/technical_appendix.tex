@@ -97,9 +97,10 @@ The 13.4-point matched gap, where it lives, prior history of the first user brid
 \multicolumn{3}{@{}l}{\textit{RQ3: who writes the connection, and does it mark a later state?}} \\
 The 17.3-point addressed-edge contrast, reply windows, repository fixed effects, specificity controls, the four-state gradient, and the ownership routes & \ref{tab:s-addressed-edge} & \pageref{tab:s-addressed-edge} \\
 The landmark and outcome-horizon sweeps, who writes the edge, stricter edge rules, balance, the E-value of 2.27, tipping grid, negative controls, the conditional shuffle test at $p=0.007$, and the whole-population hazard & \ref{tab:s-sensitivity} & \pageref{tab:s-sensitivity} \\
+Whether the hour-48 landmark is itself post-exposure: the ordered selection probe, the landmark-free whole-population estimates, and the sequential-landmark design & \ref{tab:s-landmark-selection} & \pageref{tab:s-landmark-selection} \\
 Placebo exposures, what the reply text says, and whether a person or a script wrote it & \ref{tab:s-specificity} & \pageref{tab:s-specificity} \\
 \addlinespace
-\multicolumn{3}{@{}l}{\textit{RQ4: what makes someone answer across the boundary?}} \\
+\multicolumn{3}{@{}l}{\textit{RQ4: what goes with an answer across the boundary?}} \\
 Issue link and answered review points, by reviewer relation, with the shuffled-label check & \ref{tab:s-task-context} & \pageref{tab:s-task-context} \\
 \addlinespace
 \multicolumn{3}{@{}l}{\textit{Construct checks, negative results, and reproduction}} \\
@@ -539,6 +540,42 @@ reply and checks that account against the strict prior-history rule used for
 RQ2. The split is large and does not survive repository fixed effects, so it
 describes where the association sits rather than showing that repository
 familiarity is what makes the reply work.
+
+\paragraph{Is the landmark itself post-exposure?} The article calls the
+17.3-point estimate an upper bound because the exposure is measured inside the
+same 48 hours that decide cohort membership, which makes ``still open at hour
+48'' a possible collider. Table~\ref{tab:s-landmark-selection} carries the three
+analyses behind that statement, in the order the article gives them; none
+replaces the published estimate.
+
+Panel A measures the selection directly, with the exposure strictly before the
+outcome. Reading the reply at hour 1 and asking whether the PR has closed by
+hour 48 gives $+10.7$ points (95\% interval: $3.2$ to $18.2$) for the exact
+reply and $+11.9$ points ($5.4$ to $18.4$) for any user-account reply, so a
+reply does push PRs out of the surviving cohort; the gap shrinks as the exposure
+landmark moves out, to $-0.2$ points ($-6.6$ to $+6.3$) at hour 24.
+Correspondingly, the exact-reply prevalence falls from 12.8\% in the 3,942-PR
+whole population to 10.2\% among the 1,067 survivors.
+
+Panel B drops the landmark. Every cross-product inline-trigger PR with a
+complete 30-day horizon is followed from its trigger with the reply as a
+time-varying covariate, which repeats the whole-population specification above
+and adds a user-account-reply exposure, a closure-hazard companion, and a
+g-computation contrast on the percentage-point scale the article quotes:
+standardised over the whole population, the 30-day merge risk is $+11.2$ points
+higher under always-answered than under never-answered. Fitted on post-hour-48
+person-time only, with the exposure counted only when the reply arrives after
+hour 48, the odds ratio is 2.52 on an interval from 0.91 to 6.97, which is the
+landmark-free form of Panel C and is underpowered rather than null.
+
+Panel C builds the design in which the landmark genuinely precedes the exposure:
+membership is fixed at hour 48, the exposure read only in hours 48 to 96, the
+outcome only after hour 96. Just 17 of the 1,067 receive an exact reply in that
+window, too few to be informative. Widening it to any user-account reply on the
+958 PRs still unanswered at the landmark gives 160 exposed and $+0.7$ points
+($-9.3$ to $+10.7$): a null on a slower and smaller subgroup, not a refutation.
+Read together, the panels place the effect above zero and below 17.3 points,
+with 11.2 as the landmark-free reading.
 
 \input{apx_tables_rq3.tex}
 

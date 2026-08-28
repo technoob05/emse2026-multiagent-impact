@@ -1,0 +1,3 @@
+exposure,standardised_30d_merge_risk_unexposed,standardised_30d_merge_risk_exposed,risk_difference_points,prs,note
+edge_active,0.8045543046086019,0.9163881719094578,11.183386730085587,3940,"standardised over the whole population under always-exposed against never-exposed; hypothetical, and not an identified causal contrast"
+human_reply_active,0.7633323963321428,0.9219658121577238,15.8633415825581,3940,"standardised over the whole population under always-exposed against never-exposed; hypothetical, and not an identified causal contrast"
