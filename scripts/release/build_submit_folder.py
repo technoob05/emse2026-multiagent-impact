@@ -16,6 +16,7 @@ from __future__ import annotations
 import hashlib
 import pathlib
 import shutil
+import subprocess
 import sys
 import re
 import zipfile
@@ -345,6 +346,15 @@ source, not in the upload.
             if len(text) > 20_000:
                 raise SystemExit(f"{name} is {len(text)} characters; the box takes 20,000")
             (SUBMIT / name).write_text(text, encoding="utf-8", newline="\n")
+
+    # The portal's Manuscript Data step is filled from the article, so the
+    # fields are extracted here rather than transcribed by whoever is at the
+    # keyboard.
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "release" / "extract_portal_fields.py")],
+        check=True,
+        capture_output=True,
+    )
 
     # Written with explicit newlines so `sha256sum -c` works on every platform;
     # the default on Windows produced CRLF, which sha256sum rejects.
