@@ -57,64 +57,217 @@ THREAD_POSITION = ROOT / "outputs" / "matched_thread_position"
 ICONS = ROOT / "assets" / "icons"
 OUTPUT = ROOT / "build" / "figures"
 
-# Palette. A three-hue family in the idiom systematic reviews use for their
-# risk-of-bias summaries: a steel blue for the series in focus, a goldenrod for
-# the middle term, and a brick red for the series that contrasts with, or
-# argues against, the focal one. The neutral ink is black.
+# ===========================================================================
+# PALETTE. Figure 1 is a TikZ drawing (paper/manuscript/fig1_diagram.tex) and
+# it is the reference. Every hue below is taken from it byte for byte, and the
+# charts are not free to invent a hue or to restate a meaning per panel: a
+# reader learns purple, blue, green and orange on page 11 and carries them
+# forward. The old steel/goldenrod/brick family is gone. It said nothing the
+# reader could look up, and beside Figure 1's saturated cards it printed as a
+# wash.
 #
-#   Role                                   Constant   Hex
-#   text, axes, primary neutral marks      INK        #000000
-#   addressed edge, user-account ownership STEEL      #2E7EA1  focal series
-#   cross-product boundary contrast        BRICK      #C0524C  contrasting
-#   mapped / same-product reference        GOLD_INK   #8A5A10  gold, as text
-#   goldenrod, fills only                  GOLD       #DFA83E  middle term
-#   context and comparison groups          SLATE      #444444
-#   spines, connectors, leader lines       MID        #BBBBBB
-#   grid, separators, lollipop stems       GRID       #DDDDDD
-#   pale fills carrying black text         PALE_*     tints of the three hues
+# ONE MEANING PER COLOUR. This is the whole table; if a hue is not in it, no
+# figure in this module may use it.
 #
-# Goldenrod is the one hue in the family that cannot carry lettering: #DFA83E
-# reaches only 2.14:1 on white, far under the WCAG 4.5:1 floor for text. It is
-# therefore declared FILL_ONLY and paired with GOLD_INK, a dark amber of the
-# same hue that reaches 5.91:1, wherever the gold series has to say something in
-# words. ``assert_palette_contrast`` enforces both halves of that rule.
+#   Hex      Constant   Meaning                              Figures
+#   -------  ---------  -----------------------------------  ------------------
+#   #5B2E9E  PURPLE     the product that WROTE the change     1A card, 2B line
+#                       (Figure 1's "Product A"), and that
+#                       product acting anywhere later
+#   #1A5FB4  BLUE       a DIFFERENT product: the reviewer     1A card, 2C dot,
+#                       that is not the author. This is what  3A bar, 3C card
+#                       makes an arm "cross-product", so it   + tally, 6A line,
+#                       is the cross-product arm as well as   6B mark
+#                       Figure 1's "Product B"
+#   #15703F  GREEN      a PERSON acts: a user account, the    1A card + edge,
+#                       maintainer who answers. Figure 1's    2B line, 2C dot,
+#                       "Person" and its claim line           3B bar, 4 line
+#   #2E9C5C  GREEN_LT   a person answers, but NOT on the      4 line
+#                       trigger's own thread. Same hue,
+#                       lighter, because it is the same act
+#   #A8480A  ORANGE     the BRANCH moves: the change itself   1A card, 2B line
+#                       lands or is rewritten. Figure 1's
+#                       orange git-branch glyph and its
+#                       "Merge" card
+#   #A93B1E  BRICK      SET ASIDE: what the rules refuse to   1A drop, 2C band
+#                       count, and the region in which the    + dots, 5 corner
+#                       result would not survive
+#   #464D57  SLATE      the COMPARISON BASELINE the focal     3C card + tally,
+#                       series is measured against: the       4 line, 5 line,
+#                       same-product arm, the no-reply arm    6A line, 6B mark,
+#                                                             S2 alternatives
+#   #6B7280  STONE      an actor OUTSIDE the paper's          2B line
+#                       vocabulary: a bot we never mapped
+#   #1F2328  INK        lettering, spines, ticks, zero        every figure;
+#                       lines, and a MEASURED NEUTRAL MARK    3A whiskers,
+#                       -- a reading rather than a claim      5 factor dots,
+#                                                             S2 antimode
+#   #9AA3AE  MID        a null result: an interval that       3A bars, 3C tally
+#                       includes zero, a pair that cancels    middle, connectors
+#   #C8CED7  GRID       hairline: gridlines, leader lines,    every figure;
+#                       card outlines, container surfaces     S2 density fill
 #
-# Steel and brick sit at nearly the same relative luminance by construction
-# (4.55:1 and 4.61:1 on white), which is what makes them read as equals rather
-# than as a ranking. The cost is that they do not separate on luminance alone,
-# so anywhere the two appear as adjacent *areas* they also carry a hatch, and
-# anywhere they appear as lines they also carry a marker and a dash pattern.
-INK = "#000000"
-STEEL = "#2E7EA1"
-BRICK = "#B03A34"
-GOLD = "#DFA83E"
-GOLD_INK = "#8A5A10"
-SLATE = "#444444"
-MID = "#BBBBBB"
-GRID = "#DDDDDD"
-PALE_STEEL = "#CFE3EE"
-PALE_GOLD = "#F6E3BE"
-PALE_BRICK = "#F2D3D1"
+#   ORDINAL RAMP -- Figure 1 Panel B's evidence ladder, sampled from the same
+#   gradient image, carried here byte for byte. It means one thing: HOW MUCH
+#   THE PUBLIC RECORD SHOWS, weaker to stronger. Figure 2A's funnel IS that
+#   ladder measured -- its four stages are the four rungs, in the same order --
+#   so it is drawn on the ramp rather than on four categorical hues, which said
+#   "four kinds of thing" about four stages of one narrowing.
+#
+#   #897CEF  RAMP_A     rung 1, both products merely present  1B box, 2A bar 1
+#   #5F92FF  RAMP_B     rung 2, somebody acted next           1B box, 2A bar 2,
+#                                                             S1 + S3 mid tier
+#   #53B44E  RAMP_C     rung 3, a reply names the comment     1B box, 2A bar 3
+#   #EC9638  RAMP_D     rung 4, and it came from the other    1B box, 2A bar 4
+#                       product / the change was accepted
+#
+#   RAMP_B does one further job in the appendix, where a three-tier ORDINAL
+#   scale (channel anchorability, feature coverage) runs on blue's own dark,
+#   mid and light -- BLUE, RAMP_B, GRID -- so a tier can never be mistaken for
+#   one of the paper's actors. See scripts/figures/visualize_dataset.py, which
+#   also declares the one place a hue is used for something other than its
+#   meaning here: the schema diagram, which draws tables rather than actors.
+#
+# WHAT THIS COSTS, stated rather than hidden.
+#
+# 1. BLUE carries two sentences that a reader must join: "the reviewing
+#    product" (Fig. 1A, Fig. 2C) and "the cross-product arm" (Figs. 3 and 6).
+#    They are one referent -- an arm is cross-product exactly when the
+#    reviewing product is not the author's -- but the join is the reader's to
+#    make, and no other hue in the paper asks that.
+#
+# 2. SLATE likewise: "the same-product arm" (Figs. 3, 6) and "the no-reply
+#    arm" (Fig. 4). Both are the baseline the coloured series is measured
+#    against, which is the meaning written above; neither is a series in its
+#    own right.
+#
+# 3. ORANGE covers both an untyped branch movement (Fig. 2B) and the merge
+#    (Fig. 1A). Figure 1 draws the merge with a branch glyph, so the hue is
+#    already "the branch", and this widens it by exactly that much.
+#
+# 4. The cross-product / same-product opposition has NO colour in Figure 1.
+#    BLUE against SLATE is a choice made here, and it is made once for both
+#    figures that carry it: Figure 3 (panels A and C) and Figure 6 (panels A
+#    and B). The previous pass had Figure 3 on brick-against-slate while
+#    Figure 6 ran on steel-against-slate, so the two never actually agreed.
+#    Brick was the wrong arm to spend anyway: it is what the rules throw away.
+#
+# GREYSCALE AND COLOUR VISION. The saturated set is far less separable by
+# luminance than the old one, and that is the price of matching Figure 1.
+# Measured greyscale values out of 255: INK 4, SLATE 19, PURPLE 17, BLUE 30,
+# BRICK 30, GREEN 31, ORANGE 33, STONE 43, GREEN_LT 64, RAMP 66/77/89/102,
+# MID 92, GRID 156. Blue, brick, green and orange are within 3 levels of one
+# another: on a monochrome printer they are one tone. Every panel that puts
+# two of them side by side therefore carries a second channel --
+#
+#   Fig. 2B  four lines, greens/oranges tied: marker o / s / ^ / D and dash
+#            solid / solid / dashed / dash-dot, and each line is named at its
+#            own right-hand end in its own hue.
+#   Fig. 2C  blue trigger, brick burst, green post-burst all tie: the trigger
+#            is a filled circle, the burst events are OPEN circles, the
+#            post-burst actor is a filled square.
+#   Fig. 4   green against light green: 1.76:1 apart plus solid against
+#            long-dash; slate dotted underneath.
+#   Fig. 6   blue against slate: circle + solid against square + dash, and
+#            both lines are labelled at their right end.
+#
+# ONE PLACE WHERE TYPE, NOT TONE, CARRIES IT, and it is not hidden here.
+# Figure 3C draws the two arms as AREAS -- two card headers and the two ends of
+# a tally bar -- and blue and slate sit only 1.36:1 apart, so on a monochrome
+# printer they are close. There is no marker or dash channel available to an
+# area, and a hatch behind reversed-out lettering is what an earlier pass of
+# this figure removed as unreadable. What separates them instead is that each
+# card header spells its own arm ("cross-product", "same-product") in white
+# type, each tally end sits directly under the card it belongs to, and the mid
+# grey between them is 2.5:1 lighter than either. Colour there is confirming a
+# label rather than replacing one. Figure 3A avoids the problem entirely: it
+# has one coloured bar against grey, 2.46:1 apart.
+#
+# WHAT WAS MEASURED, not assumed. Every text artist in all nine figures was
+# cropped out of the 400 dpi render and its ink and ground sampled from those
+# pixels: 385 words, none under 4.5:1. The minimum is 4.56:1 -- "100.0% ·
+# 8,608 PRs" set in ink inside Figure 2A's first bar, on ramp stop 1 -- which
+# is the same binding constraint Figure 1 records for ink on its own rung 1.
+#
+# Purple and blue collapse into one blue under deuteranopia (they sit 0.11
+# apart in simulated sRGB), so they are never the two arms of one contrast.
+# They co-occur only in Figure 1A, where each card also carries its name.
+# Orange and brick collapse likewise; they co-occur nowhere.
+INK = "#1F2328"
+SLATE = "#464D57"
+STONE = "#6B7280"
+MID = "#9AA3AE"
+GRID = "#C8CED7"
+PURPLE = "#5B2E9E"
+BLUE = "#1A5FB4"
+GREEN = "#15703F"
+GREEN_LT = "#2E9C5C"
+ORANGE = "#A8480A"
+BRICK = "#A93B1E"
+RAMP_A = "#897CEF"
+RAMP_B = "#5F92FF"
+RAMP_C = "#53B44E"
+RAMP_D = "#EC9638"
+RAMP = (RAMP_A, RAMP_B, RAMP_C, RAMP_D)
+# Tints. Figure 1's own tints sit at L* 94-96 and read as white once a chart
+# scales them down to a bar rather than a card; these are the same hues taken
+# deep enough to clear MIN_FILL_CONTRAST_RATIO against the page while still
+# holding ink at better than 11:1.
+PALE_PURPLE = "#E3D9F6"
+PALE_BLUE = "#D6E4F7"
+PALE_GREEN = "#D3EBDD"
+PALE_ORANGE = "#FAE0CB"
+PALE_BRICK = "#F7DBD4"
 WHITE = "#FFFFFF"
 
-TEXT_COLOURS = (INK, STEEL, BRICK, GOLD_INK, SLATE)
-FILL_ONLY = (GOLD,)
-PALE_FILLS = (PALE_STEEL, PALE_GOLD, PALE_BRICK, GRID)
+TEXT_COLOURS = (INK, SLATE, STONE, PURPLE, BLUE, GREEN, ORANGE, BRICK)
+# Lines and fills only. GREEN_LT reaches 3.48:1 on the page, which clears the
+# 3:1 floor for a graphical object but not the 4.5:1 floor for lettering, so
+# Figure 4 names it in a legend set in ink rather than in its own hue. The four
+# ramp stops are Figure 1's, and Figure 1 sets ink on them rather than white.
+FILL_ONLY = (GREEN_LT, RAMP_A, RAMP_B, RAMP_C, RAMP_D)
+PALE_FILLS = (
+    PALE_PURPLE,
+    PALE_BLUE,
+    PALE_GREEN,
+    PALE_ORANGE,
+    PALE_BRICK,
+    MID,
+    GRID,
+    RAMP_A,
+    RAMP_B,
+    RAMP_C,
+    RAMP_D,
+)
 
 # Every place a figure sets lettering on top of something other than the white
 # page. Checked explicitly, because the floor on TEXT_COLOURS only speaks about
 # the page and says nothing about text reversed out of a filled mark.
 TEXT_ON_FILL = (
-    ("white on steel", WHITE, STEEL),
-    ("ink on goldenrod", INK, GOLD),
-    ("ink on pale steel", INK, PALE_STEEL),
-    ("ink on pale gold", INK, PALE_GOLD),
+    ("white on purple", WHITE, PURPLE),
+    ("white on blue", WHITE, BLUE),
+    ("white on green", WHITE, GREEN),
+    ("white on orange", WHITE, ORANGE),
+    ("white on brick", WHITE, BRICK),
+    ("white on slate", WHITE, SLATE),
+    ("ink on ramp 1", INK, RAMP_A),
+    ("ink on ramp 2", INK, RAMP_B),
+    ("ink on ramp 3", INK, RAMP_C),
+    ("ink on ramp 4", INK, RAMP_D),
+    ("ink on pale purple", INK, PALE_PURPLE),
+    ("ink on pale blue", INK, PALE_BLUE),
+    ("ink on pale green", INK, PALE_GREEN),
+    ("ink on pale orange", INK, PALE_ORANGE),
     ("ink on pale brick", INK, PALE_BRICK),
-    ("ink on grid grey", INK, GRID),
+    ("ink on mid grey", INK, MID),
+    ("ink on hairline grey", INK, GRID),
 )
 
-# Hatches for the two hues that share a luminance. Kept sparse: at 372 pt a
-# dense hatch turns into a grey wash on the page.
+# Hatches for hues that share a luminance. Kept sparse: at 372 pt a dense
+# hatch turns into a grey wash on the page. No figure in this module spends
+# one; they stay declared because scripts/figures/visualize_dataset.py imports
+# all three for the appendix coverage figure, where a third ordinal tier
+# really does need a third channel.
 HATCH_STEEL = "//"
 HATCH_BRICK = "\\\\"
 HATCH_GOLD = ".."
@@ -201,10 +354,28 @@ plt.rcParams.update(
         "legend.fontsize": 8.0,
         "text.color": INK,
         "axes.labelcolor": INK,
-        "axes.edgecolor": MID,
+        # Axes read as a frame, not as a suggestion. The spines were #BBBBBB at
+        # 0.7 pt, which is lighter than the gridlines Figure 1 draws its cards
+        # with, and beside a TikZ figure whose own time axis is 1.6 pt of slate
+        # the charts looked unfinished. Spines and ticks now share the
+        # lettering's own ink at 1.1 pt, and the ticks are longer as well as
+        # heavier so a 1.1 pt stroke still reads as a tick and not as a nick.
+        # The GRID is deliberately left where it was: it moved from #DDDDDD to
+        # the hairline #C8CED7 with the rest of the palette, but its weight is
+        # unchanged at 0.6 pt. A grid drawn as heavily as a spine competes with
+        # the data for the same page.
+        "axes.edgecolor": INK,
         "xtick.color": INK,
         "ytick.color": INK,
-        "axes.linewidth": 0.7,
+        "xtick.labelcolor": INK,
+        "ytick.labelcolor": INK,
+        "xtick.major.width": 1.1,
+        "ytick.major.width": 1.1,
+        "xtick.major.size": 3.4,
+        "ytick.major.size": 3.4,
+        "grid.color": GRID,
+        "grid.linewidth": 0.6,
+        "axes.linewidth": 1.1,
         "hatch.linewidth": HATCH_LINEWIDTH,
         "lines.solid_capstyle": "round",
         "figure.facecolor": WHITE,
@@ -282,11 +453,20 @@ def panel_title(ax: plt.Axes, letter: str, title: str) -> None:
 
 
 def clean_axis(ax: plt.Axes, grid_axis: str = "x") -> None:
+    """Two spines, in ink, at the weight the rcParams set; one hairline grid.
+
+    The spines are re-coloured here as well as in the rcParams because a panel
+    that draws a zero line or a reference rule sets those in ink too, and a
+    frame lighter than the rules inside it reads as a mistake.
+    """
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
+    for side in ("left", "bottom"):
+        ax.spines[side].set_color(INK)
+        ax.spines[side].set_linewidth(1.1)
     ax.grid(axis=grid_axis, color=GRID, linewidth=0.6)
     ax.set_axisbelow(True)
-    ax.tick_params(length=2.4, width=0.6)
+    ax.tick_params(length=3.4, width=1.1, color=INK, labelcolor=INK)
 
 
 def category_axis(ax: plt.Axes) -> None:
@@ -448,6 +628,45 @@ def icon_image(name: str) -> np.ndarray:
     return _ICON_CACHE[name]
 
 
+def tinted(array: np.ndarray, colour: str) -> np.ndarray:
+    """One glyph redrawn as a single hue, keeping its own light and shade.
+
+    The icon set is stock artwork: saturated blues, greens and oranges with a
+    gloss gradient on every face. That is fine in a panel where the glyph is
+    the only mark, and wrong in a panel that already carries a two-colour
+    encoding, where a bright blue pictogram is simply the loudest thing on the
+    page and means nothing. This maps each pixel's own lightness onto the ramp
+    from ``colour`` to white, so the drawing keeps its shading and its white
+    counters but stops introducing a hue the figure never defined. Alpha is
+    untouched, so the soft edge stays soft.
+
+    The lightness is stretched to the glyph's own range first. Stock artwork is
+    drawn in mid-tones -- the blue on these reads as a 40% grey once the hue is
+    taken out of it -- so a ramp that preserved lightness exactly would print a
+    slate glyph as a pale one and lose it inside a white card. Anchoring the
+    ramp on the glyph's own second and ninety-eighth percentiles puts its
+    darkest ink at full strength and its paper at white, which is what a
+    duotone is for. Percentiles rather than extremes, so one stray pixel cannot
+    set the scale, and only pixels the reader will actually see are measured.
+    """
+    grey = linear_to_srgb(
+        srgb_to_linear(array[..., :3].astype(float)) @ RELATIVE_LUMINANCE
+    )
+    opaque = (
+        array[..., 3] > 0.5
+        if array.shape[2] == 4
+        else np.ones(grey.shape, dtype=bool)
+    )
+    out = np.array(array, dtype=float)
+    if not opaque.any():
+        return out
+    low, high = np.percentile(grey[opaque], (2.0, 98.0))
+    level = np.clip((grey - low) / max(float(high - low), 1e-3), 0.0, 1.0)
+    base = np.asarray(to_rgb(colour))[None, None, :]
+    out[..., :3] = base + (1.0 - base) * level[..., None]
+    return out
+
+
 def icon(
     ax: plt.Axes,
     name: str,
@@ -456,6 +675,7 @@ def icon(
     *,
     box_alignment: tuple[float, float] = (0.5, 0.5),
     zorder: float = 6.0,
+    tint: str | None = None,
 ) -> AnnotationBbox:
     """Place one pictogram at a stated printed height, in the axes' own units.
 
@@ -486,7 +706,10 @@ def icon(
         }
     )
     box = AnnotationBbox(
-        OffsetImage(array, zoom=height_in * POINTS_PER_INCH / pixels_high),
+        OffsetImage(
+            array if tint is None else tinted(array, tint),
+            zoom=height_in * POINTS_PER_INCH / pixels_high,
+        ),
         xy,
         xycoords="data",
         frameon=False,
@@ -884,11 +1107,16 @@ def figure_measurement_contract() -> None:
     # Each link is one actor: who did it, what they did, and when. The merge
     # has no actor in the record, so it is drawn as an outcome and not as a
     # fifth account.
+    # One card per role, in the role's own hue from the TikZ Figure 1 this
+    # panel is the chart-side echo of: the product that writes is purple, the
+    # product that reviews is blue, the person is green, the branch landing is
+    # orange. The two products no longer share a fill, which is the whole
+    # premise of the paper and used to be invisible here.
     links = (
-        (author, "wrote the change", "", PALE_GOLD, GOLD_INK),
-        (reviewer, "posted the review", clock(at["trigger"]), PALE_GOLD, GOLD_INK),
-        ("a person", "answered it", clock(at["addressed edge"]), PALE_STEEL, STEEL),
-        ("merged", "", clock(at["outcome"]), GRID, SLATE),
+        (author, "wrote the change", "", PALE_PURPLE, PURPLE),
+        (reviewer, "posted the review", clock(at["trigger"]), PALE_BLUE, BLUE),
+        ("a person", "answered it", clock(at["addressed edge"]), PALE_GREEN, GREEN),
+        ("merged", "", clock(at["outcome"]), PALE_ORANGE, ORANGE),
     )
     WIDTH = 21.0
     GAP = (100.0 - len(links) * WIDTH) / (len(links) - 1)
@@ -949,8 +1177,8 @@ def figure_measurement_contract() -> None:
                     (x - 0.4, TOP + HEIGHT / 2),
                     arrowstyle="-|>",
                     mutation_scale=9,
-                    color=STEEL if carries else SLATE,
-                    linewidth=2.2 if carries else 1.0,
+                    color=GREEN if carries else SLATE,
+                    linewidth=2.4 if carries else 1.2,
                     zorder=3,
                 )
             )
@@ -962,7 +1190,7 @@ def figure_measurement_contract() -> None:
         va="bottom",
         fontsize=8.2,
         fontweight="bold",
-        color=STEEL,
+        color=GREEN,
     )
     ax.text(
         centres[3],
@@ -1011,25 +1239,18 @@ def figure_measurement_contract() -> None:
             color=BRICK,
         )
 
+    # Four swatches, not five: the brick dots hanging off the chain already
+    # carry their own words in brick beside them, so a fifth key entry was the
+    # panel naming the same thing twice.
     swatch_key(
         ax,
         0.6,
         0.35,
         (
-            ("rect", {"facecolor": PALE_GOLD, "edgecolor": GOLD_INK}, "coding product"),
-            ("rect", {"facecolor": PALE_STEEL, "edgecolor": STEEL}, "person"),
-            ("rect", {"facecolor": GRID, "edgecolor": SLATE}, "outcome"),
-            (
-                "marker",
-                {
-                    "marker": "o",
-                    "markersize": 5.6,
-                    "markerfacecolor": WHITE,
-                    "markeredgecolor": BRICK,
-                    "markeredgewidth": 1.3,
-                },
-                "dropped by a rule",
-            ),
+            ("rect", {"facecolor": PALE_PURPLE, "edgecolor": PURPLE}, "writes"),
+            ("rect", {"facecolor": PALE_BLUE, "edgecolor": BLUE}, "reviews"),
+            ("rect", {"facecolor": PALE_GREEN, "edgecolor": GREEN}, "a person"),
+            ("rect", {"facecolor": PALE_ORANGE, "edgecolor": ORANGE}, "the outcome"),
         ),
     )
 
@@ -1044,11 +1265,15 @@ def figure_measurement_contract() -> None:
     # it comes first. The article's ladder uses this order. What each rung
     # *means* used to be printed inside its box; it is a definition, so it now
     # lives in the caption and the box carries only the name being defined.
+    # The ladder is ORDINAL, so it runs on Figure 1 Panel B's own four-stop
+    # ramp rather than on three categorical fills, two of which used to be the
+    # same colour. Each stop holds ink at better than 4.66:1, which is why the
+    # names inside the boxes stay in ink and no rung reverses out to white.
     levels = [
-        ("1. Both present", PALE_GOLD, GOLD_INK),
-        ("2. Acted on", PALE_STEEL, STEEL),
-        ("3. Answered", PALE_STEEL, STEEL),
-        ("4. Accepted", GRID, SLATE),
+        ("1. Both present", RAMP_A, INK),
+        ("2. Acted on", RAMP_B, INK),
+        ("3. Answered", RAMP_C, INK),
+        ("4. Accepted", RAMP_D, INK),
     ]
     box_width = 22.0
     gap = (100.0 - len(levels) * box_width) / (len(levels) - 1)
@@ -1086,17 +1311,18 @@ def figure_measurement_contract() -> None:
                     linewidth=0.9,
                 )
             )
-    # The colours group the four levels into what they are evidence of, so
-    # they are named rather than left to be inferred from the box order. The
-    # sentence that used to sit here said what the caption already says.
+    # The ramp is a scale, not three groups, so the key names its two ends the
+    # way the TikZ figure's gradient pill does and lets the numerals in the
+    # boxes carry the order. Colour here is redundant encoding: the rungs are
+    # numbered 1 to 4 and run left to right, so a greyscale reader loses the
+    # at-a-glance sense of how far apart two rungs are, never the order.
     swatch_key(
         ax,
         0.6,
         2.55,
         (
-            ("rect", {"facecolor": PALE_GOLD, "edgecolor": GOLD_INK}, "participation"),
-            ("rect", {"facecolor": PALE_STEEL, "edgecolor": STEEL}, "a connected edge"),
-            ("rect", {"facecolor": GRID, "edgecolor": SLATE}, "the outcome"),
+            ("rect", {"facecolor": RAMP_A, "edgecolor": INK}, "weaker evidence"),
+            ("rect", {"facecolor": RAMP_D, "edgecolor": INK}, "stronger evidence"),
         ),
     )
 
@@ -1152,26 +1378,38 @@ def figure_participation() -> None:
 
     ax = fig.add_axes(top_rect)
     y = np.arange(4)[::-1]
-    # Steel and brick share a luminance and would merge in a greyscale print
-    # wherever a reader has to tell one filled area from another. Here they do
-    # not: the four bars are a funnel, each is named on its own axis row, and
-    # the last two are 8.5% and 0.9% long. A hatch on a bar that narrow is a
-    # smudge, not a signal, so this panel stays flat and the hatching is spent
-    # where the colour itself carries a judgement (Online Resource 1, Fig. S2).
-    for position, share, count, color in zip(
-        y, shares, counts, (GOLD, PALE_GOLD, STEEL, BRICK), strict=True
-    ):
+    # This funnel is ORDINAL, not categorical, and it is the same ordering
+    # Figure 1 Panel B names: both products merely present, somebody acts,
+    # a reply names the trigger, and the reply comes from the other product.
+    # Four categorical hues said "four kinds of thing" about four stages of
+    # one narrowing, so the bars now run on Figure 1's own four-stop ramp, in
+    # its order, top to bottom. A reader who has met the ladder on page 11
+    # meets it here measured.
+    #
+    # The ramp runs LIGHT, which is the gradient's own direction and not a
+    # choice made here, so no bar reverses out to white: every stop holds ink
+    # at 4.66:1 or better and every stop fails white. The label therefore sits
+    # in ink whether it is inside the bar or beyond its end, which is one rule
+    # instead of the two the old three-hue set needed. The last two bars are
+    # 8.5% and 0.9% long, far too short to hold a label at all, so they carry
+    # theirs outside; order is still carried by row position and by the row
+    # labels themselves, not by the hue alone.
+    for position, share, count, color in zip(y, shares, counts, RAMP, strict=True):
         ax.barh(
             position,
             share,
             height=0.5,
             color=color,
             edgecolor=INK,
-            linewidth=0.35,
+            linewidth=0.5,
             zorder=2,
         )
         inside = share > 60
-        reversed_out = inside and contrast(color, WHITE) >= MIN_CONTRAST_RATIO
+        if inside and contrast(INK, color) < MIN_CONTRAST_RATIO:
+            raise AssertionError(
+                f"Figure 2A sets ink inside a {color} bar at only "
+                f"{contrast(INK, color):.2f}:1"
+            )
         ax.text(
             share - 1.8 if inside else share + 1.8,
             position,
@@ -1179,7 +1417,7 @@ def figure_participation() -> None:
             ha="right" if inside else "left",
             va="center",
             fontsize=8.2,
-            color=WHITE if reversed_out else INK,
+            color=INK,
         )
     ax.set_yticks(y, stage_labels)
     ax.set_xlim(0, 100)
@@ -1193,14 +1431,29 @@ def figure_participation() -> None:
     ax = fig.add_axes(bottom_rect)
     thresholds = [0, 1, 5, 10, 30]
     positions = np.arange(len(thresholds), dtype=float)
+    # The four classes, in the paper's own colours. Two of them are referents
+    # a reader already met in Figure 1 and they are not free to be restated:
+    # a user account IS Figure 1's green Person, and a mapped product IS the
+    # purple product that wrote the change. The other two are chosen to stay
+    # apart from those and from each other: orange because Figure 1 already
+    # draws the branch in orange, and stone because an unmapped bot is the one
+    # actor here with no place in the paper's vocabulary and a grey says so.
+    #
+    # Greyscale values out of 255 are 31, 17, 43 and 33: the green and the
+    # orange are one tone on a monochrome printer. Marker and dash carry them
+    # instead -- filled circle on solid against filled diamond on dash-dot --
+    # and every line is named at its own right-hand end. Line weight follows
+    # the claim: the user-account line is the panel's subject and is drawn
+    # heaviest.
     contract = [
-        ("user_account", "User account", STEEL, "o", "-"),
-        ("mapped_product", "Mapped product", GOLD_INK, "s", "-"),
-        ("other_bot", "Other bot", BRICK, "^", "--"),
-        ("branch_movement_untyped", "Branch movement", SLATE, "D", ":"),
+        ("user_account", "User account", GREEN, "o", "-", 2.2),
+        ("mapped_product", "Mapped product", PURPLE, "s", "-", 1.8),
+        ("other_bot", "Other bot", STONE, "^", (0, (5, 2)), 1.6),
+        ("branch_movement_untyped", "Branch movement", ORANGE, "D",
+         (0, (1, 1.6, 4, 1.6)), 1.6),
     ]
     values_by_state: dict[str, np.ndarray] = {}
-    for state, _label, color, marker, style in contract:
+    for state, _label, color, marker, style, width in contract:
         subset = burst[burst["first_post_burst_state"] == state].set_index(
             "burst_threshold_minutes"
         )
@@ -1214,10 +1467,10 @@ def figure_participation() -> None:
             color=color,
             marker=marker,
             linestyle=style,
-            linewidth=1.5,
-            markersize=4.0,
+            linewidth=width,
+            markersize=4.6,
             markeredgecolor=WHITE,
-            markeredgewidth=0.5,
+            markeredgewidth=0.6,
             clip_on=False,
             zorder=3,
         )
@@ -1233,7 +1486,11 @@ def figure_participation() -> None:
         placed = max(value, previous + minimum_gap)
         resolved[state] = placed
         previous = placed
-    for state, label, color, _marker, _style in contract:
+    # Every label is now set in its own line's hue, including the branch line:
+    # the old slate was too near the ink of the panel's other lettering to
+    # read as a series name, and all four hues here clear the 4.5:1 text floor
+    # on the page (green 6.14, purple 9.02, stone 4.83, orange 5.84).
+    for state, label, color, _marker, _style, _width in contract:
         ax.text(
             positions[-1] + 0.16,
             resolved[state],
@@ -1241,7 +1498,8 @@ def figure_participation() -> None:
             va="center",
             ha="left",
             fontsize=8.2,
-            color=color if state != "branch_movement_untyped" else INK,
+            fontweight="bold",
+            color=color,
         )
         if abs(resolved[state] - endpoints[state]) > 0.4:
             ax.plot(
@@ -1253,7 +1511,7 @@ def figure_participation() -> None:
                 zorder=2,
             )
 
-    ax.axvline(2, color=MID, linewidth=0.8, linestyle=(0, (2, 2)), zorder=0)
+    ax.axvline(2, color=MID, linewidth=0.9, linestyle=(0, (2, 2)), zorder=0)
     user_at_five = values_by_state["user_account"][2]
     product_at_five = values_by_state["mapped_product"][2]
     ax.annotate(
@@ -1262,8 +1520,8 @@ def figure_participation() -> None:
         xytext=(2.16, user_at_five + 5.5),
         fontsize=8.4,
         fontweight="bold",
-        color=STEEL,
-        arrowprops={"arrowstyle": "-", "color": STEEL, "linewidth": 0.7},
+        color=GREEN,
+        arrowprops={"arrowstyle": "-", "color": GREEN, "linewidth": 0.8},
     )
     ax.annotate(
         f"{product_at_five:.0f}%",
@@ -1272,8 +1530,8 @@ def figure_participation() -> None:
         ha="right",
         fontsize=8.4,
         fontweight="bold",
-        color=GOLD_INK,
-        arrowprops={"arrowstyle": "-", "color": GOLD_INK, "linewidth": 0.7},
+        color=PURPLE,
+        arrowprops={"arrowstyle": "-", "color": PURPLE, "linewidth": 0.8},
     )
 
     visible = [item[0] for item in contract]
@@ -1353,6 +1611,13 @@ def figure_participation() -> None:
     ax.set_xlim(-0.8, tail_minutes * 1.08)
     ax.set_ylim(-1.75, 1.75)
 
+    # This panel is Figure 1's own time axis with real readings on it, so it
+    # is drawn the way Figure 1 draws it: a brick band with a dashed brick
+    # edge for the span the rules refuse, brick dots inside the band for the
+    # events it swallows, and the axis itself as a spine rather than a rule.
+    # The band's edge is dashed here for the same reason it is dashed there --
+    # a solid rectangle around live data reads as a highlight, a dashed one
+    # reads as a boundary.
     ax.add_patch(
         Rectangle(
             (0.0, -0.75),
@@ -1360,20 +1625,26 @@ def figure_participation() -> None:
             1.5,
             facecolor=PALE_BRICK,
             edgecolor=BRICK,
-            linewidth=0.7,
+            linewidth=1.0,
+            linestyle=(0, (3.2, 2.4)),
             zorder=0,
         )
     )
-    ax.axhline(0.0, color=MID, linewidth=0.7, zorder=1)
+    ax.axhline(0.0, color=SLATE, linewidth=1.4, zorder=1)
 
+    # The trigger: the reviewing product posts. Blue, because blue is the
+    # product that is not the author, and a filled circle, because the three
+    # kinds of mark on this line -- blue trigger, brick burst, green answer --
+    # are within three greyscale levels of one another and a monochrome reader
+    # has to tell them apart by shape.
     ax.plot(
         [0.0],
         [0.0],
         marker="o",
-        markersize=6.4,
-        markerfacecolor=PALE_GOLD,
-        markeredgecolor=GOLD_INK,
-        markeredgewidth=1.3,
+        markersize=7.2,
+        markerfacecolor=BLUE,
+        markeredgecolor=WHITE,
+        markeredgewidth=1.0,
         zorder=5,
     )
     # Three of the six events share a timestamp to the second. Stacking them is
@@ -1387,20 +1658,23 @@ def figure_participation() -> None:
             offsets,
             linestyle="none",
             marker="o",
-            markersize=5.6,
+            markersize=6.0,
             markerfacecolor=WHITE,
             markeredgecolor=BRICK,
-            markeredgewidth=1.3,
+            markeredgewidth=1.6,
             zorder=5,
         )
+    # The first actor after the burst is a person, so it is green, and it is a
+    # SQUARE: green and blue are one tone in greyscale, and this mark and the
+    # trigger are the two the panel exists to contrast.
     ax.plot(
         [tail_minutes],
         [0.0],
-        marker="o",
-        markersize=6.4,
-        markerfacecolor=STEEL,
+        marker="s",
+        markersize=7.0,
+        markerfacecolor=GREEN,
         markeredgecolor=WHITE,
-        markeredgewidth=0.8,
+        markeredgewidth=1.0,
         zorder=5,
     )
 
@@ -1415,8 +1689,9 @@ def figure_participation() -> None:
     # comment says "review" and the label keeps only the product's name. The
     # first action after the burst comes from a person rather than a product, so
     # the developer at a laptop says "user account" and the label keeps only the
-    # elapsed time. The human glyph is the one that sits next to the steel mark,
-    # and it is the one that agrees with it: steel means user account here.
+    # elapsed time. The human glyph is the one that sits next to the green
+    # square, and it is the one that agrees with it: green means person here,
+    # exactly as it does in Figure 1.
     ROW = 1.24
     icon(ax, "file-comment", (-0.25, ROW), 4.8)
     ax.text(
@@ -1426,7 +1701,8 @@ def figure_participation() -> None:
         ha="left",
         va="center",
         fontsize=8.2,
-        color=GOLD_INK,
+        fontweight="bold",
+        color=BLUE,
     )
     icon(ax, "developer-github-laptop", (tail_minutes, ROW), 4.8)
     ax.text(
@@ -1436,15 +1712,15 @@ def figure_participation() -> None:
         ha="right",
         va="center",
         fontsize=8.2,
-        color=STEEL,
+        fontweight="bold",
+        color=GREEN,
     )
     # The burst keeps its words and gets no glyph. The obvious candidate is the
     # dashed group of speech bubbles, which is exactly a run of comments
     # bracketed together, but every bubble in it is blue, and blue on this
-    # figure is the user account: Panel B labels a steel line "User account" and
-    # the guards above this panel refuse to draw the example unless no user
-    # account acts inside the burst. A blue glyph naming the burst would state
-    # the one thing the burst is defined not to contain.
+    # figure is the reviewing product that posted the trigger: the guards above
+    # refuse to draw the example unless the burst is somebody else's. A blue
+    # glyph naming the burst would state the one thing it is defined not to be.
     ax.text(
         0.25,
         -ROW,
@@ -1452,6 +1728,7 @@ def figure_participation() -> None:
         ha="left",
         va="center",
         fontsize=8.2,
+        fontweight="bold",
         color=BRICK,
     )
 
@@ -1615,13 +1892,18 @@ def figure_boundary() -> None:
     lows = np.asarray(lows)
     highs = np.asarray(highs)
 
+    # The one bar that clears zero is the cross-product shortfall, so it is
+    # drawn in BLUE, the paper's cross-product arm, and not in a hue invented
+    # for this panel. The five that include zero are the null grey. Blue and
+    # grey are 2.46:1 apart on luminance alone, so the judgement survives the
+    # greyscale proof with no texture channel at all.
     ax.barh(
         positions,
         gaps,
         height=0.62,
-        color=[BRICK if separated else MID for separated in moved],
-        edgecolor=[SLATE if separated else MID for separated in moved],
-        linewidth=0.8,
+        color=[BLUE if separated else MID for separated in moved],
+        edgecolor=[INK if separated else MID for separated in moved],
+        linewidth=0.9,
         zorder=2,
     )
     ax.errorbar(
@@ -1629,13 +1911,13 @@ def figure_boundary() -> None:
         positions,
         xerr=np.vstack((gaps - lows, highs - gaps)),
         fmt="none",
-        ecolor=SLATE,
-        elinewidth=1.0,
-        capsize=2.4,
-        capthick=1.0,
+        ecolor=INK,
+        elinewidth=1.2,
+        capsize=2.6,
+        capthick=1.2,
         zorder=3,
     )
-    ax.axvline(0.0, color=INK, linewidth=1.0, zorder=4)
+    ax.axvline(0.0, color=INK, linewidth=1.2, zorder=4)
 
     ax.set_xlim(-36.0, 16.0)
     ax.set_xticks([-30, -15, 0, 15])
@@ -1689,12 +1971,12 @@ def figure_boundary() -> None:
         (
             (
                 "rect",
-                {"facecolor": BRICK, "edgecolor": SLATE, "linewidth": 0.8},
+                {"facecolor": BLUE, "edgecolor": INK, "linewidth": 0.9},
                 "clears zero",
             ),
             (
                 "rect",
-                {"facecolor": MID, "edgecolor": MID, "linewidth": 0.8},
+                {"facecolor": MID, "edgecolor": MID, "linewidth": 0.9},
                 "includes zero",
             ),
         ),
@@ -1719,15 +2001,19 @@ def figure_boundary() -> None:
         ("Anyone acting in 48 h", responders, "rows"),
     )
     positions = np.arange(len(bars))[::-1]
+    # Every row here counts PEOPLE -- whoever replies, whoever reviews last,
+    # whoever acts inside 48 hours -- so the panel is green: Figure 1's hue for
+    # the person the whole chain runs through. It was steel, which named
+    # nothing a reader could look up.
     for position, (label, row, count_key) in zip(positions, bars, strict=True):
         share = float(row["prior_reviewer_share"]) * 100
         ax.barh(
             position,
             share,
             height=0.52,
-            color=PALE_STEEL,
-            edgecolor=STEEL,
-            linewidth=0.9,
+            color=PALE_GREEN,
+            edgecolor=GREEN,
+            linewidth=1.2,
             zorder=2,
         )
         ax.text(
@@ -1796,33 +2082,82 @@ def figure_boundary() -> None:
     ax.axis("off")
     panel_title(ax, "C", f"One matched pair: {pair['repository']}")
 
-    ax.add_patch(
-        FancyBboxPatch(
-            (2.0, 8.15),
-            96.0,
-            1.35,
-            boxstyle="round,pad=0.14,rounding_size=0.55",
-            facecolor=GRID,
-            edgecolor=SLATE,
-            linewidth=0.7,
+    # Two hues, and they are the paper's two hues for this contrast: BLUE for
+    # the cross-product arm, SLATE for the same-product arm it is measured
+    # against. Blue is not a hue invented here -- it is Figure 1's Product B,
+    # the product that reviews and is not the author, which is exactly what
+    # makes an arm cross-product. Panel A two inches above draws exactly one
+    # bar in colour and it is the same blue on the same outcome, and Figure 6
+    # draws both of its panels on this same pair. The previous pass had this
+    # figure on brick and Figure 6 on steel, so the two never agreed; brick was
+    # also the wrong hue to spend, because brick is what the rules throw away.
+    #
+    # Everything that is not one of the two arms is grey, which is the rule
+    # Panel A already follows: mid grey for the pairs that cancel, exactly the
+    # grey Panel A gives the intervals that include zero, and the hairline grey
+    # for the band of keys the match holds fixed, which is a container rather
+    # than a measurement. Three fills, three meanings, no fourth hue.
+    #
+    # Greyscale: blue and slate sit 1.36:1 apart, slightly closer than the
+    # brick-and-slate this replaces, and the two are never adjacent -- the
+    # cards are a card-gap apart and the two coloured ends of the tally have
+    # two thirds of its length between them, with the lighter mid grey in
+    # between. Each card also carries the words "cross-product" and
+    # "same-product" reversed out of its own header, so the arm is named in
+    # type and the hue is redundant encoding rather than the only encoding.
+    CROSS_ARM, SAME_ARM = BLUE, SLATE
+
+    # Corner radius, stated once in inches and converted, because the panel's
+    # x and y scales differ by a factor of three: a rounding_size in data units
+    # draws an ellipse, not a corner. ``mutation_aspect`` is the ratio of the
+    # two scales, so every rounded thing in the panel gets the same 2.2 pt
+    # radius on both axes.
+    CORNER_INCHES = 0.030
+    step = ax.transData.transform((1.0, 1.0)) - ax.transData.transform((0.0, 0.0))
+    corner = CORNER_INCHES * fig.dpi / abs(step[0])
+    corner_aspect = abs(step[0]) / abs(step[1])
+
+    def rounded(x: float, y: float, w: float, h: float, **kwargs) -> None:
+        ax.add_patch(
+            FancyBboxPatch(
+                (x, y),
+                w,
+                h,
+                boxstyle=f"round,pad=0,rounding_size={corner}",
+                mutation_aspect=corner_aspect,
+                clip_on=False,
+                **kwargs,
+            )
         )
-    )
+
+    # One grid for the whole panel. The content runs the full width of the
+    # axes, so its left edge lands on the same figure column as Panel A's key
+    # and denominator line rather than a few points inside it, and the two
+    # cards, the band above them and the tally below all start and end there.
+    LEFT, RIGHT = 0.0, 100.0
+    CARD_GAP = 5.0
+    CARD_WIDTH = (RIGHT - LEFT - CARD_GAP) / 2.0
+    GAP = 0.80
+    BAND_Y, BAND_H = 8.20, 1.30
+    CARD_Y, CARD_H = 3.20, 4.20
+    BANNER_H = 1.32
+    TALLY_Y, TALLY_H = 0.55, 1.85
+
+    # The band of matched keys: a surface, so it carries a fill and no border.
+    # A fill and a stroke and a corner radius is three devices to say "these
+    # five things are the same on both sides", which needs one.
+    rounded(LEFT, BAND_Y, RIGHT - LEFT, BAND_H, facecolor=GRID, edgecolor="none")
     ax.text(
-        50.0,
-        8.82,
+        (LEFT + RIGHT) / 2.0,
+        BAND_Y + BAND_H / 2.0,
         "same "
-        + " \u00b7 ".join(("repository", "account", "product", "channel", "month")),
+        + " · ".join(("repository", "account", "product", "channel", "month")),
         ha="center",
         va="center",
-        fontsize=8.2,
+        fontsize=8.4,
         color=INK,
     )
 
-    # The cards carry no hatch: they hold three lines of lettering each, and a
-    # hatch behind text is a smudge at 372 pt. They do not need one either. Each
-    # card names its arm in words, and the tally bar below places each arm's
-    # segment directly under the card it belongs to, so the pairing survives a
-    # greyscale print through position rather than through hue.
     # One glyph per follow-up event, so the count is drawn instead of written:
     # the card that used to read "2 × a new review round" now shows two cards
     # and the words "new review round". The glyph is chosen by the channel the
@@ -1831,13 +2166,19 @@ def figure_boundary() -> None:
     # round and a comment are the two kinds of comment card, and a rewritten
     # branch is the branch glyph. The side that records nothing shows nothing,
     # which is the panel's whole point and needs no mark of its own.
+    #
+    # The glyphs are stock artwork and arrive in stock colours -- the file
+    # names still say so -- so each one is redrawn in its own card's arm colour
+    # on the way to the page. A gloss-blue pictogram inside a panel encoded in
+    # brick and slate is the loudest mark in it and carries none of the
+    # meaning.
     CHANNEL_GLYPHS = {
         "a reply on the trigger's thread": "reply-arrow-green",
         "a new review round": "comment-card-bubble",
         "a pull request comment": "comment-card",
         "the branch is rewritten": "git-branch-orange-tall",
     }
-    OUTCOME_ROW = 4.30
+    OUTCOME_ROW = CARD_Y + (CARD_H - BANNER_H) / 2.0
     GLYPH_MM = 4.6
     GLYPH_GAP = 0.7
     GLYPH_TO_WORDS = 1.6
@@ -1870,39 +2211,49 @@ def figure_boundary() -> None:
             f"{count} × {channel}" for channel, count in events.items()
         )
 
-    def card(
-        x: float,
-        heading: str,
-        reviewer: str,
-        side: dict,
-        face: str,
-        edge: str,
-    ) -> None:
-        ax.add_patch(
-            FancyBboxPatch(
-                (x, 3.55),
-                45.0,
-                3.85,
-                boxstyle="round,pad=0.18,rounding_size=0.8",
-                facecolor=face,
-                edgecolor=edge,
-                linewidth=1.0,
-            )
+    def card(x: float, heading: str, side: dict, arm: str) -> None:
+        """One arm of the pair: a white card under a solid header in its hue.
+
+        The card body carries no tint. A pale wash behind three lines of
+        lettering is the thing that made this panel look like a warning box,
+        and it was doing no work the header does not do better: the hue sits
+        where the word it names sits, at full strength, once.
+        """
+        centre = x + CARD_WIDTH / 2.0
+        # Fill, header, then outline, in that order and as three patches. The
+        # header shares the card's path exactly, so a border drawn with the
+        # fill would have half its stroke buried under the header and half
+        # showing beside it, which prints as a grey fringe down one edge. Drawn
+        # last, the outline lands on the header's own edge and the card reads
+        # as one object.
+        rounded(x, CARD_Y, CARD_WIDTH, CARD_H, facecolor=WHITE, edgecolor="none")
+        rounded(
+            x,
+            CARD_Y + CARD_H - BANNER_H,
+            CARD_WIDTH,
+            BANNER_H,
+            facecolor=arm,
+            edgecolor="none",
         )
-        for offset, content, weight, size in (
-            (6.75, heading, "bold", 8.4),
-            (5.68, reviewer, "normal", 8.2),
-        ):
-            ax.text(
-                x + 22.5,
-                offset,
-                content,
-                ha="center",
-                va="center",
-                fontsize=size,
-                fontweight=weight,
-                color=INK,
-            )
+        rounded(
+            x,
+            CARD_Y,
+            CARD_WIDTH,
+            CARD_H,
+            facecolor="none",
+            edgecolor=MID,
+            linewidth=0.8,
+        )
+        ax.text(
+            centre,
+            CARD_Y + CARD_H - BANNER_H / 2.0,
+            heading,
+            ha="center",
+            va="center",
+            fontsize=8.4,
+            fontweight="bold",
+            color=WHITE,
+        )
 
         glyphs, words = followup_row(side)
         # The row is one object and has to be centred as one, so the words are
@@ -1910,12 +2261,12 @@ def figure_boundary() -> None:
         # glyphs. Width is typographic and cannot be predicted from a count of
         # characters.
         label = ax.text(
-            x + 22.5,
+            centre,
             OUTCOME_ROW,
             words,
             ha="left",
             va="center",
-            fontsize=8.2,
+            fontsize=8.8,
             fontweight="bold",
             color=INK,
         )
@@ -1930,89 +2281,63 @@ def figure_boundary() -> None:
         )
         words_width = corners[1][0] - corners[0][0]
         row = sum(widths) + GLYPH_GAP * (len(glyphs) - 1) + GLYPH_TO_WORDS
-        cursor = x + 22.5 - (row + words_width) / 2.0
+        cursor = centre - (row + words_width) / 2.0
         for name, width in zip(glyphs, widths, strict=True):
-            icon(ax, name, (cursor + width / 2.0, OUTCOME_ROW), GLYPH_MM)
+            icon(ax, name, (cursor + width / 2.0, OUTCOME_ROW), GLYPH_MM, tint=arm)
             cursor += width + GLYPH_GAP
         label.set_x(cursor - GLYPH_GAP + GLYPH_TO_WORDS)
 
-    card(
-        2.0,
-        "cross-product",
-        str(cross_side["reviewing_product"]).replace("_", " "),
-        cross_side,
-        PALE_BRICK,
-        BRICK,
-    )
-    card(
-        53.0,
-        "same-product",
-        str(same_side["reviewing_product"]).replace("_", " "),
-        same_side,
-        PALE_GOLD,
-        GOLD_INK,
-    )
+    # The arm and the product that reviewed on it are one line, because they
+    # are one fact: "cross-product" is the arm and "Copilot" is what makes it
+    # cross-product. Splitting them cost a line of card and said nothing twice.
+    for x, arm_name, side, arm in (
+        (LEFT, "cross-product", cross_side, CROSS_ARM),
+        (LEFT + CARD_WIDTH + CARD_GAP, "same-product", same_side, SAME_ARM),
+    ):
+        product = str(side["reviewing_product"]).replace("_", " ")
+        card(x, f"{arm_name}  ·  {product}", side, arm)
 
     # The tally, drawn rather than asserted. Order runs cross-only, concordant,
-    # same-only, so the two coloured ends sit under the card each one belongs to.
+    # same-only, so the two coloured ends sit under the card each one belongs
+    # to. Square corners, unlike everything above: the cards are containers and
+    # the band is a surface, but this is a measurement, and a measured length
+    # with rounded ends is a length that no longer reads off its own scale.
+    # Each count is reversed out of its own segment, which is what lets the
+    # segments be solid rather than tinted, and the hairline between them is
+    # white so the joins stay crisp without a fourth stroke colour.
     segments = (
-        (
-            tally["only_the_cross_product_side_answered"],
-            PALE_BRICK,
-            BRICK,
-            HATCH_BRICK,
-        ),
-        (
-            tally["both_sides_answered"] + tally["neither_side_answered"],
-            GRID,
-            SLATE,
-            None,
-        ),
-        (
-            tally["only_the_same_product_side_answered"],
-            PALE_GOLD,
-            GOLD_INK,
-            HATCH_GOLD,
-        ),
+        (tally["only_the_cross_product_side_answered"], CROSS_ARM, WHITE),
+        (tally["both_sides_answered"] + tally["neither_side_answered"], MID, INK),
+        (tally["only_the_same_product_side_answered"], SAME_ARM, WHITE),
     )
-    cursor = 2.0
-    span = 96.0
-    for count, face, edge, hatch in segments:
-        width = span * count / pairs
+    cursor = LEFT
+    for count, face, digits in segments:
+        width = (RIGHT - LEFT) * count / pairs
         ax.add_patch(
             Rectangle(
-                (cursor, 1.30),
+                (cursor, TALLY_Y),
                 width,
-                1.20,
+                TALLY_H,
                 facecolor=face,
-                edgecolor=edge,
-                linewidth=0.8,
-                hatch=hatch,
+                edgecolor=WHITE,
+                linewidth=0.9,
+                clip_on=False,
             )
         )
         ax.text(
             cursor + width / 2.0,
-            1.90,
+            TALLY_Y + TALLY_H / 2.0,
             f"{count}",
             ha="center",
             va="center",
-            fontsize=8.2,
-            color=INK,
-            # The two end segments are hatched so that a greyscale print keeps
-            # them apart from the grey middle. Digits sitting straight on a
-            # hatch lose their counters, so each count clears its own ground.
-            bbox={"facecolor": WHITE, "edgecolor": "none", "pad": 1.4},
+            fontsize=8.4,
+            color=digits,
         )
         cursor += width
-    ax.text(
-        50.0,
-        0.35,
-        f"{pairs} pairs",
-        ha="center",
-        va="center",
-        fontsize=8.2,
-        color=SLATE,
-    )
+    # The denominator is not printed again. Panel A's own strip already reads
+    # "546 matched pairs" a little way up the same figure, and the three counts
+    # here sum to it, so a fourth label under the bar was the figure repeating
+    # a number to itself.
 
     save(fig, "Fig3_v2")
 
@@ -2035,21 +2360,34 @@ def figure_merge_curves() -> None:
     ax = fig.add_axes(rect)
 
     days = curve["days_since_trigger"].to_numpy()
+    # The finding is that the two REPLY arms coincide and the no-reply arm does
+    # not, so the two reply arms are drawn as two tones of one hue and the
+    # baseline in slate. Green is the person who answers -- Figure 1's Person,
+    # who "replies, naming that comment" -- and both reply arms are that same
+    # act; what differs between them is only where the reply was anchored,
+    # which is a lighter tone of the same green rather than a second hue. A
+    # reader who sees two greens converge has read the sentence in the title
+    # before reading the title.
+    #
+    # Greyscale: 31, 64 and 19 out of 255, so the pair the panel is about is
+    # 1.76:1 apart on tone alone; the baseline is a further step down and is
+    # the only dotted line. Light green cannot carry lettering at 3.48:1 on
+    # the page, so the legend below sets every entry in ink.
     series = (
-        ("reply_off_target", BRICK, (0, (5, 1.6)), "reply anchored elsewhere", 1.0),
-        ("reply_on_target", STEEL, "-", "reply on the trigger thread", -1.0),
-        ("no_reply", SLATE, (0, (2, 2)), "no inline reply", 0.0),
+        ("reply_off_target", GREEN_LT, (0, (5.5, 2)), "reply anchored elsewhere", 1.0),
+        ("reply_on_target", GREEN, "-", "reply on the trigger thread", -1.0),
+        ("no_reply", SLATE, (0, (1.6, 2)), "no inline reply", 0.0),
     )
     for arm, colour, style, label, _ in series:
         low = curve[f"merged_{arm}_low"].to_numpy() * 100
         high = curve[f"merged_{arm}_high"].to_numpy() * 100
-        ax.fill_between(days, low, high, color=colour, alpha=0.14, linewidth=0)
+        ax.fill_between(days, low, high, color=colour, alpha=0.16, linewidth=0)
 
     ends = {}
     for arm, colour, style, label, _ in series:
         centre = curve[f"merged_{arm}"].to_numpy() * 100
         ends[arm] = centre[-1]
-        ax.plot(days, centre, color=colour, linewidth=1.8, linestyle=style, zorder=3)
+        ax.plot(days, centre, color=colour, linewidth=2.2, linestyle=style, zorder=3)
 
     # A line series is keyed by a line, not by a rectangle: colour alone does
     # not identify these three, the dash pattern does half the work, and a
@@ -2060,7 +2398,7 @@ def figure_merge_curves() -> None:
             [],
             [],
             color=colour,
-            linewidth=1.8,
+            linewidth=2.2,
             linestyle=style,
             label=f"{label}  {ends[arm]:.0f}%",
         )
@@ -2069,7 +2407,7 @@ def figure_merge_curves() -> None:
     handles.append(
         Patch(
             facecolor=SLATE,
-            alpha=0.14,
+            alpha=0.16,
             edgecolor="none",
             label="95% interval",
         )
@@ -2089,7 +2427,7 @@ def figure_merge_curves() -> None:
     legend.get_title().set_color(SLATE)
     legend.get_title().set_ha("left")
 
-    ax.axvline(2.0, color=MID, linewidth=0.8, linestyle=(0, (2, 2)), zorder=0)
+    ax.axvline(2.0, color=MID, linewidth=0.9, linestyle=(0, (2, 2)), zorder=0)
     ax.text(2.3, 12, "hour 48", ha="left", va="center", fontsize=8.1, color=SLATE)
 
     ax.set_xlim(0, 30.5)
@@ -2152,10 +2490,15 @@ def figure_sensitivity() -> None:
     delta = frontier["prevalence_difference"].to_numpy() * 100
     point_line = frontier["outcome_difference_to_remove_point_estimate"].to_numpy() * 100
     interval_line = frontier["outcome_difference_to_remove_interval"].to_numpy() * 100
-    ax.fill_between(delta, point_line, 100, color=PALE_STEEL, alpha=0.75, zorder=0)
-    ax.plot(delta, point_line, color=STEEL, linewidth=1.8, zorder=3)
+    # The shaded corner is the region in which the result would not survive, so
+    # it is brick: the paper's hue for what gets set aside. The dashed slate
+    # line is the weaker version of the same threat, the comparison boundary
+    # the interval rather than the point estimate would cross. Brick and slate
+    # sit 1.35:1 apart and are told apart by dash as well.
+    ax.fill_between(delta, point_line, 100, color=PALE_BRICK, alpha=0.85, zorder=0)
+    ax.plot(delta, point_line, color=BRICK, linewidth=2.2, zorder=3)
     ax.plot(
-        delta, interval_line, color=SLATE, linewidth=1.4, linestyle=(0, (4, 2)), zorder=3
+        delta, interval_line, color=SLATE, linewidth=1.6, linestyle=(0, (4, 2)), zorder=3
     )
     ax.set_xlim(-2, 60)
     ax.set_ylim(0, 100)
@@ -2177,14 +2520,19 @@ def figure_sensitivity() -> None:
     )
 
     # The factors we actually measured, on the same two axes as the shaded
-    # corner. All of them sit far outside it, which is the point.
+    # corner. All of them sit far outside it, which is the point. They are the
+    # one thing in this panel that is a MEASUREMENT rather than a threat, so
+    # they take the neutral ink rather than a hue: the panel then has exactly
+    # one colour in it, and that colour is the danger the marks stay clear of.
+    # Ink also means the marks survive every proof -- greyscale and all three
+    # dichromacies -- without a second channel.
     ax.scatter(
         measured["prevalence_gap_pp"].to_numpy(),
         measured["outcome_gap_pp"].abs().to_numpy(),
-        s=26,
-        facecolor=BRICK,
+        s=30,
+        facecolor=INK,
         edgecolor=WHITE,
-        linewidth=0.6,
+        linewidth=0.7,
         zorder=5,
         clip_on=True,
     )
@@ -2198,12 +2546,12 @@ def figure_sensitivity() -> None:
         (
             (
                 "rect",
-                {"facecolor": PALE_STEEL, "edgecolor": STEEL, "linewidth": 1.2},
+                {"facecolor": PALE_BRICK, "edgecolor": BRICK, "linewidth": 1.4},
                 "the result disappears",
             ),
             (
                 "line",
-                {"color": SLATE, "linewidth": 1.4, "linestyle": (0, (4, 2))},
+                {"color": SLATE, "linewidth": 1.6, "linestyle": (0, (4, 2))},
                 "the interval blurs",
             ),
         ),
@@ -2221,10 +2569,10 @@ def figure_sensitivity() -> None:
                 "marker",
                 {
                     "marker": "o",
-                    "markersize": 5.2,
-                    "markerfacecolor": BRICK,
+                    "markersize": 5.5,
+                    "markerfacecolor": INK,
                     "markeredgecolor": WHITE,
-                    "markeredgewidth": 0.6,
+                    "markeredgewidth": 0.7,
                 },
                 f"the {len(measured)} measured factors",
             ),
@@ -2307,15 +2655,26 @@ def figure_task_context() -> None:
     top_rect, bottom_rect = layout.rects((1.0, 0.50))
 
     # --- Panel A: four measured rates, nothing else --------------------------
+    # Blue against slate, which is the pair Figure 3 uses for the same
+    # opposition in both of its panels. Blue is Figure 1's Product B, the
+    # reviewer that is not the author, so "a different product" is drawn in the
+    # hue the reader met as a different product; slate is the baseline arm the
+    # focal series is measured against, here and in Figures 3 and 4. This
+    # figure used to run on steel while Figure 3 ran on brick, so the paper had
+    # two vocabularies for one two-way split.
+    #
+    # Blue and slate sit 1.36:1 apart in tone, so shape and dash carry the pair
+    # as well: circle on a solid line against square on a dashed one, in both
+    # panels, and each line is named at its own right-hand end.
     ax = fig.add_axes(top_rect)
     ax.plot(
         [0, 1],
         cross,
-        color=STEEL,
+        color=BLUE,
         linewidth=2.4,
         marker="o",
         markersize=6.4,
-        markerfacecolor=STEEL,
+        markerfacecolor=BLUE,
         markeredgecolor=WHITE,
         markeredgewidth=0.7,
         clip_on=False,
@@ -2346,7 +2705,7 @@ def figure_task_context() -> None:
         ha="left",
         va="top",
         fontsize=8.4,
-        color=STEEL,
+        color=BLUE,
     )
     ax.text(
         0.035,
@@ -2364,7 +2723,7 @@ def figure_task_context() -> None:
         ha="left",
         va="center",
         fontsize=8.4,
-        color=STEEL,
+        color=BLUE,
     )
     ax.text(
         1.045,
@@ -2412,7 +2771,7 @@ def figure_task_context() -> None:
         [0.70],
         marker="o",
         markersize=6.4,
-        markerfacecolor=STEEL,
+        markerfacecolor=BLUE,
         markeredgecolor=WHITE,
         markeredgewidth=0.7,
         zorder=5,
@@ -2433,7 +2792,7 @@ def figure_task_context() -> None:
         ha="left",
         va="center",
         fontsize=8.4,
-        color=STEEL,
+        color=BLUE,
     )
     ax.text(
         (change_same + change_cross) / 2,
@@ -2451,8 +2810,8 @@ def figure_task_context() -> None:
         [high - low],
         left=low,
         height=0.30,
-        color=PALE_STEEL,
-        edgecolor=STEEL,
+        color=PALE_BLUE,
+        edgecolor=BLUE,
         linewidth=0.9,
         zorder=2,
     )
@@ -2461,7 +2820,7 @@ def figure_task_context() -> None:
         [estimates.max() - estimates.min()],
         left=estimates.min(),
         height=0.13,
-        color=STEEL,
+        color=BLUE,
         alpha=0.45,
         linewidth=0.0,
         zorder=3,
@@ -2471,7 +2830,7 @@ def figure_task_context() -> None:
         [-0.70],
         marker="D",
         markersize=6.6,
-        markerfacecolor=STEEL,
+        markerfacecolor=BLUE,
         markeredgecolor=WHITE,
         markeredgewidth=0.9,
         zorder=5,
@@ -2484,7 +2843,7 @@ def figure_task_context() -> None:
         va="bottom",
         fontsize=8.6,
         fontweight="bold",
-        color=STEEL,
+        color=BLUE,
     )
 
     ax.set_xlim(-7.0, 25.5)

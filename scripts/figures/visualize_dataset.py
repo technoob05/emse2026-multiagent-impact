@@ -62,40 +62,57 @@ ANCHORABILITY = house.ROOT / "outputs" / "anchorability_coverage"
 BURST_SELECTION = house.ROOT / "outputs" / "burst_threshold_selection"
 
 
-# The schema and coverage panels use the same three-hue family as the house
-# module, softened by one step for the near-white box fills this figure needs.
-# The two hues that carry lettering here are the steel blue and the brick red;
-# goldenrod appears only as a bar fill, and its dark amber partner GOLD_INK
-# carries the gold role wherever the mark is a line, an arrow or a word.
-STEEL = house.STEEL
+# The appendix figures take the house palette, which is Figure 1's palette,
+# and add nothing to it but four near-white box fills the schema diagram needs.
+#
+# ONE EXCEPTION, DECLARED. The schema panel is a picture of TABLES, not of
+# actors, and none of its groups is a referent the paper's narrative names. So
+# it uses BLUE, PURPLE and GREEN as structural labels -- the full corpus, the
+# rich subset, the inline review path -- and NOT with the meanings the house
+# table assigns them. Only the green is a genuine match: the inline review path
+# is the data path the connecting edge depends on, and green is that edge.
+# Nothing in the schema shares a page with a chart, so no reader is asked to
+# hold both readings at once.
+#
+# The two house-style evidence figures below are different: they are charts,
+# they sit in the same appendix as the main six, and they use the house
+# meanings exactly. Their ordinal three-tier scales run on one hue's own light
+# and dark rather than on three categorical hues, so a tier can never be
+# mistaken for one of the paper's actors.
+BLUE = house.BLUE
+PURPLE = house.PURPLE
+GREEN = house.GREEN
 BRICK = house.BRICK
-GOLD = house.GOLD
-GOLD_INK = house.GOLD_INK
 
-INK = "#202631"
+INK = house.INK
 # Body text inside a schema box sits on a tinted fill, not on the page, so the
-# grey is one step darker than it was: at #667085 it reached only 4.06:1 on the
-# palest of those fills, and at #5A6274 it clears 4.5:1 on all of them.
-SLATE = "#5A6274"
+# grey is darker than the house slate. #667085 reached only 4.06:1 on the
+# palest of those fills and #5A6274 cleared 4.5:1 on paper -- but only on
+# paper. Sampled out of the 400 dpi render, a 7.2 pt line set in #5A6274 never
+# actually reaches #5A6274: the darkest pixel in "pr_task_type" measured
+# #697081, and the word as printed cleared only 4.31:1. The specified colour
+# passing a gate the printed glyph fails is not a pass. #474F5E is dark enough
+# that the ANTIALIASED core clears the floor, which is the thing a reader sees.
+SLATE = "#474F5E"
 GRID = "#E6E9EF"
 
 # Box fills, one step off white so a fill is visible in print but still holds
 # both INK and SLATE lettering above 4.5:1.
-PALE_STEEL_FILL = "#E1EDF5"
-PALE_BRICK_FILL = "#F7E4E2"
-PALE_GOLD_FILL = "#F9EBD2"
+PALE_BLUE_FILL = "#E1EDF5"
+PALE_PURPLE_FILL = "#EDE6F8"
+PALE_GREEN_FILL = "#E3F1E9"
 PALE_GREY_FILL = "#ECEDF2"
 
 # Text-on-fill pairs this module introduces on top of the house set. Verified
 # with the house module's own contrast helper before anything is drawn.
 TEXT_ON_FILL = (
-    ("dataset ink on pale steel", INK, PALE_STEEL_FILL),
-    ("dataset ink on pale brick", INK, PALE_BRICK_FILL),
-    ("dataset ink on pale gold", INK, PALE_GOLD_FILL),
+    ("dataset ink on pale blue", INK, PALE_BLUE_FILL),
+    ("dataset ink on pale purple", INK, PALE_PURPLE_FILL),
+    ("dataset ink on pale green", INK, PALE_GREEN_FILL),
     ("dataset ink on pale grey", INK, PALE_GREY_FILL),
-    ("dataset slate on pale steel", SLATE, PALE_STEEL_FILL),
-    ("dataset slate on pale brick", SLATE, PALE_BRICK_FILL),
-    ("dataset slate on pale gold", SLATE, PALE_GOLD_FILL),
+    ("dataset slate on pale blue", SLATE, PALE_BLUE_FILL),
+    ("dataset slate on pale purple", SLATE, PALE_PURPLE_FILL),
+    ("dataset slate on pale green", SLATE, PALE_GREEN_FILL),
     ("dataset slate on pale grey", SLATE, PALE_GREY_FILL),
 )
 
@@ -103,15 +120,13 @@ TEXT_ON_FILL = (
 def assert_palette_contrast() -> None:
     """Hold this module's own hues and fills to the house floor."""
     house.assert_palette_contrast()
-    for colour in (INK, STEEL, BRICK, GOLD_INK, SLATE):
+    for colour in (INK, BLUE, PURPLE, GREEN, BRICK, SLATE):
         ratio = house.contrast(colour, house.WHITE)
         if ratio < house.MIN_CONTRAST_RATIO:
             raise AssertionError(
                 f"{colour} reaches only {ratio:.2f}:1 on white, below the "
                 f"{house.MIN_CONTRAST_RATIO}:1 text floor"
             )
-    if GOLD in (INK, STEEL, BRICK, GOLD_INK, SLATE):
-        raise AssertionError("goldenrod is fill-only and must not carry text")
     for name, ink, fill in TEXT_ON_FILL:
         ratio = house.contrast(ink, fill)
         if ratio < house.MIN_CONTRAST_RATIO:
@@ -119,7 +134,7 @@ def assert_palette_contrast() -> None:
                 f"{name} ({ink} on {fill}) reaches only {ratio:.2f}:1, below "
                 f"the {house.MIN_CONTRAST_RATIO}:1 text floor"
             )
-    for fill in (PALE_STEEL_FILL, PALE_BRICK_FILL, PALE_GOLD_FILL,
+    for fill in (PALE_BLUE_FILL, PALE_PURPLE_FILL, PALE_GREEN_FILL,
                  PALE_GREY_FILL, GRID):
         ratio = house.contrast(fill, house.WHITE)
         if ratio < house.MIN_FILL_CONTRAST_RATIO:
@@ -257,27 +272,27 @@ def draw_schema(ax: plt.Axes, panel: str = "") -> None:
 
     # ---- full corpus layer -------------------------------------------------
     ax.text(2.0, 88.5, "FULL CORPUS", ha="left", va="bottom",
-            fontsize=SECTION_PT, fontweight="bold", color=STEEL)
+            fontsize=SECTION_PT, fontweight="bold", color=BLUE)
 
     top_y, top_h = 70.0, 15.0
     top_mid = top_y + top_h / 2
     add_box(ax, 2, top_y, 19, top_h, "all_user", ("400k users",),
-            PALE_STEEL_FILL, STEEL)
+            PALE_BLUE_FILL, BLUE)
     add_box(ax, 33, top_y, 30, top_h, "all_pull_request",
-            ("7.69M PRs",), PALE_STEEL_FILL, STEEL)
+            ("7.69M PRs",), PALE_BLUE_FILL, BLUE)
     add_box(ax, 75, top_y, 23, top_h, "all_repository", ("957k repos",),
-            PALE_STEEL_FILL, STEEL)
+            PALE_BLUE_FILL, BLUE)
 
-    arrow(ax, (21, top_mid), (33, top_mid), STEEL)
-    arrow(ax, (75, top_mid), (63, top_mid), STEEL)
-    join_label(ax, 27, top_mid + 1.6, "user_id", STEEL)
-    join_label(ax, 69, top_mid + 1.6, "repo_id", STEEL)
+    arrow(ax, (21, top_mid), (33, top_mid), BLUE)
+    arrow(ax, (75, top_mid), (63, top_mid), BLUE)
+    join_label(ax, 27, top_mid + 1.6, "user_id", BLUE)
+    join_label(ax, 69, top_mid + 1.6, "repo_id", BLUE)
 
     ax.plot([1, 99], [65, 65], color=GRID, lw=1.0, zorder=1)
 
     # ---- AIDev-pop rich layer ---------------------------------------------
     ax.text(2.0, 58.5, "AIDEV-POP RICH SUBSET  (>100 STARS)", ha="left",
-            va="bottom", fontsize=SECTION_PT, fontweight="bold", color=BRICK)
+            va="bottom", fontsize=SECTION_PT, fontweight="bold", color=PURPLE)
 
     left_x, left_w = 2.0, 28.0
     right_x, right_w = 70.0, 28.0
@@ -286,7 +301,7 @@ def draw_schema(ax: plt.Axes, panel: str = "") -> None:
     mids = [(low + high) / 2 for low, high in rows]
 
     hub = add_box(ax, hub_x, rows[2][0], hub_w, rows[0][1] - rows[2][0],
-                  "", (), PALE_BRICK_FILL, BRICK)
+                  "", (), PALE_PURPLE_FILL, PURPLE)
     hub.set_linewidth(1.3)
     unit = _y_units_per_point(ax)
     hub_top = 39.0 + (BOX_TITLE_PT * 1.32 + BODY_PT * 2.60) * unit / 2
@@ -299,10 +314,10 @@ def draw_schema(ax: plt.Axes, panel: str = "") -> None:
     add_box(ax, left_x, rows[0][0], left_w, 13, "pr_timeline",
             (), PALE_GREY_FILL, SLATE)
     add_box(ax, left_x, rows[1][0], left_w, 13, "discussion tables",
-            ("pr_comments", "pr_reviews"), PALE_GOLD_FILL, GOLD_INK,
+            ("pr_comments", "pr_reviews"), PALE_GREEN_FILL, GREEN,
             BOX_TITLE_SMALL_PT)
     add_box(ax, left_x, rows[2][0], left_w, 13, "pr_review_comments",
-            (), PALE_GOLD_FILL, GOLD_INK, BOX_TITLE_SMALL_PT)
+            (), PALE_GREEN_FILL, GREEN, BOX_TITLE_SMALL_PT)
 
     add_box(ax, right_x, rows[0][0], right_w, 13, "repository",
             (), PALE_GREY_FILL, SLATE)
@@ -316,19 +331,19 @@ def draw_schema(ax: plt.Axes, panel: str = "") -> None:
     # Horizontal joins into the hub. pr_review_comments is deliberately absent:
     # it reaches a PR only through its review batch.
     arrow(ax, (left_x + left_w, mids[0]), (hub_x, mids[0]), SLATE)
-    arrow(ax, (left_x + left_w, mids[1]), (hub_x, mids[1]), GOLD_INK)
+    arrow(ax, (left_x + left_w, mids[1]), (hub_x, mids[1]), GREEN)
     arrow(ax, (right_x, mids[0]), (hub_x + hub_w, mids[0]), SLATE)
     arrow(ax, (right_x, mids[1]), (hub_x + hub_w, mids[1]), SLATE)
     arrow(ax, (right_x, mids[2]), (hub_x + hub_w, mids[2]), SLATE)
     join_label(ax, 35, mids[0] + 1.6, "pr_id")
-    join_label(ax, 35, mids[1] + 1.6, "pr_id", GOLD_INK)
+    join_label(ax, 35, mids[1] + 1.6, "pr_id", GREEN)
     join_label(ax, 65, mids[0] + 1.6, "repo_id")
     join_label(ax, 65, mids[1] + 1.6, "pr_id")
     join_label(ax, 65, mids[2] + 1.6, "pr_id")
 
     # The indirection: inline comments join the review table, not the PR.
-    arrow(ax, (9, rows[2][1]), (9, rows[1][0]), GOLD_INK)
-    join_label(ax, 12, (rows[2][1] + rows[1][0]) / 2, "review_id", GOLD_INK,
+    arrow(ax, (9, rows[2][1]), (9, rows[1][0]), GREEN)
+    join_label(ax, 12, (rows[2][1] + rows[1][0]) / 2, "review_id", GREEN,
                ha="left", va="center")
 
 
@@ -354,15 +369,17 @@ def draw_coverage(ax: plt.Axes, coverage: pd.DataFrame, panel: str = "") -> None
     total = int(data["aidev_pop_prs"].iloc[0])
     values = data["coverage_pct_of_aidev_pop"].to_numpy()
     y = list(range(len(data)))
-    # Three coverage tiers, read the way a risk-of-bias summary is read: steel
-    # blue where a feature covers most of the population, goldenrod in the
-    # middle, brick red where coverage is thin. Steel and brick share a
-    # luminance, so the tiers also carry opposed hatches and survive a
-    # greyscale print. No lettering sits on these bars; the labels are outside.
+    # Three coverage tiers. They are ORDINAL -- more coverage, less coverage --
+    # so like the channel stack they run on one hue's dark, mid and light
+    # rather than on three of the paper's categorical hues, which said "three
+    # kinds of thing" about three points on one scale. Greyscale 30, 77 and 156
+    # out of 255, strictly decreasing, and the opposed hatches stay because a
+    # tier boundary is a judgement and deserves a second channel even when the
+    # tones already separate. No lettering sits on these bars.
     tiers = [
-        (STEEL, house.HATCH_STEEL) if v >= 50
-        else (GOLD, house.HATCH_GOLD) if v >= 20
-        else (BRICK, house.HATCH_BRICK)
+        (house.BLUE, house.HATCH_STEEL) if v >= 50
+        else (house.RAMP_B, house.HATCH_GOLD) if v >= 20
+        else (house.GRID, house.HATCH_BRICK)
         for v in values
     ]
     colors = [colour for colour, _ in tiers]
@@ -391,10 +408,14 @@ def draw_coverage(ax: plt.Axes, coverage: pd.DataFrame, panel: str = "") -> None
     ax.set_axisbelow(True)
     for spine in ("top", "right", "left"):
         ax.spines[spine].set_visible(False)
-    ax.spines["bottom"].set_color(SLATE)
-    ax.spines["bottom"].set_linewidth(0.7)
+    # Same axis treatment as the six main figures: the spine and its ticks are
+    # the lettering's own ink at 1.1 pt, so the appendix does not print with a
+    # lighter frame than the article it belongs to. The grid above stays at
+    # 0.6 pt hairline; only the frame got heavier.
+    ax.spines["bottom"].set_color(INK)
+    ax.spines["bottom"].set_linewidth(1.1)
     ax.tick_params(axis="y", length=0, pad=3)
-    ax.tick_params(axis="x", length=2.4, width=0.6, color=SLATE)
+    ax.tick_params(axis="x", length=3.4, width=1.1, color=INK)
 
     for yi, value, count in zip(y, values, data["matched_pr_ids"]):
         ax.text(value + 1.4, yi, f"{value:.1f}%   {int(count) / 1000:.0f}k PRs",
@@ -407,11 +428,14 @@ def draw_coverage(ax: plt.Axes, coverage: pd.DataFrame, panel: str = "") -> None
         0.0,
         len(data) - 0.05,
         (
-            ("rect", {"facecolor": STEEL, "edgecolor": INK, "linewidth": 0.35,
+            ("rect", {"facecolor": house.BLUE, "edgecolor": INK,
+                      "linewidth": 0.35,
                       "hatch": house.HATCH_STEEL}, "50% or more"),
-            ("rect", {"facecolor": GOLD, "edgecolor": INK, "linewidth": 0.35,
+            ("rect", {"facecolor": house.RAMP_B, "edgecolor": INK,
+                      "linewidth": 0.35,
                       "hatch": house.HATCH_GOLD}, "20 to 50%"),
-            ("rect", {"facecolor": BRICK, "edgecolor": INK, "linewidth": 0.35,
+            ("rect", {"facecolor": house.GRID, "edgecolor": INK,
+                      "linewidth": 0.35,
                       "hatch": house.HATCH_BRICK}, "under 20%"),
         ),
         fontsize=BODY_PT,
@@ -556,15 +580,18 @@ CHANNEL_SHORT = {
     "submitted_review": "Review body",
     "pr_comment": "PR comment",
 }
-# Dark, mid, light left to right, so the three channels stay ordered and
-# separable in the greyscale proof as well as in colour: steel at 4.55:1 against
-# the page, goldenrod at 2.14:1, pale brick at 1.40:1. That spread is why this
-# stack needs no hatching. Goldenrod cannot carry lettering, so the middle
-# segment reverses to ink rather than to white.
+# The three channels are ORDINAL in exactly the quantity this figure measures
+# -- how much of a reply anchor the channel can carry -- so they run on ONE
+# hue's own dark, mid and light rather than on three of the paper's categorical
+# hues. That keeps a channel from being mistaken for an actor, and it separates
+# far better than the old three-hue stack: greyscale 30, 77 and 195 out of 255,
+# against 30, 102 and 192 before, and now strictly one hue so a colour-blind
+# reader reads the order off lightness alone. No hatching needed. The dark
+# segment reverses to white and the other two carry ink.
 CHANNEL_FACE = {
-    "inline_review_comment": house.STEEL,
-    "submitted_review": house.GOLD,
-    "pr_comment": house.PALE_BRICK,
+    "inline_review_comment": house.BLUE,
+    "submitted_review": house.RAMP_B,
+    "pr_comment": house.PALE_BLUE,
 }
 CHANNEL_TEXT = {
     "inline_review_comment": house.WHITE,
@@ -828,7 +855,7 @@ def figure_anchorable_coverage(output_dir: Path) -> str:
     cursor = 0.0
     ceiling = float(positions.loc["thread_root", "share_of_inline_events"]) * 100
     for position, face, ink, name in (
-        ("thread_root", house.STEEL, house.WHITE, "Thread root"),
+        ("thread_root", house.BLUE, house.WHITE, "Thread root"),
         ("reply_in_thread", house.GRID, house.INK, "Reply in a thread"),
     ):
         share = float(positions.loc[position, "share_of_inline_events"]) * 100
@@ -978,7 +1005,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
         previous_kind = kind
         y_positions.append(cursor)
         labels.append(name)
-        colours.append(house.STEEL if published else house.SLATE)
+        colours.append(house.BRICK if published else house.SLATE)
         cursor -= 1.0
 
     # The cut is a property of the scheme, not of the estimate, so it gets its
@@ -1038,7 +1065,11 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
 
     nearest = min(lows)
     ax.axvline(0.0, color=house.INK, linewidth=1.0, zorder=1)
-    ax.axvspan(0.0, nearest, color=house.PALE_STEEL, alpha=0.45, zorder=0, linewidth=0)
+    # The band from zero to the nearest interval bound is the space every
+    # specification clears. It is a null region, not a rule, so it takes the
+    # neutral hairline grey rather than brick: brick in this figure means the
+    # published burst window, and nothing else may wear it.
+    ax.axvspan(0.0, nearest, color=house.GRID, alpha=0.55, zorder=0, linewidth=0)
     bounds = (min(y_positions) - 1.05, max(y_positions) + 1.35)
     ax.text(
         CUT_COLUMN,
@@ -1053,7 +1084,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     ax.set_yticks(y_positions)
     ax.set_yticklabels(labels, fontsize=8.1, linespacing=1.3)
     for tick, colour in zip(ax.get_yticklabels(), colours, strict=True):
-        tick.set_color(house.INK if colour == house.STEEL else house.SLATE)
+        tick.set_color(house.INK if colour == house.BRICK else house.SLATE)
     ax.set_ylim(*bounds)
     ax.set_xlim(-24.0, max(highs) + 4.0)
     ax.set_xticks([0, 10, 20, 30, 40, 50])
@@ -1067,9 +1098,13 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     ax = fig.add_axes(bottom_rect)
     minutes = histogram["bin_centre_minutes"].to_numpy()
     density = histogram["kde_density_per_log10_minute"].to_numpy()
-    ax.fill_between(minutes, 0.0, density, color=house.PALE_STEEL, alpha=0.75,
+    # The density is a measurement, so it is drawn neutral; the only coloured
+    # marks on it are the published window's own -- the mode marker and its
+    # label -- and the ink antimode rule. Brick is the published burst window
+    # here, exactly as it is the excluded burst span in Figure 2C.
+    ax.fill_between(minutes, 0.0, density, color=house.GRID, alpha=0.75,
                     linewidth=0, zorder=1)
-    ax.plot(minutes, density, color=house.STEEL, linewidth=1.5, zorder=3)
+    ax.plot(minutes, density, color=house.SLATE, linewidth=1.8, zorder=3)
     ax.set_xscale("log")
     top = float(density.max()) * 1.52
     # The fixed windows are drawn where they fall on the density. The 0-minute
@@ -1077,18 +1112,22 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
     for cut in (1.0, 5.0, 10.0, 30.0):
         ax.plot([cut, cut], [0.0, top * 0.66], color=house.MID, linewidth=0.8,
                 linestyle=(0, (2, 2)), zorder=2)
+        # Ink, not slate. These are one- and two-digit numerals sitting on the
+        # density's own tint, and a thin stem at 8 pt loses most of its ink to
+        # antialiasing: sampled from the render, the slate "1" cleared only
+        # 4.45:1 where the specified colour claimed 9.3:1.
         ax.text(cut, top * 0.03, f"{cut:.0f}", ha="center", va="bottom",
-                fontsize=8.0, color=house.SLATE, zorder=4)
+                fontsize=8.0, color=house.INK, zorder=4)
     mode = float(gap["kde_mode_minutes"][0])
     antimode = float(gap["kde_antimode_minutes"][0])
-    ax.plot([antimode, antimode], [0.0, top * 0.62], color=house.BRICK,
+    ax.plot([antimode, antimode], [0.0, top * 0.62], color=house.INK,
             linewidth=1.0, linestyle=(0, (4, 2)), zorder=2)
     ax.plot(
         [mode],
         [float(np.interp(mode, minutes, density))],
         marker="v",
         markersize=5.0,
-        markerfacecolor=house.STEEL,
+        markerfacecolor=house.BRICK,
         markeredgecolor=house.WHITE,
         markeredgewidth=0.6,
         zorder=4,
@@ -1100,7 +1139,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
         ha="center",
         va="bottom",
         fontsize=8.1,
-        color=house.STEEL,
+        color=house.BRICK,
         zorder=4,
     )
     # Lifted clear of the density curve, of the window rules below it and of
@@ -1113,7 +1152,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
         ha="right",
         va="bottom",
         fontsize=8.0,
-        color=house.BRICK,
+        color=house.INK,
         zorder=4,
     )
     ax.set_xlim(0.02, 12000)
@@ -1140,7 +1179,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
         (
             (
                 "rect",
-                {"facecolor": house.STEEL, "edgecolor": house.STEEL},
+                {"facecolor": house.BRICK, "edgecolor": house.BRICK},
                 "the published window",
             ),
             (
@@ -1155,7 +1194,7 @@ def figure_burst_threshold_sensitivity(output_dir: Path) -> str:
             ),
             (
                 "line",
-                {"color": house.BRICK, "linewidth": 1.0, "linestyle": (0, (4, 2))},
+                {"color": house.INK, "linewidth": 1.0, "linestyle": (0, (4, 2))},
                 "antimode",
             ),
         ),
@@ -1190,7 +1229,7 @@ def main() -> None:
         "font.size": BODY_PT,
         "text.color": INK,
         "axes.labelcolor": INK,
-        "axes.edgecolor": SLATE,
+        "axes.edgecolor": INK,
         "xtick.color": INK,
         "ytick.color": INK,
         "figure.facecolor": "#FFFFFF",
@@ -1218,7 +1257,7 @@ def main() -> None:
         0.0,
         5.0,
         (
-            ("rect", {"facecolor": PALE_GOLD_FILL, "edgecolor": GOLD_INK,
+            ("rect", {"facecolor": PALE_GREEN_FILL, "edgecolor": GREEN,
                       "linewidth": 1.0}, "the inline review path"),
             ("rect", {"facecolor": PALE_GREY_FILL, "edgecolor": SLATE,
                       "linewidth": 1.0}, "other rich tables"),
