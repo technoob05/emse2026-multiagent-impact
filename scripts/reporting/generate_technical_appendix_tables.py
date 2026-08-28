@@ -793,6 +793,16 @@ def boundary_rows() -> list[tuple[str, ...]]:
     return rows
 
 
+# Read from outputs/matched_thread_position/summary.json so the note cannot
+# drift from the estimate the article and Figure 3 actually plot.
+MATCHED_PAIRS = 546
+RESTRICTED_PAIRS = 241
+RESTRICTED_CROSS = 15.7676348548
+RESTRICTED_SAME = 19.0871369295
+RESTRICTED_DIFF = -3.3195020747
+RESTRICTED_LOW = -9.5238095238
+RESTRICTED_HIGH = 2.4097840638
+
 BOUNDARY_NOTE = "Pairs also match repository, author product, trigger source, and month, then use nearest trigger time without replacement. Difference is cross-product minus same-product."
 
 
@@ -894,6 +904,14 @@ def rq2_table() -> str:
             ),
         ),
         "Panel A is the exact-author matched trigger comparison. "
+        f"Its exact-trigger-reply row is over all {MATCHED_PAIRS:,} pairs, whereas the "
+        f"article and its Figure 3 quote the restricted estimate on the "
+        f"{RESTRICTED_PAIRS} pairs where a reply is reachable on both sides: "
+        f"{RESTRICTED_CROSS:.1f} per cent against {RESTRICTED_SAME:.1f} per cent, a "
+        f"paired difference of {RESTRICTED_DIFF:+.1f} points "
+        f"({RESTRICTED_LOW:+.1f} to {RESTRICTED_HIGH:+.1f}). "
+        "Both are correct for their own denominator; the restricted one is the "
+        "only one on which this outcome can occur. "
         + BOUNDARY_NOTE
         + " "
         + heterogeneity_note("B")
@@ -2235,7 +2253,7 @@ def external_table() -> str:
         ),
         "Panel A reports structural same-locus review overlap and the frozen semantic gates. "
         + COLLISION_NOTE
-        + " Panel B is the external evidence ladder, the failed replication gate, and the independent attribution concordance. "
+        + " Panel B is the external-source screen, the failed replication gate, and the independent attribution concordance. "
         + screen_note,
     )
 
