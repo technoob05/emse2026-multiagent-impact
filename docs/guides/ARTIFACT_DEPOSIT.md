@@ -36,6 +36,41 @@ publisher agreement, not the MIT licence. So step 4 does not change the zip, and
 this step can be run before or after it. Rerun it after step 3, though, since
 the ORCID edits change `CITATION.cff` and `.zenodo.json`, which are both inside.
 
+## 1b. The deposit script
+
+`scripts/release/create_zenodo_draft.ps1` does steps 1 and 2 of section 2 for
+you: it creates a draft, uploads the archive, writes the metadata from
+`.zenodo.json`, and prints the reserved DOI. It never publishes unless you pass
+both `-Publish` and the exact confirmation phrase, because a published Zenodo
+record is public and cannot be deleted.
+
+Check the archive and metadata first. This needs no token and touches no
+network:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scriptselease\create_zenodo_draft.ps1 `
+  -Archive build\zenodo\emse2026-multiagent-impact-artifact.zip `
+  -Metadata .zenodo.json -ValidateOnly
+```
+
+Then create the draft. The token is read only from a process-scoped environment
+variable, never from a file, an argument or a URL, so it cannot end up in a
+shell history or a log. Use a freshly issued token, and revoke it afterwards:
+
+```powershell
+$env:ZENODO_ACCESS_TOKEN = Read-Host -AsSecureString |
+  ConvertFrom-SecureString -AsPlainText
+
+powershell -ExecutionPolicy Bypass -File scriptselease\create_zenodo_draft.ps1 `
+  -Archive build\zenodo\emse2026-multiagent-impact-artifact.zip `
+  -Metadata .zenodo.json -Production
+```
+
+Omit `-Production` to practise against the Zenodo sandbox, which needs its own
+account and its own token. The receipt it prints carries `reserved_doi`, which
+is the identifier the manuscript should cite, and `draft_url`, where you can
+inspect what would be published before anyone publishes it.
+
 ## 2. Reserve the DOI *before* submitting the manuscript
 
 The manuscript has to cite the DOI, so reserve it rather than waiting for
